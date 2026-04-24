@@ -643,6 +643,119 @@ function fecharModal() {
   document.getElementById('modal-overlay').classList.add('hidden');
 }
 
+// ============== ONBOARDING PRIMEIRO ACESSO ==============
+// Aparece só uma vez na vida do navegador. Explica a filosofia em 3 slides + pede nome.
+const ONBOARDING_KEY = 'matemagica_onboarding_visto_v1';
+
+function ehPrimeiroAcesso() {
+  try { return !localStorage.getItem(ONBOARDING_KEY); } catch(e) { return false; }
+}
+
+function marcarOnboardingVisto(nomeCrianca) {
+  try {
+    localStorage.setItem(ONBOARDING_KEY, JSON.stringify({
+      visto: true,
+      nomeCrianca: nomeCrianca || null,
+      data: new Date().toISOString()
+    }));
+  } catch(e) {}
+}
+
+function getNomeCrianca() {
+  try {
+    const d = JSON.parse(localStorage.getItem(ONBOARDING_KEY) || 'null');
+    return d && d.nomeCrianca ? d.nomeCrianca : null;
+  } catch(e) { return null; }
+}
+
+const ONBOARDING_SLIDES = [
+  {
+    emoji: '👋',
+    titulo: 'Oi! Antes de começar…',
+    corpo: `<p style="line-height:1.55;margin:0 0 10px">Só 3 ideias rápidas pra mãe, pai ou quem tá ajudando:</p>
+      <ul style="padding-left:20px;margin:0;line-height:1.6;font-size:14px">
+        <li>A criança <b>joga sozinha</b>. Sem cronômetro, sem "você tem X tentativas".</li>
+        <li>Errar aqui <b>não conta errado</b>. Conta como treino — literalmente. Badges celebram quem <b>persiste</b>.</li>
+        <li>Não tem arena pública, ranking de escola ou notificação chata. É um <b>canto de casa</b>.</li>
+      </ul>`
+  },
+  {
+    emoji: '🌱',
+    titulo: 'Como elogiar (sem machucar)',
+    corpo: `<p style="line-height:1.55;margin:0 0 10px">A pesquisa da Stanford (Jo Boaler) mostrou que <b>elogio de inteligência machuca</b> quando a criança falha depois.</p>
+      <p style="line-height:1.55;margin:0 0 10px;font-size:13px"><b style="color:#c44a2a">Evite:</b> "você é tão inteligente", "que cabeça", "é um gênio".</p>
+      <p style="line-height:1.55;margin:0 0 6px;font-size:13px"><b style="color:#1b7a3a">Prefira:</b> "você persistiu", "não desistiu", "pensou bem", "tentou de novo e conseguiu".</p>
+      <p style="line-height:1.45;font-size:12px;color:#888;margin:12px 0 0">O app já usa essas frases. Vale imitar em casa.</p>`
+  },
+  {
+    emoji: '✨',
+    titulo: 'Última coisa: o nome',
+    corpo: `<p style="line-height:1.55;margin:0 0 10px">Como a gente chama a criança aqui dentro? (pode ser apelido)</p>
+      <input type="text" id="onb-nome-input" placeholder="Ex: Lia, Pedrinho, Sofia…" maxlength="20" style="width:100%;box-sizing:border-box;padding:10px 12px;font-size:16px;border:2px solid #c5bbe9;border-radius:10px;font-family:inherit;text-align:center" autocomplete="off">
+      <p style="font-size:11px;color:#888;margin:8px 0 0;text-align:center">Opcional — pode deixar vazio e pular.</p>`
+  }
+];
+
+let _onbSlide = 0;
+
+function iniciarOnboarding() {
+  const m = document.getElementById('modal-overlay');
+  if (!m) {
+    // Se não tem modal-overlay nessa página, marca como visto pra não tentar de novo
+    marcarOnboardingVisto(null);
+    return;
+  }
+  _onbSlide = 0;
+  renderSlideOnboarding();
+  m.classList.remove('hidden');
+}
+
+function renderSlideOnboarding() {
+  const slide = ONBOARDING_SLIDES[_onbSlide];
+  if (!slide) return fecharOnboarding();
+  const ultima = _onbSlide === ONBOARDING_SLIDES.length - 1;
+  const emoji = document.getElementById('m-emoji');
+  const titulo = document.getElementById('m-titulo');
+  const conteudo = document.getElementById('m-conteudo');
+  const btn = document.getElementById('modal-btn');
+  if (emoji) emoji.textContent = slide.emoji;
+  if (titulo) titulo.textContent = slide.titulo;
+  if (conteudo) {
+    const dots = ONBOARDING_SLIDES.map((_, i) =>
+      `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 3px;background:${i === _onbSlide ? '#6b54d3' : '#d9cefa'}"></span>`
+    ).join('');
+    conteudo.innerHTML = `
+      <div style="text-align:left;color:#4a3b8a;font-size:14px">
+        ${slide.corpo}
+      </div>
+      <div style="text-align:center;margin-top:14px">${dots}</div>
+    `;
+  }
+  if (btn) {
+    btn.textContent = ultima ? '✨ Começar!' : 'Próximo →';
+    btn.onclick = () => {
+      if (ultima) {
+        const input = document.getElementById('onb-nome-input');
+        const nome = input ? (input.value || '').trim().slice(0, 20) : null;
+        marcarOnboardingVisto(nome || null);
+        fecharOnboarding();
+        if (nome) {
+          try { soltarConfete(80); somCelebracao(); } catch(e) {}
+          setTimeout(() => alert(`Prazer, ${nome}! Vem jogar 🎲`), 300);
+        }
+      } else {
+        _onbSlide++;
+        renderSlideOnboarding();
+      }
+    };
+  }
+}
+
+function fecharOnboarding() {
+  const m = document.getElementById('modal-overlay');
+  if (m) m.classList.add('hidden');
+}
+
 // ============== PAYWALL (licença R$17 vitalícia) ==============
 function abrirPaywall(motivo) {
   const m = document.getElementById('modal-overlay');
@@ -942,6 +1055,9 @@ function abrirJogo(id, nome) {
   adicionarBotaoRespirarManual();
   mostrarMetacognicao(id);
   JOGOS[id].iniciar();
+  // Botão "Me explica" — tenta algumas vezes porque o #feedback pode ser renderizado async pelo iniciar()
+  setTimeout(garantirBotaoMeExplica, 100);
+  setTimeout(garantirBotaoMeExplica, 400);
 }
 
 function atualizarPlacarJogo() {
@@ -1622,6 +1738,174 @@ function detectarTipoJogo(id) {
 }
 
 const _metacogVistas = new Set();
+
+// ============== "ME EXPLICA DE NOVO" (ELI5) ==============
+// Banco de explicações simples por tipo de jogo. Derivado de 3 referências:
+// ChatGPT "explain like I'm 5", Math Antics, Jason Gibson.
+// Botão sempre acessível, zero penalidade de tempo.
+const EXPLICACOES_ELI5 = {
+  multiplicacao: {
+    emoji: '✖️',
+    titulo: 'O que é multiplicar?',
+    metafora: 'É <b>somar o mesmo número várias vezes</b>.',
+    exemplo: '<b>3 × 4</b> é o mesmo que <b>4 + 4 + 4 = 12</b>.',
+    visual: 'Imagina <b>3 fileiras de bolinhas</b> com <b>4 bolinhas em cada</b>. Se contar todas, dá 12.',
+    macete: 'Sabe uma? Sabe a outra! <b>3 × 4 = 4 × 3 = 12</b>. A ordem não muda o total.'
+  },
+  divisao: {
+    emoji: '➗',
+    titulo: 'O que é dividir?',
+    metafora: 'É <b>repartir em grupos iguais</b>.',
+    exemplo: '<b>12 ÷ 3</b> é "se eu tenho 12 brigadeiros e 3 amigos, quantos cada um pega?" → <b>4</b>.',
+    visual: 'Coloca 12 bolinhas numa mesa. Vai separando em 3 grupos iguais. Cada grupo fica com quantos? 4.',
+    macete: 'Dividir é o <b>contrário de multiplicar</b>. Se 3 × 4 = 12, então 12 ÷ 3 = 4.'
+  },
+  fracao: {
+    emoji: '🍕',
+    titulo: 'O que é fração?',
+    metafora: 'É <b>uma parte do todo</b>.',
+    exemplo: '<b>3/8</b> = você cortou algo em 8 pedaços e pegou 3.',
+    visual: 'Pensa numa pizza cortada em 8 fatias. Se você comeu 3 fatias, comeu <b>3/8</b> da pizza.',
+    macete: 'Número <b>de baixo</b>: em quantos pedaços cortei. <b>De cima</b>: quantos peguei.'
+  },
+  soma: {
+    emoji: '➕',
+    titulo: 'O que é somar?',
+    metafora: 'É <b>juntar quantidades</b>.',
+    exemplo: '<b>5 + 3 = 8</b>. Você tinha 5 figurinhas, ganhou 3, agora tem 8.',
+    visual: 'Mostra 5 dedos de uma mão, 3 da outra, e conta tudo: 8 dedos.',
+    macete: 'Começa pelo número MAIOR e soma o menor. <b>2 + 7 é mais fácil contando "7 + 2"</b>.'
+  },
+  subtracao: {
+    emoji: '➖',
+    titulo: 'O que é subtrair?',
+    metafora: 'É <b>tirar uma quantidade</b>.',
+    exemplo: '<b>7 − 3 = 4</b>. Você tinha 7 moedas, gastou 3, sobrou 4.',
+    visual: 'Mostra 7 dedos. Abaixa 3. Sobrou 4 pra cima.',
+    macete: 'Pensa também: "<b>de 3 até 7 é quanto?</b>" — também dá 4.'
+  },
+  tabuada: {
+    emoji: '🧮',
+    titulo: 'Tabuada é fácil se você…',
+    metafora: '…souber que é só <b>soma disfarçada</b>.',
+    exemplo: '<b>4 × 3</b> é <b>3 + 3 + 3 + 3 = 12</b>.',
+    visual: '4 vezes você soma o 3. 4 pulos de tamanho 3 na reta numérica = 12.',
+    macete: 'Só decora metade! <b>4 × 3 = 3 × 4</b>. Se sabe um, sabe o outro.'
+  },
+  contagem: {
+    emoji: '🔢',
+    titulo: 'Contar é um pulo',
+    metafora: 'Contar é <b>dar um pulo de 1 em 1</b>.',
+    exemplo: 'De 4 pra 5 é 1 pulo. De 10 pra 20 é 10 pulos. Ou 2 pulos de 5 em 5.',
+    visual: 'Imagina uma trilha no chão com números. De 7 pra 10, você dá 3 pulos.',
+    macete: 'Dá pra contar pulando: de 2 em 2, de 5 em 5, de 10 em 10. É mais rápido!'
+  },
+  dinheiro: {
+    emoji: '💰',
+    titulo: 'Dinheiro é só soma',
+    metafora: 'Dinheiro é <b>soma com reais e centavos</b>.',
+    exemplo: '<b>2 notas de R$5 = R$10</b>. <b>Troco de R$50 pra R$37 = R$13</b>.',
+    visual: 'Pensa em moedas empilhadas. 10 moedas de R$1 = R$10. Meia moeda = R$0,50.',
+    macete: 'Juntar dinheiro: <b>soma</b>. Dar troco: <b>subtração</b>. R$ tem vírgula: antes é real, depois é centavo.'
+  },
+  medida: {
+    emoji: '📏',
+    titulo: 'Medir é comparar',
+    metafora: 'Medir é <b>comparar algo com uma unidade</b>.',
+    exemplo: '<b>1 metro = 100 centímetros</b>. <b>1 quilo = 1.000 gramas</b>.',
+    visual: 'Uma régua tem 30 cm. Se a porta tem 2 metros, cabem 6 réguas e um pouco até o topo.',
+    macete: 'Pra unidade <b>maior</b>, divide. Pra <b>menor</b>, multiplica. Metro pra cm: × 100.'
+  },
+  horas: {
+    emoji: '⏰',
+    titulo: 'O relógio',
+    metafora: 'O relógio tem <b>2 ponteiros</b>: pequeno (hora) e grande (minuto).',
+    exemplo: 'Quando o grande aponta 12 e o pequeno o 3, são <b>3 horas</b>. Quando o grande aponta 6, é <b>meia hora</b> (30 min).',
+    visual: 'Um quarto de hora = 15 min. Meia hora = 30 min. Três-quartos = 45 min. Hora cheia = 60.',
+    macete: 'O ponteiro grande gira <b>12 vezes mais rápido</b> que o pequeno. 12 voltas dele = 1 volta deste.'
+  },
+  decimal: {
+    emoji: '🔢',
+    titulo: 'Número com vírgula',
+    metafora: 'Decimal é <b>número com pedaço</b>.',
+    exemplo: '<b>2,5</b> é 2 inteiros + meio. <b>R$3,75</b> é 3 reais e 75 centavos.',
+    visual: 'Pensa em pizza. 2 pizzas inteiras + meia pizza = 2,5 pizzas.',
+    macete: '<b>Depois da vírgula</b> é sempre pedaço do 1. 0,5 = metade. 0,25 = um quarto.'
+  }
+};
+
+function abrirExplicaELI5(id) {
+  const tipo = (typeof detectarTipoJogo === 'function') ? detectarTipoJogo(id || jogoAtivo) : null;
+  const e = tipo ? EXPLICACOES_ELI5[tipo] : null;
+  const m = document.getElementById('modal-overlay');
+  if (!m) {
+    // Sem modal disponível — usa alert simples como fallback
+    if (e) alert(`${e.titulo}\n\n${e.metafora.replace(/<\/?b>/g, '')}\n\nExemplo: ${e.exemplo.replace(/<\/?b>/g, '')}\n\nDica: ${e.macete.replace(/<\/?b>/g, '')}`);
+    return;
+  }
+  const emoji = document.getElementById('m-emoji');
+  const titulo = document.getElementById('m-titulo');
+  const conteudo = document.getElementById('m-conteudo');
+  const btn = document.getElementById('modal-btn');
+  if (e) {
+    if (emoji) emoji.textContent = e.emoji;
+    if (titulo) titulo.textContent = e.titulo;
+    if (conteudo) {
+      conteudo.innerHTML = `
+        <div style="text-align:left;font-size:14px;color:#4a3b8a;line-height:1.6">
+          <div style="background:#fff3d6;border-left:3px solid #ffd36b;padding:10px 12px;border-radius:8px;margin-bottom:10px">
+            <div style="font-size:11px;font-weight:800;color:#8a5a10;letter-spacing:0.5px;margin-bottom:2px">EM UMA FRASE</div>
+            ${e.metafora}
+          </div>
+          <div style="background:#ede8fa;border-left:3px solid #6b54d3;padding:10px 12px;border-radius:8px;margin-bottom:10px">
+            <div style="font-size:11px;font-weight:800;color:#6b54d3;letter-spacing:0.5px;margin-bottom:2px">EXEMPLO</div>
+            ${e.exemplo}
+          </div>
+          <div style="background:#e6f7ec;border-left:3px solid #3ac070;padding:10px 12px;border-radius:8px;margin-bottom:10px">
+            <div style="font-size:11px;font-weight:800;color:#1b7a3a;letter-spacing:0.5px;margin-bottom:2px">IMAGINA ISSO</div>
+            ${e.visual}
+          </div>
+          <div style="background:#ffe0d0;border-left:3px solid #d4794a;padding:10px 12px;border-radius:8px">
+            <div style="font-size:11px;font-weight:800;color:#a8410a;letter-spacing:0.5px;margin-bottom:2px">💡 MACETE</div>
+            ${e.macete}
+          </div>
+        </div>
+      `;
+    }
+  } else {
+    if (emoji) emoji.textContent = '💡';
+    if (titulo) titulo.textContent = 'Um lembrete';
+    if (conteudo) conteudo.innerHTML = `<div style="font-size:14px;color:#4a3b8a;line-height:1.6;text-align:left">
+      Toda conta de matemática é só <b>juntar</b>, <b>tirar</b>, <b>agrupar</b> ou <b>repartir</b>.<br><br>
+      <b>+</b> é juntar. <b>−</b> é tirar. <b>×</b> é juntar grupos iguais. <b>÷</b> é repartir em partes iguais.<br><br>
+      <i>Lê a pergunta devagar. Pensa no que você faria se fossem <b>brigadeiros de verdade</b> na sua mesa.</i>
+    </div>`;
+  }
+  if (btn) {
+    btn.textContent = 'Já entendi 👍';
+    btn.onclick = () => fecharModal();
+  }
+  m.classList.remove('hidden');
+}
+
+// Injeta botão "💡 Me explica" no container de feedback dos jogos
+function garantirBotaoMeExplica() {
+  const fb = document.getElementById('feedback');
+  if (!fb) return;
+  const cont = fb.parentElement;
+  if (!cont || cont.querySelector('.btn-me-explica')) return;
+  const btn = document.createElement('button');
+  btn.className = 'btn-me-explica';
+  btn.type = 'button';
+  btn.innerHTML = '💡 Me explica';
+  btn.title = 'Uma explicação rápida e simples';
+  btn.onclick = () => abrirExplicaELI5(jogoAtivo);
+  btn.style.cssText = 'background:#ede8fa;color:#6b54d3;border:2px solid #c5bbe9;padding:7px 14px;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer;margin:6px auto;display:block;font-family:inherit;transition:all 0.2s';
+  btn.onmouseenter = () => { btn.style.background = '#dccbf5'; };
+  btn.onmouseleave = () => { btn.style.background = '#ede8fa'; };
+  // Coloca antes do feedback pra ficar visível
+  cont.insertBefore(btn, fb);
+}
 
 function mostrarMetacognicao(id) {
   const tipo = detectarTipoJogo(id);

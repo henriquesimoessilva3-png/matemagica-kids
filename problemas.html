@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Problemas do Dia a Dia — MATEMÁGICA</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=14">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  h1.titulo-prob {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 32px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(135deg, #4ab3a5, #6b54d3);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-align: center; margin: 6px 0 2px; line-height: 1.1;
+  }
+  .sub-prob { text-align: center; color: #888; font-size: 13px; margin-bottom: 14px; }
+
+  .op-tabs {
+    display: flex; gap: 6px; justify-content: center;
+    margin-bottom: 12px; flex-wrap: wrap;
+  }
+  .op-tab {
+    background: #f7f5ff; color: #6b54d3;
+    border: 2px solid #c5bbe9;
+    padding: 6px 14px; border-radius: 16px;
+    font-weight: 700; font-size: 13px;
+    cursor: pointer; font-family: inherit;
+  }
+  .op-tab.ativo { background: #6b54d3; color: #fff; border-color: #6b54d3; }
+
+  .historia-card {
+    background: linear-gradient(135deg, #fff4dc, #ffe8ba);
+    border: 2.5px solid #d4a574;
+    border-radius: 16px;
+    padding: 20px 20px 18px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .historia-texto {
+    font-size: 17px; line-height: 1.55;
+    color: #3a2818;
+    margin-bottom: 14px;
+  }
+  .historia-texto b { color: #8b5a2b; }
+  .historia-pergunta {
+    background: #fff; border: 2px solid #8b5a2b;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 16px; font-weight: 700;
+    color: #4a3b8a; text-align: center;
+  }
+  .historia-pergunta b { color: #6b54d3; }
+
+  .prob-opcoes {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 10px;
+  }
+  .prob-opcoes button {
+    padding: 16px 8px;
+    font-size: 22px; font-weight: 800;
+    background: #f7f5ff; color: #4a3b8a;
+    border: 3px solid #c5bbe9; border-radius: 12px;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.15s;
+  }
+  .prob-opcoes button:hover:not(:disabled) {
+    background: #ede8fa; transform: scale(1.03); border-color: #b968e8;
+  }
+  .prob-opcoes button.acerto {
+    background: #d4f5dd; border-color: #3ac070; color: #1b4a2a;
+    animation: flash 0.4s;
+  }
+  .prob-opcoes button.erro {
+    background: #fde0e0; border-color: #d04040; color: #801818;
+    animation: shake 0.3s;
+  }
+
+  .prob-feedback {
+    min-height: 40px;
+    text-align: center;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .prob-feedback.acerto { background: #d4f5dd; color: #1b4a2a; }
+  .prob-feedback.erro { background: #fde0e0; color: #801818; }
+
+  .prob-hud {
+    display: flex; justify-content: space-between; gap: 8px;
+    background: linear-gradient(135deg, #ede8fa, #d9c8f5);
+    padding: 10px 14px; border-radius: 12px;
+    margin-bottom: 12px;
+    font-size: 13px; color: #4a3b8a; font-weight: 700;
+  }
+  .prob-hud b { color: #6b54d3; font-size: 18px; }
+
+  .prob-btn {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff; border: none;
+    padding: 10px 22px; border-radius: 12px;
+    font-weight: 700; font-size: 14px;
+    cursor: pointer; font-family: inherit;
+    display: block; margin: 0 auto;
+  }
+
+  .voltar {
+    display: inline-block;
+    color: #6b54d3; text-decoration: none;
+    font-size: 12px; font-weight: 700;
+    background: #ede8fa; border: 2px solid #c5bbe9;
+    padding: 6px 12px; border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .btn-me-explica-inline {
+    background: #ede8fa; color: #6b54d3;
+    border: 2px solid #c5bbe9;
+    padding: 6px 12px; border-radius: 10px;
+    font-weight: 700; font-size: 11px;
+    cursor: pointer; font-family: inherit;
+    display: inline-block; margin-top: 8px;
+  }
+  .btn-me-explica-inline:hover { background: #dccbf5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="voltar">← Voltar ao início</a>
+  <h1 class="titulo-prob">📖 Problemas do Dia a Dia</h1>
+  <div class="sub-prob">Matemática de gente, com nome, coisa e história.</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div class="op-tabs" id="op-tabs">
+    <button class="op-tab ativo" data-op="soma" onclick="setOp('soma')">➕ Somar</button>
+    <button class="op-tab" data-op="subtracao" onclick="setOp('subtracao')">➖ Subtrair</button>
+    <button class="op-tab" data-op="multiplicacao" onclick="setOp('multiplicacao')">✖️ Multiplicar</button>
+    <button class="op-tab" data-op="divisao" onclick="setOp('divisao')">➗ Dividir</button>
+    <button class="op-tab" data-op="mix" onclick="setOp('mix')">🎲 Misturado</button>
+  </div>
+
+  <div class="prob-hud">
+    <span>Acertos: <b id="hud-acertos">0</b></span>
+    <span>Rodada: <b id="hud-rodada">0</b></span>
+    <span>Operação: <b id="hud-op">Somar</b></span>
+  </div>
+
+  <div class="historia-card" id="historia-card">
+    <div class="historia-texto" id="historia-texto">
+      Clica em <b>Novo problema</b> pra começar.
+    </div>
+    <div class="historia-pergunta hidden" id="historia-pergunta"></div>
+  </div>
+
+  <div class="prob-opcoes" id="prob-opcoes"></div>
+  <div class="prob-feedback" id="prob-feedback"></div>
+
+  <button class="prob-btn" onclick="gerarProblema()" id="btn-novo">🎲 Novo problema</button>
+</div>
+
+<!-- Modal compartilhado -->
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<script src="mascotes.js?v=14"></script>
+<script src="jogos_shared.js?v=14"></script>
+<script>
+STORAGE_KEY = 'jogosMat_default';
+CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
+
+// ============== BANCO PARAMETRIZÁVEL BR ==============
+const NOMES = ['Ana', 'Bia', 'Caio', 'Davi', 'Elisa', 'João', 'Luiza', 'Mateus', 'Rafa', 'Sofia', 'Léo', 'Helena', 'Gabi', 'Pedro', 'Val', 'Lucas', 'Maria', 'Nina'];
+const OBJETOS = {
+  pequenos: ['lápis', 'borracha', 'figurinha', 'moeda', 'bala', 'botão', 'caneta', 'giz'],
+  medios:   ['livro', 'bolacha', 'brigadeiro', 'maçã', 'laranja', 'sanduíche', 'carrinho', 'boneca'],
+  grandes:  ['bola de futebol', 'pipa', 'garrafa', 'travesseiro', 'mochila', 'pote', 'caixa de giz']
+};
+const RECIPIENTES = ['caixa', 'pacote', 'saco', 'sacola', 'mochila', 'pote', 'estojo', 'gaveta'];
+const LUGARES = ['na sala', 'no recreio', 'na festa', 'no parque', 'em casa', 'na padaria', 'na escola'];
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function rint(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+// ============== GERADORES DE PROBLEMAS POR OPERAÇÃO ==============
+const GERADORES = {
+  soma: () => {
+    const nome = pick(NOMES);
+    const obj = pick(OBJETOS.pequenos);
+    const a = rint(3, 20);
+    const b = rint(2, 15);
+    const res = a + b;
+    return {
+      texto: `${nome} tinha <b>${a} ${obj}${obj.endsWith('s') ? '' : 's'}</b> ${pick(LUGARES)}. De presente, ganhou mais <b>${b} ${obj}${obj.endsWith('s') ? '' : 's'}</b>.`,
+      pergunta: `Quantos ${obj}${obj.endsWith('s') ? '' : 's'} ${nome} tem agora?`,
+      resposta: res,
+      tipo: 'soma'
+    };
+  },
+  subtracao: () => {
+    const nome = pick(NOMES);
+    const obj = pick(OBJETOS.pequenos);
+    const a = rint(15, 40);
+    const b = rint(3, a - 2);
+    const res = a - b;
+    const verbos = ['deu', 'perdeu', 'usou', 'trocou'];
+    return {
+      texto: `${nome} tinha <b>${a} ${obj}${obj.endsWith('s') ? '' : 's'}</b>. Em uma tarde, ${pick(verbos)} <b>${b}</b>.`,
+      pergunta: `Quantos ${obj}${obj.endsWith('s') ? '' : 's'} sobraram com ${nome}?`,
+      resposta: res,
+      tipo: 'subtracao'
+    };
+  },
+  multiplicacao: () => {
+    const nome = pick(NOMES);
+    const obj = pick(OBJETOS.medios);
+    const recipiente = pick(RECIPIENTES);
+    const a = rint(2, 8);
+    const b = rint(2, 9);
+    const res = a * b;
+    return {
+      texto: `${nome} organizou <b>${a} ${recipiente}${recipiente.endsWith('s') ? '' : 's'}</b> de ${obj}${obj.endsWith('s') ? '' : 's'}. Em cada ${recipiente} colocou <b>${b} ${obj}${obj.endsWith('s') ? '' : 's'}</b>.`,
+      pergunta: `Quantos ${obj}${obj.endsWith('s') ? '' : 's'} ${nome} tem no total?`,
+      resposta: res,
+      tipo: 'multiplicacao'
+    };
+  },
+  divisao: () => {
+    const nome = pick(NOMES);
+    const obj = pick(OBJETOS.medios);
+    const nAmigos = rint(2, 6);
+    const perCada = rint(2, 8);
+    const total = nAmigos * perCada;
+    return {
+      texto: `${nome} tem <b>${total} ${obj}${obj.endsWith('s') ? '' : 's'}</b> pra repartir igualzinho entre <b>${nAmigos} amigos</b>.`,
+      pergunta: `Quantos ${obj}${obj.endsWith('s') ? '' : 's'} cada amigo recebe?`,
+      resposta: perCada,
+      tipo: 'divisao'
+    };
+  },
+  mix: null // tratado em gerarProblema
+};
+
+let _opAtual = 'soma';
+let _probAtual = null;
+let _acertos = 0;
+let _rodada = 0;
+
+function setOp(op) {
+  _opAtual = op;
+  document.querySelectorAll('.op-tab').forEach(t => {
+    t.classList.toggle('ativo', t.dataset.op === op);
+  });
+  const nomes = { soma: 'Somar', subtracao: 'Subtrair', multiplicacao: 'Multiplicar', divisao: 'Dividir', mix: 'Misturado' };
+  document.getElementById('hud-op').textContent = nomes[op];
+}
+
+function gerarProblema() {
+  const op = _opAtual === 'mix'
+    ? pick(['soma', 'subtracao', 'multiplicacao', 'divisao'])
+    : _opAtual;
+  _probAtual = GERADORES[op]();
+  _rodada++;
+  document.getElementById('historia-texto').innerHTML = _probAtual.texto;
+  document.getElementById('historia-pergunta').innerHTML = `${_probAtual.pergunta} <span style="color:#888;font-size:13px;display:block;margin-top:4px;font-weight:normal;font-style:italic">Dica: pensa como se fosse de verdade.</span>`;
+  document.getElementById('historia-pergunta').classList.remove('hidden');
+  document.getElementById('prob-feedback').textContent = '';
+  document.getElementById('prob-feedback').className = 'prob-feedback';
+  // Gera 4 opções com a certa + 3 distratoras próximas
+  const certa = _probAtual.resposta;
+  const set = new Set([certa]);
+  while (set.size < 4) {
+    const delta = rint(-4, 4);
+    const v = Math.max(0, certa + delta);
+    if (v !== certa) set.add(v);
+  }
+  const arr = Array.from(set).sort((a, b) => a - b);
+  document.getElementById('prob-opcoes').innerHTML = arr.map(v =>
+    `<button onclick="responder(${v}, this)">${v}</button>`
+  ).join('') + `<button class="btn-me-explica-inline" style="grid-column:span 2;margin-top:6px" onclick="abrirExplicaELI5('${_probAtual.tipo}')">💡 Me explica</button>`;
+  atualizarHUD();
+  document.getElementById('btn-novo').textContent = '🎲 Próximo';
+}
+
+function responder(v, btn) {
+  const botoes = document.querySelectorAll('.prob-opcoes > button');
+  botoes.forEach(b => b.disabled = true);
+  const fb = document.getElementById('prob-feedback');
+  if (v === _probAtual.resposta) {
+    _acertos++;
+    btn.classList.add('acerto');
+    try { somAcerto(); } catch(e) {}
+    try {
+      jogoAtivo = 'problemas_' + _probAtual.tipo;
+      STATE.acertou(jogoAtivo);
+      renderHeaderPlayer();
+      window._acertosSessao = (window._acertosSessao || 0) + 1;
+      if (window._acertosSessao % 5 === 0 && typeof mostrarCapsulaMundoReal === 'function') {
+        setTimeout(mostrarCapsulaMundoReal, 1200);
+      }
+    } catch(e) {}
+    fb.className = 'prob-feedback acerto';
+    fb.innerHTML = `✨ Isso! ${_probAtual.resposta} ${getObjeto(_probAtual.texto)}. ${fraseSorteada(FRASES_ACERTO)}`;
+    try { soltarConfete(20); reagirMascoteCoach('acerto'); } catch(e) {}
+  } else {
+    btn.classList.add('erro');
+    botoes.forEach(b => { if (parseInt(b.textContent) === _probAtual.resposta) b.classList.add('acerto'); });
+    try { somErro(); } catch(e) {}
+    try {
+      jogoAtivo = 'problemas_' + _probAtual.tipo;
+      STATE.errou(jogoAtivo);
+      reagirMascoteCoach('erro');
+    } catch(e) {}
+    fb.className = 'prob-feedback erro';
+    fb.innerHTML = `Respira. A resposta era <b>${_probAtual.resposta}</b>. Tenta o próximo — cada erro ensina.`;
+  }
+  atualizarHUD();
+}
+
+function getObjeto(texto) {
+  // tenta extrair o objeto principal do texto (depois de "ganhou", "deu" etc) — quick and dirty
+  const match = texto.match(/<b>(\d+) ([^<]+)<\/b>/);
+  return match ? match[2] : '';
+}
+
+function atualizarHUD() {
+  document.getElementById('hud-acertos').textContent = _acertos;
+  document.getElementById('hud-rodada').textContent = _rodada;
+}
+
+// Init
+initJogos();
+atualizarHUD();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

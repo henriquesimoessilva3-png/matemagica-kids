@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inventa! — MATEMÁGICA</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=14">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  h1.titulo-inv {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 34px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(135deg, #ff7b6b, #b968e8);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-align: center; margin: 6px 0 2px; line-height: 1.1;
+  }
+  .sub-inv { text-align: center; color: #888; font-size: 13px; margin-bottom: 14px; }
+
+  .inv-card {
+    background: linear-gradient(135deg, #fff3d6, #ffe0a0);
+    border: 2.5px solid #d4a574;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .inv-label {
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 1px; color: #8b5a2b;
+    text-transform: uppercase;
+  }
+  .inv-alvo {
+    font-size: 72px; font-weight: 900;
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    line-height: 1; margin: 4px 0 8px;
+    text-shadow: 0 4px 10px rgba(107,84,211,0.2);
+  }
+  .inv-regra {
+    font-size: 13px; color: #6b3a15;
+    line-height: 1.45; max-width: 320px; margin: 0 auto;
+  }
+  .inv-regra b { color: #8b5a2b; }
+
+  .seletor-alvo {
+    display: flex; gap: 6px; justify-content: center;
+    margin-bottom: 12px; flex-wrap: wrap;
+  }
+  .chip-alvo {
+    background: #f7f5ff; color: #6b54d3;
+    border: 2px solid #c5bbe9;
+    padding: 5px 12px; border-radius: 14px;
+    font-weight: 700; font-size: 12px;
+    cursor: pointer; font-family: inherit;
+  }
+  .chip-alvo.ativo { background: #6b54d3; color: #fff; border-color: #6b54d3; }
+  .chip-alvo.aleat { background: linear-gradient(135deg,#ffd36b,#ff9a44); color:#5a3a00; border-color:#ff9a44; }
+
+  .inv-input-area {
+    background: #fff;
+    border: 3px solid #c5bbe9;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .inv-input-label {
+    font-size: 12px; color: #888;
+    margin-bottom: 6px; text-align: center;
+  }
+  .inv-input {
+    width: 100%; box-sizing: border-box;
+    padding: 14px 16px;
+    font-size: 24px; font-weight: 700;
+    border: 2px solid #c5bbe9; border-radius: 10px;
+    text-align: center; font-family: 'Courier New', monospace;
+    color: #4a3b8a;
+  }
+  .inv-input:focus { outline: none; border-color: #6b54d3; box-shadow: 0 0 0 3px rgba(107,84,211,0.15); }
+
+  .teclado {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 6px; margin-top: 10px;
+  }
+  .tecla {
+    padding: 12px 4px;
+    font-size: 20px; font-weight: 800;
+    background: #f7f5ff; color: #4a3b8a;
+    border: 2px solid #c5bbe9; border-radius: 10px;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.1s;
+  }
+  .tecla:hover { background: #ede8fa; transform: scale(1.05); }
+  .tecla:active { transform: scale(0.95); }
+  .tecla.op { background: linear-gradient(135deg,#ffd36b,#ff9a44); color:#5a3a00; border-color:#ff9a44; }
+  .tecla.del { background: #ffe0d0; color:#c44a2a; border-color:#d4794a; }
+  .tecla.enviar { grid-column: span 2; background: linear-gradient(135deg,#6b54d3,#b968e8); color:#fff; border-color:#6b54d3; }
+
+  .inv-feedback {
+    min-height: 44px;
+    padding: 10px 12px; border-radius: 10px;
+    font-size: 14px; font-weight: 700;
+    text-align: center; line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .inv-feedback.acerto { background: #d4f5dd; color: #1b4a2a; }
+  .inv-feedback.erro { background: #fde0e0; color: #801818; }
+  .inv-feedback.repetido { background: #fff3d6; color: #8a5a10; }
+
+  .inv-historico {
+    background: #f7f5ff;
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 8px;
+    min-height: 60px;
+  }
+  .inv-historico-titulo {
+    font-size: 11px; font-weight: 800;
+    color: #6b54d3; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+  .inv-item {
+    display: inline-block;
+    background: #fff;
+    border: 2px solid #b968e8;
+    color: #4a3b8a;
+    padding: 4px 10px;
+    margin: 3px;
+    border-radius: 10px;
+    font-family: 'Courier New', monospace;
+    font-weight: 700; font-size: 13px;
+  }
+  .inv-placeholder { color: #aaa; font-style: italic; font-size: 12px; }
+
+  .inv-hud {
+    display: flex; justify-content: space-between; gap: 8px;
+    background: linear-gradient(135deg, #ede8fa, #d9c8f5);
+    padding: 10px 14px; border-radius: 12px;
+    margin-bottom: 12px;
+    font-size: 13px; color: #4a3b8a; font-weight: 700;
+  }
+  .inv-hud b { color: #6b54d3; font-size: 18px; }
+
+  .inv-btn {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff; border: none;
+    padding: 10px 18px; border-radius: 10px;
+    font-weight: 700; font-size: 13px;
+    cursor: pointer; font-family: inherit;
+  }
+  .inv-btn.sec { background: #fff; color: #6b54d3; border: 2px solid #c5bbe9; }
+
+  .voltar {
+    display: inline-block;
+    color: #6b54d3; text-decoration: none;
+    font-size: 12px; font-weight: 700;
+    background: #ede8fa; border: 2px solid #c5bbe9;
+    padding: 6px 12px; border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 420px) {
+    .inv-alvo { font-size: 60px; }
+    .tecla { font-size: 18px; padding: 10px 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="voltar">← Voltar ao início</a>
+  <h1 class="titulo-inv">💡 Inventa!</h1>
+  <div class="sub-inv">Todas as formas de chegar no número são válidas.</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div class="inv-hud">
+    <span>Descobertas: <b id="hud-count">0</b></span>
+    <span>Alvo: <b id="hud-alvo">?</b></span>
+    <span>Moedas: <b id="hud-moedas">0</b></span>
+  </div>
+
+  <div class="seletor-alvo" id="seletor-alvo">
+    <button class="chip-alvo aleat" onclick="sortearAlvo()">🎲 Sorteio</button>
+    <button class="chip-alvo" onclick="escolherAlvo(5)">5</button>
+    <button class="chip-alvo" onclick="escolherAlvo(10)">10</button>
+    <button class="chip-alvo" onclick="escolherAlvo(12)">12</button>
+    <button class="chip-alvo" onclick="escolherAlvo(20)">20</button>
+    <button class="chip-alvo" onclick="escolherAlvo(25)">25</button>
+    <button class="chip-alvo" onclick="escolherAlvo(50)">50</button>
+    <button class="chip-alvo" onclick="escolherAlvo(100)">100</button>
+  </div>
+
+  <div class="inv-card" id="inv-card">
+    <div class="inv-label">ACHE TODAS AS FORMAS DE FAZER</div>
+    <div class="inv-alvo" id="inv-alvo">5</div>
+    <div class="inv-regra">
+      Ex: <b>4 + 1</b>, <b>7 − 2</b>, <b>10 ÷ 2</b>, <b>1 × 5</b>, <b>3 + 1 + 1</b>. Use <b>+ − × ÷</b> e parênteses. <b>Cada forma diferente vale 1 moeda 🪙</b>.
+    </div>
+  </div>
+
+  <div class="inv-input-area">
+    <div class="inv-input-label">Sua expressão:</div>
+    <input type="text" class="inv-input" id="inv-input" placeholder="3+2" autocomplete="off" inputmode="none">
+    <div class="teclado" id="teclado">
+      <button class="tecla" onclick="digitar('7')">7</button>
+      <button class="tecla" onclick="digitar('8')">8</button>
+      <button class="tecla" onclick="digitar('9')">9</button>
+      <button class="tecla op" onclick="digitar('+')">+</button>
+      <button class="tecla op" onclick="digitar('-')">−</button>
+
+      <button class="tecla" onclick="digitar('4')">4</button>
+      <button class="tecla" onclick="digitar('5')">5</button>
+      <button class="tecla" onclick="digitar('6')">6</button>
+      <button class="tecla op" onclick="digitar('*')">×</button>
+      <button class="tecla op" onclick="digitar('/')">÷</button>
+
+      <button class="tecla" onclick="digitar('1')">1</button>
+      <button class="tecla" onclick="digitar('2')">2</button>
+      <button class="tecla" onclick="digitar('3')">3</button>
+      <button class="tecla op" onclick="digitar('(')">(</button>
+      <button class="tecla op" onclick="digitar(')')">)</button>
+
+      <button class="tecla" onclick="digitar('0')">0</button>
+      <button class="tecla del" onclick="apagar()">⌫</button>
+      <button class="tecla del" onclick="limparInput()">C</button>
+      <button class="tecla enviar" onclick="enviar()">✓ Enviar</button>
+    </div>
+  </div>
+
+  <div class="inv-feedback" id="inv-feedback"></div>
+
+  <div class="inv-historico">
+    <div class="inv-historico-titulo">🌱 Formas que você descobriu:</div>
+    <div id="inv-historico-lista"><span class="inv-placeholder">Ainda nenhuma. Escreve uma expressão e envia!</span></div>
+  </div>
+</div>
+
+<!-- Modal compartilhado -->
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<script src="mascotes.js?v=14"></script>
+<script src="jogos_shared.js?v=14"></script>
+<script>
+STORAGE_KEY = 'jogosMat_default';
+CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
+
+// ============== JOGO DOS NÚMEROS ==============
+let _alvo = 5;
+let _formas = new Set();   // canonicalizadas (sem espaços, normalizadas)
+let _formasOrig = [];      // lista de strings originais pra exibir
+
+function escolherAlvo(n) {
+  _alvo = n;
+  _formas.clear();
+  _formasOrig = [];
+  document.getElementById('inv-alvo').textContent = n;
+  document.getElementById('hud-alvo').textContent = n;
+  renderHistorico();
+  document.getElementById('inv-feedback').textContent = '';
+  document.getElementById('inv-feedback').className = 'inv-feedback';
+  document.querySelectorAll('.chip-alvo').forEach(c => {
+    c.classList.toggle('ativo', parseInt(c.textContent) === n);
+  });
+  atualizarHUD();
+}
+
+function sortearAlvo() {
+  const opts = [3, 6, 7, 8, 11, 14, 15, 17, 24, 36, 42, 60, 72];
+  escolherAlvo(opts[Math.floor(Math.random() * opts.length)]);
+}
+
+function digitar(ch) {
+  const i = document.getElementById('inv-input');
+  i.value += ch;
+  i.focus();
+}
+function apagar() {
+  const i = document.getElementById('inv-input');
+  i.value = i.value.slice(0, -1);
+  i.focus();
+}
+function limparInput() {
+  document.getElementById('inv-input').value = '';
+}
+
+// Parser SEGURO — só aceita dígitos, operadores e parênteses.
+function avaliar(expr) {
+  const limpa = expr.replace(/\s/g, '').replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+  if (!/^[0-9+\-*/().]+$/.test(limpa)) return { erro: 'Só use números e + − × ÷ ( )' };
+  // Não permite expressões absurdamente curtas
+  if (!/\d/.test(limpa)) return { erro: 'Escreve pelo menos um número!' };
+  try {
+    // eslint-disable-next-line no-new-func
+    const val = Function(`"use strict";return (${limpa})`)();
+    if (typeof val !== 'number' || !isFinite(val)) return { erro: 'Isso não deu um número. Tenta outra.' };
+    return { valor: val, canon: limpa };
+  } catch (e) {
+    return { erro: 'Expressão inválida. Dá uma olhada nos parênteses.' };
+  }
+}
+
+// Canonicaliza expressão pra detectar repetições (ex: "4+1" = "1+4" em soma simples)
+function canonicalizar(expr) {
+  const limpa = expr.replace(/\s/g, '').replace(/×/g, '*').replace(/÷/g, '/');
+  // Caso simples: A+B ordenado crescente
+  const somaMatch = limpa.match(/^(\d+)\+(\d+)$/);
+  if (somaMatch) {
+    const a = parseInt(somaMatch[1]);
+    const b = parseInt(somaMatch[2]);
+    return a <= b ? `${a}+${b}` : `${b}+${a}`;
+  }
+  // Multiplicação A*B
+  const multMatch = limpa.match(/^(\d+)\*(\d+)$/);
+  if (multMatch) {
+    const a = parseInt(multMatch[1]);
+    const b = parseInt(multMatch[2]);
+    return a <= b ? `${a}*${b}` : `${b}*${a}`;
+  }
+  return limpa; // resto deixa como veio
+}
+
+function enviar() {
+  const i = document.getElementById('inv-input');
+  const expr = i.value.trim();
+  const fb = document.getElementById('inv-feedback');
+  if (!expr) {
+    fb.textContent = 'Escreve uma expressão antes de enviar.';
+    fb.className = 'inv-feedback erro';
+    return;
+  }
+  const r = avaliar(expr);
+  if (r.erro) {
+    fb.textContent = r.erro;
+    fb.className = 'inv-feedback erro';
+    try { somErro(); } catch(e) {}
+    return;
+  }
+  if (r.valor !== _alvo) {
+    fb.innerHTML = `Essa dá <b>${r.valor}</b>, não ${_alvo}. Respira e tenta de novo — toda tentativa ensina.`;
+    fb.className = 'inv-feedback erro';
+    try { somErro(); reagirMascoteCoach('erro'); } catch(e) {}
+    return;
+  }
+  const canon = canonicalizar(expr);
+  if (_formas.has(canon)) {
+    fb.textContent = `Dá ${_alvo}! Mas essa forma você já descobriu. Tenta outra — usa + − × ÷ em combinações diferentes.`;
+    fb.className = 'inv-feedback repetido';
+    return;
+  }
+  _formas.add(canon);
+  _formasOrig.push(expr);
+  try {
+    jogoAtivo = 'inventa_' + _alvo;
+    STATE.acertou(jogoAtivo);
+    somMoeda();
+    renderHeaderPlayer();
+    window._acertosSessao = (window._acertosSessao || 0) + 1;
+    if (_formas.size % 5 === 0 && typeof mostrarCapsulaMundoReal === 'function') {
+      setTimeout(mostrarCapsulaMundoReal, 1000);
+    }
+  } catch(e) {}
+  fb.innerHTML = `✨ <b>${expr} = ${_alvo}</b>! Uma forma nova. <b>+1 🪙</b>`;
+  fb.className = 'inv-feedback acerto';
+  i.value = '';
+  renderHistorico();
+  atualizarHUD();
+  try { reagirMascoteCoach('acerto'); } catch(e) {}
+  if (_formas.size === 3) {
+    try { soltarConfete(40); } catch(e) {}
+  } else if (_formas.size === 10) {
+    try { soltarConfete(80); somCelebracao(); } catch(e) {}
+    const t = document.getElementById('toast-celebra');
+    if (t) {
+      t.innerHTML = `<div style="font-size:14px;opacity:0.9">10 FORMAS!</div><div style="font-size:44px">🌟</div><div style="font-size:16px">Você é criativo!</div>`;
+      t.classList.add('mostrar');
+      setTimeout(() => t.classList.remove('mostrar'), 2200);
+    }
+  }
+}
+
+function renderHistorico() {
+  const el = document.getElementById('inv-historico-lista');
+  if (_formasOrig.length === 0) {
+    el.innerHTML = '<span class="inv-placeholder">Ainda nenhuma. Escreve uma expressão e envia!</span>';
+    return;
+  }
+  el.innerHTML = _formasOrig.map(e =>
+    `<span class="inv-item">${e.replace(/\*/g, '×').replace(/\//g, '÷')} = ${_alvo}</span>`
+  ).join('');
+}
+
+function atualizarHUD() {
+  document.getElementById('hud-count').textContent = _formas.size;
+  document.getElementById('hud-alvo').textContent = _alvo;
+  if (typeof STATE !== 'undefined') {
+    document.getElementById('hud-moedas').textContent = STATE.moedas || 0;
+  }
+}
+
+// Enter envia
+document.getElementById('inv-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') enviar();
+});
+
+// Init
+initJogos();
+escolherAlvo(5);
+atualizarHUD();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
