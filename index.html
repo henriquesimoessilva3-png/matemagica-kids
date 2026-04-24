@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MATEMÁGICA — Escolha o Ano</title>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=17">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=18">
 <style>
   h1.matemagica-titulo {
     font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
@@ -408,8 +408,8 @@
 <link rel="apple-touch-icon" href="icon-192.svg">
 
 <!-- SEO -->
-<meta name="description" content="A criança joga. A matemática fica. App BNCC do 1º ao 5º ano com jogos de matemática, história e geografia. R$17 vitalício, sem mensalidade.">
-<meta name="keywords" content="matemática infantil, jogos de matemática, app BNCC, tabuada, matemática 1 ano, matemática 2 ano, matemática 3 ano, matemática 4 ano, matemática 5 ano, história, geografia, BNCC, matemática sem trauma, matemática brincando">
+<meta name="description" content="A criança joga. A matemática fica. App gratuito BNCC do 1º ao 5º ano com jogos de matemática, história e geografia.">
+<meta name="keywords" content="matemática infantil, jogos de matemática, app BNCC, tabuada, matemática 1 ano, matemática 2 ano, matemática 3 ano, matemática 4 ano, matemática 5 ano, história, geografia, BNCC, matemática sem trauma, matemática brincando, app gratuito matemática">
 <meta name="author" content="Matemágica">
 <link rel="canonical" href="https://matemagica.app.br/">
 
@@ -417,18 +417,18 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Matemágica">
 <meta property="og:title" content="Matemágica — A criança joga. A matemática fica.">
-<meta property="og:description" content="App BNCC do 1º ao 5º ano: matemática + história + geografia em um só lugar. Pagamento único de R$17. Sem mensalidade, sem lição forçada.">
+<meta property="og:description" content="App gratuito BNCC do 1º ao 5º ano: matemática + história + geografia em um só lugar. Sem login, sem lição forçada.">
 <meta property="og:url" content="https://matemagica.app.br/">
 <meta property="og:image" content="https://matemagica.app.br/og-image.svg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Matemágica — A criança joga. A matemática fica. · R$17 vitalício">
+<meta property="og:image:alt" content="Matemágica — A criança joga. A matemática fica.">
 <meta property="og:locale" content="pt_BR">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Matemágica — A criança joga. A matemática fica.">
-<meta name="twitter:description" content="Matemática + História + Geografia BNCC. 1º ao 5º ano. R$17 vitalício.">
+<meta name="twitter:description" content="App gratuito. Matemática + História + Geografia BNCC. 1º ao 5º ano.">
 <meta name="twitter:image" content="https://matemagica.app.br/og-image.svg">
 
 <!-- JSON-LD structured data pra SEO -->
@@ -439,10 +439,10 @@
   "name": "Matemágica",
   "applicationCategory": "EducationalApplication",
   "operatingSystem": "Any",
-  "description": "App BNCC do 1º ao 5º ano com jogos de matemática, história e geografia. Pagamento único vitalício.",
+  "description": "App gratuito BNCC do 1º ao 5º ano com jogos de matemática, história e geografia.",
   "offers": {
     "@type": "Offer",
-    "price": "17.00",
+    "price": "0",
     "priceCurrency": "BRL"
   },
   "audience": {
@@ -494,7 +494,7 @@
       <div style="font-size:15px;font-weight:800;color:#8b5a2b;letter-spacing:0.3px">EXPLORA — História e Geografia</div>
       <div style="font-size:12px;color:#6b3a15;margin-top:2px">App-irmão com a mesma trupe · BNCC · 1º ao 5º ano</div>
     </div>
-    <div id="explora-badge" style="background:#c0392b;color:#fff;font-size:10px;font-weight:800;padding:4px 10px;border-radius:10px;letter-spacing:0.5px;white-space:nowrap">BÔNUS</div>
+    <div style="background:#8b5a2b;color:#fff;font-size:10px;font-weight:800;padding:4px 10px;border-radius:10px;letter-spacing:0.5px;white-space:nowrap">ABRIR →</div>
   </a>
 
   <div class="ano-grid" id="ano-grid">
@@ -545,8 +545,8 @@
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="jogos_shared.js?v=17"></script>
-<script src="mascotes.js?v=17"></script>
+<script src="jogos_shared.js?v=18"></script>
+<script src="mascotes.js?v=18"></script>
 <script>
 // ============== MASCOTE DA TELA INICIAL ==============
 let _falaIdx = 0;
@@ -639,42 +639,10 @@ if (typeof STATE !== 'undefined' && typeof STATE.load === 'function') {
   const el = document.getElementById('moedas-home');
   if (el) el.textContent = STATE.moedas;
 
-  // Banner de upgrade ou de "premium ativo"
-  const slot = document.getElementById('premium-slot');
-  if (slot) {
-    if (STATE.isPremium()) {
-      slot.innerHTML = `<div class="premium-ativo">✨ Matemágica Completo ativado · tudo liberado</div>`;
-    } else {
-      slot.innerHTML = `
-        <div class="premium-banner" onclick="abrirPaywall('Libere 2º ao 5º ano, SOS Prova, PDFs premium e temas.')">
-          <div class="pb-emoji">🔓</div>
-          <div class="pb-texto"><b>Libere tudo</b><br>2º ao 5º ano · SOS Prova · PDFs premium · Temas · Vitalício</div>
-          <div class="pb-preco">R$ 17</div>
-        </div>
-      `;
-    }
-  }
-
-  // Marca cards de ano com cadeado (não-premium) ou tag grátis
+  // App 100% liberado — nenhum banner nem cadeado.
+  // Todos os cards de ano recebem tag "GRÁTIS".
   document.querySelectorAll('.ano-card').forEach(card => {
-    const ano = parseInt(card.dataset.ano, 10);
-    const href = card.getAttribute('href') || '';
-    const premium = (typeof PAGINAS_PREMIUM !== 'undefined') && PAGINAS_PREMIUM.includes(href);
-    if (premium && !STATE.isPremium()) {
-      if (!card.querySelector('.cadeado-premium')) {
-        const tag = document.createElement('div');
-        tag.className = 'cadeado-premium';
-        tag.textContent = '🔒';
-        tag.title = 'Conteúdo premium';
-        card.appendChild(tag);
-      }
-      card.addEventListener('click', function(ev){
-        // Deixa o href abrir; o guarda da página dispara o paywall
-        // (Mantém UX de navegação previsível em vez de bloquear clique)
-      });
-    } else if (!premium) {
-      card.classList.add('premium-free-tag');
-    }
+    card.classList.add('premium-free-tag');
   });
 }
 </script>

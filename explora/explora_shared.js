@@ -17,10 +17,8 @@ const PRECO_EXPLORA = 'R$ 17';
 const PAGINAS_PREMIUM_EXPLORA = ['ano_1.html', 'ano_2.html', 'ano_3.html', 'ano_4.html', 'ano_5.html'];
 
 function ehPremiumExplora() {
-  try {
-    const l = JSON.parse(localStorage.getItem(LICENCA_STORAGE_KEY_EXPLORA) || 'null');
-    return !!(l && l.key);
-  } catch(e) { return false; }
+  // MODELO ATUAL: app 100% liberado. Retorna true pra todos.
+  return true;
 }
 
 function abrirPaywallExplora(motivo) {
@@ -98,16 +96,8 @@ function abrirReativarExplora() {
   } catch(e) {}
 })();
 
-function guardaAnoPremiumExplora() {
-  try {
-    const pathname = (location.pathname || '').split('/').pop() || '';
-    if (!PAGINAS_PREMIUM_EXPLORA.includes(pathname)) return;
-    if (ehPremiumExplora()) return;
-    const container = document.querySelector('.container');
-    if (container) container.style.filter = 'blur(4px) opacity(0.4)';
-    setTimeout(() => abrirPaywallExplora('Este ano faz parte do pacote Matemágica + EXPLORA.'), 150);
-  } catch(e) {}
-}
+// MODELO ATUAL: EXPLORA 100% liberado. Guarda desativada.
+function guardaAnoPremiumExplora() { /* no-op */ }
 
 function _readState() {
   try {

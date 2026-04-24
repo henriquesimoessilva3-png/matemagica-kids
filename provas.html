@@ -329,7 +329,7 @@
   <!-- SOS PROVA -->
   <div id="view-sos">
     <div class="sos-hero">
-      <h3>🚨 Prova é amanhã? <span id="sos-premium-tag" style="display:none;font-size:11px;background:#ffd36b;color:#5a3a00;padding:2px 8px;border-radius:10px;margin-left:6px;vertical-align:middle;font-weight:800">✨ PREMIUM</span></h3>
+      <h3>🚨 Prova é amanhã?</h3>
       <p>A gente lê onde você mais erra e monta uma prova de 10 minutos focada nos pontos fracos.<br>Sem enrolação — direto no que importa.</p>
     </div>
     <div class="sos-controles">
@@ -393,10 +393,8 @@
 // ==================== PAYWALL (standalone) ====================
 const LICENCA_STORAGE_KEY = 'matemagica_licenca_v1';
 function ehPremium() {
-  try {
-    const l = JSON.parse(localStorage.getItem(LICENCA_STORAGE_KEY) || 'null');
-    return !!(l && l.key);
-  } catch(e) { return false; }
+  // MODELO ATUAL: app 100% liberado. Retorna true pra todos.
+  return true;
 }
 function abrirPaywall(motivo) {
   let ov = document.getElementById('paywall-overlay');
@@ -1090,11 +1088,7 @@ function renderLista() {
 renderLista();
 atualizarCapitulos();
 
-// Mostra tag PREMIUM no SOS se usuário ainda não é premium
-(function(){
-  const tag = document.getElementById('sos-premium-tag');
-  if (tag && !ehPremium()) tag.style.display = 'inline-block';
-})();
+// Tag PREMIUM removida — app 100% liberado.
 
 </script>
 <script>

@@ -140,8 +140,7 @@
 <div class="container">
   <a href="../index.html" class="voltar-matemagica">← Voltar ao Matemágica</a>
   <h1 class="explora-titulo"><span class="deco">✦</span>EXPLORA<span class="deco">✦</span></h1>
-  <div class="sub-explora">História e Geografia · Bônus do Matemágica</div>
-  <div id="explora-banner-slot"></div>
+  <div class="sub-explora">História e Geografia</div>
 
   <div class="mascote-wrap">
     <div class="mascote-holder" id="mascote-holder"></div>
@@ -199,36 +198,11 @@
 </div>
 
 <script src="mascotes.js"></script>
-<script src="explora_shared.js?v=5"></script>
+<script src="explora_shared.js?v=18"></script>
 <script>
   initExplora({ storageKey: 'explora_home_v1' });
   atualizarProgressoAnos();
-  marcarPremiumNosCards();
-
-  function marcarPremiumNosCards() {
-    const premium = ehPremiumExplora();
-    const slot = document.getElementById('explora-banner-slot');
-    if (slot) {
-      if (premium) {
-        slot.innerHTML = `<div class="explora-banner"><div class="eb-emoji">✨</div><div><b>EXPLORA desbloqueado</b> — acesso vitalício via Matemágica Completo. Tudo liberado.</div></div>`;
-      } else {
-        slot.innerHTML = `<div class="explora-banner"><div class="eb-emoji">🎁</div><div><b>EXPLORA faz parte do pacote Matemágica + EXPLORA.</b> Todos os anos (1º ao 5º) liberam com a chave do Matemágica — pagamento único de R$ 17.</div></div>`;
-      }
-    }
-    document.querySelectorAll('.ano-card').forEach(card => {
-      const href = card.getAttribute('href') || '';
-      const isPremPage = ['ano_1.html','ano_2.html','ano_3.html','ano_4.html','ano_5.html'].includes(href);
-      if (isPremPage && !premium) {
-        if (!card.querySelector('.cadeado-premium')) {
-          const tag = document.createElement('div');
-          tag.className = 'cadeado-premium';
-          tag.textContent = '🔒';
-          tag.title = 'Bônus premium';
-          card.appendChild(tag);
-        }
-      }
-    });
-  }
+  // App 100% liberado — nenhum banner nem cadeado.
 
   function atualizarProgressoAnos() {
     for (let ano = 1; ano <= 5; ano++) {

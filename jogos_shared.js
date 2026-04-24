@@ -136,7 +136,8 @@ const STATE = {
   },
 
   isPremium() {
-    return !!(this.licenca && this.licenca.key);
+    // MODELO ATUAL: app 100% liberado. Retorna true pra todos.
+    return true;
   },
 
   salvarLicenca(lic) {
@@ -854,19 +855,8 @@ async function ativarLicenca(key) {
   } catch(e) {}
 })();
 
-// Bloqueia acesso à página inteira se ela é premium e o usuário não tem licença
-function guardaPaginaPremium() {
-  try {
-    const pathname = (location.pathname || '').split('/').pop() || '';
-    const ehPremium = PAGINAS_PREMIUM.includes(pathname);
-    if (!ehPremium) return;
-    if (STATE.isPremium()) return;
-    // Mostra paywall de bloqueio e esconde conteúdo
-    const container = document.querySelector('.container');
-    if (container) container.style.filter = 'blur(4px) opacity(0.4)';
-    setTimeout(() => abrirPaywall('Este ano faz parte do Matemágica Completo.'), 150);
-  } catch(e) {}
-}
+// MODELO ATUAL: app 100% liberado. Guarda desativada.
+function guardaPaginaPremium() { /* no-op — tudo liberado */ }
 
 function mostrarNovaBadge(key) {
   const b = BADGES[key]; if (!b) return;
