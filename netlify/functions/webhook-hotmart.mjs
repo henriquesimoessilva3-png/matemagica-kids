@@ -72,9 +72,77 @@ export default async (req) => {
     console.error("Erro ao enviar email:", e.message);
   }
 
+  // Dispara Conversions API pra Meta (atribuição confiável, blinda iOS/AdBlock)
+  try {
+    await disparaCAPI({
+      email,
+      nome,
+      transactionId: transaction,
+      value: parseFloat(purchase.price?.value || 17),
+      currency: purchase.price?.currency_value || "BRL",
+      ip: req.headers.get("x-forwarded-for")?.split(",")[0]?.trim(),
+      userAgent: req.headers.get("user-agent") || ""
+    });
+  } catch (e) {
+    console.error("Erro CAPI:", e.message);
+  }
+
   return new Response(JSON.stringify({ ok: true, key, emailed: email }),
     { status: 200, headers: { "Content-Type": "application/json" } });
 };
+
+// SHA-256 hex pra hash de PII (Meta exige user_data hasheado)
+async function sha256Hex(str) {
+  const buf = new TextEncoder().encode(str.toLowerCase().trim());
+  const hash = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function disparaCAPI({ email, nome, transactionId, value, currency, ip, userAgent }) {
+  const PIXEL_ID = Netlify.env.get("META_PIXEL_ID");
+  const ACCESS_TOKEN = Netlify.env.get("META_CAPI_TOKEN");
+  if (!PIXEL_ID || !ACCESS_TOKEN) {
+    console.warn("CAPI: META_PIXEL_ID ou META_CAPI_TOKEN ausente, pulando");
+    return;
+  }
+
+  const [first, ...rest] = (nome || "").trim().split(" ");
+  const last = rest.join(" ");
+  const userData = {
+    em: [await sha256Hex(email)],
+    ...(first ? { fn: [await sha256Hex(first)] } : {}),
+    ...(last ? { ln: [await sha256Hex(last)] } : {}),
+    ...(ip ? { client_ip_address: ip } : {}),
+    ...(userAgent ? { client_user_agent: userAgent } : {})
+  };
+
+  const event = {
+    event_name: "Purchase",
+    event_time: Math.floor(Date.now() / 1000),
+    action_source: "website",
+    event_source_url: "https://matemagica.app.br/obrigada.html",
+    event_id: transactionId || `tx_${Date.now()}`, // dedup com pixel client-side se houver
+    user_data: userData,
+    custom_data: {
+      currency,
+      value,
+      content_name: "Matemagica_Completo",
+      content_type: "product"
+    }
+  };
+
+  const url = `https://graph.facebook.com/v18.0/${PIXEL_ID}/events?access_token=${ACCESS_TOKEN}`;
+  const r = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data: [event] })
+  });
+  if (!r.ok) {
+    const txt = await r.text();
+    throw new Error(`CAPI ${r.status}: ${txt}`);
+  }
+}
 
 function gerarChave() {
   const bytes = new Uint8Array(16);

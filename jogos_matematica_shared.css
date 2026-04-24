@@ -961,3 +961,47 @@ svg { display: block; margin: 0 auto; }
   body { padding: 6px; }
   .container { padding: 14px 10px; }
 }
+
+/* ============================================================
+   DESKTOP COMPACTO (≥760px) — todas as páginas internas em 1 tela
+   Reduz padding global, fontes, headers e espaçamentos.
+   ============================================================ */
+@media (min-width: 760px) {
+  body { padding: 8px 12px; min-height: auto; }
+  .container { max-width: 980px; padding: 14px 22px; border-radius: 16px; }
+  h1 { font-size: 22px !important; margin: 0 0 2px !important; line-height: 1.15 !important; }
+  h2 { font-size: 17px !important; margin: 4px 0 6px !important; }
+  h3 { font-size: 15px !important; margin: 4px 0 4px !important; }
+  .sub, .sub-tabuada, .sub-prob, .sub-inv, .sub-cu, .sub-bz, .sub-fr, .sub-cz, .sub-soma, .sub-flash, .sub-imprimir, .sub-explora, .sub-texto {
+    font-size: 12px !important; margin-bottom: 8px !important;
+  }
+  /* Header player mais compacto */
+  .header-player { padding: 6px 10px !important; gap: 8px !important; }
+  .hp-avatar { width: 44px !important; height: 44px !important; }
+  .hp-cabeca { font-size: 28px !important; }
+  .hp-nivel-bolha { width: 18px !important; height: 18px !important; font-size: 10px !important; }
+  .hp-topo { font-size: 12px !important; gap: 6px !important; }
+  .hp-xp-texto { font-size: 11px !important; }
+  .hp-moedas { font-size: 12px !important; padding: 2px 8px !important; }
+  .hp-rodape { font-size: 11px !important; gap: 8px !important; margin-top: 2px !important; }
+  /* Placar dos jogos */
+  .placar-geral { padding: 8px 12px !important; }
+  .placar-grande { font-size: 22px !important; }
+  .placar-label { font-size: 10px !important; }
+  /* Botões/abas mais baixos */
+  .modo-tabs, .op-tabs, .modo-tab, .op-tab, .aba-row { margin: 8px 0 !important; }
+  .modo-tab, .op-tab, .aba { padding: 5px 14px !important; font-size: 12px !important; }
+  /* Grids de jogos: cards menores */
+  .jogo-grid { gap: 8px !important; }
+  .jogo-card { padding: 10px 8px !important; }
+  /* Voltar / nav-voltar */
+  .voltar, .voltar-topo, .voltar-matemagica, .nav-voltar { padding: 5px 10px !important; font-size: 11px !important; margin-bottom: 6px !important; }
+  /* Mascote coach desktop: menor */
+  .mascote-coach { width: 70px !important; }
+  /* Listas e parágrafos default */
+  .container > p, .container > div > p { font-size: 13px !important; line-height: 1.4 !important; }
+  /* Modal maior cabe melhor */
+  .modal { max-width: 460px !important; padding: 18px !important; }
+  .emoji-grande { font-size: 32px !important; }
+}
+

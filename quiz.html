@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="Descubra em 1 minuto onde seu filho está travando em matemática e o plano personalizado pra resolver antes do 6º ano.">
+<title>Matemágica — Diagnóstico Personalizado</title>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'SEU_PIXEL_ID_AQUI');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/></noscript>
+
+<style>
+  *,*::before,*::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f7f5ff 0%, #fff5e8 100%);
+    min-height: 100vh;
+    color: #2a2245;
+    overflow-x: hidden;
+  }
+
+  .shell {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 20px 18px 60px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .logo h1 {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    background: linear-gradient(135deg, #6b54d3 0%, #b968e8 50%, #ffd36b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin: 0;
+  }
+  .logo .estrela { -webkit-text-fill-color: #ffd36b; color: #ffd36b; }
+
+  .progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+  .progress .step {
+    flex: 1;
+    height: 5px;
+    background: #e8e2ff;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress .step.done {
+    background: linear-gradient(90deg, #6b54d3, #b968e8);
+  }
+  .progress .step.active {
+    background: linear-gradient(90deg, #6b54d3, #b968e8 50%, #e8e2ff 50%);
+  }
+
+  .screen { display: none; animation: fadeIn 0.35s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin: 0 0 12px;
+    color: #2a2245;
+  }
+  .subtitle {
+    font-size: 15px;
+    color: #6a5f88;
+    line-height: 1.5;
+    margin: 0 0 24px;
+  }
+
+  /* Hero (tela inicial) */
+  .hero h2 { font-size: 28px; }
+  .hero .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0 22px;
+  }
+  .hero .badge {
+    background: rgba(107, 84, 211, 0.08);
+    color: #6b54d3;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 20px;
+  }
+
+  /* Botões de resposta */
+  .answers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .answer-btn {
+    background: #fff;
+    border: 2px solid #e8e2ff;
+    border-radius: 14px;
+    padding: 16px 18px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #2a2245;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.18s ease;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.35;
+  }
+  .answer-btn:hover { border-color: #b968e8; transform: translateY(-1px); }
+  .answer-btn:active { transform: translateY(0); background: #faf6ff; }
+  .answer-btn .emoji { font-size: 22px; flex-shrink: 0; }
+
+  /* CTA principal */
+  .cta {
+    background: linear-gradient(135deg, #2ebd7c, #4ab3a5);
+    color: #fff;
+    border: none;
+    padding: 18px 28px;
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 6px 18px rgba(46, 189, 124, 0.35);
+    transition: transform 0.15s ease;
+    font-family: inherit;
+  }
+  .cta:hover { transform: translateY(-1px); }
+  .cta:active { transform: translateY(0); }
+
+  .cta-purple {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    box-shadow: 0 6px 18px rgba(107, 84, 211, 0.35);
+  }
+
+  /* Loading */
+  .loading {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .loading .spinner {
+    width: 56px;
+    height: 56px;
+    border: 4px solid #e8e2ff;
+    border-top-color: #6b54d3;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-msgs {
+    font-size: 14px;
+    color: #6a5f88;
+    line-height: 1.8;
+  }
+  .loading-msg { opacity: 0; transition: opacity 0.4s; }
+  .loading-msg.visible { opacity: 1; }
+  .loading-msg.done::before { content: '✅ '; color: #2ebd7c; }
+
+  /* Diagnóstico */
+  .diagnosis {
+    background: #fff;
+    border-radius: 18px;
+    padding: 22px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 18px rgba(107, 84, 211, 0.1);
+  }
+  .diagnosis .diag-tag {
+    background: #fff5e8;
+    color: #c98a00;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  .diagnosis h3 {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 8px;
+    color: #2a2245;
+  }
+  .diagnosis p {
+    font-size: 14px;
+    color: #4a3b8a;
+    line-height: 1.55;
+    margin: 0 0 12px;
+  }
+  .diagnosis p:last-child { margin-bottom: 0; }
+
+  .video-wrap {
+    background: #2a2245;
+    border-radius: 16px;
+    aspect-ratio: 9 / 16;
+    max-height: 540px;
+    margin: 0 auto 20px;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    padding: 24px;
+    background-image: linear-gradient(135deg, #2a2245 0%, #6b54d3 100%);
+  }
+  .video-wrap.with-iframe { padding: 0; }
+  .video-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 16px;
+  }
+  .video-placeholder {
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: 0.85;
+  }
+  .video-placeholder .play-icon {
+    font-size: 56px;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .price-box {
+    background: linear-gradient(135deg, #fff5e8 0%, #faf6ff 100%);
+    border: 2px dashed #ffd36b;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    margin: 14px 0;
+  }
+  .price-box .strike {
+    font-size: 13px;
+    color: #888;
+    text-decoration: line-through;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .price-box .now {
+    font-size: 28px;
+    font-weight: 900;
+    color: #2ebd7c;
+    margin: 0;
+  }
+  .price-box .now-detail {
+    font-size: 12px;
+    color: #6a5f88;
+    margin-top: 2px;
+  }
+
+  .guarantee {
+    text-align: center;
+    font-size: 12px;
+    color: #6a5f88;
+    margin: 14px 0 0;
+    line-height: 1.6;
+  }
+  .guarantee strong { color: #2a2245; }
+
+  .quiz-loading-screen { text-align: center; padding-top: 60px; }
+
+  /* Email opcional */
+  .email-row {
+    display: flex;
+    gap: 8px;
+    margin: 14px 0 8px;
+  }
+  .email-row input {
+    flex: 1;
+    padding: 14px 16px;
+    border: 2px solid #e8e2ff;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #fff;
+    color: #2a2245;
+  }
+  .email-row input:focus { outline: none; border-color: #b968e8; }
+  .email-skip {
+    text-align: center;
+    font-size: 12px;
+    color: #b0a3c8;
+    margin-top: 8px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  @media (min-width: 600px) {
+    .shell { padding: 30px 24px 80px; }
+    h2 { font-size: 26px; }
+    .hero h2 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="logo">
+    <h1>MATE<span class="estrela">✨</span>MÁGICA</h1>
+  </div>
+
+  <div class="progress" id="progress" style="display:none">
+    <div class="step" data-step="1"></div>
+    <div class="step" data-step="2"></div>
+    <div class="step" data-step="3"></div>
+    <div class="step" data-step="4"></div>
+    <div class="step" data-step="5"></div>
+  </div>
+
+  <!-- TELA 0: HERO -->
+  <div class="screen hero active" id="screen-hero">
+    <h2>Descubra em 1 minuto onde seu filho está travando em matemática</h2>
+    <p class="subtitle">E receba o plano personalizado pra resolver antes do 6º ano — quando a matéria fica realmente difícil.</p>
+    <div class="badge-row">
+      <span class="badge">⏱ 1 min</span>
+      <span class="badge">🇧🇷 100% BNCC</span>
+      <span class="badge">📱 Sem cadastro</span>
+    </div>
+    <button class="cta cta-purple" onclick="startQuiz()">Começar agora →</button>
+  </div>
+
+  <!-- TELA 1: SITUAÇÃO -->
+  <div class="screen" id="screen-1">
+    <h2>Em que ano escolar seu filho está?</h2>
+    <p class="subtitle">Isso ajuda a montar o plano certo pra idade dele.</p>
+    <div class="answers">
+      <button class="answer-btn" onclick="answer('ano','1')"><span class="emoji">1️⃣</span>1º ano</button>
+      <button class="answer-btn" onclick="answer('ano','2')"><span class="emoji">2️⃣</span>2º ano</button>
+      <button class="answer-btn" onclick="answer('ano','3')"><span class="emoji">3️⃣</span>3º ano</button>
+      <button class="answer-btn" onclick="answer('ano','4')"><span class="emoji">4️⃣</span>4º ano</button>
+      <button class="answer-btn" onclick="answer('ano','5')"><span class="emoji">5️⃣</span>5º ano</button>
+      <button class="answer-btn" onclick="answer('ano','outro')"><span class="emoji">📚</span>Outro ano (vou aproveitar pros 5 anos)</button>
+    </div>
+  </div>
+
+  <!-- TELA 2: PROBLEMA -->
+  <div class="screen" id="screen-2">
+    <h2>Onde ele mais trava em matemática?</h2>
+    <p class="subtitle">Pode escolher o que mais incomoda hoje.</p>
+    <div class="answers">
+      <button class="answer-btn" onclick="answer('trava','soma')"><span class="emoji">➕</span>Somar e subtrair</button>
+      <button class="answer-btn" onclick="answer('trava','multi')"><span class="emoji">✖️</span>Multiplicação</button>
+      <button class="answer-btn" onclick="answer('trava','tabuada')"><span class="emoji">📋</span>Tabuada (não decora)</button>
+      <button class="answer-btn" onclick="answer('trava','divisao')"><span class="emoji">➗</span>Divisão</button>
+      <button class="answer-btn" onclick="answer('trava','fracoes')"><span class="emoji">🧩</span>Frações</button>
+      <button class="answer-btn" onclick="answer('trava','problemas')"><span class="emoji">🧠</span>Problemas (interpretação)</button>
+    </div>
+  </div>
+
+  <!-- TELA 3: IMPLICAÇÃO (a dor) -->
+  <div class="screen" id="screen-3">
+    <h2>Como ele costuma reagir na hora da matemática?</h2>
+    <p class="subtitle">Honestamente — você não tá sozinha nisso.</p>
+    <div class="answers">
+      <button class="answer-btn" onclick="answer('reacao','chora')"><span class="emoji">😢</span>Chora ou faz birra</button>
+      <button class="answer-btn" onclick="answer('reacao','finge')"><span class="emoji">😶</span>Finge que entendeu</button>
+      <button class="answer-btn" onclick="answer('reacao','foge')"><span class="emoji">🏃</span>Fecha o caderno e sai</button>
+      <button class="answer-btn" onclick="answer('reacao','briga')"><span class="emoji">😤</span>A gente acaba brigando</button>
+      <button class="answer-btn" onclick="answer('reacao','trava')"><span class="emoji">😐</span>Tenta mas trava</button>
+      <button class="answer-btn" onclick="answer('reacao','gosta')"><span class="emoji">😊</span>Ele gosta, só quero reforçar</button>
+    </div>
+  </div>
+
+  <!-- TELA 4: TEMPO DE TELA -->
+  <div class="screen" id="screen-4">
+    <h2>Quanto tempo ele passa no celular ou tablet por dia?</h2>
+    <p class="subtitle">Sem julgamento. Quase toda criança hoje passa mais do que a gente queria.</p>
+    <div class="answers">
+      <button class="answer-btn" onclick="answer('tela','baixo')"><span class="emoji">⏱</span>Até 1h por dia</button>
+      <button class="answer-btn" onclick="answer('tela','medio')"><span class="emoji">📱</span>Entre 1 e 2h</button>
+      <button class="answer-btn" onclick="answer('tela','alto')"><span class="emoji">📲</span>Entre 2 e 4h</button>
+      <button class="answer-btn" onclick="answer('tela','muito')"><span class="emoji">😬</span>Mais de 4h</button>
+      <button class="answer-btn" onclick="answer('tela','nada')"><span class="emoji">🚫</span>Não tem celular ainda</button>
+    </div>
+  </div>
+
+  <!-- TELA 5: NECESSIDADE -->
+  <div class="screen" id="screen-5">
+    <h2>Se ele pudesse aprender matemática brincando, sem você precisar ensinar — isso ajudaria?</h2>
+    <p class="subtitle">Pense no que mudaria na sua rotina.</p>
+    <div class="answers">
+      <button class="answer-btn" onclick="answer('ajudaria','muito')"><span class="emoji">🚀</span>Mudaria minha vida</button>
+      <button class="answer-btn" onclick="answer('ajudaria','sim')"><span class="emoji">✨</span>Ajudaria muito</button>
+      <button class="answer-btn" onclick="answer('ajudaria','tentar')"><span class="emoji">👀</span>Vale a pena tentar</button>
+    </div>
+  </div>
+
+  <!-- TELA 6: LOADING FALSO -->
+  <div class="screen quiz-loading-screen" id="screen-loading">
+    <div class="loading">
+      <div class="spinner"></div>
+      <div class="loading-msgs">
+        <div class="loading-msg" id="lm1">Cruzando suas respostas com a base BNCC…</div>
+        <div class="loading-msg" id="lm2">Identificando o ponto exato onde ele trava…</div>
+        <div class="loading-msg" id="lm3">Selecionando o plano personalizado pro <span id="lm3-ano">ano</span> ano…</div>
+        <div class="loading-msg" id="lm4">Preparando seu vídeo de orientação…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA 7: DIAGNÓSTICO + VSL + OFERTA -->
+  <div class="screen" id="screen-result">
+    <div class="diagnosis">
+      <div class="diag-tag">DIAGNÓSTICO PERSONALIZADO</div>
+      <h3 id="diag-title">Seu filho mostra sinais clássicos de bloqueio matemático antes do 6º ano</h3>
+      <p id="diag-body">Pelas respostas, identificamos o padrão exato. Veja o vídeo abaixo (4 minutos) — eu explico o que está acontecendo e o que fazer pra resolver agora.</p>
+    </div>
+
+    <div class="video-wrap" id="video-wrap">
+      <div class="video-placeholder" id="video-placeholder">
+        <span class="play-icon">▶</span>
+        <strong>Seu vídeo de orientação está pronto</strong><br>
+        <span style="font-size:11px;opacity:0.7">[Substituir este placeholder pelo embed real do mini VSL — Vturb / YouTube unlisted]</span>
+      </div>
+    </div>
+
+    <div class="price-box">
+      <span class="strike">De R$ 197,00 (preço de consultoria)</span>
+      <p class="now">R$ 17,00</p>
+      <p class="now-detail">Pagamento único · acesso vitalício · sem mensalidade</p>
+    </div>
+
+    <button class="cta" onclick="goCheckout()">Quero o Matemágica agora →</button>
+
+    <div class="email-row" id="email-row" style="display:none">
+      <input type="email" id="email-input" placeholder="Seu melhor email (opcional)">
+      <button class="cta cta-purple" style="width:auto;padding:14px 16px;font-size:14px" onclick="saveEmail()">OK</button>
+    </div>
+    <div class="email-skip" id="email-skip" onclick="hideEmailRow()">Pular</div>
+
+    <p class="guarantee">
+      🛡 <strong>Garantia de 7 dias</strong> — se seu filho não abrir o app sozinho pelo menos 3 vezes na 1ª semana, devolvo seu dinheiro 100%.
+    </p>
+  </div>
+
+</div>
+
+<script>
+  const HOTMART_CHECKOUT = 'https://pay.hotmart.com/A105538417J';
+
+  const state = {
+    answers: {},
+    currentStep: 0
+  };
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress(step) {
+    const wrap = document.getElementById('progress');
+    if (step >= 1 && step <= 5) {
+      wrap.style.display = 'flex';
+      wrap.querySelectorAll('.step').forEach(el => {
+        const s = parseInt(el.dataset.step);
+        el.classList.toggle('done', s < step);
+        el.classList.toggle('active', s === step);
+      });
+    } else {
+      wrap.style.display = 'none';
+    }
+  }
+
+  function startQuiz() {
+    state.currentStep = 1;
+    updateProgress(1);
+    showScreen('screen-1');
+    if (typeof fbq === 'function') fbq('trackCustom', 'QuizStart');
+  }
+
+  function answer(key, value) {
+    state.answers[key] = value;
+    state.currentStep++;
+    if (state.currentStep <= 5) {
+      updateProgress(state.currentStep);
+      showScreen('screen-' + state.currentStep);
+    } else {
+      finishQuiz();
+    }
+  }
+
+  function finishQuiz() {
+    updateProgress(0);
+    showScreen('screen-loading');
+    if (typeof fbq === 'function') fbq('track', 'Lead');
+
+    // Atualiza texto do loading com o ano
+    const ano = state.answers.ano;
+    const anoTxt = (ano === 'outro') ? 'do' : (ano + 'º');
+    document.getElementById('lm3-ano').textContent = anoTxt;
+
+    // Anima as 4 mensagens em sequência (~3.6s total)
+    const msgs = ['lm1','lm2','lm3','lm4'];
+    msgs.forEach((id, i) => {
+      setTimeout(() => {
+        document.getElementById(id).classList.add('visible');
+      }, i * 700);
+      setTimeout(() => {
+        document.getElementById(id).classList.add('done');
+      }, i * 700 + 600);
+    });
+
+    setTimeout(() => {
+      mostrarResultado();
+    }, 3600);
+  }
+
+  function mostrarResultado() {
+    // Personaliza diagnóstico baseado em respostas
+    const ano = state.answers.ano;
+    const reacao = state.answers.reacao;
+    const trava = state.answers.trava;
+
+    const titulos = {
+      'chora': 'Seu filho está criando bloqueio emocional com matemática',
+      'finge': 'Seu filho está mascarando dificuldades reais',
+      'foge': 'Seu filho já desenvolveu aversão à matemática',
+      'briga': 'O ciclo de briga está reforçando o trauma — e isso piora rápido',
+      'trava': 'Seu filho tem o conteúdo, falta método pra destravar',
+      'gosta': 'Seu filho gosta — agora é hora de aprofundar antes do 6º ano'
+    };
+
+    const corpos = {
+      'chora': 'Choro indica ansiedade matemática — fenômeno documentado por Stanford. A boa notícia: do 1º ao 5º ano dá pra reverter. Veja o vídeo.',
+      'finge': 'Fingir é o sinal mais perigoso — a defasagem cresce escondida. Veja o vídeo abaixo, eu mostro como recuperar sem que ele perceba que tá estudando.',
+      'foge': 'Fuga é trauma já formado. Mas até o 5º ano dá pra reverter — depois disso vira identidade ("não sou bom de matemática"). Veja o vídeo.',
+      'briga': 'Briga = você ensinando vira punição na cabeça dele. O método precisa mudar AGORA. Veja o vídeo, eu te mostro como.',
+      'trava': 'Travar é falta de método visual e progressivo. Sua escola provavelmente pulou direto pra abstração. Veja o vídeo abaixo.',
+      'gosta': 'Aproveite a janela. Crianças que amam matemática até o 5º carregam isso pro resto da vida. Veja o vídeo.'
+    };
+
+    document.getElementById('diag-title').textContent = titulos[reacao] || titulos['trava'];
+    document.getElementById('diag-body').textContent = corpos[reacao] || corpos['trava'];
+
+    showScreen('screen-result');
+
+    // Mostra captura de email após 2s
+    setTimeout(() => {
+      document.getElementById('email-row').style.display = 'flex';
+    }, 2000);
+  }
+
+  function goCheckout() {
+    if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { value: 17.00, currency: 'BRL' });
+    // Anexa respostas como query string pro Hotmart (Hotmart aceita parâmetros customizados)
+    const params = new URLSearchParams({
+      sck: 'quiz',
+      utm_source: 'quiz',
+      utm_medium: 'organic',
+      ano: state.answers.ano || '',
+      trava: state.answers.trava || '',
+      reacao: state.answers.reacao || ''
+    });
+    window.location.href = HOTMART_CHECKOUT + '?' + params.toString();
+  }
+
+  function saveEmail() {
+    const email = document.getElementById('email-input').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('email-input').focus();
+      return;
+    }
+    // Salva localmente — função Netlify futura pode pegar e enviar pro Resend
+    try {
+      localStorage.setItem('matemagica_quiz_lead', JSON.stringify({
+        email,
+        answers: state.answers,
+        ts: new Date().toISOString()
+      }));
+    } catch(e) {}
+    if (typeof fbq === 'function') fbq('track', 'Lead', { content_name: 'email_capture' });
+    document.getElementById('email-row').style.display = 'none';
+    document.getElementById('email-skip').textContent = '✅ Email salvo — boa sorte!';
+    document.getElementById('email-skip').style.cursor = 'default';
+    document.getElementById('email-skip').onclick = null;
+  }
+
+  function hideEmailRow() {
+    document.getElementById('email-row').style.display = 'none';
+    document.getElementById('email-skip').style.display = 'none';
+  }
+</script>
+</body>
+</html>
