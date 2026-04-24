@@ -216,12 +216,33 @@ h1 { color: #4a3b8a; margin-bottom: 4px; font-size: 26px; text-align: center; }
 .cap5 .num { background: #b968e8; }
 .cap6 .num { background: #6b54d3; }
 
-.voltar {
-  background: #e0dbf5; color: #4a3b8a; border: none;
-  padding: 8px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
-  cursor: pointer; margin-bottom: 20px;
+/* Botão Voltar — preto, fixo no canto superior esquerdo, sempre visível */
+.voltar, .voltar-topo, .voltar-matemagica, .nav-voltar, .btn-voltar {
+  position: fixed !important;
+  top: 12px !important;
+  left: 12px !important;
+  z-index: 9999 !important;
+  background: #1a1a1a !important;
+  color: #fff !important;
+  border: 2px solid #1a1a1a !important;
+  padding: 8px 14px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.3px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transition: transform 0.15s, background 0.15s !important;
+  margin: 0 !important;
 }
-.voltar:hover { background: #d0c9ed; }
+.voltar:hover, .voltar-topo:hover, .voltar-matemagica:hover, .nav-voltar:hover, .btn-voltar:hover {
+  background: #000 !important;
+  transform: translateY(-1px) !important;
+}
 
 .jogos-lista { display: grid; grid-template-columns: 1fr; gap: 12px; }
 .jogo-card {
@@ -963,45 +984,326 @@ svg { display: block; margin: 0 auto; }
 }
 
 /* ============================================================
-   DESKTOP COMPACTO (≥760px) — todas as páginas internas em 1 tela
-   Reduz padding global, fontes, headers e espaçamentos.
+   DESKTOP COMPACTO (≥760px) — todas as telas internas em 1 viewport
+   Sem scroll. Sobrescreve <style> inline de cada página com !important.
    ============================================================ */
 @media (min-width: 760px) {
-  body { padding: 8px 12px; min-height: auto; }
-  .container { max-width: 980px; padding: 14px 22px; border-radius: 16px; }
-  h1 { font-size: 22px !important; margin: 0 0 2px !important; line-height: 1.15 !important; }
-  h2 { font-size: 17px !important; margin: 4px 0 6px !important; }
-  h3 { font-size: 15px !important; margin: 4px 0 4px !important; }
-  .sub, .sub-tabuada, .sub-prob, .sub-inv, .sub-cu, .sub-bz, .sub-fr, .sub-cz, .sub-soma, .sub-flash, .sub-imprimir, .sub-explora, .sub-texto {
-    font-size: 12px !important; margin-bottom: 8px !important;
+  body { padding: 4px 10px !important; min-height: auto !important; }
+  .container {
+    max-width: 920px !important;
+    padding: 8px 18px 8px !important;
+    border-radius: 14px !important;
   }
-  /* Header player mais compacto */
-  .header-player { padding: 6px 10px !important; gap: 8px !important; }
-  .hp-avatar { width: 44px !important; height: 44px !important; }
-  .hp-cabeca { font-size: 28px !important; }
-  .hp-nivel-bolha { width: 18px !important; height: 18px !important; font-size: 10px !important; }
-  .hp-topo { font-size: 12px !important; gap: 6px !important; }
+
+  /* Títulos */
+  h1, h1.titulo-tabuada, h1.titulo-prob, h1.titulo-inv, h1.titulo-cu,
+  h1.titulo-bz, h1.titulo-fr, h1.titulo-cz, h1.titulo-sn, h1.titulo-flash,
+  h1.titulo-soma, h1.titulo-imprimir {
+    font-size: 22px !important; margin: 2px 0 2px !important;
+    line-height: 1.1 !important;
+  }
+  h2 { font-size: 16px !important; margin: 4px 0 6px !important; }
+  h3 { font-size: 14px !important; margin: 4px 0 4px !important; }
+
+  /* Subtítulos */
+  .sub, [class^="sub-"], [class*=" sub-"] {
+    font-size: 12px !important; margin-bottom: 6px !important;
+  }
+
+  /* Botão voltar mantém estilo global (preto, fixed top-left) */
+
+  /* Header player (avatar + xp + moedas) */
+  .header-player { padding: 5px 10px !important; gap: 8px !important; margin-bottom: 8px !important; }
+  .hp-avatar { width: 40px !important; height: 40px !important; }
+  .hp-cabeca { font-size: 24px !important; }
+  .hp-chapeu { font-size: 18px !important; top: -4px !important; }
+  .hp-nivel-bolha { width: 16px !important; height: 16px !important; font-size: 9px !important; }
+  .hp-bichinho { width: 20px !important; height: 20px !important; font-size: 14px !important; }
+  .hp-topo { font-size: 12px !important; gap: 6px !important; margin-bottom: 2px !important; }
   .hp-xp-texto { font-size: 11px !important; }
-  .hp-moedas { font-size: 12px !important; padding: 2px 8px !important; }
-  .hp-rodape { font-size: 11px !important; gap: 8px !important; margin-top: 2px !important; }
-  /* Placar dos jogos */
-  .placar-geral { padding: 8px 12px !important; }
-  .placar-grande { font-size: 22px !important; }
+  .hp-moedas { font-size: 11px !important; padding: 2px 8px !important; }
+  .hp-rodape { font-size: 10px !important; gap: 8px !important; margin-top: 2px !important; }
+  .hp-xp-bar { height: 10px !important; }
+
+  /* Placar genérico */
+  .placar-geral { padding: 6px 12px !important; }
+  .placar-grande { font-size: 20px !important; }
   .placar-label { font-size: 10px !important; }
-  /* Botões/abas mais baixos */
-  .modo-tabs, .op-tabs, .modo-tab, .op-tab, .aba-row { margin: 8px 0 !important; }
-  .modo-tab, .op-tab, .aba { padding: 5px 14px !important; font-size: 12px !important; }
-  /* Grids de jogos: cards menores */
+
+  /* Tabs (modo / operação / nível / ano / aba) */
+  .modo-tabs, .op-tabs, .nivel-tabs, .ano-tabs, .aba-row {
+    gap: 6px !important; margin: 6px 0 8px !important;
+  }
+  .modo-tab, .op-tab, .nivel-tab, .ano-tab, .aba {
+    padding: 5px 12px !important; font-size: 12px !important;
+  }
+
+  /* Grids genéricas de jogos */
   .jogo-grid { gap: 8px !important; }
   .jogo-card { padding: 10px 8px !important; }
-  /* Voltar / nav-voltar */
-  .voltar, .voltar-topo, .voltar-matemagica, .nav-voltar { padding: 5px 10px !important; font-size: 11px !important; margin-bottom: 6px !important; }
-  /* Mascote coach desktop: menor */
-  .mascote-coach { width: 70px !important; }
-  /* Listas e parágrafos default */
-  .container > p, .container > div > p { font-size: 13px !important; line-height: 1.4 !important; }
-  /* Modal maior cabe melhor */
+
+  /* ============== TABUADA ============== */
+  .pokedex-titulo { font-size: 11px !important; margin: 6px 0 4px !important; }
+  .pokedex-grid { grid-template-columns: repeat(10, 1fr) !important; gap: 4px !important; margin-bottom: 8px !important; }
+  .poke-card { padding: 4px !important; }
+  .poke-num { font-size: 18px !important; margin-top: 2px !important; }
+  .poke-label { font-size: 7px !important; }
+  .poke-estrelas { font-size: 9px !important; min-height: 11px !important; }
+  .poke-card.bloq .poke-num::before { font-size: 28px !important; top: 8px !important; }
+  .estudo-area { padding: 10px 12px !important; margin-bottom: 8px !important; }
+  .estudo-titulo { font-size: 13px !important; margin-bottom: 6px !important; }
+  .comutativa-par { gap: 10px !important; }
+  .comut-box { padding: 8px !important; }
+  .comut-expr { font-size: 16px !important; margin-bottom: 4px !important; }
+  .comut-result { font-size: 16px !important; margin-top: 4px !important; }
+  .comut-viz { gap: 2px !important; margin: 4px auto !important; }
+  .comut-viz .dot { width: 9px !important; height: 9px !important; }
+  .comut-insight { padding: 6px 10px !important; font-size: 11px !important; margin-top: 6px !important; }
+  .macete-card { padding: 6px 10px !important; font-size: 11px !important; margin-top: 6px !important; }
+  .estudo-controles { gap: 6px !important; margin-top: 6px !important; }
+  .estudo-btn { padding: 5px 10px !important; font-size: 11px !important; }
+  .treino-header { padding: 8px 12px !important; margin-bottom: 8px !important; }
+  .treino-placar { font-size: 18px !important; }
+  .treino-label { font-size: 10px !important; }
+  .treino-pergunta { padding: 12px 14px !important; margin-bottom: 8px !important; }
+  .treino-expr { font-size: 30px !important; margin-bottom: 4px !important; }
+  .treino-hint { font-size: 11px !important; }
+  .treino-opcoes { gap: 8px !important; }
+  .treino-opcoes button { padding: 10px !important; font-size: 18px !important; }
+  .resultado-treino { padding: 12px !important; margin: 8px 0 !important; }
+  .resultado-emoji { font-size: 40px !important; margin-bottom: 4px !important; }
+  .resultado-texto { font-size: 18px !important; margin-bottom: 2px !important; }
+  .resultado-sub { font-size: 12px !important; margin-bottom: 6px !important; }
+  .resumo-txt { font-size: 11px !important; }
+
+  /* ============== SOMA ============== */
+  .soma-visual { padding: 10px !important; margin-bottom: 8px !important; }
+  .soma-expr, .soma-resultado { font-size: 22px !important; }
+  .grupo-bolinhas { gap: 3px !important; }
+  .bolinha { width: 14px !important; height: 14px !important; }
+  .macete-soma { padding: 6px 10px !important; font-size: 11px !important; }
+
+  /* ============== FRAÇÕES ============== */
+  .fr-card { padding: 10px !important; margin-bottom: 8px !important; }
+  .fr-controles { gap: 6px !important; margin-top: 6px !important; }
+  .fr-btn { padding: 5px 10px !important; font-size: 12px !important; }
+  .fracao-texto { font-size: 16px !important; }
+  .fracao-label { font-size: 11px !important; }
+  .fr-insight { padding: 6px 10px !important; font-size: 11px !important; }
+  .pizza-svg { max-height: 200px !important; }
+
+  /* ============== CUISENAIRE ============== */
+  .cu-intro { font-size: 12px !important; padding: 6px 10px !important; margin-bottom: 8px !important; }
+  .cu-controles { gap: 6px !important; margin: 6px 0 !important; }
+  .cu-btn, .cu-modo-tab { padding: 5px 10px !important; font-size: 12px !important; }
+  .cu-desafio { padding: 10px !important; margin-bottom: 8px !important; }
+  .cu-desafio-prompt { font-size: 13px !important; }
+  .cu-desafio-expr { font-size: 22px !important; }
+  .cu-palco { padding: 8px !important; min-height: 60px !important; }
+  .cu-palco-label { font-size: 11px !important; }
+  .cu-seletor-titulo { font-size: 12px !important; margin: 6px 0 4px !important; }
+  .cu-seletor { gap: 4px !important; }
+  .cu-barras-grid { gap: 4px !important; }
+  .cu-feedback { padding: 6px 10px !important; font-size: 12px !important; }
+
+  /* ============== BELEZA ============== */
+  .bz-intro { font-size: 12px !important; padding: 6px 10px !important; margin-bottom: 8px !important; }
+  .bz-cards { gap: 8px !important; }
+  .bz-card { padding: 10px !important; }
+  .bz-nome { font-size: 13px !important; }
+  .bz-nome-sub { font-size: 11px !important; }
+  .bz-viz { max-height: 90px !important; }
+
+  /* ============== COZINHA ============== */
+  .receitas-grid { gap: 8px !important; }
+  .receita-card { padding: 8px !important; }
+  .receita-emoji { font-size: 26px !important; }
+  .receita-nome { font-size: 13px !important; }
+  .receita-meta { font-size: 10px !important; }
+  .cz-desafio { padding: 10px 12px !important; margin-bottom: 8px !important; }
+  .cz-desafio-titulo { font-size: 13px !important; }
+  .cz-desafio-pergunta { font-size: 18px !important; }
+  .cz-pessoas-controle { gap: 6px !important; padding: 6px 10px !important; }
+  .cz-pessoas-btn { width: 28px !important; height: 28px !important; font-size: 16px !important; }
+  .cz-pessoas-num { font-size: 16px !important; }
+  .cz-pessoas-label { font-size: 11px !important; }
+  .cz-ingredientes { padding: 8px 10px !important; margin-bottom: 8px !important; }
+  .cz-titulo-ing { font-size: 12px !important; }
+  .cz-ing-item { font-size: 12px !important; padding: 3px 0 !important; }
+  .cz-opcoes { gap: 8px !important; }
+  .cz-opcoes button { padding: 10px !important; font-size: 16px !important; }
+  .cz-feedback, .cz-explicacao { padding: 6px 10px !important; font-size: 12px !important; }
+  .cz-controles { gap: 6px !important; margin-top: 6px !important; }
+
+  /* ============== SENSO NUMÉRICO ============== */
+  .sn-intro { font-size: 12px !important; padding: 6px 10px !important; margin-bottom: 8px !important; }
+  .sn-conta { padding: 12px !important; margin-bottom: 8px !important; }
+  .sn-conta-prompt { font-size: 13px !important; }
+  .sn-conta-expr { font-size: 24px !important; }
+  .sn-jeitos { gap: 6px !important; }
+  .sn-jeito { padding: 8px 10px !important; }
+  .sn-jeito-titulo { font-size: 12px !important; }
+  .sn-jeito-sub { font-size: 11px !important; }
+  .sn-jeito-passos { font-size: 12px !important; }
+  .sn-controles-conta { gap: 6px !important; margin-top: 6px !important; }
+  .sn-btn { padding: 5px 10px !important; font-size: 12px !important; }
+  .sn-feedback { padding: 6px 10px !important; font-size: 12px !important; }
+  .sub-sn { font-size: 12px !important; }
+
+  /* ============== FLASH ============== */
+  .flash-hud { padding: 6px 10px !important; margin-bottom: 8px !important; }
+  .flash-area, .flash-palco { padding: 12px !important; min-height: 100px !important; margin-bottom: 8px !important; }
+  .flash-controles { gap: 6px !important; }
+  .flash-btn { padding: 6px 12px !important; font-size: 12px !important; }
+  .flash-opcoes { gap: 8px !important; }
+  .flash-opcoes button { padding: 10px !important; font-size: 18px !important; }
+  .flash-resultado { padding: 8px !important; font-size: 12px !important; }
+  .pontos-grid { gap: 4px !important; }
+  .ponto { width: 16px !important; height: 16px !important; }
+  .big-emoji { font-size: 30px !important; }
+  .legend { font-size: 11px !important; }
+
+  /* ============== PROBLEMAS ============== */
+  .prob-hud { padding: 6px 10px !important; margin-bottom: 8px !important; }
+  .historia-card { padding: 12px 14px !important; margin-bottom: 8px !important; }
+  .historia-texto { font-size: 14px !important; line-height: 1.4 !important; margin-bottom: 6px !important; }
+  .historia-pergunta { font-size: 16px !important; }
+  .prob-opcoes { gap: 8px !important; }
+  .prob-btn { padding: 10px !important; font-size: 16px !important; }
+  .prob-feedback { padding: 6px 10px !important; font-size: 12px !important; }
+  .btn-me-explica-inline { padding: 4px 10px !important; font-size: 11px !important; }
+
+  /* ============== INVENTA ============== */
+  .inv-hud { padding: 6px 10px !important; margin-bottom: 8px !important; }
+  .inv-card { padding: 10px 12px !important; margin-bottom: 8px !important; }
+  .inv-alvo { font-size: 18px !important; }
+  .inv-label { font-size: 11px !important; }
+  .inv-input-area { gap: 6px !important; margin: 6px 0 !important; }
+  .inv-input { font-size: 16px !important; padding: 6px 10px !important; }
+  .inv-input-label { font-size: 11px !important; }
+  .inv-placeholder { font-size: 12px !important; }
+  .inv-btn { padding: 6px 12px !important; font-size: 12px !important; }
+  .inv-feedback { padding: 6px 10px !important; font-size: 12px !important; }
+  .inv-historico { padding: 6px 10px !important; max-height: 100px !important; }
+  .inv-historico-titulo { font-size: 11px !important; }
+  .inv-item { font-size: 12px !important; padding: 2px 0 !important; }
+  .seletor-alvo { gap: 4px !important; margin-top: 6px !important; }
+  .chip-alvo { padding: 3px 8px !important; font-size: 11px !important; }
+  .teclado { gap: 4px !important; margin: 4px 0 !important; }
+  .tecla { padding: 8px !important; font-size: 16px !important; }
+
+  /* ============== PROVAS / SOS PROVA ============== */
+  .aba-row { gap: 6px !important; margin: 6px 0 8px !important; }
+  .prova-card { padding: 10px 12px !important; margin-bottom: 8px !important; }
+  .bonus-wrap { padding: 10px !important; margin-bottom: 8px !important; }
+  .bonus-grid { gap: 6px !important; }
+  .bonus-card { padding: 8px !important; }
+  .bonus-titulo { font-size: 13px !important; }
+  .bonus-sub { font-size: 11px !important; }
+  .bonus-emoji { font-size: 22px !important; }
+  .bonus-nome { font-size: 12px !important; }
+  .bonus-descricao { font-size: 11px !important; }
+  .sos-hero { padding: 10px 12px !important; margin-bottom: 8px !important; }
+  .sos-icone { font-size: 32px !important; }
+  .sos-acao-comecar { padding: 8px 14px !important; font-size: 13px !important; }
+  .sos-controles { gap: 6px !important; margin: 6px 0 !important; }
+  .sos-btn-gerar { padding: 6px 12px !important; font-size: 12px !important; }
+  .sos-analise-titulo { font-size: 13px !important; }
+  .sos-analise-vazio { font-size: 12px !important; padding: 8px !important; }
+  .roteiro-item { padding: 6px 10px !important; font-size: 12px !important; }
+  .add-jogo-row { gap: 6px !important; margin-bottom: 6px !important; }
+  .editor-campo { padding: 4px 8px !important; font-size: 12px !important; }
+  .btn-add, .btn-passo, .btn-mini, .btn-jogar, .btn-editar, .btn-deletar, .btn-rem {
+    padding: 4px 10px !important; font-size: 11px !important;
+  }
+  .ordem-btns { gap: 4px !important; }
+  .jogo-meta { font-size: 11px !important; }
+  .jogo-nome { font-size: 13px !important; }
+  .repet-edit { gap: 6px !important; }
+
+  /* ============== DASHBOARD ============== */
+  .dash-head { padding: 6px 10px !important; margin-bottom: 4px !important; }
+  .ano-tabs { gap: 6px !important; margin: 4px 0 6px !important; }
+  .ano-tab { padding: 4px 10px !important; font-size: 11px !important; }
+  .resumo-grid { gap: 8px !important; margin-bottom: 8px !important; }
+  .card-stat { padding: 8px 10px !important; }
+  .card-stat .label { font-size: 10px !important; }
+  .card-stat .valor { font-size: 18px !important; }
+  .stat { padding: 6px 8px !important; }
+  .stat .label { font-size: 10px !important; }
+  .stat .num { font-size: 16px !important; }
+  .heat-days { gap: 3px !important; }
+  .heat-dia { width: 14px !important; height: 14px !important; font-size: 8px !important; }
+  .grafico-linha { height: 80px !important; margin: 4px 0 !important; }
+  .grafico-legenda { font-size: 10px !important; gap: 6px !important; }
+  .barra { height: 6px !important; }
+  .fill { height: 100% !important; }
+  .cap-bloco { padding: 6px 10px !important; margin-bottom: 4px !important; }
+  .cap-head { font-size: 12px !important; gap: 6px !important; }
+  .cap-nome { font-size: 12px !important; }
+  .cap-taxa { font-size: 11px !important; }
+  .sessao-titulo { font-size: 13px !important; margin: 8px 0 4px !important; }
+  .badges-row { gap: 4px !important; }
+  .badge-mini { padding: 2px 6px !important; font-size: 10px !important; }
+  .prova-hist-card { padding: 6px 10px !important; }
+  .prova-meta { font-size: 11px !important; }
+  .prova-nome { font-size: 12px !important; }
+  .prova-resultado { font-size: 11px !important; }
+  .jogo-row { padding: 4px 8px !important; gap: 6px !important; }
+  .jogado .nome { font-size: 12px !important; }
+  .todos-anos-header { font-size: 11px !important; padding: 4px 8px !important; }
+
+  /* Dashboard: 2 colunas no #conteudo pra cortar altura pela metade */
+  #conteudo { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px 14px !important; align-items: start !important; }
+  #conteudo > * { min-width: 0 !important; }
+  #conteudo .sessao-titulo:first-of-type, #conteudo > .resumo-grid, #conteudo > .todos-anos-header { grid-column: 1 / -1 !important; }
+  /* Dica Boaler — bem compacta (1-2 linhas no desktop) */
+  #dica-boaler-slot { margin-bottom: 6px !important; }
+  #dica-boaler-slot > div { padding: 6px 10px !important; font-size: 11px !important; line-height: 1.3 !important; margin-bottom: 4px !important; max-height: 56px !important; overflow: hidden !important; }
+  #dica-boaler-slot h3, #dica-boaler-slot strong { font-size: 11px !important; display: inline !important; }
+  #dica-boaler-slot p, #dica-boaler-slot div { font-size: 11px !important; margin: 0 !important; }
+
+  /* ============== BELEZA — 3 cols ============== */
+  .bz-cards { grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; }
+  .bz-card { padding: 10px !important; }
+  .bz-viz { min-height: 70px !important; padding: 6px !important; margin-bottom: 6px !important; }
+  .bz-viz svg { max-height: 80px !important; }
+
+  /* ============== IMPRIMIR — 4 cols + cards menores ============== */
+  .pdfs-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; margin-bottom: 6px !important; }
+  .pdf-card { padding: 6px !important; gap: 3px !important; }
+  .pdf-preview { aspect-ratio: 2 / 1 !important; font-size: 24px !important; }
+  .pdf-cadeado { font-size: 11px !important; gap: 3px !important; }
+  .pdf-cadeado .cad-icon { font-size: 22px !important; }
+  .pdf-cadeado .cad-preco { padding: 2px 8px !important; font-size: 10px !important; }
+  .pdf-nome { font-size: 12px !important; line-height: 1.2 !important; }
+  .pdf-desc { font-size: 10px !important; line-height: 1.25 !important; }
+  .tier-header { margin: 10px 0 6px !important; padding-bottom: 4px !important; font-size: 11px !important; }
+  .tier-badge { font-size: 10px !important; padding: 1px 6px !important; }
+  .hero-imprimir { padding: 8px 12px !important; margin-bottom: 8px !important; font-size: 12px !important; }
+  .hero-imprimir .dica { padding: 4px 8px !important; font-size: 11px !important; margin-top: 4px !important; }
+  .em-breve { padding: 6px 10px !important; font-size: 10px !important; line-height: 1.25 !important; max-height: 32px !important; overflow: hidden !important; }
+  .em-breve .big { font-size: 14px !important; margin-bottom: 0 !important; display: inline !important; margin-right: 4px !important; }
+  .em-breve br { display: none !important; }
+
+  /* ============== SOMA — view-estudo + bolinhas menores ============== */
+  #view-estudo { max-height: 320px !important; overflow-y: auto !important; }
+  .soma-visual { padding: 6px !important; }
+  .soma-bolinhas { gap: 8px !important; margin: 2px 0 !important; }
+  .grupo-bolinhas { padding: 3px !important; grid-template-columns: repeat(5, 10px) !important; gap: 2px !important; }
+  .bolinha { width: 10px !important; height: 10px !important; }
+  .sep { font-size: 20px !important; }
+  .estudo-area { padding: 8px 10px !important; }
+  .estudo-titulo { font-size: 12px !important; margin-bottom: 4px !important; }
+  /* Soma pokedex (alvos): 16 cols pra caber em 1 linha */
+  body:has(.titulo-soma) .pokedex-grid { grid-template-columns: repeat(16, 1fr) !important; }
+  body:has(.titulo-soma) .poke-num { font-size: 14px !important; }
+  body:has(.titulo-soma) .poke-card { padding: 3px !important; }
+
+  /* Mascote / modais */
+  .mascote-coach { width: 60px !important; }
   .modal { max-width: 460px !important; padding: 18px !important; }
-  .emoji-grande { font-size: 32px !important; }
+  .emoji-grande { font-size: 30px !important; }
+  .container > p, .container > div > p { font-size: 13px !important; line-height: 1.4 !important; }
 }
 

@@ -124,12 +124,32 @@ h1 { color: #6b3a15; margin-bottom: 4px; font-size: 26px; text-align: center; }
   background: #fff4dc; padding: 4px 12px; border-radius: 12px;
   border: 1.5px solid #d4a574; font-size: 13px; font-weight: 700; color: #6b3a15;
 }
-.btn-voltar {
-  background: #fff; border: 2px solid #c9a86b;
-  color: #6b3a15; padding: 6px 12px; border-radius: 10px;
-  font-weight: 700; cursor: pointer; font-size: 13px;
+/* Botão Voltar — preto, fixo no canto superior esquerdo */
+.btn-voltar, .voltar {
+  position: fixed !important;
+  top: 12px !important;
+  left: 12px !important;
+  z-index: 9999 !important;
+  background: #1a1a1a !important;
+  color: #fff !important;
+  border: 2px solid #1a1a1a !important;
+  padding: 8px 14px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transition: transform 0.15s, background 0.15s !important;
+  margin: 0 !important;
 }
-.btn-voltar:hover { background: #fff4dc; }
+.btn-voltar:hover, .voltar:hover {
+  background: #000 !important;
+  transform: translateY(-1px) !important;
+}
 
 .pergunta {
   background: linear-gradient(135deg, #fff4dc, #ffe8ba);
@@ -520,4 +540,62 @@ h1 { color: #6b3a15; margin-bottom: 4px; font-size: 26px; text-align: center; }
   .jogo-card .desc { font-size: 11px; min-height: 0; }
   .mascote-coach svg { width: 80px; }
   .mascote-coach .balao { max-width: 160px; font-size: 11px; }
+}
+
+/* ============ DESKTOP COMPACTO (≥760px) — telas em 1 viewport ============ */
+@media (min-width: 760px) {
+  body { padding: 4px 10px !important; min-height: auto !important; }
+  .container {
+    max-width: 920px !important;
+    padding: 8px 18px !important;
+    border-radius: 14px !important;
+    min-height: 0 !important;
+  }
+  h1 { font-size: 20px !important; margin: 2px 0 !important; }
+  h2 { font-size: 16px !important; margin: 4px 0 !important; }
+  h3 { font-size: 13px !important; margin: 4px 0 !important; }
+  .topo-ano { padding: 4px 0 !important; }
+  .btn-voltar, .voltar { padding: 4px 10px !important; font-size: 11px !important; }
+
+  /* Header player */
+  .header-player { padding: 5px 10px !important; gap: 8px !important; margin-bottom: 6px !important; }
+  .hp-avatar { width: 40px !important; height: 40px !important; }
+  .hp-cabeca { font-size: 24px !important; }
+  .hp-nivel-bolha { width: 16px !important; height: 16px !important; font-size: 9px !important; }
+  .hp-topo { font-size: 12px !important; gap: 6px !important; margin-bottom: 2px !important; }
+  .hp-xp-texto { font-size: 11px !important; }
+  .hp-moedas { font-size: 11px !important; padding: 2px 8px !important; }
+  .hp-rodape { font-size: 10px !important; gap: 8px !important; margin-top: 2px !important; }
+  .hp-xp-bar { height: 10px !important; }
+
+  /* Abas (matérias) */
+  .abas { gap: 6px !important; margin: 6px 0 8px !important; }
+  .aba { padding: 5px 12px !important; font-size: 12px !important; }
+
+  /* Capítulos grid: cards menores e mais cols */
+  .capitulos-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important; gap: 8px !important; margin-top: 6px !important; }
+  .cap-card { padding: 8px 10px !important; gap: 2px !important; }
+  .cap-card .cap-rotulo { font-size: 10px !important; margin-bottom: 0 !important; }
+  .cap-card .cap-nome { font-size: 13px !important; line-height: 1.2 !important; }
+  .cap-card .cap-desc { font-size: 11px !important; line-height: 1.3 !important; margin-top: 2px !important; }
+  .cap-card .cap-stats { font-size: 11px !important; gap: 6px !important; margin-top: 4px !important; }
+  .cap-card .cap-progresso-bar { height: 4px !important; margin-top: 4px !important; }
+  .cap-card .cap-num { width: 26px !important; height: 26px !important; font-size: 13px !important; top: -8px !important; right: -8px !important; }
+  .cap-separador { font-size: 11px !important; padding: 4px 0 1px !important; margin-top: 4px !important; }
+
+  /* Breadcrumb / cabeçalho cap */
+  .breadcrumb { margin-bottom: 6px !important; }
+  .breadcrumb .crumb { padding: 3px 8px !important; font-size: 11px !important; }
+
+  /* Jogos / cards genéricos */
+  .jogos-grid { gap: 8px !important; }
+  .jogo-card { padding: 10px 8px !important; }
+  .jogo-card .emoji { font-size: 26px !important; }
+  .jogo-card .titulo { font-size: 13px !important; }
+  .jogo-card .desc { font-size: 11px !important; min-height: 0 !important; }
+
+  /* Mascote */
+  .mascote-coach { width: 60px !important; }
+  .mascote-coach svg { width: 60px !important; }
+  .mascote-coach .balao { font-size: 11px !important; padding: 8px 12px !important; }
 }

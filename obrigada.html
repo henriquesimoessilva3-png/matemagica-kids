@@ -17,7 +17,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', 'SEU_PIXEL_ID_AQUI');
 fbq('track', 'PageView');
-// Evento Purchase é disparado server-side via webhook (mais confiável que client-side aqui)
+// Purchase é disparado server-side via webhook (mais confiável)
 </script>
 
 <style>
@@ -36,188 +36,97 @@ fbq('track', 'PageView');
   }
 
   .logo h1 {
-    font-size: 22px;
-    font-weight: 900;
-    letter-spacing: 1.5px;
+    font-size: 22px; font-weight: 900; letter-spacing: 1.5px;
     background: linear-gradient(135deg, #6b54d3 0%, #b968e8 50%, #ffd36b 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    margin: 0;
-    text-align: center;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    margin: 0; text-align: center;
   }
   .logo .estrela { -webkit-text-fill-color: #ffd36b; color: #ffd36b; }
 
   .confirm {
     background: #fff;
     border-radius: 18px;
-    padding: 28px 22px;
+    padding: 32px 24px;
     text-align: center;
-    margin: 24px 0 18px;
+    margin: 28px 0 18px;
     box-shadow: 0 6px 20px rgba(46, 189, 124, 0.15);
     border-top: 4px solid #2ebd7c;
   }
   .confirm .check {
-    width: 64px;
-    height: 64px;
-    background: #2ebd7c;
-    border-radius: 50%;
-    margin: 0 auto 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 36px;
-    font-weight: 900;
+    width: 72px; height: 72px;
+    background: #2ebd7c; border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 40px; font-weight: 900;
   }
   .confirm h2 {
-    font-size: 22px;
-    margin: 0 0 8px;
-    font-weight: 800;
+    font-size: 24px; margin: 0 0 10px; font-weight: 800;
   }
   .confirm p {
-    color: #4a3b8a;
-    font-size: 14px;
-    line-height: 1.55;
+    color: #4a3b8a; font-size: 15px; line-height: 1.55;
     margin: 0 0 8px;
   }
   .confirm .email-tip {
     background: #fff5e8;
     border-radius: 10px;
-    padding: 12px 14px;
+    padding: 14px 16px;
     font-size: 13px;
     color: #c98a00;
-    margin-top: 14px;
-    line-height: 1.5;
+    margin-top: 18px;
+    line-height: 1.55;
+    text-align: left;
   }
 
-  .upsell {
-    background: linear-gradient(135deg, #fff5e8 0%, #faf6ff 100%);
-    border: 3px solid #ffd36b;
-    border-radius: 20px;
-    padding: 24px 22px;
+  .next-steps {
+    background: #fff;
+    border-radius: 18px;
+    padding: 22px 20px;
     margin: 18px 0;
-    position: relative;
-    box-shadow: 0 8px 24px rgba(255, 211, 107, 0.25);
+    box-shadow: 0 4px 18px rgba(107, 84, 211, 0.08);
   }
-  .upsell .ribbon {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-    color: #fff;
-    font-size: 11px;
+  .next-steps h3 {
+    font-size: 17px;
     font-weight: 800;
-    padding: 6px 16px;
-    border-radius: 20px;
-    letter-spacing: 1px;
-    white-space: nowrap;
-    box-shadow: 0 4px 10px rgba(255, 107, 107, 0.35);
+    margin: 0 0 14px;
+    color: #6b54d3;
   }
-  .upsell h3 {
-    font-size: 20px;
-    font-weight: 800;
-    margin: 8px 0 6px;
-    text-align: center;
+  .next-steps ol {
+    padding-left: 20px;
+    margin: 0;
   }
-  .upsell .sub {
-    font-size: 13px;
-    color: #6a5f88;
-    text-align: center;
-    margin: 0 0 18px;
-    line-height: 1.5;
-  }
-  .upsell ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 18px;
-  }
-  .upsell ul li {
+  .next-steps li {
     font-size: 14px;
-    color: #2a2245;
-    padding: 8px 0;
-    padding-left: 28px;
-    position: relative;
-    line-height: 1.45;
+    color: #4a3b8a;
+    line-height: 1.6;
+    margin-bottom: 10px;
   }
-  .upsell ul li::before {
-    content: '✓';
-    position: absolute;
-    left: 6px;
-    color: #2ebd7c;
-    font-weight: 900;
-  }
-  .price-row {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 10px;
-    margin: 14px 0 10px;
-  }
-  .price-row .strike {
-    font-size: 14px;
-    color: #888;
-    text-decoration: line-through;
-  }
-  .price-row .now {
-    font-size: 32px;
-    font-weight: 900;
-    color: #2ebd7c;
-  }
-  .price-detail {
-    text-align: center;
-    font-size: 12px;
-    color: #6a5f88;
-    margin-bottom: 16px;
-  }
+  .next-steps li strong { color: #2a2245; }
+  .next-steps li:last-child { margin-bottom: 0; }
 
   .cta {
-    background: linear-gradient(135deg, #2ebd7c, #4ab3a5);
-    color: #fff;
-    border: none;
-    padding: 16px 22px;
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: 800;
-    cursor: pointer;
-    width: 100%;
-    box-shadow: 0 6px 18px rgba(46, 189, 124, 0.35);
-    font-family: inherit;
-    transition: transform 0.15s ease;
-    text-decoration: none;
-    display: block;
-    text-align: center;
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff; border: none;
+    padding: 16px 22px; border-radius: 14px;
+    font-size: 15px; font-weight: 800;
+    cursor: pointer; width: 100%;
+    box-shadow: 0 6px 18px rgba(107, 84, 211, 0.35);
+    font-family: inherit; text-decoration: none;
+    display: block; text-align: center;
+    margin-top: 16px;
   }
-  .cta:hover { transform: translateY(-1px); }
-  .cta:active { transform: translateY(0); }
 
-  .skip {
+  .footer-note {
     text-align: center;
-    margin: 18px 0 0;
-    font-size: 13px;
+    font-size: 12px;
     color: #888;
+    margin: 24px 0 0;
+    line-height: 1.6;
   }
-  .skip a {
-    color: #6a5f88;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-
-  .timer {
-    text-align: center;
-    font-size: 13px;
-    color: #c98a00;
-    margin: 14px 0 0;
-    font-weight: 700;
-  }
-  .timer #countdown { font-variant-numeric: tabular-nums; }
 
   @media (min-width: 600px) {
     .shell { padding: 36px 24px 80px; }
-    .confirm h2 { font-size: 26px; }
-    .upsell h3 { font-size: 22px; }
+    .confirm h2 { font-size: 28px; }
   }
 </style>
 </head>
@@ -231,90 +140,30 @@ fbq('track', 'PageView');
   <div class="confirm">
     <div class="check">✓</div>
     <h2>Compra confirmada!</h2>
-    <p>Sua chave de ativação foi enviada pro email do checkout.</p>
-    <p style="margin-top:10px"><strong>Em até 5 minutos</strong> ela chega na sua caixa de entrada (ou pasta de promoções).</p>
+    <p><strong>Bem-vinda ao Matemágica.</strong></p>
+    <p>Seu acesso vitalício foi liberado.</p>
+
     <div class="email-tip">
-      💡 <strong>Antes de abrir o email</strong>, leia a oferta exclusiva abaixo — só aparece UMA vez.
+      📧 <strong>Sua chave de ativação foi enviada pro email do checkout</strong> — chega em até 5 minutos. Olha também a aba "Promoções" do Gmail ou pasta de spam.
     </div>
   </div>
 
-  <div class="upsell">
-    <div class="ribbon">⚡ OFERTA PÓS-COMPRA</div>
-    <h3>Adicione o EXPLORA por só +R$17</h3>
-    <p class="sub">Mesmo método do Matemágica, agora pra <strong>História e Geografia do 4º ano</strong> — BNCC, jogos, conquistas. Acesso vitalício também.</p>
+  <div class="next-steps">
+    <h3>📌 Próximos passos</h3>
+    <ol>
+      <li>Abra o email com sua chave de ativação</li>
+      <li>Clique no botão "<strong>Liberar meu acesso</strong>"</li>
+      <li>Mostre pro seu filho. Ele já abre sozinho — não precisa explicar.</li>
+    </ol>
 
-    <ul>
-      <li>Capítulos completos do 4º ano de História e Geografia</li>
-      <li>+500 perguntas em formato de jogo (verdadeiro ou falso, cloze, memória)</li>
-      <li>Modo prova com simulado BNCC</li>
-      <li>Mesmo login do Matemágica — uma chave libera os dois</li>
-      <li>Garantia de 7 dias junto com o Matemágica</li>
-    </ul>
-
-    <div class="price-row">
-      <span class="strike">R$ 47,00</span>
-      <span class="now">R$ 17,00</span>
-    </div>
-    <div class="price-detail">Pagamento único · acesso vitalício · oferta válida só agora</div>
-
-    <a href="#" class="cta" id="upsell-cta">Sim, quero adicionar EXPLORA →</a>
-
-    <div class="timer">⏱ Esta oferta expira em <span id="countdown">10:00</span></div>
+    <a href="https://matemagica.app.br/" class="cta">Ir pro Matemágica agora →</a>
   </div>
 
-  <div class="skip">
-    <a id="skip-link">Não, obrigada — só quero meu Matemágica</a>
-  </div>
+  <p class="footer-note">
+    Dúvidas? Responda o email da compra que a gente ajuda.<br>
+    🛡 Garantia de 7 dias · sem perguntas
+  </p>
 
 </div>
-
-<script>
-  // Hotmart passa orderRef/transaction como query params — usa pra logar/atribuir
-  const params = new URLSearchParams(window.location.search);
-  const transactionId = params.get('transaction') || params.get('orderRef') || params.get('order_ref') || '';
-
-  // Placeholder do checkout do EXPLORA — substituir pela URL Hotmart real do produto bump
-  const EXPLORA_CHECKOUT = 'https://pay.hotmart.com/EXPLORA_PRODUTO_AQUI';
-  const HOME = 'https://matemagica.app.br/';
-
-  document.getElementById('upsell-cta').addEventListener('click', (e) => {
-    e.preventDefault();
-    if (typeof fbq === 'function') {
-      fbq('track', 'AddToCart', { value: 17.00, currency: 'BRL', content_name: 'EXPLORA_upsell' });
-    }
-    const url = EXPLORA_CHECKOUT + '?' + new URLSearchParams({
-      sck: 'upsell_obrigada',
-      utm_source: 'matemagica_obrigada',
-      utm_medium: 'upsell',
-      original_tx: transactionId
-    });
-    window.location.href = url;
-  });
-
-  document.getElementById('skip-link').addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location.href = HOME;
-  });
-
-  // Countdown 10 min — apenas pressão visual; expira leva pra home (não bloqueia compra)
-  (function startCountdown() {
-    let total = 10 * 60;
-    const el = document.getElementById('countdown');
-    const tick = () => {
-      const m = Math.floor(total / 60);
-      const s = total % 60;
-      el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
-      if (total <= 0) {
-        el.textContent = 'expirado';
-        document.getElementById('upsell-cta').textContent = 'Tudo bem, vou direto pro Matemágica →';
-        document.getElementById('upsell-cta').onclick = (e) => { e.preventDefault(); window.location.href = HOME; };
-        return;
-      }
-      total--;
-      setTimeout(tick, 1000);
-    };
-    tick();
-  })();
-</script>
 </body>
 </html>
