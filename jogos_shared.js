@@ -38,7 +38,9 @@ const BADGES = {
   capitulo_1: { emoji:'📘', nome:'Cap. 1 dominado', desc:'10 estrelas em cada jogo do cap. 1' },
   nivel_5: { emoji:'🎖️', nome:'Nível 5', desc:'Chegou ao nível 5' },
   nivel_10: { emoji:'🎗️', nome:'Nível 10', desc:'Chegou ao nível 10' },
-  matemagico: { emoji:'✨', nome:'Matemágico', desc:'Apoiador Matemágica Completo' }
+  matemagico: { emoji:'✨', nome:'Matemágico', desc:'Apoiador Matemágica Completo' },
+  persistente: { emoji:'🌱', nome:'Persistente', desc:'Tentou e conseguiu depois de errar. Errar é estudar!' },
+  persistente_x5: { emoji:'🪴', nome:'Nunca desisto', desc:'5 vezes: errou, tentou de novo, acertou.' }
 };
 
 // ============== AVATAR OPÇÕES (gratuitas) ==============
@@ -156,6 +158,7 @@ const STATE = {
     this.avatar = u.avatar || { cabeca: '😀', chapeu: '', cor: '#ffd36b' };
     this.temaAtivo = u.temaAtivo || 'padrao';
     this.bichinhoAtivo = u.bichinhoAtivo || null;
+    this.persistencias = u.persistencias || 0;
   },
 
   // Campos por ano: estrelas, streak, recorde, porJogo, xp, badges, streakDiario, ultimoDia, diasJogados
@@ -250,7 +253,8 @@ const STATE = {
         comprados: this.comprados,
         avatar: this.avatar,
         temaAtivo: this.temaAtivo,
-        bichinhoAtivo: this.bichinhoAtivo
+        bichinhoAtivo: this.bichinhoAtivo,
+        persistencias: this.persistencias || 0
       }));
     } catch(e) {}
   },
@@ -1043,11 +1047,34 @@ function fraseSorteada(arr) { return arr[Math.floor(Math.random() * arr.length)]
 // ============== FEEDBACK ==============
 function feedbackAcerto(msg) {
   const eraPrimeira = !STATE.porJogo[jogoAtivo] || STATE.porJogo[jogoAtivo].acertos === 0;
+  // Detecta "persistência": errou 1+ vezes e acertou essa pergunta
+  const houvePersistencia = (jogoState.errosNaPerguntaAtual || 0) >= 1;
   STATE.acertou(jogoAtivo);
   atualizarPlacarJogo();
   somAcerto();
   jogoState.errosSeguidos = 0;
   jogoState.errosNaPerguntaAtual = 0;
+
+  // Badge de persistência (Boaler: esforço > acerto de primeira)
+  if (houvePersistencia) {
+    STATE.persistencias = (STATE.persistencias || 0) + 1;
+    if (!STATE.badges.includes('persistente')) {
+      STATE.badges.push('persistente');
+      setTimeout(() => mostrarNovaBadge('persistente'), 400);
+    }
+    if (STATE.persistencias >= 5 && !STATE.badges.includes('persistente_x5')) {
+      STATE.badges.push('persistente_x5');
+      setTimeout(() => mostrarNovaBadge('persistente_x5'), 800);
+    }
+    // Toast celebratório extra curto (não polui)
+    const t = document.getElementById('toast-celebra');
+    if (t && !t.classList.contains('mostrar')) {
+      t.innerHTML = `<div style="font-size:13px;opacity:0.9">NÃO DESISTIU</div><div style="font-size:32px">🌱</div><div style="font-size:15px">Tentou e conseguiu!</div>`;
+      t.classList.add('mostrar');
+      setTimeout(() => t.classList.remove('mostrar'), 1600);
+    }
+    try { STATE.save(); } catch(e) {}
+  }
   const fb = document.getElementById('feedback');
   if (fb) {
     const texto = msg || (eraPrimeira ? fraseSorteada(FRASES_PRIMEIRA_VEZ) : fraseSorteada(FRASES_ACERTO));
@@ -1067,7 +1094,98 @@ function feedbackAcerto(msg) {
   } else {
     reagirMascoteCoach('acerto');
   }
+
+  // Cápsula mundo real: a cada 5 acertos NA SESSÃO (não global, evita saturar)
+  window._acertosSessao = (window._acertosSessao || 0) + 1;
+  if (window._acertosSessao % 5 === 0 && typeof mostrarCapsulaMundoReal === 'function') {
+    setTimeout(() => mostrarCapsulaMundoReal(), 1800);
+  }
+
   setTimeout(() => { if (jogoAtivo) JOGOS[jogoAtivo].iniciar(); }, 1400);
+}
+
+// ============== CÁPSULAS "MATEMÁTICA NO MUNDO REAL" ==============
+// Toast discreto entre exercícios, 1 cápsula a cada 5 acertos acumulados na sessão.
+// Tira o "exercício seco" e conecta mat a coisas que a criança já curte.
+const CAPSULAS_MUNDO_REAL = [
+  { emoji: '⚽', tag: 'Futebol', texto: 'Um jogador corre uns <b>10 km por partida</b>. Isso é a volta do Cristo Redentor 3 vezes.' },
+  { emoji: '⚽', tag: 'Futebol', texto: 'Em um escanteio, o gol tem só <b>7,32 m de largura</b>. O goleiro pula pra cobrir tudo isso — imagina o cálculo!' },
+  { emoji: '🍰', tag: 'Cozinha', texto: 'Brigadeiro pra 4 pessoas: 1 lata de leite condensado. Pra 8? Dobra. <b>Isso é multiplicação</b>.' },
+  { emoji: '🍕', tag: 'Pizza', texto: 'Pizza cortada em 8 fatias: cada uma é <b>1/8 da pizza</b>. Comeu 3? 3/8 da pizza foi embora.' },
+  { emoji: '🎮', tag: 'Videogame', texto: 'Pra subir do level 5 pro 6, precisa de <b>300 XP</b>. Você tem 180. <b>Faltam 120</b> — isso é subtração.' },
+  { emoji: '🛒', tag: 'Compra', texto: 'No mercado, pagou R$50 numa compra de R$37. <b>Seu troco = 13 reais</b>. Conferiu certo?' },
+  { emoji: '🐙', tag: 'Animal', texto: 'Polvo tem <b>8 braços</b>. Uma formiga tem 6 patas. Juntando um polvo e uma formiga: 14 membros!' },
+  { emoji: '🚗', tag: 'Viagem', texto: 'Rio ao Recife: <b>2.300 km</b>. Seu carro faz 12 km/litro. Quantos litros gasta? <b>192 litros</b>.' },
+  { emoji: '📺', tag: 'TV', texto: 'Um episódio de 25 minutos × 10 = <b>250 minutos</b>. Ou seja, mais de 4 horas seguidas de TV. Exagerou!' },
+  { emoji: '🏀', tag: 'Basquete', texto: 'Cesta de 3 pontos vale o triplo da de 1 ponto. Em um jogo, fez 5 triplas: <b>15 pontos só delas</b>.' },
+  { emoji: '💰', tag: 'Mesada', texto: 'R$20 por semana × 4 semanas = <b>R$80 no mês</b>. Guardou 3 meses inteiros? R$240 na poupança!' },
+  { emoji: '⏰', tag: 'Relógio', texto: 'Uma hora tem 60 minutos. Meia hora tem 30. <b>Um quarto de hora são 15</b> — e dá pra assistir um desenho.' }
+];
+
+let _capsulaUltimoShow = -1;
+function sorteioCapsula() {
+  // Evita repetir a última
+  let idx;
+  do { idx = Math.floor(Math.random() * CAPSULAS_MUNDO_REAL.length); }
+  while (idx === _capsulaUltimoShow && CAPSULAS_MUNDO_REAL.length > 1);
+  _capsulaUltimoShow = idx;
+  return CAPSULAS_MUNDO_REAL[idx];
+}
+
+function mostrarCapsulaMundoReal() {
+  if (!document.getElementById('capsula-mundo-real-style')) {
+    const st = document.createElement('style');
+    st.id = 'capsula-mundo-real-style';
+    st.textContent = `
+      #capsula-toast {
+        position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(120%);
+        background: linear-gradient(135deg, #fff4dc, #ffe0a0);
+        border: 2px solid #d4a574; color: #4a3b8a;
+        border-radius: 14px; padding: 12px 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+        max-width: 340px; width: calc(100% - 24px);
+        font-size: 13px; line-height: 1.4;
+        z-index: 400; cursor: pointer;
+        display: flex; align-items: flex-start; gap: 10px;
+        transition: transform 0.45s cubic-bezier(0.2,0.8,0.2,1), opacity 0.3s;
+      }
+      #capsula-toast.visivel { transform: translateX(-50%) translateY(0); }
+      #capsula-toast .cap-emoji { font-size: 28px; flex-shrink: 0; }
+      #capsula-toast .cap-tag { font-size: 10px; font-weight: 800; color: #8b5a2b;
+        letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 2px; }
+      #capsula-toast .cap-texto { color: #3a2818; }
+      #capsula-toast .cap-texto b { color: #6b54d3; }
+      #capsula-toast .cap-x {
+        position: absolute; top: 4px; right: 8px;
+        font-size: 16px; color: #8b5a2b; opacity: 0.6;
+        cursor: pointer;
+      }
+      #capsula-toast .cap-x:hover { opacity: 1; }
+    `;
+    document.head.appendChild(st);
+  }
+  const c = sorteioCapsula();
+  const old = document.getElementById('capsula-toast');
+  if (old) old.remove();
+  const t = document.createElement('div');
+  t.id = 'capsula-toast';
+  t.innerHTML = `
+    <div class="cap-x" onclick="event.stopPropagation();document.getElementById('capsula-toast').remove()">×</div>
+    <div class="cap-emoji">${c.emoji}</div>
+    <div>
+      <div class="cap-tag">Sabia que… · ${c.tag}</div>
+      <div class="cap-texto">${c.texto}</div>
+    </div>
+  `;
+  t.onclick = () => t.remove();
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add('visivel'), 50);
+  setTimeout(() => {
+    if (t.parentNode) {
+      t.style.opacity = '0';
+      setTimeout(() => t.remove(), 300);
+    }
+  }, 6500);
 }
 
 // Fallback progressivo acolhedor (Boaler) quando o jogo não definiu dicas específicas

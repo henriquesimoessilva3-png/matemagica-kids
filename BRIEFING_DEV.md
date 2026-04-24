@@ -69,6 +69,11 @@ Pasta `/Historiando/` (porta 8222) vira **dev sandbox isolado** — arquivos can
 | Reforço histórico "você já acertou X" | `jogos_shared.js:mostrarReforcoHistorico` | ✅ |
 | **EXPLORA integrado como bônus** | `explora/`, card no index.html, paywall unificado via `matemagica_licenca_v1` | ✅ |
 | Paywall EXPLORA espelhado | `explora/explora_shared.js:abrirPaywallExplora, guardaAnoPremiumExplora` | ✅ anos 2-5 bloqueados, 1º grátis |
+| **Slogan "A criança joga. A matemática fica."** | `index.html` (header) + OG tags + todos docs/memórias | ✅ PT-BR validado |
+| **Badge Persistente + Nunca desisto** | `jogos_shared.js:feedbackAcerto` detecta `errosNaPerguntaAtual>=1` e dá badge | ✅ Boaler anti-gênio-decepciona |
+| **Cápsulas "mundo real"** | `jogos_shared.js:CAPSULAS_MUNDO_REAL + mostrarCapsulaMundoReal` | ✅ 12 cápsulas, toast a cada 5 acertos da sessão |
+| **Flash Mágico (subitizing)** | `flash.html` jogo standalone, 3 níveis (Fácil 1-5 / Médio 1-8 / Difícil 1-10) | ✅ linkado na home |
+| **Meta tags SEO + OG image** | `index.html` head + `og-image.svg` 1200x630 | ✅ compartilhamento bonito |
 
 ---
 

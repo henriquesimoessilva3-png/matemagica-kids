@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6b54d3"/>
+      <stop offset="50%" stop-color="#b968e8"/>
+      <stop offset="100%" stop-color="#ffd36b"/>
+    </linearGradient>
+    <linearGradient id="titleGrad" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="100%" stop-color="#fff3d6"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Decorative math symbols floating -->
+  <g font-family="Segoe UI, Arial, sans-serif" font-weight="900" fill="#fff" opacity="0.18">
+    <text x="80" y="140" font-size="72">+</text>
+    <text x="180" y="490" font-size="88">×</text>
+    <text x="1060" y="170" font-size="72">÷</text>
+    <text x="1100" y="480" font-size="80">−</text>
+    <text x="130" y="300" font-size="64">=</text>
+    <text x="1010" y="340" font-size="68">√</text>
+    <text x="280" y="90" font-size="56">π</text>
+    <text x="920" y="560" font-size="60">∞</text>
+  </g>
+
+  <!-- Stars -->
+  <g fill="#ffd36b" filter="url(#shadow)">
+    <polygon points="100,50 106,70 128,70 110,82 118,103 100,90 82,103 90,82 72,70 94,70" opacity="0.9"/>
+    <polygon points="1100,80 1104,92 1120,92 1108,100 1112,114 1100,105 1088,114 1092,100 1080,92 1096,92" opacity="0.8"/>
+    <polygon points="600,40 605,55 622,55 608,65 614,80 600,71 586,80 592,65 578,55 595,55" opacity="0.9"/>
+  </g>
+
+  <!-- Main title MATEMÁGICA -->
+  <text x="600" y="260" font-family="Segoe UI, Arial, sans-serif" font-size="128" font-weight="900"
+        fill="url(#titleGrad)" text-anchor="middle" letter-spacing="6" filter="url(#shadow)">
+    ✦ MATEMÁGICA ✦
+  </text>
+
+  <!-- Slogan -->
+  <text x="600" y="340" font-family="Segoe UI, Arial, sans-serif" font-size="44" font-weight="700"
+        fill="#fff" text-anchor="middle" filter="url(#shadow)">
+    A criança joga. A matemática fica.
+  </text>
+
+  <!-- Subtítulo benefícios -->
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle" fill="#fff">
+    <text x="600" y="420" font-size="28" font-weight="600" opacity="0.95">
+      Matemática · História · Geografia · BNCC · 1º ao 5º ano
+    </text>
+  </g>
+
+  <!-- Price badge -->
+  <g transform="translate(600, 510)">
+    <rect x="-170" y="-48" width="340" height="96" rx="48" fill="#2ebd7c" filter="url(#shadow)"/>
+    <text x="0" y="-5" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700"
+          fill="#fff" text-anchor="middle" letter-spacing="1">
+      PAGAMENTO ÚNICO
+    </text>
+    <text x="0" y="30" font-family="Segoe UI, Arial, sans-serif" font-size="38" font-weight="900"
+          fill="#fff" text-anchor="middle">
+      R$ 17 · vitalício
+    </text>
+  </g>
+
+  <!-- URL rodapé -->
+  <text x="600" y="605" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="600"
+        fill="#fff" text-anchor="middle" opacity="0.9" letter-spacing="2">
+    matemagica.app.br
+  </text>
+</svg>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flash Mágico — MATEMÁGICA</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  h1.titulo-flash {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 32px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(135deg, #b968e8, #6b54d3);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-align: center; margin: 6px 0 2px; line-height: 1.1;
+  }
+  .sub-flash {
+    text-align: center; color: #888; font-size: 13px; margin-bottom: 16px;
+  }
+
+  .flash-area {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border-radius: 18px;
+    padding: 26px 20px;
+    text-align: center;
+    margin-bottom: 16px;
+    min-height: 360px;
+    position: relative;
+  }
+
+  .flash-palco {
+    background: #fff;
+    border-radius: 14px;
+    border: 3px solid #c5bbe9;
+    min-height: 220px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 12px auto;
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pontos-grid {
+    display: grid; gap: 8px;
+    animation: flashIn 0.12s ease-out;
+  }
+  @keyframes flashIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+  .ponto {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #b968e8, #6b54d3);
+    box-shadow: 0 2px 6px rgba(107,84,211,0.4);
+  }
+  .ponto.cor2 { background: radial-gradient(circle at 30% 30%, #ffd36b, #ff9a44); }
+  .ponto.cor3 { background: radial-gradient(circle at 30% 30%, #4ab3a5, #1b7a3a); }
+  .ponto.cor4 { background: radial-gradient(circle at 30% 30%, #5ba8e8, #2868b5); }
+  .ponto.cor5 { background: radial-gradient(circle at 30% 30%, #ff7b6b, #c44a2a); }
+
+  @media (max-width: 420px) {
+    .ponto { width: 28px; height: 28px; }
+  }
+
+  .contagem-pista {
+    font-size: 38px; font-weight: 900; color: #6b54d3;
+    margin: 14px 0;
+    letter-spacing: 2px;
+  }
+
+  .flash-opcoes {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    margin-top: 14px;
+  }
+  .flash-opcoes button {
+    padding: 16px 6px;
+    font-size: 24px; font-weight: 800;
+    background: #fff;
+    color: #4a3b8a;
+    border: 3px solid #c5bbe9;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .flash-opcoes button:hover:not(:disabled) {
+    background: #ede8fa;
+    transform: scale(1.05);
+    border-color: #b968e8;
+  }
+  .flash-opcoes button.acerto {
+    background: #d4f5dd; border-color: #3ac070; color: #1b4a2a;
+    animation: flash 0.4s;
+  }
+  .flash-opcoes button.erro {
+    background: #fde0e0; border-color: #d04040; color: #801818;
+    animation: shake 0.3s;
+  }
+
+  .flash-hud {
+    display: flex; justify-content: space-between; gap: 8px;
+    background: linear-gradient(135deg, #ede8fa, #d9c8f5);
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #4a3b8a;
+    font-weight: 700;
+  }
+  .flash-hud span b { color: #6b54d3; font-size: 18px; }
+
+  .flash-controles {
+    display: flex; gap: 8px; justify-content: center;
+    margin-top: 12px; flex-wrap: wrap;
+  }
+  .flash-btn {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff; border: none;
+    padding: 10px 20px; border-radius: 12px;
+    font-weight: 700; font-size: 14px; cursor: pointer;
+    font-family: inherit;
+  }
+  .flash-btn.sec {
+    background: #fff; color: #6b54d3; border: 2px solid #c5bbe9;
+  }
+
+  .flash-resultado {
+    text-align: center; padding: 20px;
+  }
+  .flash-resultado .big-emoji { font-size: 56px; margin-bottom: 8px; }
+  .flash-resultado .score { font-size: 36px; font-weight: 900; color: #6b54d3; }
+  .flash-resultado .legend { font-size: 13px; color: #888; margin-top: 6px; line-height: 1.45; }
+
+  .instr {
+    background: #fff3d6;
+    border-left: 4px solid #ffd36b;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #5a3a00;
+    line-height: 1.45;
+    margin-bottom: 12px;
+  }
+  .instr b { color: #8a5a10; }
+
+  .nivel-tabs {
+    display: flex; gap: 6px; justify-content: center;
+    margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .nivel-tab {
+    background: #f7f5ff;
+    color: #6b54d3;
+    border: 2px solid #c5bbe9;
+    padding: 5px 12px; border-radius: 14px;
+    font-weight: 700; font-size: 12px;
+    cursor: pointer; font-family: inherit;
+  }
+  .nivel-tab.ativo {
+    background: #6b54d3; color: #fff; border-color: #6b54d3;
+  }
+
+  .voltar {
+    display: inline-block;
+    color: #6b54d3; text-decoration: none;
+    font-size: 12px; font-weight: 700;
+    background: #ede8fa; border: 2px solid #c5bbe9;
+    padding: 6px 12px; border-radius: 10px;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="voltar">← Voltar ao início</a>
+  <h1 class="titulo-flash">⚡ Flash Mágico</h1>
+  <div class="sub-flash">Olha rápido. Reconhece sem contar.</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div class="instr">
+    <b>Como jogar:</b> um monte de bolinhas vai aparecer por <b>1 segundo</b>. Antes de dar tempo de contar, some! Escolhe no botão <b>quantas você viu</b>. É treino de <i>senso numérico</i> — olhar e saber.
+  </div>
+
+  <div class="nivel-tabs">
+    <button class="nivel-tab ativo" data-nivel="facil" onclick="setNivel('facil')">🌱 Fácil (1-5)</button>
+    <button class="nivel-tab" data-nivel="medio" onclick="setNivel('medio')">🔥 Médio (1-8)</button>
+    <button class="nivel-tab" data-nivel="dificil" onclick="setNivel('dificil')">⚡ Difícil (1-10)</button>
+  </div>
+
+  <div class="flash-area" id="flash-area">
+    <div class="flash-hud">
+      <span>Acertos: <b id="hud-acertos">0</b></span>
+      <span>Rodada: <b id="hud-rodada">0</b>/10</span>
+      <span>Velocidade: <b id="hud-velo">1s</b></span>
+    </div>
+
+    <div class="flash-palco" id="flash-palco">
+      <div style="font-size:14px;color:#888">Clica em <b>Começar</b> pra ver as bolinhas</div>
+    </div>
+
+    <div class="flash-controles" id="flash-controles">
+      <button class="flash-btn" onclick="iniciarFlash()">🚀 Começar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal compartilhado (pra loja/badges) -->
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<script src="mascotes.js?v=12"></script>
+<script src="jogos_shared.js?v=12"></script>
+<script>
+STORAGE_KEY = 'jogosMat_default';
+CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
+
+// ============== FLASH MÁGICO (Subitizing) ==============
+let _nivelFlash = 'facil';
+let _rodadaAtual = 0;
+let _acertosFlash = 0;
+let _totalRodadas = 10;
+let _respostaCerta = 0;
+let _jogoFlashAtivo = false;
+
+const NIVEIS = {
+  facil:   { max: 5,  velo: 1500, nome: 'Fácil' },
+  medio:   { max: 8,  velo: 1200, nome: 'Médio' },
+  dificil: { max: 10, velo: 900,  nome: 'Difícil' }
+};
+
+function setNivel(n) {
+  if (_jogoFlashAtivo) return;
+  _nivelFlash = n;
+  document.querySelectorAll('.nivel-tab').forEach(t => {
+    t.classList.toggle('ativo', t.dataset.nivel === n);
+  });
+  document.getElementById('hud-velo').textContent = (NIVEIS[n].velo/1000).toFixed(1) + 's';
+}
+
+function iniciarFlash() {
+  _rodadaAtual = 0;
+  _acertosFlash = 0;
+  _jogoFlashAtivo = true;
+  atualizarHUD();
+  proximaRodada();
+}
+
+function proximaRodada() {
+  _rodadaAtual++;
+  if (_rodadaAtual > _totalRodadas) return mostrarResultado();
+  atualizarHUD();
+  const nivel = NIVEIS[_nivelFlash];
+  _respostaCerta = Math.floor(Math.random() * nivel.max) + 1;
+  const palco = document.getElementById('flash-palco');
+  palco.innerHTML = `<div class="pontos-grid" id="pontos-grid"></div>`;
+  renderPontos(_respostaCerta);
+  document.getElementById('flash-controles').innerHTML = '';
+
+  setTimeout(() => {
+    palco.innerHTML = `<div class="contagem-pista">?</div>`;
+    mostrarOpcoes();
+  }, nivel.velo);
+}
+
+function renderPontos(n) {
+  const grid = document.getElementById('pontos-grid');
+  if (!grid) return;
+  // Grid inteligente: escolhe colunas conforme qtd (pra não esticar feio)
+  const cols = n <= 3 ? n : (n <= 6 ? 3 : (n <= 8 ? 4 : 5));
+  grid.style.gridTemplateColumns = `repeat(${cols}, 34px)`;
+  const cores = ['', 'cor2', 'cor3', 'cor4', 'cor5'];
+  const corIdx = Math.floor(Math.random() * cores.length);
+  let html = '';
+  for (let i = 0; i < n; i++) html += `<div class="ponto ${cores[corIdx]}"></div>`;
+  grid.innerHTML = html;
+}
+
+function mostrarOpcoes() {
+  const max = NIVEIS[_nivelFlash].max;
+  // Gera 4 opções: certa + 3 distratoras próximas
+  const set = new Set([_respostaCerta]);
+  while (set.size < 4) {
+    const delta = Math.floor(Math.random() * 5) - 2;
+    const v = _respostaCerta + delta;
+    if (v >= 1 && v <= max + 2 && v !== _respostaCerta) set.add(v);
+  }
+  const arr = Array.from(set).sort((a, b) => a - b);
+  document.getElementById('flash-controles').innerHTML =
+    `<div class="flash-opcoes">${arr.map(v => `<button onclick="responderFlash(${v}, this)">${v}</button>`).join('')}</div>`;
+}
+
+function responderFlash(v, btn) {
+  const botoes = document.querySelectorAll('.flash-opcoes button');
+  botoes.forEach(b => b.disabled = true);
+  if (v === _respostaCerta) {
+    _acertosFlash++;
+    btn.classList.add('acerto');
+    try { somAcerto(); } catch(e) {}
+    // Integra no STATE global pra ganhar moedas + badges + reforço
+    try {
+      jogoAtivo = 'flash_' + _nivelFlash;
+      jogoState = jogoState || {};
+      jogoState.errosNaPerguntaAtual = 0;
+      STATE.acertou('flash_' + _nivelFlash);
+      renderHeaderPlayer();
+    } catch(e) {}
+  } else {
+    btn.classList.add('erro');
+    botoes.forEach(b => { if (parseInt(b.textContent) === _respostaCerta) b.classList.add('acerto'); });
+    try { somErro(); } catch(e) {}
+    try {
+      jogoAtivo = 'flash_' + _nivelFlash;
+      STATE.errou('flash_' + _nivelFlash);
+    } catch(e) {}
+  }
+  setTimeout(() => proximaRodada(), v === _respostaCerta ? 600 : 1200);
+}
+
+function atualizarHUD() {
+  document.getElementById('hud-acertos').textContent = _acertosFlash;
+  document.getElementById('hud-rodada').textContent = Math.min(_rodadaAtual, _totalRodadas);
+  document.getElementById('hud-velo').textContent = (NIVEIS[_nivelFlash].velo/1000).toFixed(1) + 's';
+}
+
+function mostrarResultado() {
+  _jogoFlashAtivo = false;
+  const pct = _acertosFlash / _totalRodadas;
+  let emoji, texto, legend;
+  if (pct === 1) { emoji = '🏆'; texto = 'PERFEITO!'; legend = 'Você reconhece quantidade no olho. Senso numérico topíssimo.'; try { soltarConfete(120); somCelebracao(); } catch(e){} }
+  else if (pct >= 0.8) { emoji = '🌟'; texto = 'Muito bom!'; legend = 'Tá quase lá. Mais 2 treinos e você olha sem piscar.'; try { soltarConfete(60); } catch(e){} }
+  else if (pct >= 0.6) { emoji = '👍'; texto = 'No caminho!'; legend = 'Boa base. Treina em velocidade menor, depois sobe.'; }
+  else if (pct >= 0.4) { emoji = '🙂'; texto = 'Tá começando'; legend = 'Começa no Fácil. O olho vai aprendendo — é treino.'; }
+  else { emoji = '💪'; texto = 'Treina mais!'; legend = 'Zero pressa. Usa o Fácil pra começar. Errar não desconta nada.'; }
+
+  const palco = document.getElementById('flash-palco');
+  palco.innerHTML = `
+    <div class="flash-resultado">
+      <div class="big-emoji">${emoji}</div>
+      <div class="score">${_acertosFlash}/${_totalRodadas}</div>
+      <div style="font-size:20px;font-weight:700;color:#4a3b8a;margin-top:4px">${texto}</div>
+      <div class="legend">${legend}</div>
+    </div>
+  `;
+  document.getElementById('flash-controles').innerHTML = `
+    <button class="flash-btn" onclick="iniciarFlash()">🔄 De novo</button>
+    <a class="flash-btn sec" href="index.html" style="text-decoration:none">🏠 Início</a>
+  `;
+}
+
+// Init
+initJogos();
+setNivel('facil');
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
