@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jogos de Matemática — 1º Ano</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mat">
+<link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+<div class="container">
+  <h1>Jogos de Matemática</h1>
+  <div class="sub">1º Ano — Alfabetização Matemática</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div id="menu-principal">
+    <div class="capitulos">
+      <button class="cap-card cap1" onclick="abrirCapitulo(1)">
+        <span class="num">1</span><h3>Os números até 20</h3>
+        <p>Contar, comparar, completar</p>
+      </button>
+      <button class="cap-card cap2" onclick="abrirCapitulo(2)">
+        <span class="num">2</span><h3>Formas planas</h3>
+        <p>Círculo, quadrado, retângulo, triângulo</p>
+      </button>
+      <button class="cap-card cap3" onclick="abrirCapitulo(3)">
+        <span class="num">3</span><h3>Meu dia, meu mês</h3>
+        <p>Dias da semana e meses do ano</p>
+      </button>
+      <button class="cap-card cap4" onclick="abrirCapitulo(4)">
+        <span class="num">4</span><h3>Dinheirinho</h3>
+        <p>Moedas e notas do Brasil</p>
+      </button>
+      <button class="cap-card cap5" onclick="abrirCapitulo(5)">
+        <span class="num">5</span><h3>Tabelas e gráficos</h3>
+        <p>Quem tem mais? Ler gráficos</p>
+      </button>
+    </div>
+    <div style="text-align:center;margin-top:20px">
+      <a href="index.html" style="display:inline-block;margin-right:8px;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#ede8fa">← Trocar ano</a>
+      <button class="acao sec" onclick="zerarProgresso()" style="font-size:12px;padding:8px 14px">Zerar Progresso</button>
+    </div>
+  </div>
+
+  <div id="menu-capitulo" class="hidden">
+    <button class="voltar" onclick="voltarMenu()">← Voltar</button>
+    <h2 id="titulo-cap" style="color:#4a3b8a; margin-bottom:16px;"></h2>
+    <div class="jogos-lista" id="lista-jogos"></div>
+  </div>
+
+  <div id="area-jogo" class="hidden">
+    <button class="voltar" onclick="voltarCapitulo()">← Voltar aos jogos</button>
+    <h2 id="titulo-jogo" style="color:#4a3b8a; margin-bottom:14px; font-size:20px;"></h2>
+    <div class="placar-jogo">
+      <div>Estrelas<strong id="j-acertos">0</strong></div>
+      <div>Tentativas<strong id="j-tentativas">0</strong></div>
+      <div>Sequência<strong id="j-streak">0</strong></div>
+    </div>
+    <div class="dica-inline" id="dica-inline"></div>
+    <div class="jogo-area" id="jogo-conteudo"></div>
+  </div>
+</div>
+
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script src="mascotes.js"></script>
+<script src="jogos_shared.js"></script>
+<script>
+STORAGE_KEY = 'jogosMat1ano_v1';
+
+CAPS = {
+  1: { nome: 'Capítulo 1 — Os números até 20', jogos: [
+    { id: 'conta', nome: 'Conte os bichinhos', desc: 'Quantos são? Até 20!' },
+    { id: 'maior', nome: 'Qual é o maior?', desc: 'Compare dois números' },
+    { id: 'qualFalta', nome: 'Qual número falta?', desc: 'Complete a sequência' },
+    { id: 'parImpar', nome: 'Par ou Ímpar?', desc: 'O número é par ou ímpar?' }
+  ]},
+  2: { nome: 'Capítulo 2 — Formas planas', jogos: [
+    { id: 'queForma', nome: 'Que forma é essa?', desc: 'Círculo, quadrado, retângulo, triângulo' },
+    { id: 'contaForma', nome: 'Quantos de cada forma?', desc: 'Conte os triângulos, quadrados...' },
+    { id: 'objForma', nome: 'Forma do objeto', desc: 'A bola é um... círculo!' }
+  ]},
+  3: { nome: 'Capítulo 3 — Meu dia, meu mês', jogos: [
+    { id: 'diaAmanha', nome: 'Dia da semana', desc: 'Hoje é X. Amanhã é?' },
+    { id: 'proxMes', nome: 'Qual o próximo mês?', desc: 'Depois de Janeiro vem...' },
+    { id: 'diaAntes', nome: 'Que dia vem antes?', desc: 'Antes de quarta vem...' }
+  ]},
+  4: { nome: 'Capítulo 4 — Dinheirinho', jogos: [
+    { id: 'moeda', nome: 'Qual o valor da moeda?', desc: 'Moedas do real' },
+    { id: 'cofrinho', nome: 'Quanto tem no cofrinho?', desc: 'Some as moedas' },
+    { id: 'posso', nome: 'Posso comprar?', desc: 'Tenho dinheiro suficiente?' }
+  ]},
+  5: { nome: 'Capítulo 5 — Tabelas e gráficos', jogos: [
+    { id: 'quemMais', nome: 'Quem tem mais?', desc: 'Leia o gráfico e escolha' },
+    { id: 'totalBichos', nome: 'Quantos ao todo?', desc: 'Some os valores da tabela' },
+    { id: 'menor', nome: 'Quem tem menos?', desc: 'Encontre o menor do gráfico' }
+  ]}
+};
+
+TUTORIAIS = {
+  conta: { emoji:'🔢', titulo:'Conte os bichinhos', corpo:`
+    <p>Aparecem vários bichinhos ou objetos. Conta um por um e escolhe o número certo.</p>
+    <div class="exemplo">🐱🐱🐱🐱🐱 → são <b>5</b> gatinhos</div>`},
+  maior: { emoji:'🔼', titulo:'Qual é o maior?', corpo:`
+    <p>Dois números aparecem. Escolhe o maior (ou o menor, se pedido).</p>
+    <div class="exemplo">Entre <b>7</b> e <b>4</b> → o maior é <b>7</b></div>`},
+  qualFalta: { emoji:'🔍', titulo:'Qual número falta?', corpo:`
+    <p>Na fila de números, um está faltando. Qual é?</p>
+    <div class="exemplo">3, 4, <b>?</b>, 6 → falta o <b>5</b></div>`},
+  queForma: { emoji:'🔺', titulo:'Que forma é essa?', corpo:`
+    <p>Olha a figura e escolhe o nome certo.</p>
+    <div class="exemplo">⚪ = círculo · 🟥 = quadrado · 🔺 = triângulo</div>`},
+  contaForma: { emoji:'🧮', titulo:'Quantos de cada forma?', corpo:`
+    <p>Várias formas misturadas. Conta quantas são da forma pedida.</p>
+    <div class="exemplo">🔺🔺⚪🔺 → <b>3</b> triângulos</div>`},
+  objForma: { emoji:'⚽', titulo:'Forma do objeto', corpo:`
+    <p>Que forma o objeto se parece?</p>
+    <div class="exemplo">Bola ⚽ = círculo · Janela 🟥 = quadrado</div>`},
+  diaAmanha: { emoji:'📅', titulo:'Dia da semana', corpo:`
+    <p>Hoje é um dia. Que dia vem amanhã?</p>
+    <div class="exemplo">Hoje segunda → amanhã <b>terça</b></div>`},
+  proxMes: { emoji:'🗓️', titulo:'Qual o próximo mês?', corpo:`
+    <p>Depois de um mês vem o próximo. Qual é?</p>
+    <div class="exemplo">Depois de março vem <b>abril</b></div>`},
+  diaAntes: { emoji:'⏮️', titulo:'Que dia vem antes?', corpo:`
+    <p>Qual dia da semana vem antes de outro?</p>
+    <div class="exemplo">Antes de quarta → <b>terça</b></div>`},
+  moeda: { emoji:'🪙', titulo:'Qual o valor da moeda?', corpo:`
+    <p>Olha a moeda e escolhe o valor.</p>
+    <div class="exemplo">Moedas: R$ 1 · 50¢ · 25¢ · 10¢ · 5¢</div>`},
+  cofrinho: { emoji:'🐷', titulo:'Quanto tem no cofrinho?', corpo:`
+    <p>Soma o valor de todas as moedas do cofrinho.</p>
+    <div class="exemplo">R$1 + R$1 = <b>R$ 2</b></div>`},
+  posso: { emoji:'🛒', titulo:'Posso comprar?', corpo:`
+    <p>Tenho um dinheiro e quero um item. Dá pra comprar?</p>
+    <div class="exemplo">Tenho R$ 5. Item custa R$ 3. <b>Sim!</b></div>`},
+  quemMais: { emoji:'📊', titulo:'Quem tem mais?', corpo:`
+    <p>Olha o gráfico. Qual coluna é mais alta?</p>
+    <div class="exemplo">Quanto mais alta, mais tem.</div>`},
+  totalBichos: { emoji:'➕', titulo:'Quantos ao todo?', corpo:`
+    <p>Soma os valores de todas as categorias do gráfico.</p>
+    <div class="exemplo">Cachorros=3 + Gatos=2 → <b>5</b> bichinhos</div>`},
+  menor: { emoji:'🔽', titulo:'Quem tem menos?', corpo:`
+    <p>No gráfico, qual coluna é mais baixa?</p>
+    <div class="exemplo">Menos alta = menos quantidade.</div>`},
+  parImpar: { emoji:'2️⃣', titulo:'Par ou Ímpar?', corpo:`
+    <p>Par = dá pra dividir em 2 grupos iguais (2, 4, 6, 8, 10...). Ímpar = sobra 1 (1, 3, 5, 7, 9...).</p>
+    <div class="exemplo">Termina em 0, 2, 4, 6 ou 8 = PAR. Termina em 1, 3, 5, 7 ou 9 = ÍMPAR.</div>`}
+};
+
+DICAS = {
+  conta: (n) => `Conta um por um, com o dedinho. A resposta era ${n}.`,
+  maior: (a, b) => `${a} e ${b}. O maior é o que vem depois na contagem: ${Math.max(a,b)}.`,
+  qualFalta: (n) => `Conta a fila na ordem. Faltava o número ${n}.`,
+  queForma: (nome) => `Era um ${nome}. Aprende olhando as laterais (cantos ou redondo).`,
+  contaForma: (n, tipo) => `Tinha ${n} ${tipo}(s). Conta só os dessa forma, ignora o resto.`,
+  objForma: (obj, f) => `${obj} tem forma de ${f}.`,
+  diaAmanha: (hoje, amanha) => `Depois de ${hoje} vem ${amanha}.`,
+  proxMes: (mes, prox) => `Depois de ${mes} vem ${prox}.`,
+  diaAntes: (dia, antes) => `Antes de ${dia} vem ${antes}.`,
+  moeda: (v) => `Essa moeda vale ${v}.`,
+  cofrinho: (t) => `Soma todas as moedas → total R$ ${t.toFixed(2).replace('.',',')}.`,
+  posso: () => `Compara: o dinheiro que tem precisa ser maior ou igual ao preço.`,
+  quemMais: (q) => `A maior coluna é do ${q}.`,
+  totalBichos: (t) => `Soma cada categoria → total ${t}.`,
+  menor: (q) => `A menor coluna é do ${q}.`,
+  parImpar: (n, r) => `${n} é ${r}. Olha o último algarismo: par se for 0,2,4,6,8; ímpar se for 1,3,5,7,9.`
+};
+
+// ============== JOGOS ==============
+
+const BICHINHOS = ['🐱','🐶','🐰','🐻','🦊','🐼','🐨','🦁','🐸','🦄','🐙','🦋'];
+const OBJETOS = ['⭐','❤️','🌸','🍎','🎈','🌈','🎁','🌙','☀️','🌟'];
+
+JOGOS.conta = {
+  iniciar() {
+    const fx = pickNivel([[2,6],[2,12],[5,20]], 'conta');
+    const maxN = fx[1];
+    const n = rand(fx[1], fx[0]);
+    const emoji = escolher([...BICHINHOS, ...OBJETOS]);
+    jogoState.resposta = n;
+    let grid = '';
+    for (let i = 0; i < n; i++) grid += `<div class="obj">${emoji}</div>`;
+    const opcoes = new Set([n]);
+    while (opcoes.size < 4) opcoes.add(rand(Math.min(maxN, n + 3), Math.max(1, n - 3)));
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:20px">Quantos ${emoji} têm aqui?</div>
+      <div class="obj-grid">${grid}</div>
+      <div class="opcoes q4">${arr.map(o => `<button onclick="JOGOS.conta.conferir(${o})">${o}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Acertou! ${escolha} no total`);
+    else feedbackErro(`Eram ${jogoState.resposta}`, DICAS.conta(jogoState.resposta));
+  }
+};
+
+JOGOS.maior = {
+  iniciar() {
+    const fx = pickNivel([[1,10],[1,20],[1,50]], 'maior');
+    let a = rand(fx[1], fx[0]), b = rand(fx[1], fx[0]);
+    while (a === b) b = rand(fx[1], fx[0]);
+    const procuraMaior = rand(1, 0) === 1;
+    jogoState.a = a; jogoState.b = b; jogoState.procuraMaior = procuraMaior;
+    jogoState.resposta = procuraMaior ? Math.max(a, b) : Math.min(a, b);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual é o ${procuraMaior ? '<b style="color:#4ab3a5">MAIOR</b>' : '<b style="color:#ff7b6b">MENOR</b>'}?</div>
+      <div class="opcoes">
+        <button onclick="JOGOS.maior.conferir(${a})" style="font-size:32px">${a}</button>
+        <button onclick="JOGOS.maior.conferir(${b})" style="font-size:32px">${b}</button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha} é o ${jogoState.procuraMaior ? 'maior' : 'menor'}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.maior(jogoState.a, jogoState.b));
+  }
+};
+
+JOGOS.qualFalta = {
+  iniciar() {
+    const fx = pickNivel([[1,10],[1,25],[1,50]], 'qualFalta');
+    const inicio = rand(fx[1], fx[0]);
+    const seq = [];
+    for (let i = 0; i < 5; i++) seq.push(inicio + i);
+    const posFalta = rand(3, 1);
+    jogoState.resposta = seq[posFalta];
+    const html = seq.map((n, i) =>
+      i === posFalta ? `<div class="num-box falta">?</div>` : `<div class="num-box">${n}</div>`
+    ).join('');
+    const opcoes = new Set([jogoState.resposta]);
+    while (opcoes.size < 4) opcoes.add(rand(jogoState.resposta + 3, Math.max(1, jogoState.resposta - 3)));
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual número está faltando?</div>
+      <div class="seq-vis">${html}</div>
+      <div class="opcoes q4">${arr.map(o => `<button onclick="JOGOS.qualFalta.conferir(${o})" style="font-size:26px">${o}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto('Acertou!');
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.qualFalta(jogoState.resposta));
+  }
+};
+
+const FORMAS_PLANAS = [
+  {nome:'círculo', svg:'<circle cx="80" cy="70" r="55" fill="#ff7b6b" stroke="#4a3b8a" stroke-width="3"/>'},
+  {nome:'quadrado', svg:'<rect x="25" y="15" width="110" height="110" fill="#4ab3a5" stroke="#4a3b8a" stroke-width="3"/>'},
+  {nome:'retângulo', svg:'<rect x="15" y="30" width="130" height="80" fill="#5ba8e8" stroke="#4a3b8a" stroke-width="3"/>'},
+  {nome:'triângulo', svg:'<polygon points="80,15 20,120 140,120" fill="#ffd36b" stroke="#4a3b8a" stroke-width="3"/>'}
+];
+
+JOGOS.queForma = {
+  iniciar() {
+    const f = escolher(FORMAS_PLANAS);
+    jogoState.resposta = f.nome;
+    const opcoes = [...FORMAS_PLANAS].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Que forma é essa?</div>
+      <svg width="160" height="140" viewBox="0 0 160 140">${f.svg}</svg>
+      <div class="opcoes q4" style="margin-top:14px">
+        ${opcoes.map(o => `<button onclick="JOGOS.queForma.conferir('${o.nome}')">${o.nome}</button>`).join('')}
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! É um ${escolha}`);
+    else feedbackErro(`Era um ${jogoState.resposta}`, DICAS.queForma(jogoState.resposta));
+  }
+};
+
+JOGOS.contaForma = {
+  iniciar() {
+    const tipoAlvo = escolher(FORMAS_PLANAS);
+    jogoState.tipo = tipoAlvo.nome;
+    const fa = pickNivel([[2,4],[2,6],[3,8]], 'contaForma');
+    const fo = pickNivel([[1,3],[2,5],[3,7]], 'contaForma');
+    const qtdAlvo = rand(fa[1], fa[0]);
+    const qtdOutros = rand(fo[1], fo[0]);
+    const outros = FORMAS_PLANAS.filter(f => f.nome !== tipoAlvo.nome);
+    jogoState.resposta = qtdAlvo;
+    let figs = [];
+    for (let i = 0; i < qtdAlvo; i++) figs.push(tipoAlvo);
+    for (let i = 0; i < qtdOutros; i++) figs.push(escolher(outros));
+    figs.sort(() => Math.random() - 0.5);
+    const html = figs.map(f =>
+      `<div style="display:inline-block;margin:6px"><svg width="54" height="54" viewBox="0 0 160 140" style="transform:scale(0.35);transform-origin:top left;width:54px;height:54px">${f.svg}</svg></div>`
+    ).join('');
+    const opcoes = new Set([qtdAlvo]);
+    while (opcoes.size < 4) opcoes.add(rand(qtdAlvo + 2, Math.max(1, qtdAlvo - 2)));
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quantos <b>${tipoAlvo.nome}s</b> tem?</div>
+      <div style="text-align:center;background:#f7f5ff;border-radius:14px;padding:14px;margin:10px 0">${html}</div>
+      <div class="opcoes q4">${arr.map(o => `<button onclick="JOGOS.contaForma.conferir(${o})" style="font-size:24px">${o}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Acertou! ${escolha} ${jogoState.tipo}s`);
+    else feedbackErro(`Eram ${jogoState.resposta}`, DICAS.contaForma(jogoState.resposta, jogoState.tipo));
+  }
+};
+
+const OBJ_FORMA = [
+  {obj:'⚽ bola', forma:'círculo'},
+  {obj:'🪟 janela', forma:'quadrado'},
+  {obj:'📺 TV', forma:'retângulo'},
+  {obj:'🍕 fatia de pizza', forma:'triângulo'},
+  {obj:'🕐 relógio de parede', forma:'círculo'},
+  {obj:'📱 celular', forma:'retângulo'},
+  {obj:'🎲 dado', forma:'quadrado'},
+  {obj:'🍩 rosquinha', forma:'círculo'},
+  {obj:'📕 livro', forma:'retângulo'},
+  {obj:'🚸 placa de escola', forma:'triângulo'}
+];
+
+JOGOS.objForma = {
+  iniciar() {
+    const o = escolher(OBJ_FORMA);
+    jogoState.obj = o.obj; jogoState.resposta = o.forma;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual forma tem um<br><b style="font-size:34px">${o.obj}</b>?</div>
+      <div class="opcoes q4">${FORMAS_PLANAS.map(f => `<button onclick="JOGOS.objForma.conferir('${f.nome}')">${f.nome}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${jogoState.obj.split(' ').slice(1).join(' ')} é ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.objForma(jogoState.obj.split(' ').slice(1).join(' '), jogoState.resposta));
+  }
+};
+
+const DIAS = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+
+JOGOS.diaAmanha = {
+  iniciar() {
+    const idx = rand(6, 0);
+    jogoState.hoje = DIAS[idx];
+    jogoState.resposta = DIAS[(idx + 1) % 7];
+    const opcoes = [...DIAS].sort(() => Math.random() - 0.5).slice(0, 4);
+    if (!opcoes.includes(jogoState.resposta)) opcoes[0] = jogoState.resposta;
+    opcoes.sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Hoje é <b style="color:#ff9a44">${jogoState.hoje}</b>.<br>Que dia é amanhã?</div>
+      <div class="opcoes q4">${opcoes.map(d => `<button onclick="JOGOS.diaAmanha.conferir('${d}')">${d}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! Amanhã é ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.diaAmanha(jogoState.hoje, jogoState.resposta));
+  }
+};
+
+JOGOS.diaAntes = {
+  iniciar() {
+    const idx = rand(6, 0);
+    jogoState.hoje = DIAS[idx];
+    jogoState.resposta = DIAS[(idx + 6) % 7];
+    const opcoes = [...DIAS].sort(() => Math.random() - 0.5).slice(0, 4);
+    if (!opcoes.includes(jogoState.resposta)) opcoes[0] = jogoState.resposta;
+    opcoes.sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Antes de <b style="color:#ff9a44">${jogoState.hoje}</b> vem que dia?</div>
+      <div class="opcoes q4">${opcoes.map(d => `<button onclick="JOGOS.diaAntes.conferir('${d}')">${d}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! Antes vem ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.diaAntes(jogoState.hoje, jogoState.resposta));
+  }
+};
+
+const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+JOGOS.proxMes = {
+  iniciar() {
+    const idx = rand(11, 0);
+    jogoState.mes = MESES[idx];
+    jogoState.resposta = MESES[(idx + 1) % 12];
+    const opcoes = [...MESES].sort(() => Math.random() - 0.5).slice(0, 4);
+    if (!opcoes.includes(jogoState.resposta)) opcoes[0] = jogoState.resposta;
+    opcoes.sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Depois de <b style="color:#ff9a44">${jogoState.mes}</b> vem que mês?</div>
+      <div class="opcoes q4">${opcoes.map(m => `<button onclick="JOGOS.proxMes.conferir('${m}')">${m}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! É ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.proxMes(jogoState.mes, jogoState.resposta));
+  }
+};
+
+// Moedas e notas do Real
+const MOEDAS = [
+  {val:1.00, label:'R$ 1'},
+  {val:0.50, label:'50 centavos'},
+  {val:0.25, label:'25 centavos'},
+  {val:0.10, label:'10 centavos'},
+  {val:0.05, label:'5 centavos'}
+];
+const NOTAS = [2, 5, 10, 20, 50, 100];
+
+function formatReal(v) {
+  if (v < 1) return (v * 100).toFixed(0) + '¢';
+  return 'R$ ' + v.toFixed(2).replace('.',',').replace(',00','');
+}
+
+function renderMoeda(m) {
+  if (m.val < 1) return `<div class="moeda"><span class="val">${(m.val*100).toFixed(0)}</span><span class="cent">cent</span></div>`;
+  return `<div class="moeda"><span class="val">R$${m.val.toFixed(0)}</span></div>`;
+}
+
+JOGOS.moeda = {
+  iniciar() {
+    const m = escolher(MOEDAS);
+    jogoState.resposta = m.label;
+    const opcoes = [...MOEDAS].sort(() => Math.random() - 0.5).slice(0, 4);
+    if (!opcoes.find(o => o.label === m.label)) opcoes[0] = m;
+    opcoes.sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual o valor desta moeda?</div>
+      <div class="moedas-grid" style="justify-content:center">${renderMoeda(m)}</div>
+      <div class="opcoes q4">${opcoes.map(o => `<button onclick="JOGOS.moeda.conferir('${o.label}')">${o.label}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Acertou! ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.moeda(jogoState.resposta));
+  }
+};
+
+JOGOS.cofrinho = {
+  iniciar() {
+    const fq = pickNivel([[2,3],[3,4],[4,6]], 'cofrinho');
+    const qtd = rand(fq[1], fq[0]);
+    const moedasReais = [{val:1, label:'R$ 1'}, {val:2, label:'R$ 2'}];
+    let total = 0;
+    let html = '';
+    for (let i = 0; i < qtd; i++) {
+      const m = escolher(moedasReais);
+      total += m.val;
+      html += m.val === 1
+        ? `<div class="moeda"><span class="val">R$1</span></div>`
+        : `<div class="nota"><span class="val">R$2</span></div>`;
+    }
+    jogoState.resposta = total;
+    const opcoes = new Set([total]);
+    while (opcoes.size < 4) opcoes.add(rand(total + 2, Math.max(1, total - 2)));
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quanto dinheiro tem no cofrinho?</div>
+      <div class="moedas-grid">${html}</div>
+      <div class="opcoes q4">${arr.map(o => `<button onclick="JOGOS.cofrinho.conferir(${o})" style="font-size:22px">R$ ${o}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Acertou! R$ ${escolha}`);
+    else feedbackErro(`Eram R$ ${jogoState.resposta}`, DICAS.cofrinho(jogoState.resposta));
+  }
+};
+
+JOGOS.posso = {
+  itens: [
+    {nome:'sorvete',emoji:'🍦'}, {nome:'pipoca',emoji:'🍿'},
+    {nome:'bala',emoji:'🍬'}, {nome:'maçã',emoji:'🍎'},
+    {nome:'suco',emoji:'🧃'}, {nome:'pão',emoji:'🥖'}
+  ],
+  iniciar() {
+    const item = escolher(this.itens);
+    const fp = pickNivel([[2,6],[2,12],[3,20]], 'posso');
+    const ft = pickNivel([[1,8],[1,15],[1,25]], 'posso');
+    const preco = rand(fp[1], fp[0]);
+    const tenho = rand(ft[1], ft[0]);
+    jogoState.resposta = tenho >= preco;
+    jogoState.item = item; jogoState.preco = preco; jogoState.tenho = tenho;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:18px">
+        Tenho <b style="color:#4ab3a5">R$ ${tenho}</b><br>
+        O ${item.emoji} ${item.nome} custa <b style="color:#ff7b6b">R$ ${preco}</b><br>
+        Consigo comprar?
+      </div>
+      <div class="opcoes">
+        <button onclick="JOGOS.posso.conferir(true)" style="background:#d4f5dd;border-color:#4ab3a5;color:#1b7a3a">Sim ✓</button>
+        <button onclick="JOGOS.posso.conferir(false)" style="background:#fde0e0;border-color:#ff7b6b;color:#a83232">Não ✗</button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(jogoState.resposta ? 'Sim, consegue comprar!' : 'Isso, não tem dinheiro suficiente');
+    else feedbackErro(`${jogoState.resposta ? 'Daria sim, R$' + jogoState.tenho + ' é mais que R$' + jogoState.preco : 'Não daria, R$' + jogoState.tenho + ' é menos que R$' + jogoState.preco}`, DICAS.posso());
+  }
+};
+
+// GRÁFICOS DE BARRAS
+const ANIMAIS_GRAF = [
+  {nome:'cachorros',emoji:'🐶'}, {nome:'gatos',emoji:'🐱'},
+  {nome:'coelhos',emoji:'🐰'}, {nome:'peixes',emoji:'🐟'},
+  {nome:'pássaros',emoji:'🐦'}
+];
+
+function gerarDados(qtd = 3, max = 8) {
+  const escolhidos = [...ANIMAIS_GRAF].sort(() => Math.random() - 0.5).slice(0, qtd);
+  return escolhidos.map(a => ({...a, qtd: rand(max, 1)}));
+}
+
+function renderGrafico(dados) {
+  const maxQ = Math.max(...dados.map(d => d.qtd));
+  return `<div class="grafico-cols" style="margin-bottom:30px">${dados.map(d =>
+    `<div class="col" style="height:${(d.qtd / maxQ) * 160}px">
+      <span class="qtd">${d.qtd}</span>
+      <span class="nome">${d.emoji} ${d.nome}</span>
+    </div>`).join('')}</div>`;
+}
+
+JOGOS.quemMais = {
+  iniciar() {
+    let dados = gerarDados(3, 8);
+    // garantir que haja um claro maior
+    while (dados.filter(d => d.qtd === Math.max(...dados.map(x => x.qtd))).length > 1) {
+      dados = gerarDados(3, 8);
+    }
+    const maior = dados.reduce((a, b) => a.qtd > b.qtd ? a : b);
+    jogoState.resposta = maior.nome;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quem tem <b style="color:#4ab3a5">MAIS</b>?</div>
+      ${renderGrafico(dados)}
+      <div class="opcoes q3">${dados.map(d => `<button onclick="JOGOS.quemMais.conferir('${d.nome}')">${d.emoji} ${d.nome}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha} tem mais`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.quemMais(jogoState.resposta));
+  }
+};
+
+JOGOS.menor = {
+  iniciar() {
+    let dados = gerarDados(3, 8);
+    while (dados.filter(d => d.qtd === Math.min(...dados.map(x => x.qtd))).length > 1) {
+      dados = gerarDados(3, 8);
+    }
+    const menor = dados.reduce((a, b) => a.qtd < b.qtd ? a : b);
+    jogoState.resposta = menor.nome;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quem tem <b style="color:#ff7b6b">MENOS</b>?</div>
+      ${renderGrafico(dados)}
+      <div class="opcoes q3">${dados.map(d => `<button onclick="JOGOS.menor.conferir('${d.nome}')">${d.emoji} ${d.nome}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha} tem menos`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.menor(jogoState.resposta));
+  }
+};
+
+JOGOS.totalBichos = {
+  iniciar() {
+    const fd = pickNivel([[2,5],[3,8],[3,15]], 'totalBichos');
+    const dados = gerarDados(fd[0] < 3 ? 2 : 3, fd[1]);
+    const total = dados.reduce((s, d) => s + d.qtd, 0);
+    jogoState.resposta = total;
+    const opcoes = new Set([total]);
+    while (opcoes.size < 4) opcoes.add(rand(total + 3, Math.max(1, total - 3)));
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quantos bichinhos tem ao <b>TODO</b>?</div>
+      ${renderGrafico(dados)}
+      <div class="opcoes q4">${arr.map(o => `<button onclick="JOGOS.totalBichos.conferir(${o})" style="font-size:22px">${o}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Acertou! ${escolha} ao todo`);
+    else feedbackErro(`Eram ${jogoState.resposta}`, DICAS.totalBichos(jogoState.resposta));
+  }
+};
+
+
+JOGOS.parImpar = {
+  iniciar() {
+    const fx = pickNivel([[1,10],[1,30],[1,99]], 'parImpar');
+    const n = rand(fx[1], fx[0]);
+    const par = n % 2 === 0;
+    jogoState.resposta = par ? 'par' : 'impar'; jogoState.n = n;
+    // visual: desenha pares de bolinhas
+    let bolas = '';
+    for (let i = 0; i < n; i++) {
+      bolas += `<span style="display:inline-block;width:20px;height:20px;background:${i%2===0?'#ff7b6b':'#4ab3a5'};border-radius:50%;margin:3px"></span>`;
+    }
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">O número <span class="grande">${n}</span> é par ou ímpar?</div>
+      <div style="text-align:center;background:#f7f5ff;border-radius:14px;padding:14px;margin:10px 0;line-height:1">${bolas}</div>
+      <div class="opcoes">
+        <button onclick="JOGOS.parImpar.conferir('par')" style="background:#d4f5dd;border-color:#4ab3a5;color:#1b7a3a">Par</button>
+        <button onclick="JOGOS.parImpar.conferir('impar')" style="background:#fde0e0;border-color:#ff7b6b;color:#a83232">Ímpar</button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${jogoState.n} é ${jogoState.resposta === 'par' ? 'par' : 'ímpar'}`);
+    else feedbackErro(`Era ${jogoState.resposta === 'par' ? 'par' : 'ímpar'}`, DICAS.parImpar(jogoState.n, jogoState.resposta === 'par' ? 'par' : 'ímpar'));
+  }
+};
+
+initJogos();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

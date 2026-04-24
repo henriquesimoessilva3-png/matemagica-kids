@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Antecessor e Sucessor</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+  h1 { color: #4a3b8a; margin-bottom: 8px; font-size: 28px; }
+  .sub { color: #888; margin-bottom: 28px; font-size: 14px; }
+  .placar {
+    display: flex;
+    justify-content: space-around;
+    background: #f3f1fb;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 24px;
+  }
+  .placar div { font-size: 14px; color: #555; }
+  .placar strong { display: block; font-size: 22px; color: #4a3b8a; }
+  .numeros {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .box {
+    background: #f7f5ff;
+    border: 3px dashed #c5bbe9;
+    border-radius: 16px;
+    padding: 24px 8px;
+    font-size: 40px;
+    font-weight: 700;
+    color: #4a3b8a;
+  }
+  .box.atual {
+    background: linear-gradient(135deg, #ffd36b, #ff9a44);
+    border: none;
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(255,154,68,0.4);
+  }
+  .box input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 700;
+    color: #4a3b8a;
+    outline: none;
+    font-family: inherit;
+  }
+  .labels {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  button {
+    background: #6b54d3;
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.2s;
+    margin: 4px;
+  }
+  button:hover { background: #5842c2; transform: translateY(-2px); }
+  button.secundario { background: #e0dbf5; color: #4a3b8a; }
+  button.secundario:hover { background: #d0c9ed; }
+  .feedback {
+    min-height: 60px;
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .feedback.acerto { background: #d4f5dd; color: #1b7a3a; }
+  .feedback.erro { background: #fde0e0; color: #a83232; }
+  .nivel {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .nivel button {
+    padding: 8px 16px;
+    font-size: 13px;
+    background: #e0dbf5;
+    color: #4a3b8a;
+  }
+  .nivel button.ativo { background: #6b54d3; color: #fff; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Antecessor e Sucessor</h1>
+  <div class="sub">Escreva o número que vem ANTES e DEPOIS</div>
+
+  <div class="nivel">
+    <button class="ativo" data-max="20">Fácil (até 20)</button>
+    <button data-max="100">Médio (até 100)</button>
+    <button data-max="1000">Difícil (até 1000)</button>
+  </div>
+
+  <div class="placar">
+    <div>Acertos<strong id="acertos">0</strong></div>
+    <div>Erros<strong id="erros">0</strong></div>
+    <div>Sequência<strong id="streak">0</strong></div>
+  </div>
+
+  <div class="labels">
+    <div>Antecessor</div>
+    <div>Número</div>
+    <div>Sucessor</div>
+  </div>
+
+  <div class="numeros">
+    <div class="box"><input id="ant" type="number" placeholder="?" autocomplete="off"></div>
+    <div class="box atual" id="atual">—</div>
+    <div class="box"><input id="suc" type="number" placeholder="?" autocomplete="off"></div>
+  </div>
+
+  <button onclick="conferir()">Conferir</button>
+  <button class="secundario" onclick="novaRodada()">Pular</button>
+
+  <div class="feedback" id="feedback"></div>
+</div>
+
+<script>
+  let maxNum = 20;
+  let numeroAtual = 0;
+  let acertos = 0, erros = 0, streak = 0;
+
+  document.querySelectorAll('.nivel button').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.nivel button').forEach(b => b.classList.remove('ativo'));
+      btn.classList.add('ativo');
+      maxNum = parseInt(btn.dataset.max);
+      novaRodada();
+    };
+  });
+
+  function novaRodada() {
+    numeroAtual = Math.floor(Math.random() * (maxNum - 1)) + 1;
+    document.getElementById('atual').textContent = numeroAtual;
+    document.getElementById('ant').value = '';
+    document.getElementById('suc').value = '';
+    document.getElementById('feedback').textContent = '';
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('ant').focus();
+  }
+
+  function conferir() {
+    const ant = parseInt(document.getElementById('ant').value);
+    const suc = parseInt(document.getElementById('suc').value);
+    const fb = document.getElementById('feedback');
+
+    if (isNaN(ant) || isNaN(suc)) {
+      fb.textContent = 'Preencha os dois números!';
+      fb.className = 'feedback erro';
+      return;
+    }
+
+    const antCerto = ant === numeroAtual - 1;
+    const sucCerto = suc === numeroAtual + 1;
+
+    if (antCerto && sucCerto) {
+      acertos++;
+      streak++;
+      const emojis = ['Muito bem!', 'Perfeito!', 'Mandou bem!', 'Excelente!', 'Arrasou!'];
+      fb.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      fb.className = 'feedback acerto';
+      setTimeout(novaRodada, 1100);
+    } else {
+      erros++;
+      streak = 0;
+      let msg = 'Quase! ';
+      if (!antCerto) msg += `Antecessor é ${numeroAtual - 1}. `;
+      if (!sucCerto) msg += `Sucessor é ${numeroAtual + 1}.`;
+      fb.textContent = msg;
+      fb.className = 'feedback erro';
+    }
+
+    document.getElementById('acertos').textContent = acertos;
+    document.getElementById('erros').textContent = erros;
+    document.getElementById('streak').textContent = streak;
+  }
+
+  document.getElementById('ant').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('suc').focus();
+  });
+  document.getElementById('suc').addEventListener('keydown', e => {
+    if (e.key === 'Enter') conferir();
+  });
+
+  novaRodada();
+</script>
+</body>
+</html>

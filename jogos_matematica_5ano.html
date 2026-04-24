@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jogos de Matemática — 5º Ano</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css">
+<style>
+  .fracao-visual {
+    display: inline-block; vertical-align: middle; text-align: center;
+    font-size: 32px; font-weight: 700; line-height: 1; color: #4a3b8a; margin: 0 8px;
+  }
+  .fracao-visual .num-f { display: block; border-bottom: 3px solid #4a3b8a; padding: 0 12px 2px; }
+  .fracao-visual .den-f { display: block; padding: 2px 12px 0; }
+  .barra-percent {
+    background: #f7f5ff; border-radius: 10px; height: 28px; overflow: hidden;
+    border: 2px solid #c5bbe9; margin: 12px 0; position: relative;
+  }
+  .barra-percent .fill {
+    background: linear-gradient(90deg, #ffd36b, #ff9a44);
+    height: 100%; transition: width 0.4s;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 13px;
+  }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mat">
+<link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+<div class="container">
+  <h1>Jogos de Matemática</h1>
+  <div class="sub">5º Ano — Preparação para o Fundamental II</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div id="menu-principal">
+    <div class="capitulos">
+      <button class="cap-card cap1" onclick="abrirCapitulo(1)">
+        <span class="num">1</span><h3>Centenas de milhar</h3>
+        <p>Até 999.999 e milhão</p>
+      </button>
+      <button class="cap-card cap2" onclick="abrirCapitulo(2)">
+        <span class="num">2</span><h3>Números decimais</h3>
+        <p>0,5 e 1/2 · ordem · reta</p>
+      </button>
+      <button class="cap-card cap3" onclick="abrirCapitulo(3)">
+        <span class="num">3</span><h3>Frações equivalentes</h3>
+        <p>1/2 = 2/4 · simplificar</p>
+      </button>
+      <button class="cap-card cap4" onclick="abrirCapitulo(4)">
+        <span class="num">4</span><h3>Porcentagem</h3>
+        <p>10%, 25%, 50% do valor</p>
+      </button>
+      <button class="cap-card cap5" onclick="abrirCapitulo(5)">
+        <span class="num">5</span><h3>Operações com decimais</h3>
+        <p>Soma, ×10, ×100, dividir</p>
+      </button>
+      <button class="cap-card cap6" onclick="abrirCapitulo(6)">
+        <span class="num">6</span><h3>Dados e chance</h3>
+        <p>Tabelas, média, probabilidade</p>
+      </button>
+    </div>
+    <div style="text-align:center;margin-top:20px">
+      <a href="index.html" style="display:inline-block;margin-right:8px;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#ede8fa">← Trocar ano</a>
+      <button class="acao sec" onclick="zerarProgresso()" style="font-size:12px;padding:8px 14px">Zerar Progresso</button>
+    </div>
+  </div>
+
+  <div id="menu-capitulo" class="hidden">
+    <button class="voltar" onclick="voltarMenu()">← Voltar</button>
+    <h2 id="titulo-cap" style="color:#4a3b8a; margin-bottom:16px;"></h2>
+    <div class="jogos-lista" id="lista-jogos"></div>
+  </div>
+
+  <div id="area-jogo" class="hidden">
+    <button class="voltar" onclick="voltarCapitulo()">← Voltar aos jogos</button>
+    <h2 id="titulo-jogo" style="color:#4a3b8a; margin-bottom:14px; font-size:20px;"></h2>
+    <div class="placar-jogo">
+      <div>Estrelas<strong id="j-acertos">0</strong></div>
+      <div>Tentativas<strong id="j-tentativas">0</strong></div>
+      <div>Sequência<strong id="j-streak">0</strong></div>
+    </div>
+    <div class="dica-inline" id="dica-inline"></div>
+    <div class="jogo-area" id="jogo-conteudo"></div>
+  </div>
+</div>
+
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script src="mascotes.js"></script>
+<script src="jogos_shared.js"></script>
+<script>
+STORAGE_KEY = 'jogosMat5ano_v1';
+
+CAPS = {
+  1: { nome: 'Capítulo 1 — Centenas de milhar', jogos: [
+    { id: 'lerCm', nome: 'Ler Número até 999.999', desc: 'Grandes números' },
+    { id: 'compCm', nome: 'Comparar Grandes', desc: 'Qual é maior?' },
+    { id: 'ordensCm', nome: 'Decomposição Completa', desc: 'CM + DM + UM + C + D + U' },
+    { id: 'milhao', nome: 'Milhão', desc: 'Leia números de milhão' }
+  ]},
+  2: { nome: 'Capítulo 2 — Números decimais', jogos: [
+    { id: 'fracDec', nome: 'Fração para Decimal', desc: '1/2 é igual a 0,5' },
+    { id: 'decToFrac', nome: 'Decimal para Fração', desc: '0,25 é igual a?' },
+    { id: 'ordDec', nome: 'Ordenar Decimais', desc: 'Qual é maior?' }
+  ]},
+  3: { nome: 'Capítulo 3 — Frações equivalentes', jogos: [
+    { id: 'equiv', nome: 'É equivalente?', desc: '1/2 e 3/6 são iguais?' },
+    { id: 'simplif', nome: 'Simplificar Fração', desc: 'Qual a forma mais simples?' },
+    { id: 'somaFrac', nome: 'Somar Frações', desc: 'Mesmo denominador' }
+  ]},
+  4: { nome: 'Capítulo 4 — Porcentagem', jogos: [
+    { id: 'pctValor', nome: 'X% de um valor', desc: 'Quanto é 10% de 200?' },
+    { id: 'descto', nome: 'Desconto', desc: 'Quanto fica com desconto?' },
+    { id: 'pctFrac', nome: '% vira Fração', desc: '50% = 1/2' }
+  ]},
+  5: { nome: 'Capítulo 5 — Operações com decimais', jogos: [
+    { id: 'somaDec', nome: 'Soma Decimal', desc: '2,5 + 1,7 = ?' },
+    { id: 'multDez', nome: 'Multiplicar por 10, 100, 1000', desc: 'Vírgula anda!' },
+    { id: 'divDec', nome: 'Dividir Decimal', desc: '6,4 ÷ 2 = ?' }
+  ]},
+  6: { nome: 'Capítulo 6 — Dados e chance', jogos: [
+    { id: 'media', nome: 'Calcular a Média', desc: 'Soma e divide' },
+    { id: 'tabLe', nome: 'Ler Tabela', desc: 'Responda da tabela' },
+    { id: 'probSimples', nome: 'Probabilidade em Fração', desc: '2 em 6 = 2/6' }
+  ]}
+};
+
+TUTORIAIS = {
+  lerCm: { emoji:'🔢', titulo:'Ler até 999.999', corpo:`
+    <p>O número se divide em "milhares" e "unidades simples".</p>
+    <div class="exemplo"><b>345.678</b> = 345 mil, 678</div>`},
+  compCm: { emoji:'⚖️', titulo:'Comparar Grandes', corpo:`
+    <p>Mais dígitos = maior. Mesma quantidade? Compara da esquerda.</p>`},
+  ordensCm: { emoji:'🧩', titulo:'Decomposição Completa', corpo:`
+    <p>Cada posição tem ordem: CM=centena de milhar, DM=dezena de milhar, UM=unidade de milhar, C, D, U.</p>
+    <div class="exemplo"><b>234.567</b> = 200.000 + 30.000 + 4.000 + 500 + 60 + 7</div>`},
+  fracDec: { emoji:'🔄', titulo:'Fração para Decimal', corpo:`
+    <p>Dividir o de cima pelo de baixo. 1/2 = 1÷2 = 0,5.</p>
+    <div class="exemplo">1/4 = 0,25 · 3/4 = 0,75 · 1/5 = 0,2</div>`},
+  decToFrac: { emoji:'🔄', titulo:'Decimal para Fração', corpo:`
+    <p>0,5 = 5/10 = 1/2. Conta as casas decimais pra saber o denominador.</p>
+    <div class="exemplo">0,25 = 25/100 = 1/4</div>`},
+  ordDec: { emoji:'📊', titulo:'Ordenar Decimais', corpo:`
+    <p>Compare primeiro a parte inteira. Depois as casas decimais por ordem.</p>
+    <div class="exemplo"><b>2,5 vs 2,45</b> → 2,5 é maior (5 > 4 na primeira casa)</div>`},
+  equiv: { emoji:'🟰', titulo:'É equivalente?', corpo:`
+    <p>Duas frações são iguais se representam a mesma parte.</p>
+    <div class="exemplo">1/2 = 2/4 = 3/6 = 4/8 (multiplicando em cima e embaixo)</div>`},
+  simplif: { emoji:'✂️', titulo:'Simplificar Fração', corpo:`
+    <p>Divide o numerador e o denominador pelo mesmo número.</p>
+    <div class="exemplo">6/8 ÷ 2 = 3/4 (já é o mais simples)</div>`},
+  somaFrac: { emoji:'➕', titulo:'Somar Frações', corpo:`
+    <p>Se o denominador é igual, soma só os numeradores.</p>
+    <div class="exemplo">1/5 + 2/5 = 3/5</div>`},
+  pctValor: { emoji:'%', titulo:'% de um Valor', corpo:`
+    <p>% = "em cada 100". Transforme em fração ou divida por 100.</p>
+    <div class="exemplo">10% de 200 = 200 ÷ 10 = <b>20</b></div>`},
+  descto: { emoji:'🏷️', titulo:'Desconto', corpo:`
+    <p>Calcula quanto é o desconto, depois subtrai do valor.</p>
+    <div class="exemplo">R$ 100 com 20% off → desconto R$ 20 → paga R$ 80</div>`},
+  pctFrac: { emoji:'🔄', titulo:'% vira Fração', corpo:`
+    <p>Porcentagem é fração de 100.</p>
+    <div class="exemplo">50% = 50/100 = 1/2 · 25% = 1/4 · 10% = 1/10</div>`},
+  somaDec: { emoji:'➕', titulo:'Soma Decimal', corpo:`
+    <p>Alinha a vírgula e soma normal.</p>
+    <div class="exemplo">2,5 + 1,7 = 4,2 (somando 5+7=12, vai 1. 1+2+1=4)</div>`},
+  multDez: { emoji:'✖️', titulo:'Multiplicar por 10, 100, 1000', corpo:`
+    <p>A vírgula anda pra direita: 1 zero = 1 casa, 2 zeros = 2 casas...</p>
+    <div class="exemplo">2,5 × 10 = 25 · 2,5 × 100 = 250</div>`},
+  divDec: { emoji:'➗', titulo:'Dividir Decimal', corpo:`
+    <p>Dividir decimal por inteiro: divide normal, coloca vírgula na mesma posição.</p>
+    <div class="exemplo">6,4 ÷ 2 = 3,2</div>`},
+  media: { emoji:'📊', titulo:'Calcular a Média', corpo:`
+    <p>Soma todos os números e divide pela quantidade deles.</p>
+    <div class="exemplo">Notas 7, 8, 9 → (7+8+9)÷3 = 24÷3 = <b>8</b></div>`},
+  tabLe: { emoji:'📋', titulo:'Ler Tabela', corpo:`
+    <p>Encontre a linha e a coluna que a pergunta pede.</p>`},
+  probSimples: { emoji:'🎲', titulo:'Probabilidade em Fração', corpo:`
+    <p>Chance = quantos casos favoráveis / quantos casos no total.</p>
+    <div class="exemplo">Tirar 2 em um dado = <b>1/6</b> (1 face favorável, 6 no total)</div>`},
+  milhao: { emoji:'🌟', titulo:'Milhão', corpo:`
+    <p>1 milhão = 1.000.000 (um seguido de 6 zeros). Organiza em classes: milhões, milhares, unidades.</p>
+    <div class="exemplo"><b>2.345.678</b> = 2 milhões, 345 mil, 678</div>`}
+};
+
+DICAS = {
+  lerCm: (n) => `Separa: ${Math.floor(n/1000)} mil e ${n%1000}.`,
+  compCm: (a,b) => `${Math.max(a,b)} é maior. Conta os dígitos ou compara da esquerda.`,
+  ordensCm: (n) => `${n} = ${String(Math.floor(n/100000)*100000).replace(/\B(?=(\d{3})+(?!\d))/g,'.')} + ... + ${n%10}`,
+  fracDec: (n,d) => `${n}/${d} = ${n}÷${d} = ${(n/d).toFixed(2).replace('.',',').replace(/,?0+$/,'')}`,
+  decToFrac: (d) => `Conta as casas decimais. 0,${(d*10)%10===0?d*10:d*100} = ${d<0.1?d*100:d*10}/${d<0.1?100:10}, aí simplifica se der.`,
+  ordDec: (a,b) => `${Math.max(a,b).toString().replace('.',',')} é maior.`,
+  equiv: (r) => r ? `São equivalentes (mesma fração em forma diferente).` : `Não são. Verifica multiplicando cruzado.`,
+  simplif: (n,d,n2,d2) => `Divide ${n} e ${d} por ${n/n2}: fica ${n2}/${d2}.`,
+  somaFrac: (a,b,d) => `Denominador igual (${d}). Soma só os numeradores: ${a}+${b} = ${a+b}. Resultado: ${a+b}/${d}.`,
+  pctValor: (p,v,r) => `${p}% de ${v} = ${v} × ${p} ÷ 100 = ${r}.`,
+  descto: (p,v,d,f) => `${p}% de ${v} = ${d}. Preço final: ${v} − ${d} = ${f}.`,
+  pctFrac: (p,f) => `${p}% = ${p}/100 simplificado = ${f}.`,
+  somaDec: (a,b,r) => `${a} + ${b} = ${r}. Alinha a vírgula e soma cada coluna.`,
+  multDez: (n,m,r) => `${n} × ${m} = ${r}. Anda a vírgula ${m===10?1:m===100?2:3} casa(s) pra direita.`,
+  divDec: (a,b,r) => `${a} ÷ ${b} = ${r}. Divide normal, mantém a vírgula.`,
+  media: (s,n,m) => `Soma = ${s}. Divide por ${n}: ${s}÷${n} = ${m}.`,
+  tabLe: () => `Encontra a linha e a coluna na tabela e lê o valor.`,
+  probSimples: (f,t) => `Chance = ${f}/${t}. Simplifica se der.`,
+  milhao: (n) => `${n.toLocaleString('pt-BR')}. Separa em milhões, milhares, unidades.`
+};
+
+// ============== JOGOS ==============
+
+JOGOS.lerCm = {
+  iniciar() {
+    const fx = pickNivel([[1000,9999],[10000,99999],[100000,999999]], 'lerCm');
+    const n = rand(fx[1], fx[0]);
+    jogoState.resposta = n;
+    const opcoes = new Set([n]);
+    while (opcoes.size < 4) opcoes.add(rand(fx[1], fx[0]));
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    const mil = Math.floor(n/1000), resto = n%1000;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:19px">Qual é este número?<br>
+        <span style="font-size:16px;color:#6b54d3;display:block;margin-top:6px">
+          ${mil.toLocaleString('pt-BR')} mil${resto > 0 ? ` e ${resto}` : ''}
+        </span></div>
+      <div class="opcoes q4">${arr.map(o => `<button onclick="JOGOS.lerCm.conferir(${o})" style="font-size:20px">${o.toLocaleString('pt-BR')}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Certo!`);
+    else feedbackErro(`Era ${jogoState.resposta.toLocaleString('pt-BR')}`, DICAS.lerCm(jogoState.resposta));
+  }
+};
+
+JOGOS.compCm = {
+  iniciar() {
+    const fx = pickNivel([[100,9999],[1000,99999],[10000,999999]], 'compCm');
+    let a = rand(fx[1], fx[0]), b = rand(fx[1], fx[0]);
+    while (a === b) b = rand(fx[1], fx[0]);
+    const procuraMaior = rand(1, 0) === 1;
+    jogoState.a = a; jogoState.b = b;
+    jogoState.resposta = procuraMaior ? Math.max(a, b) : Math.min(a, b);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual é ${procuraMaior ? '<b style="color:#4ab3a5">MAIOR</b>' : '<b style="color:#ff7b6b">MENOR</b>'}?</div>
+      <div class="opcoes">
+        <button onclick="JOGOS.compCm.conferir(${a})" style="font-size:22px">${a.toLocaleString('pt-BR')}</button>
+        <button onclick="JOGOS.compCm.conferir(${b})" style="font-size:22px">${b.toLocaleString('pt-BR')}</button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso!`);
+    else feedbackErro(`Era ${jogoState.resposta.toLocaleString('pt-BR')}`, DICAS.compCm(jogoState.a, jogoState.b));
+  }
+};
+
+JOGOS.ordensCm = {
+  iniciar() {
+    const fx = pickNivel([[1000,9999],[10000,99999],[100000,999999]], 'ordensCm');
+    const n = rand(fx[1], fx[0]);
+    jogoState.resposta = n;
+    const cm = Math.floor(n/100000)*100000;
+    const dm = Math.floor((n%100000)/10000)*10000;
+    const um = Math.floor((n%10000)/1000)*1000;
+    const c = Math.floor((n%1000)/100)*100;
+    const d = Math.floor((n%100)/10)*10;
+    const u = n%10;
+    const partes = [cm, dm, um, c, d, u].filter(p => p > 0);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:17px">Qual número é?<br>
+        <span style="font-size:18px;color:#6b54d3;display:block;margin-top:8px">
+          ${partes.map(p => p.toLocaleString('pt-BR')).join(' + ')}
+        </span></div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.ordensCm.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.ordensCm.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto(`Certo! ${r.toLocaleString('pt-BR')}`);
+    else feedbackErro(`Era ${jogoState.resposta.toLocaleString('pt-BR')}`, DICAS.ordensCm(jogoState.resposta));
+  }
+};
+
+const FRAC_DEC_PARES = [
+  {num:1,den:2,dec:0.5,txt:'0,5'},
+  {num:1,den:4,dec:0.25,txt:'0,25'},
+  {num:3,den:4,dec:0.75,txt:'0,75'},
+  {num:1,den:5,dec:0.2,txt:'0,2'},
+  {num:2,den:5,dec:0.4,txt:'0,4'},
+  {num:3,den:5,dec:0.6,txt:'0,6'},
+  {num:4,den:5,dec:0.8,txt:'0,8'},
+  {num:1,den:10,dec:0.1,txt:'0,1'},
+  {num:7,den:10,dec:0.7,txt:'0,7'},
+  {num:1,den:100,dec:0.01,txt:'0,01'}
+];
+
+JOGOS.fracDec = {
+  iniciar() {
+    const p = escolher(FRAC_DEC_PARES);
+    jogoState.resposta = p.txt; jogoState.p = p;
+    const opcoes = new Set([p.txt]);
+    while (opcoes.size < 4) {
+      const o = escolher(FRAC_DEC_PARES);
+      opcoes.add(o.txt);
+    }
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual decimal representa
+        <span class="fracao-visual"><span class="num-f">${p.num}</span><span class="den-f">${p.den}</span></span>
+      ?</div>
+      <div class="opcoes q4">${arr.map(o => `<button onclick="JOGOS.fracDec.conferir('${o}')" style="font-size:22px">${o}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.fracDec(jogoState.p.num, jogoState.p.den));
+  }
+};
+
+JOGOS.decToFrac = {
+  iniciar() {
+    const p = escolher(FRAC_DEC_PARES);
+    jogoState.resposta = `${p.num}/${p.den}`; jogoState.p = p;
+    const opcoes = new Set([jogoState.resposta]);
+    while (opcoes.size < 4) {
+      const o = escolher(FRAC_DEC_PARES);
+      opcoes.add(`${o.num}/${o.den}`);
+    }
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual fração é igual a <span class="grande">${p.txt}</span></div>
+      <div class="opcoes q4">${arr.map(o => {
+        const [n, d] = o.split('/');
+        return `<button onclick="JOGOS.decToFrac.conferir('${o}')"><span class="fracao-visual"><span class="num-f">${n}</span><span class="den-f">${d}</span></span></button>`;
+      }).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso!`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.decToFrac(jogoState.p.dec));
+  }
+};
+
+JOGOS.ordDec = {
+  iniciar() {
+    const opts = [0.25, 0.5, 0.75, 0.1, 0.9, 1.2, 1.5, 0.3, 0.8, 2.4, 2.45, 2.5];
+    let a = escolher(opts), b = escolher(opts);
+    while (a === b) b = escolher(opts);
+    const procuraMaior = rand(1, 0) === 1;
+    jogoState.a = a; jogoState.b = b;
+    jogoState.resposta = procuraMaior ? Math.max(a, b) : Math.min(a, b);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual decimal é ${procuraMaior ? '<b style="color:#4ab3a5">MAIOR</b>' : '<b style="color:#ff7b6b">MENOR</b>'}?</div>
+      <div class="opcoes">
+        <button onclick="JOGOS.ordDec.conferir(${a})" style="font-size:30px">${a.toString().replace('.',',')}</button>
+        <button onclick="JOGOS.ordDec.conferir(${b})" style="font-size:30px">${b.toString().replace('.',',')}</button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha.toString().replace('.',',')}`);
+    else feedbackErro(`Era ${jogoState.resposta.toString().replace('.',',')}`, DICAS.ordDec(jogoState.a, jogoState.b));
+  }
+};
+
+JOGOS.equiv = {
+  iniciar() {
+    const bases = pickNivel([
+      [[1,2],[1,3],[1,4]],
+      [[1,2],[1,3],[1,4],[2,3],[3,4]],
+      [[1,2],[1,3],[1,4],[2,3],[3,4],[2,5],[3,5]]
+    ], 'equiv');
+    const base = escolher(bases);
+    const fm = pickNivel([[2,3],[2,5],[2,8]], 'equiv');
+    const mult = rand(fm[1], fm[0]);
+    const n1 = base[0], d1 = base[1];
+    const eq = rand(1, 0) === 1;
+    let n2, d2;
+    if (eq) {
+      n2 = n1 * mult; d2 = d1 * mult;
+    } else {
+      n2 = n1 * mult + rand(2, 1); d2 = d1 * mult;
+    }
+    jogoState.resposta = eq;
+    jogoState.n1=n1; jogoState.d1=d1; jogoState.n2=n2; jogoState.d2=d2;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Essas frações são equivalentes?<br>
+        <span class="fracao-visual"><span class="num-f">${n1}</span><span class="den-f">${d1}</span></span>
+        <span style="font-size:30px;margin:0 10px">=?</span>
+        <span class="fracao-visual"><span class="num-f">${n2}</span><span class="den-f">${d2}</span></span>
+      </div>
+      <div class="opcoes">
+        <button onclick="JOGOS.equiv.conferir(true)" style="background:#d4f5dd;border-color:#4ab3a5;color:#1b7a3a">Sim ✓</button>
+        <button onclick="JOGOS.equiv.conferir(false)" style="background:#fde0e0;border-color:#ff7b6b;color:#a83232">Não ✗</button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(jogoState.resposta ? 'Isso, são equivalentes!' : 'Isso, NÃO são equivalentes');
+    else feedbackErro(`Na verdade ${jogoState.resposta ? 'SÃO' : 'NÃO são'} equivalentes`, DICAS.equiv(jogoState.resposta));
+  }
+};
+
+function mdc(a, b) { return b === 0 ? a : mdc(b, a % b); }
+
+JOGOS.simplif = {
+  iniciar() {
+    const bases = pickNivel([
+      [[1,2],[1,3],[1,4],[2,3]],
+      [[1,2],[1,3],[1,4],[2,3],[3,4],[2,5]],
+      [[1,2],[1,3],[1,4],[2,3],[3,4],[2,5],[3,5],[1,6]]
+    ], 'simplif');
+    const base = escolher(bases);
+    const fm = pickNivel([[2,3],[2,4],[2,6]], 'simplif');
+    const mult = rand(fm[1], fm[0]);
+    const n = base[0] * mult, d = base[1] * mult;
+    jogoState.resposta = `${base[0]}/${base[1]}`;
+    jogoState.n = n; jogoState.d = d;
+    // opcoes: a correta + 3 erradas plausíveis
+    const opcoes = new Set([jogoState.resposta]);
+    while (opcoes.size < 4) {
+      const o = escolher([[1,2],[1,3],[2,3],[3,4],[2,5],[3,5],[1,4],[3,8],[1,5],[5,6]]);
+      opcoes.add(`${o[0]}/${o[1]}`);
+    }
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual a forma simplificada de
+        <span class="fracao-visual"><span class="num-f">${n}</span><span class="den-f">${d}</span></span>
+      ?</div>
+      <div class="opcoes q4">${arr.map(o => {
+        const [n2, d2] = o.split('/');
+        return `<button onclick="JOGOS.simplif.conferir('${o}')"><span class="fracao-visual"><span class="num-f">${n2}</span><span class="den-f">${d2}</span></span></button>`;
+      }).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha}`);
+    else {
+      const [n2, d2] = jogoState.resposta.split('/').map(Number);
+      feedbackErro(`Era ${jogoState.resposta}`, DICAS.simplif(jogoState.n, jogoState.d, n2, d2));
+    }
+  }
+};
+
+JOGOS.somaFrac = {
+  iniciar() {
+    const dens = pickNivel([[3,4,5],[3,4,5,6,8],[4,5,6,8,10]], 'somaFrac');
+    const d = escolher(dens);
+    const a = rand(d - 2, 1), b = rand(d - a - 1, 1);
+    jogoState.a = a; jogoState.b = b; jogoState.d = d;
+    jogoState.resposta = `${a+b}/${d}`;
+    const opcoes = new Set([jogoState.resposta]);
+    while (opcoes.size < 4) {
+      opcoes.add(`${rand(d, 1)}/${d}`);
+    }
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quanto é
+        <span class="fracao-visual"><span class="num-f">${a}</span><span class="den-f">${d}</span></span>
+        <span style="font-size:26px">+</span>
+        <span class="fracao-visual"><span class="num-f">${b}</span><span class="den-f">${d}</span></span>
+        ?</div>
+      <div class="opcoes q4">${arr.map(o => {
+        const [n2, d2] = o.split('/');
+        return `<button onclick="JOGOS.somaFrac.conferir('${o}')"><span class="fracao-visual"><span class="num-f">${n2}</span><span class="den-f">${d2}</span></span></button>`;
+      }).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.somaFrac(jogoState.a, jogoState.b, jogoState.d));
+  }
+};
+
+JOGOS.pctValor = {
+  iniciar() {
+    const pcts = pickNivel([[10,50],[10,20,25,50],[10,15,20,25,30,50,75]], 'pctValor');
+    const p = escolher(pcts);
+    const fv = pickNivel([[2,5],[3,10],[5,20]], 'pctValor');
+    const vBase = rand(fv[1], fv[0]);
+    const v = vBase * 20;
+    jogoState.resposta = v * p / 100;
+    jogoState.p = p; jogoState.v = v;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quanto é <b style="color:#ff9a44">${p}%</b> de <b style="color:#4ab3a5">${v}</b>?</div>
+      <div class="barra-percent"><div class="fill" style="width:${p}%">${p}%</div></div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.pctValor.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.pctValor.conferir(); });
+  },
+  conferir() {
+    const r = parseFloat(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto(`Isso! ${r}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.pctValor(jogoState.p, jogoState.v, jogoState.resposta));
+  }
+};
+
+JOGOS.descto = {
+  iniciar() {
+    const pcts = pickNivel([[10,50],[10,20,25,50],[10,15,20,25,30,50]], 'descto');
+    const p = escolher(pcts);
+    const fv = pickNivel([[2,5],[4,10],[5,30]], 'descto');
+    const v = rand(fv[1], fv[0]) * 10;
+    const descVal = v * p / 100;
+    jogoState.resposta = v - descVal;
+    jogoState.p = p; jogoState.v = v; jogoState.desc = descVal;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:18px">Uma peça custa <b>R$ ${v}</b><br>Com <b style="color:#ff9a44">${p}% de desconto</b>, quanto fica?</div>
+      <input type="number" id="resp" placeholder="R$ ?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.descto.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.descto.conferir(); });
+  },
+  conferir() {
+    const r = parseFloat(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um valor!');
+    if (r === jogoState.resposta) feedbackAcerto(`Certo! R$ ${r}`);
+    else feedbackErro(`Era R$ ${jogoState.resposta}`, DICAS.descto(jogoState.p, jogoState.v, jogoState.desc, jogoState.resposta));
+  }
+};
+
+JOGOS.pctFrac = {
+  pares: [
+    {p:50,f:'1/2'},{p:25,f:'1/4'},{p:75,f:'3/4'},
+    {p:10,f:'1/10'},{p:20,f:'1/5'},{p:100,f:'1/1'}
+  ],
+  iniciar() {
+    const x = escolher(this.pares);
+    jogoState.resposta = x.f; jogoState.p = x.p;
+    const opcoes = new Set([x.f]);
+    while (opcoes.size < 4) opcoes.add(escolher(this.pares).f);
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta"><span class="grande">${x.p}%</span> é igual a qual fração?</div>
+      <div class="opcoes q4">${arr.map(o => {
+        const [n, d] = o.split('/');
+        return `<button onclick="JOGOS.pctFrac.conferir('${o}')"><span class="fracao-visual"><span class="num-f">${n}</span><span class="den-f">${d}</span></span></button>`;
+      }).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.pctFrac(jogoState.p, jogoState.resposta));
+  }
+};
+
+JOGOS.somaDec = {
+  iniciar() {
+    const fa = pickNivel([[2,20],[10,80],[30,200]], 'somaDec');
+    const fb = pickNivel([[2,15],[5,50],[10,100]], 'somaDec');
+    const a = (rand(fa[1], fa[0]) + rand(9, 0)/10);
+    const b = (rand(fb[1], fb[0]) + rand(9, 0)/10);
+    const resp = Math.round((a + b) * 10) / 10;
+    jogoState.resposta = resp; jogoState.a = a; jogoState.b = b;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta"><span class="grande">${a.toFixed(1).replace('.',',')} + ${b.toFixed(1).replace('.',',')}</span></div>
+      <input type="number" id="resp" step="0.1" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.somaDec.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.somaDec.conferir(); });
+  },
+  conferir() {
+    const r = parseFloat(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (Math.abs(r - jogoState.resposta) < 0.01) feedbackAcerto(`Certo! ${jogoState.resposta.toFixed(1).replace('.',',')}`);
+    else feedbackErro(`Era ${jogoState.resposta.toFixed(1).replace('.',',')}`, DICAS.somaDec(jogoState.a.toFixed(1).replace('.',','), jogoState.b.toFixed(1).replace('.',','), jogoState.resposta.toFixed(1).replace('.',',')));
+  }
+};
+
+JOGOS.multDez = {
+  iniciar() {
+    const fn = pickNivel([[1,20],[1,99],[10,500]], 'multDez');
+    const mults = pickNivel([[10],[10,100],[10,100,1000]], 'multDez');
+    const n = (rand(fn[1], fn[0]) + rand(9, 0)/10);
+    const mult = escolher(mults);
+    jogoState.resposta = Math.round(n * mult * 100) / 100;
+    jogoState.n = n; jogoState.m = mult;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta"><span class="grande">${n.toFixed(1).replace('.',',')} × ${mult}</span></div>
+      <input type="number" id="resp" step="0.01" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.multDez.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.multDez.conferir(); });
+  },
+  conferir() {
+    const r = parseFloat(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (Math.abs(r - jogoState.resposta) < 0.01) feedbackAcerto(`Certo!`);
+    else feedbackErro(`Era ${jogoState.resposta.toString().replace('.',',')}`, DICAS.multDez(jogoState.n.toFixed(1).replace('.',','), jogoState.m, jogoState.resposta.toString().replace('.',',')));
+  }
+};
+
+JOGOS.divDec = {
+  iniciar() {
+    const divs = pickNivel([[2,5],[2,4,5],[2,4,5,8]], 'divDec');
+    const fq = pickNivel([[2,6],[2,10],[5,25]], 'divDec');
+    const div = escolher(divs);
+    const quoc = rand(fq[1], fq[0]) + rand(9, 0)/10;
+    const n = Math.round(div * quoc * 10) / 10;
+    jogoState.resposta = Math.round(n / div * 100) / 100;
+    jogoState.a = n; jogoState.b = div;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta"><span class="grande">${n.toString().replace('.',',')} ÷ ${div}</span></div>
+      <input type="number" id="resp" step="0.01" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.divDec.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.divDec.conferir(); });
+  },
+  conferir() {
+    const r = parseFloat(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (Math.abs(r - jogoState.resposta) < 0.01) feedbackAcerto(`Certo!`);
+    else feedbackErro(`Era ${jogoState.resposta.toString().replace('.',',')}`, DICAS.divDec(jogoState.a.toString().replace('.',','), jogoState.b, jogoState.resposta.toString().replace('.',',')));
+  }
+};
+
+JOGOS.media = {
+  iniciar() {
+    const qtds = pickNivel([[3],[3,4],[3,4,5]], 'media');
+    const qtd = escolher(qtds);
+    const nums = [];
+    let tentar;
+    do {
+      nums.length = 0;
+      let soma = 0;
+      for (let i = 0; i < qtd - 1; i++) {
+        const n = rand(10, 1);
+        nums.push(n); soma += n;
+      }
+      tentar = rand(10, 1) * qtd - soma;
+    } while (tentar < 1 || tentar > 10);
+    nums.push(tentar);
+    const soma = nums.reduce((a,b)=>a+b, 0);
+    const media = soma / qtd;
+    jogoState.resposta = media; jogoState.soma = soma; jogoState.qtd = qtd;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:18px">Calcule a média destas notas:<br>
+        <span style="font-size:28px;color:#6b54d3;display:block;margin-top:8px">${nums.join(' · ')}</span></div>
+      <input type="number" id="resp" step="0.01" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.media.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.media.conferir(); });
+  },
+  conferir() {
+    const r = parseFloat(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (Math.abs(r - jogoState.resposta) < 0.01) feedbackAcerto(`Isso! Média = ${jogoState.resposta}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.media(jogoState.soma, jogoState.qtd, jogoState.resposta));
+  }
+};
+
+const ANIMAIS_TAB = [
+  {nome:'cachorros',emoji:'🐶'}, {nome:'gatos',emoji:'🐱'},
+  {nome:'coelhos',emoji:'🐰'}, {nome:'peixes',emoji:'🐟'}
+];
+
+JOGOS.tabLe = {
+  iniciar() {
+    const fq = pickNivel([[3,10],[3,15],[5,30]], 'tabLe');
+    const dados = [...ANIMAIS_TAB].sort(() => Math.random() - 0.5).slice(0, 3);
+    const qtds = dados.map(d => ({...d, qtd: rand(fq[1], fq[0])}));
+    const alvo = escolher(qtds);
+    jogoState.resposta = alvo.qtd; jogoState.alvo = alvo;
+    const opcoes = new Set([alvo.qtd]);
+    while (opcoes.size < 4) opcoes.add(rand(alvo.qtd + 5, Math.max(1, alvo.qtd - 5)));
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:18px">Na loja de animais tem:<br>
+        <table style="margin:14px auto;border-collapse:collapse;font-size:16px">
+        ${qtds.map(q => `<tr><td style="padding:6px 14px;border:1px solid #c5bbe9">${q.emoji} ${q.nome}</td><td style="padding:6px 14px;border:1px solid #c5bbe9;font-weight:700">${q.qtd}</td></tr>`).join('')}
+        </table>
+        <br>Quantos <b>${alvo.nome}</b> têm?
+      </div>
+      <div class="opcoes q4">${arr.map(o => `<button onclick="JOGOS.tabLe.conferir(${o})" style="font-size:22px">${o}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha} ${jogoState.alvo.nome}`);
+    else feedbackErro(`Eram ${jogoState.resposta}`, DICAS.tabLe());
+  }
+};
+
+JOGOS.probSimples = {
+  iniciar() {
+    const totais = pickNivel([[4,5,6],[4,6,8],[6,8,10,12]], 'probSimples');
+    const total = escolher(totais);
+    const fav = rand(total - 1, 1);
+    jogoState.resposta = `${fav}/${total}`;
+    jogoState.fav = fav; jogoState.total = total;
+    const opcoes = new Set([jogoState.resposta]);
+    while (opcoes.size < 4) {
+      const f = rand(total - 1, 1);
+      opcoes.add(`${f}/${total}`);
+    }
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:17px">Uma caixa tem <b>${total} bolas</b>: <b style="color:#ff7b6b">${fav} vermelhas</b> e ${total-fav} azuis.<br>
+        Qual a probabilidade de tirar uma <b>vermelha</b>?</div>
+      <div class="opcoes q4">${arr.map(o => {
+        const [n, d] = o.split('/');
+        return `<button onclick="JOGOS.probSimples.conferir('${o}')"><span class="fracao-visual"><span class="num-f">${n}</span><span class="den-f">${d}</span></span></button>`;
+      }).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.probSimples(jogoState.fav, jogoState.total));
+  }
+};
+
+
+JOGOS.milhao = {
+  iniciar() {
+    const fx = pickNivel([[1000000,1999999],[1000000,4999999],[1000000,9999999]], 'milhao');
+    const n = rand(fx[1], fx[0]);
+    jogoState.resposta = n;
+    const opcoes = new Set([n]);
+    while (opcoes.size < 4) opcoes.add(rand(fx[1], fx[0]));
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    const milhoes = Math.floor(n / 1000000);
+    const milhares = Math.floor((n % 1000000) / 1000);
+    const unidades = n % 1000;
+    let leitura = `${milhoes} milh${milhoes > 1 ? 'ões' : 'ão'}`;
+    if (milhares > 0) leitura += `, ${milhares} mil`;
+    if (unidades > 0) leitura += ` e ${unidades}`;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:18px">Qual é este número?<br>
+        <span style="font-size:17px;color:#6b54d3;display:block;margin-top:6px">${leitura}</span></div>
+      <div class="opcoes q4">${arr.map(o => `<button onclick="JOGOS.milhao.conferir(${o})" style="font-size:18px">${o.toLocaleString('pt-BR')}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Certo!`);
+    else feedbackErro(`Era ${jogoState.resposta.toLocaleString('pt-BR')}`, DICAS.milhao(jogoState.resposta));
+  }
+};
+
+initJogos();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

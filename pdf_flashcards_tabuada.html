@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flashcards Tabuada — Matemágica</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #e0dbf5;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .controles {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+  .controles label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .controles select {
+    padding: 8px 12px;
+    border: 2px solid #c5bbe9;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a3b8a;
+    background: #fff;
+  }
+  .controles .btn-voltar {
+    background: #ede8fa;
+    color: #6b54d3;
+    border: 2px solid #c5bbe9;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .controles .btn-print {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .instrucoes {
+    background: #fff3d6;
+    border-radius: 12px;
+    padding: 12px 14px;
+    max-width: 900px;
+    width: 100%;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #5a3a00;
+    line-height: 1.5;
+  }
+  .instrucoes b { color: #8a5a10; }
+
+  .folha {
+    background: #fff;
+    width: 100%;
+    max-width: 900px;
+    padding: 30px 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    border-radius: 4px;
+    margin-bottom: 14px;
+  }
+  .folha-titulo {
+    text-align: center;
+    font-size: 16px;
+    color: #4a3b8a;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .folha-sub {
+    text-align: center;
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 14px;
+  }
+
+  .cartas-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .carta {
+    background: #fff;
+    border: 2.5px dashed #c5bbe9;
+    border-radius: 12px;
+    aspect-ratio: 3 / 4;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    position: relative;
+  }
+  .carta.frente {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+  }
+  .carta.verso {
+    background: linear-gradient(135deg, #fff3d6, #ffd36b);
+  }
+  .carta .mini-logo {
+    font-size: 8px;
+    color: #888;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .carta.frente .mini-logo { color: #6b54d3; }
+  .carta.verso .mini-logo { color: #8a5a10; }
+  .carta .expr {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: 900;
+    color: #4a3b8a;
+    line-height: 1;
+  }
+  .carta.verso .expr {
+    background: linear-gradient(135deg, #8a5a10, #6b54d3);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .carta .dica {
+    font-size: 9px;
+    color: #666;
+    line-height: 1.2;
+    padding: 2px;
+  }
+  .carta .equal {
+    position: absolute;
+    top: 3px;
+    right: 6px;
+    font-size: 10px;
+    color: #aaa;
+    font-weight: 700;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .controles, .instrucoes { display: none; }
+    .folha {
+      box-shadow: none;
+      max-width: 100%;
+      width: 100%;
+      border-radius: 0;
+      padding: 8mm;
+      page-break-after: always;
+    }
+    @page { size: A4 portrait; margin: 0; }
+    .carta { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="controles">
+  <a href="imprimir.html" class="btn-voltar">← Voltar</a>
+  <div>
+    <label>Tabuada:</label>
+    <select id="sel-tab" onchange="renderCartas()">
+      <option value="todas">Todas (2 ao 10)</option>
+      <option value="2">Do 2</option>
+      <option value="3">Do 3</option>
+      <option value="4">Do 4</option>
+      <option value="5">Do 5</option>
+      <option value="6">Do 6</option>
+      <option value="7">Do 7</option>
+      <option value="8">Do 8</option>
+      <option value="9">Do 9</option>
+      <option value="10">Do 10</option>
+    </select>
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+</div>
+
+<div class="instrucoes">
+  <b>Como usar:</b> Imprima (papel mais grosso é melhor). Recorte as cartas tracejadas. Junte cada <b>frente</b> (roxa) com seu <b>verso</b> (amarelo) e cole ou grampeie. Agora sua criança tem um baralho de tabuada pra treinar em qualquer lugar.
+</div>
+
+<div id="folhas"></div>
+
+<script>
+function gerarCartasTabuada(t) {
+  const arr = [];
+  for (let i = 1; i <= 10; i++) {
+    arr.push({ a: t, b: i, res: t * i });
+  }
+  return arr;
+}
+
+function renderCartas() {
+  const sel = document.getElementById('sel-tab').value;
+  let cartas;
+  if (sel === 'todas') {
+    cartas = [];
+    for (let t = 2; t <= 10; t++) cartas = cartas.concat(gerarCartasTabuada(t));
+  } else {
+    cartas = gerarCartasTabuada(parseInt(sel));
+  }
+
+  const cartasPorFolha = 8; // 4x2 — frente + verso
+  const folhas = [];
+  for (let i = 0; i < cartas.length; i += cartasPorFolha) {
+    folhas.push(cartas.slice(i, i + cartasPorFolha));
+  }
+
+  const host = document.getElementById('folhas');
+  host.innerHTML = folhas.map((grupo, gi) => {
+    // primeiro as frentes, depois os versos correspondentes na mesma folha
+    const frentes = grupo.map((c, i) => `
+      <div class="carta frente">
+        <div class="mini-logo">✦ MATEMÁGICA</div>
+        <div class="equal">#${gi*cartasPorFolha+i+1}</div>
+        <div class="expr">${c.a} × ${c.b}</div>
+        <div class="dica">Quanto dá?</div>
+      </div>`).join('');
+    const versos = grupo.map((c, i) => `
+      <div class="carta verso">
+        <div class="mini-logo">★ RESPOSTA</div>
+        <div class="equal">#${gi*cartasPorFolha+i+1}</div>
+        <div class="expr">${c.res}</div>
+        <div class="dica">${c.a} × ${c.b} = ${c.b} × ${c.a}</div>
+      </div>`).join('');
+    return `
+      <div class="folha">
+        <div class="folha-titulo">Flashcards — Folha ${gi + 1} (frentes)</div>
+        <div class="folha-sub">Recorte nas linhas tracejadas</div>
+        <div class="cartas-grid">${frentes}${grupo.length < 4 ? ''.padEnd((4 - grupo.length) * 6, ' ') : ''}</div>
+      </div>
+      <div class="folha">
+        <div class="folha-titulo">Flashcards — Folha ${gi + 1} (versos)</div>
+        <div class="folha-sub">Combine com as frentes numeradas</div>
+        <div class="cartas-grid">${versos}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+renderCartas();
+</script>
+</body>
+</html>

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabuada Mágica — MATEMÁGICA</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  h1.titulo-tabuada {
+    font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    background: linear-gradient(135deg, #6b54d3 0%, #ff7b6b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-align: center;
+    margin: 6px 0 2px;
+    line-height: 1.1;
+  }
+  .sub-tabuada { text-align: center; color: #888; font-size: 13px; margin-bottom: 16px; }
+
+  /* ===== POKÉDEX ===== */
+  .pokedex-titulo {
+    font-size: 13px;
+    color: #4a3b8a;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 18px 0 8px;
+    text-align: center;
+  }
+  .pokedex-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .poke-card {
+    aspect-ratio: 3 / 4;
+    border-radius: 12px;
+    padding: 6px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2.5px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .poke-card:hover { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+  .poke-card.bloq {
+    background: linear-gradient(135deg, #d9d3e8, #ede8fa);
+    color: #8578b0;
+    filter: grayscale(0.3);
+  }
+  .poke-card.n1 { background: linear-gradient(135deg, #ffd8d0, #ffb4a6); color: #7a3020; border-color: #ff9a80; }
+  .poke-card.n2 { background: linear-gradient(135deg, #ffe29a, #ffb347); color: #6a4020; border-color: #ff9a44; }
+  .poke-card.n3 { background: linear-gradient(135deg, #c8f2d8, #7ae0a0); color: #1b4a2a; border-color: #3ac070; }
+  .poke-num {
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1;
+    margin-top: 4px;
+  }
+  .poke-label {
+    font-size: 9px;
+    font-weight: 700;
+    opacity: 0.75;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .poke-estrelas {
+    font-size: 11px;
+    letter-spacing: -1px;
+    min-height: 14px;
+  }
+  .poke-card.bloq .poke-num::before {
+    content: '?';
+    position: absolute;
+    font-size: 44px;
+    left: 0; right: 0;
+    top: 18px;
+    color: #6b54d3;
+    opacity: 0.4;
+  }
+  .poke-card.bloq .poke-num {
+    opacity: 0;
+  }
+
+  /* ===== SELETOR DE MODO ===== */
+  .modo-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0 12px;
+    justify-content: center;
+  }
+  .modo-tab {
+    background: #f7f5ff;
+    border: 2px solid #c5bbe9;
+    color: #6b54d3;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+  .modo-tab:hover { background: #ede8fa; }
+  .modo-tab.ativo { background: #6b54d3; color: #fff; border-color: #6b54d3; }
+
+  /* ===== ESTUDO ===== */
+  .estudo-area {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .estudo-titulo {
+    font-size: 16px;
+    font-weight: 700;
+    color: #4a3b8a;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .comutativa-par {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .comut-box {
+    background: #fff;
+    border: 2.5px solid #c5bbe9;
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+  }
+  .comut-expr {
+    font-size: 20px;
+    font-weight: 800;
+    color: #4a3b8a;
+    margin-bottom: 8px;
+  }
+  .comut-viz {
+    display: grid;
+    gap: 3px;
+    justify-content: center;
+    margin: 8px auto;
+  }
+  .comut-viz .dot {
+    width: 14px;
+    height: 14px;
+    background: linear-gradient(135deg, #ffd36b, #ff9a44);
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  .comut-result {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1b7a3a;
+    margin-top: 6px;
+  }
+  .comut-insight {
+    margin-top: 12px;
+    background: #fff3d6;
+    border-left: 4px solid #ffd36b;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #5a3a00;
+    line-height: 1.45;
+  }
+  .comut-insight strong { color: #8a5a10; }
+
+  .estudo-controles {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  .estudo-btn {
+    background: #fff;
+    border: 2px solid #c5bbe9;
+    color: #6b54d3;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .estudo-btn:hover { background: #ede8fa; }
+  .estudo-btn.principal {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff;
+    border-color: #6b54d3;
+  }
+
+  /* ===== TREINO ===== */
+  .treino-header {
+    background: linear-gradient(135deg, #ffd36b, #ff9a44);
+    color: #fff;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .treino-progresso {
+    background: rgba(255,255,255,0.3);
+    border-radius: 6px;
+    height: 8px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .treino-progresso-fill {
+    background: #fff;
+    height: 100%;
+    transition: width 0.4s;
+  }
+  .treino-placar { font-size: 24px; font-weight: 900; }
+  .treino-label { font-size: 11px; opacity: 0.9; text-transform: uppercase; }
+
+  .treino-pergunta {
+    background: #fff;
+    border: 3px solid #ffd36b;
+    border-radius: 14px;
+    padding: 22px 16px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .treino-expr {
+    font-size: 42px;
+    font-weight: 800;
+    color: #4a3b8a;
+    margin-bottom: 6px;
+  }
+  .treino-hint {
+    font-size: 12px;
+    color: #888;
+  }
+
+  .treino-opcoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .treino-opcoes button {
+    padding: 16px;
+    font-size: 22px;
+    font-weight: 800;
+    background: #f7f5ff;
+    color: #4a3b8a;
+    border: 3px solid #c5bbe9;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .treino-opcoes button:hover {
+    background: #ede8fa;
+    transform: scale(1.03);
+  }
+  .treino-opcoes button.acerto {
+    background: #d4f5dd;
+    border-color: #3ac070;
+    color: #1b4a2a;
+    animation: flash 0.4s;
+  }
+  .treino-opcoes button.erro {
+    background: #fde0e0;
+    border-color: #d04040;
+    color: #801818;
+    animation: shake 0.3s;
+  }
+  @keyframes flash {
+    0%, 100% { transform: scale(1); }
+    40% { transform: scale(1.1); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  .resultado-treino {
+    background: linear-gradient(135deg, #7ecfa8, #4a9e6f);
+    color: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    margin: 14px 0;
+  }
+  .resultado-emoji { font-size: 54px; margin-bottom: 8px; }
+  .resultado-texto { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .resultado-sub { font-size: 14px; opacity: 0.9; margin-bottom: 10px; }
+  .resultado-botoes { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+  /* ===== RESUMO ===== */
+  .resumo-txt {
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    line-height: 1.4;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1 class="titulo-tabuada">🔢 Tabuada Mágica</h1>
+  <div class="sub-tabuada">Desbloqueie cada tabuada. Ordem não muda o total!</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div class="pokedex-titulo">🎴 Sua coleção de tabuadas</div>
+  <div class="pokedex-grid" id="pokedex-grid"></div>
+  <div class="resumo-txt" id="resumo-txt"></div>
+
+  <div class="modo-tabs">
+    <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
+    <button class="modo-tab" id="tab-treino" onclick="mudarModo('treino')">⚡ Treinar</button>
+  </div>
+
+  <div id="painel-estudo">
+    <div class="estudo-area">
+      <div class="estudo-titulo" id="estudo-titulo">Tabuada do <span id="estudo-tab-num">2</span></div>
+      <div class="comutativa-par" id="comutativa-par"></div>
+      <div class="comut-insight">
+        <strong>💡 Truque mágico:</strong> <span id="insight-texto">...</span>
+      </div>
+      <div class="estudo-controles">
+        <button class="estudo-btn" onclick="mudarFator(-1)">← Anterior</button>
+        <button class="estudo-btn principal" onclick="proximoTreino()">Treinar essa! ⚡</button>
+        <button class="estudo-btn" onclick="mudarFator(1)">Próximo →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="painel-treino" class="hidden">
+    <div class="treino-header">
+      <div>
+        <div class="treino-label">Tabuada do <span id="treino-tab-num">2</span></div>
+        <div class="treino-placar"><span id="treino-acertos">0</span>/<span id="treino-total">10</span></div>
+        <div class="treino-progresso"><div class="treino-progresso-fill" id="treino-fill" style="width:0%"></div></div>
+      </div>
+      <button class="estudo-btn" onclick="mudarModo('estudo')" style="background:rgba(255,255,255,0.25);border-color:rgba(255,255,255,0.5);color:#fff">Sair</button>
+    </div>
+    <div class="treino-pergunta">
+      <div class="treino-expr" id="treino-expr">...</div>
+      <div class="treino-hint" id="treino-hint"></div>
+    </div>
+    <div class="treino-opcoes" id="treino-opcoes"></div>
+  </div>
+
+  <div id="painel-resultado" class="hidden">
+    <div class="resultado-treino">
+      <div class="resultado-emoji" id="res-emoji">🌟</div>
+      <div class="resultado-texto" id="res-texto">...</div>
+      <div class="resultado-sub" id="res-sub">...</div>
+      <div class="resultado-botoes">
+        <button class="estudo-btn principal" onclick="iniciarTreino(_fatorAtual)">🔄 Tentar de novo</button>
+        <button class="estudo-btn" onclick="mudarModo('estudo')">📖 Estudar mais</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:16px">
+    <a href="index.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#ede8fa">← Voltar ao início</a>
+  </div>
+</div>
+
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script src="mascotes.js"></script>
+<script src="jogos_shared.js"></script>
+<script>
+STORAGE_KEY = 'jogosMatTabuada_v1';
+CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
+
+// ============== ESTADO DA TABUADA ==============
+const TABUADA_KEY = 'matemagica_tabuada_v1';
+let TABUADA = {};
+function tabuadaLoad() {
+  try { TABUADA = JSON.parse(localStorage.getItem(TABUADA_KEY) || '{}'); } catch(e) { TABUADA = {}; }
+  for (let i = 1; i <= 10; i++) {
+    if (!TABUADA[i]) TABUADA[i] = { acertos: 0, total: 0, melhor: 0 };
+  }
+}
+function tabuadaSave() {
+  try { localStorage.setItem(TABUADA_KEY, JSON.stringify(TABUADA)); } catch(e) {}
+}
+function nivelTabuada(t) {
+  const d = TABUADA[t] || { melhor: 0 };
+  if (d.melhor >= 9) return 3;
+  if (d.melhor >= 7) return 2;
+  if (d.melhor >= 5) return 1;
+  return 0;
+}
+
+// ============== POKÉDEX ==============
+function renderPokedex() {
+  const el = document.getElementById('pokedex-grid');
+  let html = '';
+  for (let t = 1; t <= 10; t++) {
+    const n = nivelTabuada(t);
+    const d = TABUADA[t];
+    const classe = n === 0 ? 'bloq' : ('n' + n);
+    const estrelas = n === 0 ? '' : '★'.repeat(n) + '☆'.repeat(3 - n);
+    const label = n === 0 ? 'NÃO TESTADA' : (n === 3 ? 'DOMINADA' : n === 2 ? 'QUASE LÁ' : 'TREINANDO');
+    html += `
+      <button class="poke-card ${classe}" onclick="abrirEstudo(${t})" title="Tabuada do ${t}">
+        <div class="poke-label">×${t}</div>
+        <div class="poke-num">${t}</div>
+        <div>
+          <div class="poke-estrelas">${estrelas}</div>
+          <div class="poke-label" style="font-size:8px">${label}</div>
+        </div>
+      </button>`;
+  }
+  el.innerHTML = html;
+
+  // resumo
+  const dominadas = [1,2,3,4,5,6,7,8,9,10].filter(t => nivelTabuada(t) === 3).length;
+  const treinadas = [1,2,3,4,5,6,7,8,9,10].filter(t => nivelTabuada(t) >= 1).length;
+  const txt = dominadas === 10
+    ? '🏆 Você dominou todas as tabuadas! Lenda!'
+    : `${dominadas}/10 dominadas · ${treinadas}/10 já treinadas`;
+  document.getElementById('resumo-txt').textContent = txt;
+}
+
+// ============== ESTUDO (visual comutativa) ==============
+let _fatorAtual = 2;
+let _outro = 3;
+
+function renderEstudo() {
+  document.getElementById('estudo-tab-num').textContent = _fatorAtual;
+  const a = _fatorAtual, b = _outro;
+  const total = a * b;
+  document.getElementById('comutativa-par').innerHTML = `
+    <div class="comut-box">
+      <div class="comut-expr">${a} × ${b}</div>
+      <div class="comut-viz" style="grid-template-columns:repeat(${b}, 14px)">
+        ${Array(a*b).fill(0).map(() => '<span class="dot"></span>').join('')}
+      </div>
+      <div class="comut-result">= ${total}</div>
+      <div style="font-size:10px;color:#888;margin-top:4px">${a} fileiras · ${b} em cada</div>
+    </div>
+    <div class="comut-box">
+      <div class="comut-expr">${b} × ${a}</div>
+      <div class="comut-viz" style="grid-template-columns:repeat(${a}, 14px)">
+        ${Array(a*b).fill(0).map(() => '<span class="dot"></span>').join('')}
+      </div>
+      <div class="comut-result">= ${total}</div>
+      <div style="font-size:10px;color:#888;margin-top:4px">${b} fileiras · ${a} em cada</div>
+    </div>
+  `;
+  document.getElementById('insight-texto').innerHTML =
+    `<b>${a} × ${b}</b> é a mesma coisa que <b>${b} × ${a}</b>. Se já sabe um, já sabe o outro! Por isso só precisa decorar metade. ✨`;
+}
+
+function mudarFator(delta) {
+  _fatorAtual = Math.max(1, Math.min(10, _fatorAtual + delta));
+  _outro = Math.max(2, Math.min(10, _outro));
+  renderEstudo();
+  renderPokedex();
+}
+function abrirEstudo(t) {
+  _fatorAtual = t;
+  _outro = 3;
+  mudarModo('estudo');
+  renderEstudo();
+}
+
+// ============== TREINO ==============
+let _treinoPerguntas = [];
+let _treinoIdx = 0;
+let _treinoAcertos = 0;
+
+function gerarPerguntasTreino(fator) {
+  // 10 perguntas: inclui todos os fatores de 2 a 10 na tabuada escolhida
+  const base = [];
+  for (let i = 1; i <= 10; i++) {
+    base.push({ a: fator, b: i, res: fator * i });
+    // versão comutada (mistura)
+    if (i !== fator) base.push({ a: i, b: fator, res: fator * i });
+  }
+  // embaralha + pega 10
+  for (let i = base.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [base[i], base[j]] = [base[j], base[i]];
+  }
+  return base.slice(0, 10);
+}
+
+function iniciarTreino(fator) {
+  _fatorAtual = fator;
+  _treinoPerguntas = gerarPerguntasTreino(fator);
+  _treinoIdx = 0;
+  _treinoAcertos = 0;
+  document.getElementById('treino-tab-num').textContent = fator;
+  document.getElementById('treino-total').textContent = _treinoPerguntas.length;
+  mudarModo('treino');
+  renderPerguntaTreino();
+}
+
+function proximoTreino() {
+  iniciarTreino(_fatorAtual);
+}
+
+function renderPerguntaTreino() {
+  if (_treinoIdx >= _treinoPerguntas.length) return mostrarResultadoTreino();
+  const p = _treinoPerguntas[_treinoIdx];
+  document.getElementById('treino-expr').innerHTML = `${p.a} × ${p.b} = <span style="opacity:0.4">?</span>`;
+  document.getElementById('treino-acertos').textContent = _treinoAcertos;
+  document.getElementById('treino-fill').style.width = (_treinoIdx / _treinoPerguntas.length * 100) + '%';
+  // dica inteligente
+  const outra = (p.a === _fatorAtual) ? `${p.b} × ${p.a}` : `${p.b} × ${p.a}`;
+  document.getElementById('treino-hint').textContent = `Dica: é o mesmo que ${p.b} × ${p.a}`;
+
+  // gera 4 opções (1 certa + 3 próximas)
+  const certo = p.res;
+  const opcs = new Set([certo]);
+  while (opcs.size < 4) {
+    const d = Math.floor(Math.random() * 5) - 2;
+    const c = certo + d + (Math.random() < 0.3 ? (Math.floor(Math.random()*6) - 3) : 0);
+    if (c > 0 && c !== certo) opcs.add(c);
+  }
+  const arr = Array.from(opcs).sort(() => Math.random() - 0.5);
+  document.getElementById('treino-opcoes').innerHTML = arr.map(v =>
+    `<button onclick="responderTreino(${v}, this)">${v}</button>`
+  ).join('');
+}
+
+function responderTreino(valor, btn) {
+  const p = _treinoPerguntas[_treinoIdx];
+  const todos = document.querySelectorAll('#treino-opcoes button');
+  todos.forEach(b => b.disabled = true);
+
+  TABUADA[_fatorAtual].total++;
+  if (valor === p.res) {
+    _treinoAcertos++;
+    TABUADA[_fatorAtual].acertos++;
+    btn.classList.add('acerto');
+    somAcerto();
+    STATE.acertou('tabuada_' + _fatorAtual);
+    reagirMascoteCoach('acerto');
+  } else {
+    btn.classList.add('erro');
+    // marca a certa
+    todos.forEach(b => {
+      if (parseInt(b.textContent) === p.res) b.classList.add('acerto');
+    });
+    somErro();
+    STATE.errou('tabuada_' + _fatorAtual);
+    reagirMascoteCoach('erro');
+  }
+  tabuadaSave();
+
+  setTimeout(() => {
+    _treinoIdx++;
+    renderPerguntaTreino();
+  }, valor === p.res ? 700 : 1400);
+}
+
+function mostrarResultadoTreino() {
+  const d = TABUADA[_fatorAtual];
+  if (_treinoAcertos > (d.melhor || 0)) d.melhor = _treinoAcertos;
+  tabuadaSave();
+  renderPokedex();
+
+  let emoji = '💪', texto = 'Continua treinando!', sub = '';
+  const nivel = nivelTabuada(_fatorAtual);
+  if (_treinoAcertos === 10) { emoji = '🏆'; texto = 'PERFEITO!'; sub = 'Tabuada do ' + _fatorAtual + ' dominada!'; soltarConfete(120); somCelebracao(); }
+  else if (_treinoAcertos >= 9) { emoji = '🌟'; texto = 'Dominada!'; sub = 'Tabuada do ' + _fatorAtual + ' no nível 3!'; soltarConfete(80); somCelebracao(); }
+  else if (_treinoAcertos >= 7) { emoji = '👍'; texto = 'Quase lá!'; sub = 'Mais um treino e você domina!'; soltarConfete(30); }
+  else if (_treinoAcertos >= 5) { emoji = '🙂'; texto = 'No caminho!'; sub = 'Bora estudar um pouquinho mais.'; }
+  else { emoji = '💪'; texto = 'Bora treinar mais!'; sub = 'Usa o modo Estudar pra ver o truque.'; }
+
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-texto').textContent = texto + ` (${_treinoAcertos}/10)`;
+  document.getElementById('res-sub').textContent = sub;
+  mudarModo('resultado');
+}
+
+// ============== CONTROLE DE MODO ==============
+function mudarModo(m) {
+  document.getElementById('painel-estudo').classList.toggle('hidden', m !== 'estudo');
+  document.getElementById('painel-treino').classList.toggle('hidden', m !== 'treino');
+  document.getElementById('painel-resultado').classList.toggle('hidden', m !== 'resultado');
+  document.getElementById('tab-estudo').classList.toggle('ativo', m === 'estudo');
+  document.getElementById('tab-treino').classList.toggle('ativo', m === 'treino' || m === 'resultado');
+  if (m === 'estudo') renderEstudo();
+  if (m === 'treino') renderPerguntaTreino();
+}
+
+// ============== INIT ==============
+tabuadaLoad();
+initJogos();
+renderPokedex();
+renderEstudo();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

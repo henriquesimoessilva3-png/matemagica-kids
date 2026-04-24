@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATEMÁGICA — Escolha o Ano</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css">
+<style>
+  h1.matemagica-titulo {
+    font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
+    font-size: 44px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #6b54d3 0%, #b968e8 50%, #ffd36b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-align: center;
+    margin: 6px 0 2px;
+    line-height: 1;
+    text-shadow: 0 2px 6px rgba(107, 84, 211, 0.15);
+  }
+  h1.matemagica-titulo .estrela-tit {
+    display: inline-block;
+    -webkit-text-fill-color: #ffd36b;
+    color: #ffd36b;
+    animation: estrelaPulsa 1.6s ease-in-out infinite;
+    margin: 0 6px;
+    font-size: 36px;
+  }
+
+  .ano-grid {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 4px 2px 14px;
+    margin: 0 -4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #c5bbe9 transparent;
+  }
+  .ano-grid::-webkit-scrollbar { height: 6px; }
+  .ano-grid::-webkit-scrollbar-thumb { background: #c5bbe9; border-radius: 3px; }
+  .ano-grid::-webkit-scrollbar-track { background: transparent; }
+  .ano-card {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border: 3px solid transparent;
+    border-radius: 18px;
+    padding: 18px 12px 16px;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: center;
+    text-decoration: none;
+    flex: 0 0 135px;
+    scroll-snap-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 170px;
+  }
+  .ano-card:hover {
+    transform: translateY(-5px);
+    border-color: #6b54d3;
+    box-shadow: 0 8px 20px rgba(107, 84, 211, 0.25);
+  }
+  .ano-card.ano1 { background: linear-gradient(135deg, #ffebe8, #ffd1ca); }
+  .ano-card.ano2 { background: linear-gradient(135deg, #e0f2ee, #c1e8df); }
+  .ano-card.ano3 { background: linear-gradient(135deg, #fff3d6, #ffe5a3); }
+  .ano-card.ano4 { background: linear-gradient(135deg, #dbedfb, #b8d9f5); }
+  .ano-card.ano5 { background: linear-gradient(135deg, #f0def5, #e0bdea); }
+  .ano-num {
+    font-size: 40px;
+    font-weight: 800;
+    color: #4a3b8a;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .ano-label {
+    font-size: 12px;
+    color: #4a3b8a;
+    font-weight: 700;
+    opacity: 0.9;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .ano-tema {
+    font-size: 10px;
+    color: #555;
+    line-height: 1.3;
+    flex: 1;
+  }
+  .ano-progresso {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #4a3b8a;
+    font-weight: 700;
+    min-height: 14px;
+  }
+  @media (min-width: 760px) {
+    .ano-grid { overflow-x: visible; justify-content: center; }
+    .ano-card { flex: 1 1 0; min-width: 120px; max-width: 140px; }
+  }
+
+  .intro {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+
+  /* ===== MASCOTE ===== */
+  .mascote-wrap {
+    text-align: center;
+    margin: 4px 0 10px;
+    position: relative;
+    user-select: none;
+  }
+  .mascote-holder {
+    display: inline-block;
+    line-height: 0;
+  }
+  .mascote-holder svg.mascote {
+    width: 210px;
+    max-width: 60%;
+    height: auto;
+    animation: mascoteBounce 3.6s ease-in-out infinite;
+    filter: drop-shadow(0 8px 14px rgba(107, 84, 211, 0.35));
+    cursor: pointer;
+    transition: transform 0.25s;
+  }
+  .mascote-holder svg.mascote:hover { transform: scale(1.05) rotate(2deg); }
+  .mascote-holder svg.mascote:active { transform: scale(0.96); }
+  @keyframes mascoteBounce {
+    0%, 100% { transform: translateY(0) rotate(-1.2deg); }
+    50%      { transform: translateY(-9px) rotate(1.2deg); }
+  }
+
+  .sim { font-family: 'Segoe UI', Arial, sans-serif; font-weight: 800; fill: #6b54d3; }
+  .sim-1 { animation: simFloatA 4.2s ease-in-out infinite; }
+  .sim-2 { animation: simFloatB 5.1s ease-in-out infinite; }
+  .sim-3 { animation: simFloatA 4.7s ease-in-out infinite reverse; }
+  .sim-4 { animation: simFloatB 3.7s ease-in-out infinite reverse; }
+  .sim-5 { animation: simFloatA 5.4s ease-in-out infinite; }
+  .sim-6 { animation: simFloatB 4.0s ease-in-out infinite; }
+  @keyframes simFloatA {
+    0%, 100% { transform: translateY(0) rotate(-6deg); opacity: 0.35; }
+    50%      { transform: translateY(-7px) rotate(10deg); opacity: 0.85; }
+  }
+  @keyframes simFloatB {
+    0%, 100% { transform: translateY(0) rotate(6deg); opacity: 0.4; }
+    50%      { transform: translateY(7px) rotate(-10deg); opacity: 0.9; }
+  }
+  .estrela-varinha {
+    transform-origin: center; transform-box: fill-box;
+    animation: estrelaPulsa 1.6s ease-in-out infinite;
+  }
+  @keyframes estrelaPulsa {
+    0%, 100% { transform: scale(1);   filter: drop-shadow(0 0 2px #ffd36b); }
+    50%      { transform: scale(1.25); filter: drop-shadow(0 0 8px #ffd36b); }
+  }
+  .olho-brilho { animation: piscar 4s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+  @keyframes piscar {
+    0%, 46%, 54%, 100% { transform: scaleY(1); }
+    50%                { transform: scaleY(0.1); }
+  }
+
+  .mascote-balao {
+    display: inline-block;
+    background: #fff;
+    border: 2px solid #6b54d3;
+    color: #4a3b8a;
+    padding: 6px 14px;
+    border-radius: 18px;
+    font-size: 13px;
+    font-weight: 700;
+    position: relative;
+    margin-top: -6px;
+    box-shadow: 0 3px 8px rgba(107, 84, 211, 0.18);
+    animation: balaoFade 0.6s ease-out both;
+    max-width: 280px;
+  }
+  .mascote-balao::before {
+    content: ''; position: absolute; top: -9px; left: 50%;
+    transform: translateX(-50%); width: 0; height: 0;
+    border-left: 8px solid transparent; border-right: 8px solid transparent;
+    border-bottom: 9px solid #6b54d3;
+  }
+  .mascote-balao::after {
+    content: ''; position: absolute; top: -6px; left: 50%;
+    transform: translateX(-50%); width: 0; height: 0;
+    border-left: 6px solid transparent; border-right: 6px solid transparent;
+    border-bottom: 7px solid #fff;
+  }
+  @keyframes balaoFade {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== SELETOR DE MASCOTE ===== */
+  .mascote-seletor {
+    display: flex; gap: 8px; justify-content: center;
+    margin: 10px 0 4px; flex-wrap: wrap;
+  }
+  .mascote-seletor-label {
+    font-size: 11px; color: #888; text-transform: uppercase;
+    letter-spacing: 1px; font-weight: 700;
+    text-align: center; margin-top: 6px;
+  }
+  .mini-mascote {
+    width: 62px; height: 66px;
+    border: 2.5px solid #e0d8f5;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #fafaff, #f0ecff);
+    cursor: pointer;
+    padding: 2px;
+    transition: all 0.2s;
+    overflow: hidden;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mini-mascote:hover {
+    border-color: #b968e8;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 12px rgba(185, 104, 232, 0.25);
+  }
+  .mini-mascote.ativo {
+    border-color: #6b54d3;
+    background: linear-gradient(135deg, #ede8fa, #dccbf5);
+    box-shadow: 0 0 0 3px rgba(107, 84, 211, 0.22);
+  }
+  .mini-mascote svg {
+    width: 100%; height: 100%;
+    display: block;
+    pointer-events: none;
+  }
+  .mini-mascote svg, .mini-mascote svg * {
+    animation: none !important;
+    filter: none !important;
+    transform: none !important;
+  }
+  .mini-mascote .mini-nome {
+    position: absolute; bottom: 1px; left: 0; right: 0;
+    font-size: 8px; font-weight: 700; color: #6b54d3;
+    background: rgba(255,255,255,0.85); padding: 1px 0;
+    text-align: center;
+  }
+  .mini-mascote.ativo::after {
+    content: '✓';
+    position: absolute; top: -6px; right: -6px;
+    background: #6b54d3; color: #fff;
+    width: 18px; height: 18px; border-radius: 50%;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+
+  /* === MOBILE: caber em uma viewport sem scroll excessivo === */
+  @media (max-width: 500px) {
+    h1.matemagica-titulo { font-size: 30px; letter-spacing: 1px; }
+    h1.matemagica-titulo .estrela-tit { font-size: 24px; margin: 0 4px; }
+    .sub { font-size: 12px; margin-bottom: 8px; }
+    .mascote-wrap { margin: 2px 0 6px; }
+    .mascote-holder svg.mascote { width: 130px; }
+    .mascote-balao { font-size: 11px; padding: 4px 10px; max-width: 240px; margin-top: -4px; }
+    .mascote-seletor { gap: 6px; margin: 6px 0 2px; }
+    .mini-mascote { width: 46px; height: 50px; }
+    .mini-mascote .mini-nome { font-size: 7px; }
+    .mascote-seletor-label { font-size: 10px; margin-top: 4px; }
+    .intro { font-size: 12px; margin-bottom: 10px; line-height: 1.35; }
+    .ano-card { flex: 0 0 110px; min-height: 140px; padding: 12px 8px; }
+    .ano-num { font-size: 30px; margin-bottom: 2px; }
+    .ano-label { font-size: 11px; }
+    .ano-tema { font-size: 9px; line-height: 1.25; }
+    .ano-progresso { font-size: 10px; margin-top: 4px; }
+  }
+  @media (max-width: 380px) {
+    h1.matemagica-titulo { font-size: 26px; }
+    .mascote-holder svg.mascote { width: 110px; }
+    .mini-mascote { width: 42px; height: 46px; }
+  }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="MATEMÁGICA">
+<link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+<div class="container">
+  <h1 class="matemagica-titulo"><span class="estrela-tit">✦</span>MATEMÁGICA<span class="estrela-tit">✦</span></h1>
+  <div class="sub">Escolha o ano pra começar</div>
+
+  <div class="mascote-wrap">
+    <div class="mascote-holder" id="mascote-holder"></div>
+    <div class="mascote-balao" id="mascote-balao">Carregando…</div>
+    <div class="mascote-seletor" id="mascote-seletor"></div>
+    <div class="mascote-seletor-label">Escolha seu mascote</div>
+  </div>
+
+  <div class="intro">Jogos alinhados à BNCC · Progresso salvo por ano</div>
+
+  <div style="text-align:center;margin-bottom:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <button onclick="abrirLoja()" style="display:inline-flex;align-items:center;gap:4px;color:#a87800;background:linear-gradient(135deg,#fff3d6,#ffe5a3);border:1px solid #ffcc4a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit">🛒 Loja · 🪙 <span id="moedas-home">0</span></button>
+    <a href="tabuada.html" style="display:inline-block;color:#a8410a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff3d6,#ffd36b);border:1px solid #ff9a44">🔢 Tabuada</a>
+    <a href="imprimir.html" style="display:inline-block;color:#1b4a2a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:1px solid #4ab3a5">📄 Imprimir</a>
+    <a href="provas.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px;background:#ede8fa;border:1px solid #d9cefa">📝 Provas</a>
+    <a href="dashboard.html" style="display:inline-block;color:#666;text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px;background:#f7f5ff;border:1px solid #d9cefa">📊 Pais</a>
+  </div>
+
+  <div class="ano-grid" id="ano-grid">
+    <a href="jogos_matematica_1ano.html" class="ano-card ano1" data-ano="1">
+      <div class="ano-num">1º</div>
+      <div class="ano-label">1º Ano</div>
+      <div class="ano-tema">Contagem, formas planas, calendário, dinheirinho</div>
+      <div class="ano-progresso" data-ano="1"></div>
+    </a>
+    <a href="jogos_matematica_2ano.html" class="ano-card ano2" data-ano="2">
+      <div class="ano-num">2º</div>
+      <div class="ano-label">2º Ano</div>
+      <div class="ano-tema">Dezenas, somar/subtrair, horas, formas 3D</div>
+      <div class="ano-progresso" data-ano="2"></div>
+    </a>
+    <a href="jogos_matematica_3ano.html" class="ano-card ano3" data-ano="3">
+      <div class="ano-num">3º</div>
+      <div class="ano-label">3º Ano</div>
+      <div class="ano-tema">Milhar, multiplicação, divisão, medidas</div>
+      <div class="ano-progresso" data-ano="3"></div>
+    </a>
+    <a href="jogos_matematica_4ano.html" class="ano-card ano4" data-ano="4">
+      <div class="ano-num">4º</div>
+      <div class="ano-label">4º Ano</div>
+      <div class="ano-tema">Dezenas de milhar, frações, probabilidade</div>
+      <div class="ano-progresso" data-ano="4"></div>
+    </a>
+    <a href="jogos_matematica_5ano.html" class="ano-card ano5" data-ano="5">
+      <div class="ano-num">5º</div>
+      <div class="ano-label">5º Ano</div>
+      <div class="ano-tema">Decimais, frações equivalentes, porcentagem</div>
+      <div class="ano-progresso" data-ano="5"></div>
+    </a>
+  </div>
+</div>
+
+<!-- Modal compartilhado (usado pela Loja e Badges) -->
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<script src="jogos_shared.js"></script>
+<script src="mascotes.js"></script>
+<script>
+// ============== MASCOTE DA TELA INICIAL ==============
+let _falaIdx = 0;
+let _intervaloFala = null;
+
+function renderMascote() {
+  const m = getMascoteAtivo();
+  const holder = document.getElementById('mascote-holder');
+  holder.innerHTML = m.svg;
+  const balao = document.getElementById('mascote-balao');
+  balao.textContent = m.falas.intro[0];
+  _falaIdx = 0;
+  balao.style.animation = 'none';
+  balao.offsetHeight;
+  balao.style.animation = '';
+
+  const svg = holder.querySelector('svg');
+  if (svg) svg.addEventListener('click', onClickMascote);
+
+  document.querySelectorAll('.mini-mascote').forEach(el => {
+    el.classList.toggle('ativo', el.dataset.id === getMascoteAtivoId());
+  });
+}
+
+function renderSeletor() {
+  const bar = document.getElementById('mascote-seletor');
+  bar.innerHTML = Object.entries(MASCOTES).map(([id, m]) =>
+    `<button class="mini-mascote ${id===getMascoteAtivoId()?'ativo':''}" data-id="${id}" title="${m.nome}" onclick="trocarMascote('${id}')">${m.svg}</button>`
+  ).join('');
+}
+
+function trocarMascote(id) {
+  if (!MASCOTES[id]) return;
+  setMascoteAtivo(id);
+  renderMascote();
+}
+
+function trocarFalaMascote() {
+  const m = getMascoteAtivo();
+  _falaIdx = (_falaIdx + 1) % m.falas.intro.length;
+  const b = document.getElementById('mascote-balao');
+  if (!b) return;
+  b.style.animation = 'none';
+  b.offsetHeight;
+  b.textContent = m.falas.intro[_falaIdx];
+  b.style.animation = '';
+}
+
+function onClickMascote() {
+  trocarFalaMascote();
+  const svg = document.querySelector('#mascote-holder svg');
+  if (!svg) return;
+  svg.style.animation = 'none';
+  svg.offsetHeight;
+  svg.style.animation = 'mascoteBounce 0.5s ease-in-out 2, mascoteBounce 3.6s ease-in-out infinite 1s';
+}
+
+renderSeletor();
+renderMascote();
+_intervaloFala = setInterval(trocarFalaMascote, 4500);
+</script>
+
+<script>
+const chaves = {
+  1: 'jogosMat1ano_v1',
+  2: 'jogosMat2ano_v1',
+  3: 'jogosMat3ano_v1',
+  4: 'jogosMat4ano_v1',
+  5: 'jogosMat5ano_v1'
+};
+document.querySelectorAll('.ano-progresso').forEach(el => {
+  const ano = el.dataset.ano;
+  try {
+    const data = JSON.parse(localStorage.getItem(chaves[ano]) || '{}');
+    const estrelas = data.estrelas || 0;
+    if (estrelas > 0) el.textContent = `⭐ ${estrelas}`;
+  } catch(e) {}
+});
+</script>
+
+<script>
+// Carrega STATE (global via matemagica_user_v1 + migra per-year na primeira vez) e mostra saldo
+if (typeof STATE !== 'undefined' && typeof STATE.load === 'function') {
+  STATE.load();
+  const el = document.getElementById('moedas-home');
+  if (el) el.textContent = STATE.moedas;
+}
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

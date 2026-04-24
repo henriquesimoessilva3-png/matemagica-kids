@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Provas — Jogos de Matemática</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  .aba-row {
+    display: flex; gap: 6px; margin-bottom: 16px;
+    border-bottom: 2px solid #e0dbf5; padding-bottom: 0;
+  }
+  .aba {
+    background: none; border: none; padding: 10px 14px;
+    cursor: pointer; font-weight: 600; font-size: 14px;
+    color: #888; border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+  }
+  .aba.ativo { color: #6b54d3; border-color: #6b54d3; }
+
+  .prova-card {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border-radius: 14px; padding: 16px; margin-bottom: 10px;
+    border: 2px solid #d9cefa;
+  }
+  .prova-card h3 { color: #4a3b8a; font-size: 16px; margin-bottom: 4px; }
+  .prova-card .meta { font-size: 12px; color: #888; margin-bottom: 10px; }
+  .prova-card .acoes { display: flex; gap: 8px; flex-wrap: wrap; }
+  .prova-card .btn-mini {
+    padding: 6px 12px; font-size: 12px; border-radius: 8px;
+    border: none; font-weight: 600; cursor: pointer;
+  }
+  .btn-jogar {
+    background: linear-gradient(135deg, #4ab3a5, #1b7a3a); color: #fff;
+  }
+  .btn-editar { background: #e0dbf5; color: #4a3b8a; }
+  .btn-deletar { background: #fde0e0; color: #a83232; }
+
+  .editor-campo { margin-bottom: 12px; }
+  .editor-campo label {
+    display: block; font-size: 12px; color: #666; margin-bottom: 4px;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .editor-campo input, .editor-campo select {
+    width: 100%; padding: 10px 12px; border: 2px solid #c5bbe9;
+    border-radius: 10px; font-size: 14px; font-family: inherit;
+    background: #fff; color: #4a3b8a;
+  }
+  .editor-campo input[type=number] { text-align: left; font-size: 14px; font-weight: normal; }
+
+  .add-jogo-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 80px auto;
+    gap: 6px; align-items: center; margin-bottom: 10px;
+  }
+  .add-jogo-row select, .add-jogo-row input {
+    padding: 8px; border: 2px solid #c5bbe9; border-radius: 8px;
+    font-size: 13px; font-family: inherit;
+    min-width: 0;
+  }
+  .add-jogo-row .btn-add {
+    background: #4ab3a5; color: #fff; border: none; padding: 8px 14px;
+    border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px;
+  }
+  @media (max-width: 640px) {
+    .add-jogo-row {
+      grid-template-columns: 1fr 1fr;
+    }
+    .add-jogo-row > select:first-child { grid-column: 1 / -1; }
+    .add-jogo-row .btn-add { grid-column: 1 / -1; padding: 10px; }
+  }
+
+  .roteiro-item {
+    display: flex; align-items: center; gap: 10px;
+    background: #f7f5ff; padding: 10px 12px; border-radius: 10px;
+    margin-bottom: 6px; border: 1px solid #c5bbe9;
+  }
+  .roteiro-item .num {
+    background: #6b54d3; color: #fff; width: 24px; height: 24px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .roteiro-item .info { flex: 1; }
+  .roteiro-item .info .jogo-nome { font-weight: 600; color: #4a3b8a; font-size: 14px; }
+  .roteiro-item .info .jogo-meta { font-size: 11px; color: #888; }
+  .roteiro-item .repet-edit {
+    display: flex; align-items: center; gap: 2px;
+    background: #ffd36b; border-radius: 8px; padding: 3px 4px;
+  }
+  .roteiro-item .repet-edit input {
+    background: transparent; border: none; color: #4a3b8a;
+    font-weight: 700; font-size: 13px; width: 32px; text-align: center;
+    font-family: inherit; outline: none; padding: 2px 0;
+  }
+  .roteiro-item .repet-edit input:focus {
+    background: #fff; border-radius: 4px;
+  }
+  .roteiro-item .repet-edit .x { color: #4a3b8a; font-weight: 700; font-size: 12px; padding-right: 4px; }
+  .roteiro-item .repet-edit .btn-passo {
+    background: rgba(255,255,255,0.6); border: none; color: #4a3b8a;
+    width: 18px; height: 18px; font-size: 12px; line-height: 1; cursor: pointer;
+    border-radius: 4px; font-weight: 700; padding: 0;
+  }
+  .roteiro-item .repet-edit .btn-passo:hover { background: #fff; }
+  .roteiro-item .ordem-btns { display: flex; flex-direction: column; gap: 2px; }
+  .roteiro-item .ordem-btns button {
+    background: #fff; border: 1px solid #c5bbe9; color: #6b54d3;
+    padding: 1px 5px; font-size: 10px; cursor: pointer; border-radius: 3px;
+  }
+  .roteiro-item .btn-rem {
+    background: #fde0e0; border: none; color: #a83232;
+    padding: 5px 8px; border-radius: 6px; cursor: pointer; font-size: 13px;
+  }
+
+  .vazio-msg {
+    text-align: center; padding: 30px 20px; background: #f7f5ff;
+    border-radius: 14px; color: #888; font-size: 14px; line-height: 1.5;
+  }
+  .vazio-msg .big-emoji { font-size: 40px; margin-bottom: 8px; }
+
+  .voltar-topo {
+    background: #e0dbf5; color: #4a3b8a; border: none;
+    padding: 8px 14px; border-radius: 10px; font-size: 13px;
+    font-weight: 600; cursor: pointer; text-decoration: none;
+    display: inline-block; margin-bottom: 12px;
+  }
+
+  /* ===== SOS PROVA ===== */
+  .sos-hero {
+    background: linear-gradient(135deg, #ff7b6b, #ff9a44);
+    color: #fff;
+    border-radius: 16px;
+    padding: 18px 16px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .sos-hero h3 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .sos-hero p {
+    font-size: 13px;
+    opacity: 0.95;
+    line-height: 1.45;
+    margin-bottom: 10px;
+  }
+  .sos-controles {
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .sos-controles label {
+    font-size: 11px;
+    color: #666;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .sos-controles select {
+    padding: 8px 12px;
+    border: 2px solid #c5bbe9;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a3b8a;
+    background: #fff;
+    flex: 1;
+    min-width: 100px;
+  }
+  .sos-btn-gerar {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .sos-btn-gerar:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(107,84,211,0.3); }
+
+  .sos-analise-titulo {
+    font-size: 13px;
+    color: #4a3b8a;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 18px 0 8px;
+  }
+  .sos-analise-vazio {
+    background: #fff3d6;
+    border: 2px dashed #ffd36b;
+    border-radius: 12px;
+    padding: 16px 14px;
+    color: #8a5a10;
+    font-size: 13px;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .sos-jogo-item {
+    background: #fff;
+    border: 2px solid #e0dbf5;
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sos-jogo-item .sos-icone {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .sos-jogo-item.criti .sos-icone { background: #fde0e0; color: #a83232; }
+  .sos-jogo-item.medio .sos-icone { background: #fff3d6; color: #a87000; }
+  .sos-jogo-item.baixo .sos-icone { background: #d4f5dd; color: #1b7a3a; }
+  .sos-jogo-item .sos-info { flex: 1; min-width: 0; }
+  .sos-jogo-item .sos-nome { font-size: 14px; font-weight: 700; color: #4a3b8a; }
+  .sos-jogo-item .sos-stats { font-size: 11px; color: #888; margin-top: 2px; }
+  .sos-jogo-item .sos-pct {
+    font-size: 18px;
+    font-weight: 800;
+    color: #4a3b8a;
+    flex-shrink: 0;
+  }
+  .sos-jogo-item.criti .sos-pct { color: #a83232; }
+  .sos-jogo-item.medio .sos-pct { color: #a87000; }
+  .sos-jogo-item.baixo .sos-pct { color: #1b7a3a; }
+
+  .sos-resumo {
+    background: linear-gradient(135deg, #4ab3a5, #1b7a3a);
+    color: #fff;
+    border-radius: 12px;
+    padding: 14px;
+    margin: 14px 0;
+  }
+  .sos-resumo-titulo {
+    font-size: 12px;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  .sos-resumo-grande { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+  .sos-acao-comecar {
+    background: #fff;
+    color: #1b7a3a;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+  }
+  .sos-acao-comecar:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="voltar-topo">← Voltar aos jogos</a>
+  <h1>📝 Provas</h1>
+  <div class="sub">Monte uma sequência de exercícios personalizada</div>
+
+  <div class="aba-row">
+    <button class="aba ativo" id="aba-sos" onclick="mostrarAba('sos')" style="color:#c44a2a">🚨 SOS Prova</button>
+    <button class="aba" id="aba-lista" onclick="mostrarAba('lista')">Minhas Provas</button>
+    <button class="aba" id="aba-criar" onclick="mostrarAba('criar')">+ Nova</button>
+  </div>
+
+  <!-- SOS PROVA -->
+  <div id="view-sos">
+    <div class="sos-hero">
+      <h3>🚨 Prova é amanhã?</h3>
+      <p>A gente lê onde você mais erra e monta uma prova de 10 minutos focada nos pontos fracos.<br>Sem enrolação — direto no que importa.</p>
+    </div>
+    <div class="sos-controles">
+      <label>Ano:</label>
+      <select id="sos-ano">
+        <option value="1">1º Ano</option>
+        <option value="2">2º Ano</option>
+        <option value="3">3º Ano</option>
+        <option value="4" selected>4º Ano</option>
+        <option value="5">5º Ano</option>
+      </select>
+      <button class="sos-btn-gerar" onclick="gerarSos()">🔍 Analisar</button>
+    </div>
+    <div id="sos-resultado"></div>
+  </div>
+
+  <!-- LISTA -->
+  <div id="view-lista" class="hidden">
+    <div id="lista-provas"></div>
+  </div>
+
+  <!-- EDITOR -->
+  <div id="view-criar" class="hidden">
+    <div class="editor-campo">
+      <label>Nome da prova</label>
+      <input type="text" id="ed-nome" placeholder="Ex: Revisão de Frações - quinta">
+    </div>
+
+    <div class="editor-campo">
+      <label>Ano escolar</label>
+      <select id="ed-ano" onchange="atualizarCapitulos()">
+        <option value="1">1º Ano</option>
+        <option value="2">2º Ano</option>
+        <option value="3">3º Ano</option>
+        <option value="4" selected>4º Ano</option>
+        <option value="5">5º Ano</option>
+      </select>
+    </div>
+
+    <label style="display:block;font-size:12px;color:#666;margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Adicionar jogo ao roteiro</label>
+    <div class="add-jogo-row">
+      <select id="ed-capitulo" onchange="atualizarJogos()"></select>
+      <select id="ed-jogo"></select>
+      <div></div>
+      <input type="number" id="ed-vezes" value="5" min="1" max="30" title="Quantas vezes">
+      <button class="btn-add" onclick="adicionarAoRoteiro()">+ Add</button>
+    </div>
+    <div style="font-size:11px;color:#888;margin-bottom:16px">Número ao lado = quantas vezes esse exercício vai repetir. Padrão: 5.</div>
+
+    <label style="display:block;font-size:12px;color:#666;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Roteiro da prova</label>
+    <div id="ed-roteiro"></div>
+
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="acao" onclick="salvarProva()" style="flex:1">💾 Salvar prova</button>
+      <button class="acao sec" onclick="cancelarEdicao()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== DADOS DE JOGOS (catálogo) ====================
+const CATALOGO = {
+  1: {
+    nome: '1º Ano',
+    caps: {
+      1: {nome:'Números até 20', jogos:[
+        {id:'conta',nome:'Conte os bichinhos'},
+        {id:'maior',nome:'Qual é o maior?'},
+        {id:'qualFalta',nome:'Qual número falta?'},
+        {id:'parImpar',nome:'Par ou Ímpar?'}
+      ]},
+      2: {nome:'Formas planas', jogos:[
+        {id:'queForma',nome:'Que forma é essa?'},
+        {id:'contaForma',nome:'Quantos de cada forma?'},
+        {id:'objForma',nome:'Forma do objeto'}
+      ]},
+      3: {nome:'Meu dia, meu mês', jogos:[
+        {id:'diaAmanha',nome:'Dia da semana'},
+        {id:'proxMes',nome:'Qual o próximo mês?'},
+        {id:'diaAntes',nome:'Que dia vem antes?'}
+      ]},
+      4: {nome:'Dinheirinho', jogos:[
+        {id:'moeda',nome:'Valor da moeda'},
+        {id:'cofrinho',nome:'Quanto no cofrinho?'},
+        {id:'posso',nome:'Posso comprar?'}
+      ]},
+      5: {nome:'Tabelas e gráficos', jogos:[
+        {id:'quemMais',nome:'Quem tem mais?'},
+        {id:'totalBichos',nome:'Quantos ao todo?'},
+        {id:'menor',nome:'Quem tem menos?'}
+      ]}
+    }
+  },
+  2: {
+    nome: '2º Ano',
+    caps: {
+      1: {nome:'Números por todo lado', jogos:[
+        {id:'antSuc',nome:'Antecessor e Sucessor'},
+        {id:'ordinais',nome:'Quem está na fila?'},
+        {id:'sequencia',nome:'Complete a Sequência'}
+      ]},
+      2: {nome:'Dezenas e mais dezenas', jogos:[
+        {id:'dezUn',nome:'Conte os Palitos'},
+        {id:'componha',nome:'Componha o Número'},
+        {id:'faca10',nome:'Faça 10'}
+      ]},
+      3: {nome:'Somar e Subtrair', jogos:[
+        {id:'soma',nome:'Soma Rápida'},
+        {id:'subtracao',nome:'Subtração'},
+        {id:'troco',nome:'Troco da Compra'},
+        {id:'dobro2',nome:'Dobro Rápido'}
+      ]},
+      4: {nome:'Na Medida Certa', jogos:[
+        {id:'horas',nome:'Que Horas São?'},
+        {id:'calendario',nome:'Calendário'},
+        {id:'pesa',nome:'Pesa Mais?'}
+      ]},
+      5: {nome:'Um Mundo de Formas', jogos:[
+        {id:'forma',nome:'Que Forma é Essa?'},
+        {id:'rola',nome:'Rola ou Não Rola?'},
+        {id:'lados',nome:'Quantos Lados?'}
+      ]}
+    }
+  },
+  3: {
+    nome: '3º Ano',
+    caps: {
+      1: {nome:'Até o milhar', jogos:[
+        {id:'lerMilhar',nome:'Ler Números Grandes'},
+        {id:'compMilhar',nome:'Comparar Números'},
+        {id:'decompor',nome:'Decomposição'},
+        {id:'arredonda',nome:'Arredondar'}
+      ]},
+      2: {nome:'Contas de verdade', jogos:[
+        {id:'somaReag',nome:'Soma com Reagrupamento'},
+        {id:'subEmp',nome:'Subtração com Empréstimo'},
+        {id:'mentalMat',nome:'Conta de Cabeça'}
+      ]},
+      3: {nome:'Multiplicação que divide', jogos:[
+        {id:'tab5',nome:'Tabuada 2 a 5'},
+        {id:'divSimples',nome:'Divisão Simples'},
+        {id:'dobroMetade',nome:'Dobro e Metade'}
+      ]},
+      4: {nome:'Tempo e espaço', jogos:[
+        {id:'horaMeia',nome:'Horas e Meia'},
+        {id:'cmMetro',nome:'Centímetro ou Metro?'},
+        {id:'litroKg',nome:'Litro ou Quilo?'}
+      ]},
+      5: {nome:'Figuras planas e sólidas', jogos:[
+        {id:'poligono',nome:'Identifique o Polígono'},
+        {id:'facesVert',nome:'Faces e Vértices'},
+        {id:'simetria',nome:'Eixo de Simetria'}
+      ]}
+    }
+  },
+  4: {
+    nome: '4º Ano',
+    caps: {
+      1: {nome:'Dezenas de milhar', jogos:[
+        {id:'lerMil',nome:'Ler Números até 99.999'},
+        {id:'compMil',nome:'Comparar Grandes'},
+        {id:'decMil',nome:'Decomposição em Ordens'},
+        {id:'valorPos',nome:'Valor Posicional'}
+      ]},
+      2: {nome:'Multiplicação e divisão', jogos:[
+        {id:'tab10',nome:'Tabuada 6 a 10'},
+        {id:'divResto',nome:'Divisão com Resto'},
+        {id:'probMult',nome:'Problema de Multiplicação'}
+      ]},
+      3: {nome:'Conhecendo frações', jogos:[
+        {id:'fracNomeia',nome:'Que fração é essa?'},
+        {id:'fracPizza',nome:'Pinte a Fração'},
+        {id:'fracComp',nome:'Fração Maior ou Menor?'},
+        {id:'fracColec',nome:'Fração da Coleção'}
+      ]},
+      4: {nome:'Medidas de tempo', jogos:[
+        {id:'hms',nome:'Horas, Minutos, Segundos'},
+        {id:'interv',nome:'Quanto tempo passou?'},
+        {id:'relDig',nome:'Relógio Digital'}
+      ]},
+      5: {nome:'Probabilidade', jogos:[
+        {id:'chance',nome:'Maior Chance'},
+        {id:'sorteio',nome:'Sorteio na Caixa'},
+        {id:'evento',nome:'Certo, Possível, Impossível?'}
+      ]},
+      6: {nome:'Geometria', jogos:[
+        {id:'angulo',nome:'Tipo de Ângulo'},
+        {id:'retas',nome:'Paralelas ou Perpendiculares?'},
+        {id:'perim',nome:'Perímetro'}
+      ]}
+    }
+  },
+  5: {
+    nome: '5º Ano',
+    caps: {
+      1: {nome:'Centenas de milhar', jogos:[
+        {id:'lerCm',nome:'Ler até 999.999'},
+        {id:'compCm',nome:'Comparar Grandes'},
+        {id:'ordensCm',nome:'Decomposição Completa'},
+        {id:'milhao',nome:'Milhão'}
+      ]},
+      2: {nome:'Números decimais', jogos:[
+        {id:'fracDec',nome:'Fração para Decimal'},
+        {id:'decToFrac',nome:'Decimal para Fração'},
+        {id:'ordDec',nome:'Ordenar Decimais'}
+      ]},
+      3: {nome:'Frações equivalentes', jogos:[
+        {id:'equiv',nome:'É equivalente?'},
+        {id:'simplif',nome:'Simplificar Fração'},
+        {id:'somaFrac',nome:'Somar Frações'}
+      ]},
+      4: {nome:'Porcentagem', jogos:[
+        {id:'pctValor',nome:'% de um Valor'},
+        {id:'descto',nome:'Desconto'},
+        {id:'pctFrac',nome:'% vira Fração'}
+      ]},
+      5: {nome:'Operações com decimais', jogos:[
+        {id:'somaDec',nome:'Soma Decimal'},
+        {id:'multDez',nome:'×10, ×100, ×1000'},
+        {id:'divDec',nome:'Dividir Decimal'}
+      ]},
+      6: {nome:'Dados e chance', jogos:[
+        {id:'media',nome:'Calcular Média'},
+        {id:'tabLe',nome:'Ler Tabela'},
+        {id:'probSimples',nome:'Probabilidade em Fração'}
+      ]}
+    }
+  }
+};
+
+const STORAGE_PROVAS = 'jogosMat_provas_v1';
+
+function carregarProvas() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_PROVAS) || '[]'); }
+  catch(e) { return []; }
+}
+
+function salvarProvas(lista) {
+  localStorage.setItem(STORAGE_PROVAS, JSON.stringify(lista));
+}
+
+function novoId() {
+  return 'p' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+}
+
+// Estado do editor
+let edicaoAtual = null;
+let roteiroAtual = [];
+
+function mostrarAba(qual) {
+  document.getElementById('aba-sos').classList.toggle('ativo', qual === 'sos');
+  document.getElementById('aba-lista').classList.toggle('ativo', qual === 'lista');
+  document.getElementById('aba-criar').classList.toggle('ativo', qual === 'criar');
+  document.getElementById('view-sos').classList.toggle('hidden', qual !== 'sos');
+  document.getElementById('view-lista').classList.toggle('hidden', qual !== 'lista');
+  document.getElementById('view-criar').classList.toggle('hidden', qual !== 'criar');
+  if (qual === 'lista') renderLista();
+  else if (qual === 'criar' && !edicaoAtual) iniciarNovaEdicao();
+}
+
+// ============== SOS PROVA — detecta pontos fracos ==============
+function analisarAno(ano) {
+  const chave = 'jogosMat' + ano + 'ano_v1';
+  let dados = {};
+  try { dados = JSON.parse(localStorage.getItem(chave) || '{}'); } catch(e) {}
+  const porJogo = dados.porJogo || {};
+  // monta lista flat de jogos catalogados com stats
+  const catCaps = CATALOGO[ano].caps;
+  const todosJogos = [];
+  for (const [capN, cap] of Object.entries(catCaps)) {
+    for (const j of cap.jogos) {
+      const stats = porJogo[j.id] || { acertos: 0, tentativas: 0 };
+      const pct = stats.tentativas > 0 ? stats.acertos / stats.tentativas : null;
+      todosJogos.push({
+        id: j.id, nome: j.nome, cap: parseInt(capN),
+        capNome: cap.nome,
+        acertos: stats.acertos,
+        tentativas: stats.tentativas,
+        pct
+      });
+    }
+  }
+  return todosJogos;
+}
+
+function gerarSos() {
+  const ano = parseInt(document.getElementById('sos-ano').value);
+  const todos = analisarAno(ano);
+
+  // Regras de priorização:
+  // 1. Jogos com >=3 tentativas e pct < 80% → prioridade por pior pct
+  // 2. Jogos NUNCA tentados → próximos (são "desconhecidos")
+  // 3. Em empate de pct, mais tentativas desempata
+  const testados = todos.filter(j => j.tentativas >= 3);
+  const fracos = testados.filter(j => j.pct < 0.80).sort((a, b) => a.pct - b.pct || b.tentativas - a.tentativas);
+  const naoTestados = todos.filter(j => j.tentativas < 3);
+  const selecao = fracos.slice(0, 5);
+
+  const el = document.getElementById('sos-resultado');
+
+  if (selecao.length === 0 && testados.length === 0) {
+    el.innerHTML = `
+      <div class="sos-analise-vazio">
+        <div style="font-size:32px;margin-bottom:6px">🤔</div>
+        Ainda não tem dados suficientes desse ano. Joga um pouco primeiro (pelo menos 3 tentativas por jogo) e eu consigo identificar onde você precisa reforçar.
+      </div>`;
+    return;
+  }
+
+  if (selecao.length === 0) {
+    el.innerHTML = `
+      <div class="sos-analise-vazio" style="background:#d4f5dd;border-color:#4ab3a5;color:#1b4a2a">
+        <div style="font-size:32px;margin-bottom:6px">🎉</div>
+        Tá tudo bem! Você acerta pelo menos 80% em todos os jogos que jogou. Se quiser, monta uma prova manual na aba <b>+ Nova</b>.
+      </div>`;
+    return;
+  }
+
+  const roteiro = selecao.map(j => ({
+    ano, cap: j.cap, jogoId: j.id, jogoNome: j.nome, vezes: 4
+  }));
+  const totalExercicios = roteiro.reduce((s, r) => s + r.vezes, 0);
+  const tempoEstimado = Math.ceil(totalExercicios * 15 / 60); // ~15s/pergunta
+
+  let html = `<div class="sos-analise-titulo">🎯 Pontos fracos detectados</div>`;
+  for (const j of selecao) {
+    const pct = Math.round(j.pct * 100);
+    const classe = pct < 50 ? 'criti' : (pct < 70 ? 'medio' : 'baixo');
+    const icone = pct < 50 ? '🔴' : (pct < 70 ? '🟡' : '🟢');
+    html += `
+      <div class="sos-jogo-item ${classe}">
+        <div class="sos-icone">${icone}</div>
+        <div class="sos-info">
+          <div class="sos-nome">${j.nome}</div>
+          <div class="sos-stats">Cap. ${j.cap} · ${j.capNome} · ${j.acertos}/${j.tentativas} tentativas</div>
+        </div>
+        <div class="sos-pct">${pct}%</div>
+      </div>`;
+  }
+
+  html += `
+    <div class="sos-resumo">
+      <div class="sos-resumo-titulo">Prova montada</div>
+      <div class="sos-resumo-grande">${roteiro.length} jogos · ${totalExercicios} exercícios · ~${tempoEstimado} min</div>
+      <button class="sos-acao-comecar" onclick="iniciarSos()">▶ Começar agora</button>
+    </div>`;
+
+  if (naoTestados.length > 0) {
+    html += `<div style="font-size:11px;color:#888;margin-top:10px;line-height:1.4">
+      💡 Ainda há ${naoTestados.length} jogo${naoTestados.length>1?'s':''} que você quase não tentou — vale dar uma passada depois.
+    </div>`;
+  }
+
+  // Armazena pra iniciar no próximo clique
+  _sosProva = {
+    id: 'sos-' + ano + '-' + Date.now(),
+    nome: `🚨 SOS — ${CATALOGO[ano].nome}`,
+    ano,
+    roteiro
+  };
+
+  el.innerHTML = html;
+}
+
+let _sosProva = null;
+function iniciarSos() {
+  if (!_sosProva) return;
+  // Salva na lista de provas pra gravar histórico depois
+  const provas = carregarProvas();
+  provas.push({
+    ..._sosProva,
+    criado: new Date().toISOString(),
+    historico: [],
+    eSos: true
+  });
+  salvarProvas(provas);
+  sessionStorage.setItem('modoProva', JSON.stringify(_sosProva));
+  location.href = `jogos_matematica_${_sosProva.ano}ano.html?prova=${_sosProva.id}`;
+}
+
+function iniciarNovaEdicao() {
+  edicaoAtual = { id: novoId(), nome: '', ano: 4, roteiro: [] };
+  roteiroAtual = [];
+  document.getElementById('ed-nome').value = '';
+  document.getElementById('ed-ano').value = 4;
+  atualizarCapitulos();
+  renderRoteiro();
+}
+
+function editarProva(id) {
+  const provas = carregarProvas();
+  const p = provas.find(x => x.id === id);
+  if (!p) return;
+  edicaoAtual = { id: p.id, nome: p.nome, ano: p.ano, roteiro: [...p.roteiro] };
+  roteiroAtual = [...p.roteiro];
+  document.getElementById('ed-nome').value = p.nome;
+  document.getElementById('ed-ano').value = p.ano;
+  atualizarCapitulos();
+  renderRoteiro();
+  mostrarAba('criar');
+}
+
+function atualizarCapitulos() {
+  const ano = parseInt(document.getElementById('ed-ano').value);
+  const caps = CATALOGO[ano].caps;
+  const sel = document.getElementById('ed-capitulo');
+  sel.innerHTML = Object.entries(caps).map(([n, c]) =>
+    `<option value="${n}">Cap. ${n} — ${c.nome}</option>`
+  ).join('');
+  atualizarJogos();
+}
+
+function atualizarJogos() {
+  const ano = parseInt(document.getElementById('ed-ano').value);
+  const cap = parseInt(document.getElementById('ed-capitulo').value);
+  const jogos = CATALOGO[ano].caps[cap].jogos;
+  const sel = document.getElementById('ed-jogo');
+  sel.innerHTML = jogos.map(j => `<option value="${j.id}">${j.nome}</option>`).join('');
+}
+
+function adicionarAoRoteiro() {
+  const ano = parseInt(document.getElementById('ed-ano').value);
+  const jogoId = document.getElementById('ed-jogo').value;
+  const vezes = parseInt(document.getElementById('ed-vezes').value) || 5;
+  const cap = parseInt(document.getElementById('ed-capitulo').value);
+  const jogoNome = CATALOGO[ano].caps[cap].jogos.find(j => j.id === jogoId).nome;
+  roteiroAtual.push({ ano, cap, jogoId, jogoNome, vezes });
+  renderRoteiro();
+}
+
+function renderRoteiro() {
+  const el = document.getElementById('ed-roteiro');
+  if (roteiroAtual.length === 0) {
+    el.innerHTML = '<div class="vazio-msg" style="padding:16px"><div style="font-size:28px">📋</div>Adicione jogos acima pra montar o roteiro.</div>';
+    return;
+  }
+  el.innerHTML = roteiroAtual.map((r, i) => `
+    <div class="roteiro-item">
+      <span class="num">${i + 1}</span>
+      <div class="info">
+        <div class="jogo-nome">${r.jogoNome}</div>
+        <div class="jogo-meta">${CATALOGO[r.ano].nome} · Cap. ${r.cap}</div>
+      </div>
+      <div class="repet-edit">
+        <button class="btn-passo" onclick="mudarVezes(${i}, -1)" title="Diminuir">−</button>
+        <input type="number" value="${r.vezes}" min="1" max="30"
+               onchange="setVezes(${i}, this.value)"
+               onfocus="this.select()">
+        <span class="x">×</span>
+        <button class="btn-passo" onclick="mudarVezes(${i}, 1)" title="Aumentar">+</button>
+      </div>
+      <div class="ordem-btns">
+        <button onclick="moverRoteiro(${i}, -1)" ${i===0?'disabled':''}>▲</button>
+        <button onclick="moverRoteiro(${i}, 1)" ${i===roteiroAtual.length-1?'disabled':''}>▼</button>
+      </div>
+      <button class="btn-rem" onclick="removerRoteiro(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function mudarVezes(idx, delta) {
+  const atual = roteiroAtual[idx].vezes;
+  const novo = Math.max(1, Math.min(30, atual + delta));
+  roteiroAtual[idx].vezes = novo;
+  renderRoteiro();
+}
+
+function setVezes(idx, valor) {
+  const n = parseInt(valor);
+  if (isNaN(n)) { renderRoteiro(); return; }
+  roteiroAtual[idx].vezes = Math.max(1, Math.min(30, n));
+  renderRoteiro();
+}
+
+function moverRoteiro(idx, dir) {
+  const novoIdx = idx + dir;
+  if (novoIdx < 0 || novoIdx >= roteiroAtual.length) return;
+  [roteiroAtual[idx], roteiroAtual[novoIdx]] = [roteiroAtual[novoIdx], roteiroAtual[idx]];
+  renderRoteiro();
+}
+
+function removerRoteiro(idx) {
+  roteiroAtual.splice(idx, 1);
+  renderRoteiro();
+}
+
+function salvarProva() {
+  const nome = document.getElementById('ed-nome').value.trim();
+  if (!nome) { alert('Dê um nome pra prova!'); return; }
+  if (roteiroAtual.length === 0) { alert('Adicione pelo menos 1 jogo ao roteiro!'); return; }
+  const ano = parseInt(document.getElementById('ed-ano').value);
+
+  const provas = carregarProvas();
+  const idx = provas.findIndex(x => x.id === edicaoAtual.id);
+  const prova = {
+    id: edicaoAtual.id, nome, ano,
+    roteiro: roteiroAtual,
+    criado: provas[idx]?.criado || new Date().toISOString(),
+    historico: provas[idx]?.historico || []
+  };
+  if (idx >= 0) provas[idx] = prova; else provas.push(prova);
+  salvarProvas(provas);
+  edicaoAtual = null; roteiroAtual = [];
+  alert('Prova salva! 🎉');
+  mostrarAba('lista');
+}
+
+function cancelarEdicao() {
+  if (confirm('Descartar alterações?')) {
+    edicaoAtual = null; roteiroAtual = [];
+    mostrarAba('lista');
+  }
+}
+
+function deletarProva(id) {
+  if (!confirm('Apagar essa prova?')) return;
+  const provas = carregarProvas().filter(p => p.id !== id);
+  salvarProvas(provas);
+  renderLista();
+}
+
+function iniciarProva(id) {
+  const provas = carregarProvas();
+  const p = provas.find(x => x.id === id);
+  if (!p) return;
+  // salva em sessionStorage e redirect
+  sessionStorage.setItem('modoProva', JSON.stringify(p));
+  location.href = `jogos_matematica_${p.ano}ano.html?prova=${p.id}`;
+}
+
+function renderLista() {
+  const provas = carregarProvas();
+  const el = document.getElementById('lista-provas');
+  if (provas.length === 0) {
+    el.innerHTML = `<div class="vazio-msg">
+      <div class="big-emoji">📝</div>
+      Você ainda não tem nenhuma prova.<br>
+      Clica em <b>+ Nova Prova</b> pra criar uma.
+    </div>`;
+    return;
+  }
+  el.innerHTML = provas.map(p => {
+    const totalEx = p.roteiro.reduce((s, r) => s + r.vezes, 0);
+    const ultimaExec = p.historico?.length ? p.historico[p.historico.length - 1] : null;
+    return `
+      <div class="prova-card">
+        <h3>${p.nome}</h3>
+        <div class="meta">
+          ${CATALOGO[p.ano].nome} · ${p.roteiro.length} jogo${p.roteiro.length>1?'s':''} · ${totalEx} exercício${totalEx>1?'s':''}
+          ${ultimaExec ? ` · última: ${ultimaExec.acertos}/${ultimaExec.total} (${Math.round(ultimaExec.acertos/ultimaExec.total*100)}%)` : ''}
+        </div>
+        <div class="acoes">
+          <button class="btn-mini btn-jogar" onclick="iniciarProva('${p.id}')">▶ Começar</button>
+          <button class="btn-mini btn-editar" onclick="editarProva('${p.id}')">✏️ Editar</button>
+          <button class="btn-mini btn-deletar" onclick="deletarProva('${p.id}')">🗑 Apagar</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Init
+renderLista();
+atualizarCapitulos();
+
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

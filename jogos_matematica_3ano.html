@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jogos de Matemática — 3º Ano</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mat">
+<link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+<div class="container">
+  <h1>Jogos de Matemática</h1>
+  <div class="sub">3º Ano — Consolidação</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div id="menu-principal">
+    <div class="capitulos">
+      <button class="cap-card cap1" onclick="abrirCapitulo(1)">
+        <span class="num">1</span><h3>Até o milhar</h3>
+        <p>Ler, comparar, decompor até 1.000</p>
+      </button>
+      <button class="cap-card cap2" onclick="abrirCapitulo(2)">
+        <span class="num">2</span><h3>Contas de verdade</h3>
+        <p>Adição, subtração, cálculo mental</p>
+      </button>
+      <button class="cap-card cap3" onclick="abrirCapitulo(3)">
+        <span class="num">3</span><h3>Multiplicação que divide</h3>
+        <p>Tabuada, divisão, dobro e metade</p>
+      </button>
+      <button class="cap-card cap4" onclick="abrirCapitulo(4)">
+        <span class="num">4</span><h3>Tempo e espaço</h3>
+        <p>Horas, metros, litros, kg</p>
+      </button>
+      <button class="cap-card cap5" onclick="abrirCapitulo(5)">
+        <span class="num">5</span><h3>Figuras planas e sólidas</h3>
+        <p>Polígonos, faces, simetria</p>
+      </button>
+    </div>
+    <div style="text-align:center;margin-top:20px">
+      <a href="index.html" style="display:inline-block;margin-right:8px;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#ede8fa">← Trocar ano</a>
+      <button class="acao sec" onclick="zerarProgresso()" style="font-size:12px;padding:8px 14px">Zerar Progresso</button>
+    </div>
+  </div>
+
+  <div id="menu-capitulo" class="hidden">
+    <button class="voltar" onclick="voltarMenu()">← Voltar</button>
+    <h2 id="titulo-cap" style="color:#4a3b8a; margin-bottom:16px;"></h2>
+    <div class="jogos-lista" id="lista-jogos"></div>
+  </div>
+
+  <div id="area-jogo" class="hidden">
+    <button class="voltar" onclick="voltarCapitulo()">← Voltar aos jogos</button>
+    <h2 id="titulo-jogo" style="color:#4a3b8a; margin-bottom:14px; font-size:20px;"></h2>
+    <div class="placar-jogo">
+      <div>Estrelas<strong id="j-acertos">0</strong></div>
+      <div>Tentativas<strong id="j-tentativas">0</strong></div>
+      <div>Sequência<strong id="j-streak">0</strong></div>
+    </div>
+    <div class="dica-inline" id="dica-inline"></div>
+    <div class="jogo-area" id="jogo-conteudo"></div>
+  </div>
+</div>
+
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script src="mascotes.js"></script>
+<script src="jogos_shared.js"></script>
+<script>
+STORAGE_KEY = 'jogosMat3ano_v1';
+
+CAPS = {
+  1: { nome: 'Capítulo 1 — Até o milhar', jogos: [
+    { id: 'lerMilhar', nome: 'Ler Números Grandes', desc: 'Leia e escolha o número certo' },
+    { id: 'compMilhar', nome: 'Comparar Números', desc: 'Qual é maior?' },
+    { id: 'decompor', nome: 'Decomposição', desc: '143 = 100 + 40 + 3' },
+    { id: 'arredonda', nome: 'Arredondar', desc: 'Aproxime pra dezena mais próxima' }
+  ]},
+  2: { nome: 'Capítulo 2 — Contas de verdade', jogos: [
+    { id: 'somaReag', nome: 'Soma com Reagrupamento', desc: 'Some números de 2 e 3 dígitos' },
+    { id: 'subEmp', nome: 'Subtração com Empréstimo', desc: 'Tire pedindo emprestado' },
+    { id: 'mentalMat', nome: 'Conta de Cabeça', desc: 'Calcule rápido' }
+  ]},
+  3: { nome: 'Capítulo 3 — Multiplicação que divide', jogos: [
+    { id: 'tab5', nome: 'Tabuada 2 a 5', desc: 'Multiplicação rápida' },
+    { id: 'divSimples', nome: 'Divisão Simples', desc: 'Repartir em partes iguais' },
+    { id: 'dobroMetade', nome: 'Dobro e Metade', desc: 'Dobrar ou cortar pela metade' }
+  ]},
+  4: { nome: 'Capítulo 4 — Tempo e espaço', jogos: [
+    { id: 'horaMeia', nome: 'Horas e Meia', desc: 'Leia o relógio digital' },
+    { id: 'cmMetro', nome: 'Centímetro ou Metro?', desc: 'Qual unidade usar?' },
+    { id: 'litroKg', nome: 'Litro ou Quilo?', desc: 'Comparar capacidade e peso' }
+  ]},
+  5: { nome: 'Capítulo 5 — Figuras planas e sólidas', jogos: [
+    { id: 'poligono', nome: 'Identifique o Polígono', desc: 'Qual é o nome da figura?' },
+    { id: 'facesVert', nome: 'Faces e Vértices', desc: 'Quantas faces tem o sólido?' },
+    { id: 'simetria', nome: 'Eixo de Simetria', desc: 'A figura é simétrica?' }
+  ]}
+};
+
+TUTORIAIS = {
+  lerMilhar: { emoji:'🔢', titulo:'Ler Números Grandes', corpo:`
+    <p>O número é lido por ordens: centena + dezena + unidade.</p>
+    <div class="exemplo"><b>347</b> = trezentos e quarenta e sete</div>`},
+  compMilhar: { emoji:'⚖️', titulo:'Comparar Números', corpo:`
+    <p>Compare os algarismos da esquerda pra direita. Primeiro o que vale mais.</p>
+    <div class="exemplo"><b>524 × 472</b> → 5 é maior que 4 → 524 é maior</div>`},
+  decompor: { emoji:'🧩', titulo:'Decomposição', corpo:`
+    <p>Quebre o número em centenas, dezenas e unidades.</p>
+    <div class="exemplo"><b>527</b> = 500 + 20 + 7</div>`},
+  somaReag: { emoji:'➕', titulo:'Soma com Reagrupamento', corpo:`
+    <p>Quando a soma da coluna passa de 9, "sobe 1" pra próxima coluna.</p>
+    <div class="exemplo">27 + 15: 7+5=12, escreve 2 sobe 1. 1+2+1=4. = <b>42</b></div>`},
+  subEmp: { emoji:'➖', titulo:'Subtração com Empréstimo', corpo:`
+    <p>Se o de cima é menor, pede 1 emprestado da coluna vizinha.</p>
+    <div class="exemplo">52 − 28: 2−8 não dá. Pega 1 do 5: 12−8=4. 4−2=2. = <b>24</b></div>`},
+  mentalMat: { emoji:'🧠', titulo:'Conta de Cabeça', corpo:`
+    <p>Quebre em partes fáceis. Ex.: 47+5 = 47+3+2 = 50+2 = 52.</p>
+    <div class="exemplo">Use dezenas redondas pra ajudar.</div>`},
+  tab5: { emoji:'✖️', titulo:'Tabuada 2 a 5', corpo:`
+    <p>Multiplicar é somar várias vezes a mesma coisa.</p>
+    <div class="exemplo"><b>3 × 4</b> = 4+4+4 = <b>12</b></div>`},
+  divSimples: { emoji:'➗', titulo:'Divisão Simples', corpo:`
+    <p>Dividir é repartir em partes iguais.</p>
+    <div class="exemplo"><b>12 ÷ 3</b> = 12 biscoitos pra 3 crianças → <b>4</b> cada</div>`},
+  dobroMetade: { emoji:'2️⃣', titulo:'Dobro e Metade', corpo:`
+    <p>Dobro = multiplicar por 2. Metade = dividir por 2.</p>
+    <div class="exemplo">Dobro de 8 = 16. Metade de 10 = 5.</div>`},
+  horaMeia: { emoji:'🕐', titulo:'Horas e Meia', corpo:`
+    <p>O relógio digital mostra h:mm. Meia hora = 30 minutos.</p>
+    <div class="exemplo"><b>3:30</b> = 3 horas e meia</div>`},
+  cmMetro: { emoji:'📏', titulo:'Centímetro ou Metro?', corpo:`
+    <p>cm = coisas pequenas · m = distâncias maiores.</p>
+    <div class="exemplo">Caderno = cm · Altura = metro · Rua = metro</div>`},
+  litroKg: { emoji:'⚖️', titulo:'Litro ou Quilo?', corpo:`
+    <p>Litro (L) = líquidos. Quilo (kg) = coisas com peso.</p>
+    <div class="exemplo">Água = litros · Carne = quilos</div>`},
+  poligono: { emoji:'🔷', titulo:'Identifique o Polígono', corpo:`
+    <p>Polígono é forma com lados retos. Triângulo=3, quadrilátero=4, pentágono=5...</p>`},
+  facesVert: { emoji:'🎲', titulo:'Faces e Vértices', corpo:`
+    <p>Face = cada lado do sólido. Vértice = o "bico" (ponto onde encontram faces).</p>
+    <div class="exemplo">Cubo: 6 faces, 8 vértices</div>`},
+  simetria: { emoji:'🦋', titulo:'Eixo de Simetria', corpo:`
+    <p>Figura simétrica: se dobrar, as 2 partes batem perfeitas.</p>
+    <div class="exemplo">Borboleta = simétrica. Mão = simétrica.</div>`},
+  arredonda: { emoji:'📍', titulo:'Arredondar', corpo:`
+    <p>Olha o último algarismo. Se for 0-4, desce. Se for 5-9, sobe.</p>
+    <div class="exemplo"><b>47</b> → arredonda para <b>50</b> (o 7 manda subir).<br><b>43</b> → arredonda para <b>40</b> (o 3 manda descer).</div>`}
+};
+
+// ============== MACETES BRASILEIROS DA TABUADA ==============
+const MACETES_TABUADA = [
+  { emoji: '2️⃣', titulo: 'Tabuada do 2 = DOBRO',
+    corpo: 'A tabuada do 2 é sempre o número somado com ele mesmo. É só dobrar.',
+    exemplo: '2 × 7 = 7 + 7 = 14\n2 × 9 = 9 + 9 = 18' },
+  { emoji: '3️⃣', titulo: 'Tabuada do 3 = de 3 em 3',
+    corpo: 'Vai contando de 3 em 3: 3, 6, 9, 12, 15, 18, 21, 24, 27, 30.',
+    exemplo: 'Pra 3 × 4, fala "3, 6, 9, 12". Parou no 4º.\n3 × 4 = 12' },
+  { emoji: '4️⃣', titulo: 'Tabuada do 4 = DOBRO DO DOBRO',
+    corpo: 'Dobra o número. Depois dobra de novo. Dois dobros = ×4.',
+    exemplo: '4 × 6 → dobro de 6 = 12 → dobro de 12 = 24\n4 × 8 → dobro de 8 = 16 → dobro de 16 = 32' },
+  { emoji: '5️⃣', titulo: 'Tabuada do 5 termina em 0 ou 5',
+    corpo: 'Sempre: 5, 10, 15, 20, 25, 30, 35, 40, 45, 50. Par → termina em 0. Ímpar → termina em 5.',
+    exemplo: '5 × 4 = 20 (par, termina em 0)\n5 × 7 = 35 (ímpar, termina em 5)' },
+  { emoji: '🖐️', titulo: 'Tabuada do 9 nas MÃOS',
+    corpo: 'Abre as duas mãos (10 dedos). Pra 9 × N, abaixa o dedo número N. Os dedos à esquerda = dezenas. Os à direita = unidades.',
+    exemplo: '9 × 3 → abaixa o 3º dedo → 2 dedos à esquerda, 7 à direita = 27\n9 × 7 → abaixa o 7º → 6 à esquerda, 3 à direita = 63' },
+  { emoji: '🔟', titulo: 'Tabuada do 10 = coloca um 0',
+    corpo: 'Só acrescentar um zero no final do número. Zero fácil!',
+    exemplo: '10 × 4 = 40\n10 × 8 = 80\n10 × 9 = 90' }
+];
+
+// ============== MODO HISTÓRIA (problemas contextualizados) ==============
+let _modoHistoria = false;
+try { _modoHistoria = localStorage.getItem('matemagica_modo_historia_3ano') === '1'; } catch(e) {}
+
+function toggleModoHistoria() {
+  _modoHistoria = !_modoHistoria;
+  try { localStorage.setItem('matemagica_modo_historia_3ano', _modoHistoria ? '1' : '0'); } catch(e) {}
+  const btn = document.getElementById('btn-modo-historia');
+  if (btn) {
+    btn.textContent = `🎭 Modo História: ${_modoHistoria ? 'ON' : 'OFF'}`;
+    btn.classList.toggle('ativo', _modoHistoria);
+  }
+  if (jogoAtivo && JOGOS[jogoAtivo] && JOGOS[jogoAtivo].iniciar && ['somaReag','divSimples','dobroMetade'].includes(jogoAtivo)) {
+    JOGOS[jogoAtivo].iniciar();
+  }
+}
+
+function botaoModoHistoriaHtml() {
+  return `<div style="text-align:center;margin-bottom:10px">
+    <button id="btn-modo-historia" class="btn-modo-historia ${_modoHistoria?'ativo':''}" onclick="toggleModoHistoria()">🎭 Modo História: ${_modoHistoria?'ON':'OFF'}</button>
+  </div>`;
+}
+
+const HISTORIAS_SOMA = (a, b) => [
+  `Ana tem <b>${a}</b> figurinhas. Ganhou mais <b>${b}</b> do primo. Quantas figurinhas ela tem agora?`,
+  `A biblioteca tinha <b>${a}</b> livros. Chegaram <b>${b}</b> livros novos. Quantos livros no total?`,
+  `Um cofre tinha <b>${a}</b> moedas. Colocaram mais <b>${b}</b>. Quantas moedas agora?`,
+  `A padaria vendeu <b>${a}</b> pães de manhã e <b>${b}</b> à tarde. Quantos pães no total?`,
+  `O ônibus saiu com <b>${a}</b> pessoas. Entraram <b>${b}</b> no ponto. Quantas pessoas agora?`
+];
+
+const HISTORIAS_DIV = (a, b) => [
+  `João tem <b>${a}</b> biscoitos pra repartir com <b>${b}</b> amigos igualmente. Quantos biscoitos pra cada um?`,
+  `<b>${a}</b> figurinhas divididas em pacotes de <b>${b}</b>. Quantos pacotes dá pra fazer?`,
+  `Uma caixa tem <b>${a}</b> doces, distribuídos igualmente pra <b>${b}</b> crianças. Quantos doces cada criança recebe?`,
+  `<b>${a}</b> páginas de gibi pra ler em <b>${b}</b> dias. Quantas páginas por dia?`,
+  `Uma professora tem <b>${a}</b> balas pra <b>${b}</b> alunos, igualmente. Quantas pra cada aluno?`
+];
+
+const HISTORIAS_DOBRO = (n) => [
+  `Luiza tem <b>${n}</b> bolinhas. O irmão tem o dobro. Quantas bolinhas tem o irmão?`,
+  `A festa começou com <b>${n}</b> balões. A vizinha trouxe o dobro. Quantos balões ela trouxe?`,
+  `<b>${n}</b> minhocas no canteiro. No canteiro ao lado tem o dobro. Quantas minhocas lá?`,
+  `Pedro tem <b>${n}</b> carrinhos. O primo tem o dobro. Quantos carrinhos o primo tem?`
+];
+const HISTORIAS_METADE = (n) => [
+  `<b>${n}</b> biscoitos numa caixa. Metade foi comida. Quantos biscoitos sobraram?`,
+  `<b>${n}</b> alunos na turma. Metade foi pra quadra. Quantos ficaram na sala?`,
+  `<b>${n}</b> doces pra dividir em 2 sacos iguais. Quantos doces em cada saco?`,
+  `A árvore tinha <b>${n}</b> frutas. Caiu a metade. Quantas frutas ainda estão na árvore?`
+];
+
+function abrirModalMacetes() {
+  const m = document.getElementById('modal-overlay');
+  if (!m) return;
+  document.getElementById('m-emoji').textContent = '🧠';
+  document.getElementById('m-titulo').textContent = 'Macetes da Tabuada';
+  const cardsHtml = MACETES_TABUADA.map(ma => `
+    <div class="macete-card">
+      <div class="macete-header">
+        <span class="macete-emoji">${ma.emoji}</span>
+        <span class="macete-titulo">${ma.titulo}</span>
+      </div>
+      <div class="macete-corpo">${ma.corpo}</div>
+      <div class="macete-exemplo">${ma.exemplo.replace(/\n/g, '<br>')}</div>
+    </div>`).join('');
+  document.getElementById('m-conteudo').innerHTML = `
+    <p style="text-align:center;color:#888;font-size:13px;margin-bottom:12px">Truques brasileiros pra decorar tabuada mais rápido</p>
+    <div class="macetes-lista">${cardsHtml}</div>`;
+  document.getElementById('modal-btn').onclick = () => fecharModal();
+  document.getElementById('modal-btn').textContent = 'Fechar';
+  m.classList.remove('hidden');
+}
+
+DICAS = {
+  lerMilhar: (n) => `Leia por ordens: ${Math.floor(n/100)}00 + ${Math.floor((n%100)/10)*10} + ${n%10}.`,
+  compMilhar: (a,b) => `Compara algarismo por algarismo da esquerda. ${Math.max(a,b)} é maior.`,
+  decompor: (n) => `${n} = ${Math.floor(n/100)*100} + ${Math.floor((n%100)/10)*10} + ${n%10}.`,
+  somaReag: (a,b) => {
+    const uA = a%10, uB = b%10, dA = Math.floor(a/10)%10, dB = Math.floor(b/10)%10;
+    const somaU = uA+uB, vai1 = somaU >= 10 ? 1 : 0;
+    return [
+      `Começa pela coluna das unidades (último número à direita).`,
+      `Soma as unidades: ${uA} + ${uB} = ${somaU}${vai1?' (passou de 9, "vai 1")':''}.`,
+      `${a} + ${b}: unidades ${uA}+${uB}=${somaU}${vai1?' (sobe 1)':''}. Dezenas ${dA}+${dB}${vai1?'+1':''}=${dA+dB+vai1}. Total = ${a+b}.`
+    ];
+  },
+  subEmp: (a,b) => `${a} − ${b} = ${a-b}. Quando não dá, pega 1 emprestado da coluna vizinha.`,
+  mentalMat: (a,b) => `${a} + ${b} = ${a+b}. Decompõe pra arredondar: ${a}+${10-(a%10)}+${b-(10-(a%10))}.`,
+  tab5: (a,b) => [
+    `Multiplicar é somar várias vezes. Pensa em somar ${a} na mão.`,
+    `Soma ${a} exatamente ${b} vezes.`,
+    `${a} × ${b} = ${Array(b).fill(a).join(' + ')} = ${a*b}.`
+  ],
+  divSimples: (a,b) => [
+    `Dividir é repartir igual. ${a} coisas pra ${b} pessoas, quantas pra cada?`,
+    `Vai somando ${b} até chegar em ${a}: ${b}, ${b*2}, ${b*3}…`,
+    `${a} ÷ ${b} = ${a/b}. Confere: ${b} × ${a/b} = ${a}.`
+  ],
+  dobroMetade: (n, tipo) => tipo === 'dobro'
+    ? [
+        `Dobro é o número somado com ele mesmo.`,
+        `Faz: ${n} + ${n} = ?`,
+        `Dobro de ${n}: ${n} + ${n} = ${n*2}.`
+      ]
+    : [
+        `Metade é partir em duas partes iguais.`,
+        `Pergunta: qual número + ele mesmo dá ${n}?`,
+        `Metade de ${n}: ${n} ÷ 2 = ${n/2}. Confere: ${n/2} + ${n/2} = ${n}.`
+      ],
+  horaMeia: () => `Ponteiro curto vermelho = hora. Longo verde: 12=0, 3=15, 6=30, 9=45.`,
+  cmMetro: () => `Pequeno (caderno, lápis) = cm. Grande (sala, altura) = metro.`,
+  litroKg: () => `Líquido que bebe = litro. Objeto que pesa = quilo.`,
+  poligono: (n, nome) => `Essa figura tem ${n} lados, então é um ${nome}.`,
+  facesVert: (f) => `Conta cada lado "plano" do sólido. Eram ${f} faces.`,
+  simetria: () => `Pensa se dá pra dobrar a figura e as 2 partes ficam iguais.`,
+  arredonda: (n, r) => `${n} arredonda pra ${r}. Olha o último dígito: ≥5 sobe, <5 desce.`
+};
+
+// ============== JOGOS ==============
+
+const POR_EXTENSO = {
+  0:'zero',1:'um',2:'dois',3:'três',4:'quatro',5:'cinco',6:'seis',7:'sete',8:'oito',9:'nove',
+  10:'dez',11:'onze',12:'doze',13:'treze',14:'quatorze',15:'quinze',16:'dezesseis',17:'dezessete',18:'dezoito',19:'dezenove',
+  20:'vinte',30:'trinta',40:'quarenta',50:'cinquenta',60:'sessenta',70:'setenta',80:'oitenta',90:'noventa',
+  100:'cem',200:'duzentos',300:'trezentos',400:'quatrocentos',500:'quinhentos',
+  600:'seiscentos',700:'setecentos',800:'oitocentos',900:'novecentos'
+};
+function numeroPorExtenso(n) {
+  if (POR_EXTENSO[n]) return POR_EXTENSO[n];
+  const c = Math.floor(n/100)*100;
+  const resto = n - c;
+  const d = Math.floor(resto/10)*10;
+  const u = resto%10;
+  let partes = [];
+  if (c > 0) partes.push(POR_EXTENSO[c === 100 && resto > 0 ? 100 : c]);
+  if (c === 100 && resto > 0) partes[0] = 'cento';
+  if (d >= 20) {
+    partes.push(POR_EXTENSO[d]);
+    if (u > 0) partes.push(POR_EXTENSO[u]);
+  } else if (resto > 0) {
+    partes.push(POR_EXTENSO[resto]);
+  }
+  return partes.join(' e ');
+}
+
+JOGOS.lerMilhar = {
+  iniciar() {
+    const fx = pickNivel([[10,99],[100,999],[200,9999]], 'lerMilhar');
+    const n = rand(fx[1], fx[0]);
+    jogoState.resposta = n;
+    const opcoes = new Set([n]);
+    while (opcoes.size < 4) opcoes.add(rand(fx[1], fx[0]));
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual é este número?<br><span style="font-size:20px;color:#6b54d3">${numeroPorExtenso(n)}</span></div>
+      <div class="opcoes q4">${arr.map(o => `<button onclick="JOGOS.lerMilhar.conferir(${o})" style="font-size:26px">${o}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Certo! ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.lerMilhar(jogoState.resposta));
+  }
+};
+
+JOGOS.compMilhar = {
+  iniciar() {
+    const fx = pickNivel([[10,99],[100,999],[1000,9999]], 'compMilhar');
+    let a = rand(fx[1], fx[0]), b = rand(fx[1], fx[0]);
+    while (a === b) b = rand(fx[1], fx[0]);
+    const procuraMaior = rand(1, 0) === 1;
+    jogoState.a = a; jogoState.b = b; jogoState.procuraMaior = procuraMaior;
+    jogoState.resposta = procuraMaior ? Math.max(a, b) : Math.min(a, b);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual número é ${procuraMaior ? '<b style="color:#4ab3a5">MAIOR</b>' : '<b style="color:#ff7b6b">MENOR</b>'}?</div>
+      <div class="opcoes">
+        <button onclick="JOGOS.compMilhar.conferir(${a})" style="font-size:32px">${a}</button>
+        <button onclick="JOGOS.compMilhar.conferir(${b})" style="font-size:32px">${b}</button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.compMilhar(jogoState.a, jogoState.b));
+  }
+};
+
+JOGOS.decompor = {
+  iniciar() {
+    const fx = pickNivel([[100,499],[100,999],[500,9999]], 'decompor');
+    const n = rand(fx[1], fx[0]);
+    jogoState.resposta = n;
+    const c = Math.floor(n/100)*100;
+    const d = Math.floor((n%100)/10)*10;
+    const u = n%10;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual número é?<br><span style="font-size:28px;color:#6b54d3">${c} + ${d} + ${u}</span></div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.decompor.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.decompor.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto(`Certo! ${r}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.decompor(jogoState.resposta));
+  }
+};
+
+JOGOS.somaReag = {
+  iniciar() {
+    const fx = pickNivel([[15,50],[20,150],[50,500]], 'somaReag');
+    const a = rand(fx[1], fx[0]), b = rand(fx[1], fx[0]);
+    jogoState.resposta = a + b; jogoState.a = a; jogoState.b = b;
+    setDicasPergunta(DICAS.somaReag(a, b));
+    const perguntaHtml = _modoHistoria
+      ? `<div class="pergunta-historia">${escolher(HISTORIAS_SOMA(a, b))}</div>`
+      : `<div class="pergunta"><span class="grande">${a} + ${b}</span></div>`;
+    document.getElementById('jogo-conteudo').innerHTML = botaoModoHistoriaHtml() + perguntaHtml + `
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.somaReag.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.somaReag.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto('Certo!');
+    else feedbackErro(`Era ${jogoState.resposta}`);
+  }
+};
+
+JOGOS.subEmp = {
+  iniciar() {
+    const fx = pickNivel([[20,80],[40,200],[80,500]], 'subEmp');
+    const a = rand(fx[1], fx[0]), b = rand(a - 1, 10);
+    jogoState.resposta = a - b; jogoState.a = a; jogoState.b = b;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta"><span class="grande">${a} − ${b}</span></div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.subEmp.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.subEmp.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto('Certo!');
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.subEmp(jogoState.a, jogoState.b));
+  }
+};
+
+JOGOS.mentalMat = {
+  iniciar() {
+    const tipo = escolher(['soma','sub']);
+    const fa = pickNivel([[10,30],[10,90],[50,200]], 'mentalMat');
+    const fb = pickNivel([[1,5],[1,9],[2,15]], 'mentalMat');
+    let a, b, resp;
+    if (tipo === 'soma') {
+      a = rand(fa[1], fa[0]); b = rand(fb[1], fb[0]); resp = a + b;
+    } else {
+      a = rand(fa[1], Math.max(fa[0], 20)); b = rand(fb[1], fb[0]); resp = a - b;
+    }
+    jogoState.resposta = resp; jogoState.a = a; jogoState.b = b;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:20px">Calcule de cabeça!<br><span class="grande">${a} ${tipo === 'soma' ? '+' : '−'} ${b}</span></div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.mentalMat.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.mentalMat.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto('Mandou bem!');
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.mentalMat(jogoState.a, jogoState.b));
+  }
+};
+
+JOGOS.tab5 = {
+  iniciar() {
+    const fa = pickNivel([[2,3],[2,5],[3,5]], 'tab5');
+    const fb = pickNivel([[2,5],[2,10],[5,10]], 'tab5');
+    const a = rand(fa[1], fa[0]), b = rand(fb[1], fb[0]);
+    jogoState.resposta = a * b; jogoState.a = a; jogoState.b = b;
+    setDicasPergunta(DICAS.tab5(a, b));
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div style="text-align:center;margin-bottom:10px">
+        <button class="btn-macetes" onclick="abrirModalMacetes()">🧠 Macetes da Tabuada</button>
+      </div>
+      <div class="pergunta"><span class="grande">${a} × ${b}</span></div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.tab5.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.tab5.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto(`${jogoState.a} × ${jogoState.b} = ${r}`);
+    else feedbackErro(`Era ${jogoState.resposta}`);
+  }
+};
+
+JOGOS.divSimples = {
+  iniciar() {
+    const fd = pickNivel([[2,3],[2,5],[3,9]], 'divSimples');
+    const fq = pickNivel([[2,5],[2,10],[5,15]], 'divSimples');
+    const divisor = rand(fd[1], fd[0]);
+    const quociente = rand(fq[1], fq[0]);
+    const a = divisor * quociente;
+    jogoState.resposta = quociente; jogoState.a = a; jogoState.b = divisor;
+    setDicasPergunta(DICAS.divSimples(a, divisor));
+    const perguntaHtml = _modoHistoria
+      ? `<div class="pergunta-historia">${escolher(HISTORIAS_DIV(a, divisor))}</div>`
+      : `<div class="pergunta"><span class="grande">${a} ÷ ${divisor}</span></div>`;
+    document.getElementById('jogo-conteudo').innerHTML = botaoModoHistoriaHtml() + perguntaHtml + `
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.divSimples.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.divSimples.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto(`${jogoState.a} ÷ ${jogoState.b} = ${r}`);
+    else feedbackErro(`Era ${jogoState.resposta}`);
+  }
+};
+
+JOGOS.dobroMetade = {
+  iniciar() {
+    const tipo = escolher(['dobro','metade']);
+    const fx = pickNivel([[2,10],[2,50],[10,100]], 'dobroMetade');
+    const n = tipo === 'dobro' ? rand(fx[1], fx[0]) : rand(fx[1], fx[0]) * 2;
+    jogoState.resposta = tipo === 'dobro' ? n * 2 : n / 2;
+    jogoState.n = n; jogoState.tipo = tipo;
+    setDicasPergunta(DICAS.dobroMetade(n, tipo));
+    const perguntaHtml = _modoHistoria
+      ? `<div class="pergunta-historia">${escolher(tipo === 'dobro' ? HISTORIAS_DOBRO(n) : HISTORIAS_METADE(n))}</div>`
+      : `<div class="pergunta">${tipo === 'dobro' ? 'Qual o <b style="color:#4ab3a5">dobro</b> de' : 'Qual a <b style="color:#ff7b6b">metade</b> de'}
+          <span class="grande">${n}</span></div>`;
+    document.getElementById('jogo-conteudo').innerHTML = botaoModoHistoriaHtml() + perguntaHtml + `
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.dobroMetade.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.dobroMetade.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto('Certo!');
+    else feedbackErro(`Era ${jogoState.resposta}`);
+  }
+};
+
+JOGOS.horaMeia = {
+  iniciar() {
+    const h = rand(12, 1);
+    const m = escolher([0, 15, 30, 45]);
+    const respostaTxt = `${h}:${m.toString().padStart(2,'0')}`;
+    jogoState.resposta = respostaTxt;
+    const angH = (h % 12) * 30 + m * 0.5, angM = m * 6;
+    const relogio = `
+      <svg width="180" height="180" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="90" fill="#fff" stroke="#4a3b8a" stroke-width="4"/>
+        ${[1,2,3,4,5,6,7,8,9,10,11,12].map(n => {
+          const a = (n * 30 - 90) * Math.PI / 180;
+          return `<text x="${100 + 72 * Math.cos(a)}" y="${100 + 72 * Math.sin(a) + 5}" text-anchor="middle" font-size="18" font-weight="700" fill="#4a3b8a">${n}</text>`;
+        }).join('')}
+        <line x1="100" y1="100" x2="${100 + 45 * Math.cos((angH - 90) * Math.PI / 180)}" y2="${100 + 45 * Math.sin((angH - 90) * Math.PI / 180)}" stroke="#ff7b6b" stroke-width="6" stroke-linecap="round"/>
+        <line x1="100" y1="100" x2="${100 + 70 * Math.cos((angM - 90) * Math.PI / 180)}" y2="${100 + 70 * Math.sin((angM - 90) * Math.PI / 180)}" stroke="#4ab3a5" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="100" cy="100" r="6" fill="#4a3b8a"/>
+      </svg>`;
+    const alts = new Set([respostaTxt]);
+    while (alts.size < 4) {
+      const hO = rand(12, 1), mO = escolher([0, 15, 30, 45]);
+      alts.add(`${hO}:${mO.toString().padStart(2,'0')}`);
+    }
+    const arr = [...alts].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Que horas são?</div>
+      ${relogio}
+      <div class="relogio-opcoes">${arr.map(a => `<button onclick="JOGOS.horaMeia.conferir('${a}')">${a}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Certo! ${jogoState.resposta}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.horaMeia());
+  }
+};
+
+const ITENS_MEDIDA = [
+  {obj:'um caderno',medida:'cm'}, {obj:'um lápis',medida:'cm'}, {obj:'uma régua',medida:'cm'},
+  {obj:'altura de uma pessoa',medida:'m'}, {obj:'comprimento de uma sala',medida:'m'},
+  {obj:'uma estrada',medida:'km'}, {obj:'largura da cidade',medida:'km'},
+  {obj:'distância até a padaria',medida:'m'}, {obj:'um celular',medida:'cm'},
+  {obj:'uma mesa',medida:'m'}, {obj:'um botão',medida:'cm'}
+];
+
+JOGOS.cmMetro = {
+  iniciar() {
+    const item = escolher(ITENS_MEDIDA);
+    jogoState.resposta = item.medida;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:20px">Para medir <b style="color:#ff9a44">${item.obj}</b>, qual unidade usar?</div>
+      <div class="opcoes q3">
+        <button onclick="JOGOS.cmMetro.conferir('cm')">cm<br><small style="font-size:11px">centímetro</small></button>
+        <button onclick="JOGOS.cmMetro.conferir('m')">m<br><small style="font-size:11px">metro</small></button>
+        <button onclick="JOGOS.cmMetro.conferir('km')">km<br><small style="font-size:11px">quilômetro</small></button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.cmMetro());
+  }
+};
+
+const ITENS_LK = [
+  {obj:'uma garrafa de água',un:'L'}, {obj:'um saco de arroz',un:'kg'},
+  {obj:'um pacote de açúcar',un:'kg'}, {obj:'um copo de suco',un:'L'},
+  {obj:'um pedaço de carne',un:'kg'}, {obj:'leite no supermercado',un:'L'},
+  {obj:'uma maçã',un:'kg'}, {obj:'refrigerante em garrafa',un:'L'}
+];
+
+JOGOS.litroKg = {
+  iniciar() {
+    const item = escolher(ITENS_LK);
+    jogoState.resposta = item.un;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:20px">Como medimos <b style="color:#ff9a44">${item.obj}</b>?</div>
+      <div class="opcoes">
+        <button onclick="JOGOS.litroKg.conferir('L')" style="background:#dbedfb">Litros (L)</button>
+        <button onclick="JOGOS.litroKg.conferir('kg')" style="background:#fff3d6">Quilos (kg)</button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha === 'L' ? 'Litros' : 'Quilos'}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.litroKg());
+  }
+};
+
+const POLIGONOS = [
+  {nome:'triângulo', lados:3, pts:'80,15 20,100 140,100', cor:'#ff7b6b'},
+  {nome:'quadrado', lados:4, pts:'30,20 130,20 130,100 30,100', cor:'#4ab3a5'},
+  {nome:'pentágono', lados:5, pts:'80,15 145,55 120,105 40,105 15,55', cor:'#ffd36b'},
+  {nome:'hexágono', lados:6, pts:'80,15 140,45 140,85 80,115 20,85 20,45', cor:'#b968e8'},
+  {nome:'heptágono', lados:7, pts:'80,15 130,35 145,80 125,120 35,120 15,80 30,35', cor:'#5ba8e8'},
+  {nome:'octógono', lados:8, pts:'50,15 110,15 140,45 140,85 110,115 50,115 20,85 20,45', cor:'#f2a541'}
+];
+
+JOGOS.poligono = {
+  iniciar() {
+    const f = escolher(POLIGONOS);
+    jogoState.resposta = f.nome; jogoState.lados = f.lados;
+    const opcoes = [...POLIGONOS].sort(() => Math.random() - 0.5).slice(0, 4);
+    if (!opcoes.find(o => o.nome === f.nome)) opcoes[0] = f;
+    opcoes.sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual é o nome deste polígono?</div>
+      <svg width="160" height="130" viewBox="0 0 160 130">
+        <polygon points="${f.pts}" fill="${f.cor}" stroke="#4a3b8a" stroke-width="3"/></svg>
+      <div class="opcoes q4" style="margin-top:14px">${opcoes.map(o => `<button onclick="JOGOS.poligono.conferir('${o.nome}')">${o.nome}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Certo! ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.poligono(jogoState.lados, jogoState.resposta));
+  }
+};
+
+const SOLIDOS = [
+  {nome:'cubo', faces:6, vertices:8, svg:'<polygon points="40,80 40,30 80,10 120,30 120,80 80,100" fill="#ffd36b" stroke="#4a3b8a" stroke-width="3"/><line x1="40" y1="30" x2="80" y2="50" stroke="#4a3b8a" stroke-width="2"/><line x1="80" y1="50" x2="120" y2="30" stroke="#4a3b8a" stroke-width="2"/><line x1="80" y1="50" x2="80" y2="100" stroke="#4a3b8a" stroke-width="2"/>'},
+  {nome:'pirâmide triangular', faces:4, vertices:4, svg:'<polygon points="80,10 30,90 130,90" fill="#b968e8" stroke="#4a3b8a" stroke-width="3"/><line x1="80" y1="10" x2="80" y2="90" stroke="#4a3b8a" stroke-width="2"/>'},
+  {nome:'paralelepípedo', faces:6, vertices:8, svg:'<polygon points="30,80 30,35 100,20 140,35 140,80 70,95" fill="#5ba8e8" stroke="#4a3b8a" stroke-width="3"/><line x1="30" y1="35" x2="70" y2="50" stroke="#4a3b8a" stroke-width="2"/><line x1="70" y1="50" x2="140" y2="35" stroke="#4a3b8a" stroke-width="2"/><line x1="70" y1="50" x2="70" y2="95" stroke="#4a3b8a" stroke-width="2"/>'}
+];
+
+JOGOS.facesVert = {
+  iniciar() {
+    const s = escolher(SOLIDOS);
+    const atr = escolher(['faces','vertices']);
+    jogoState.resposta = s[atr];
+    jogoState.atr = atr; jogoState.nome = s.nome;
+    const opcoes = new Set([s[atr]]);
+    while (opcoes.size < 4) opcoes.add(rand(s[atr] + 3, Math.max(2, s[atr] - 3)));
+    const arr = [...opcoes].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quantas <b>${atr === 'faces' ? 'faces' : 'vértices (bicos)'}</b> tem o ${s.nome}?</div>
+      <svg width="160" height="110" viewBox="0 0 160 110">${s.svg}</svg>
+      <div class="opcoes q4" style="margin-top:14px">${arr.map(o => `<button onclick="JOGOS.facesVert.conferir(${o})" style="font-size:24px">${o}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha} ${jogoState.atr === 'faces' ? 'faces' : 'vértices'}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.facesVert(jogoState.resposta));
+  }
+};
+
+JOGOS.simetria = {
+  figs: [
+    {nome:'quadrado', svg:'<rect x="40" y="20" width="80" height="80" fill="#4ab3a5" stroke="#4a3b8a" stroke-width="3"/>', simetrica:true},
+    {nome:'coração', svg:'<path d="M80,100 C50,70 30,50 30,35 C30,20 45,15 55,15 C65,15 72,20 80,30 C88,20 95,15 105,15 C115,15 130,20 130,35 C130,50 110,70 80,100 Z" fill="#ff7b6b" stroke="#4a3b8a" stroke-width="2"/>', simetrica:true},
+    {nome:'triângulo isósceles', svg:'<polygon points="80,15 30,100 130,100" fill="#ffd36b" stroke="#4a3b8a" stroke-width="3"/>', simetrica:true},
+    {nome:'círculo', svg:'<circle cx="80" cy="60" r="45" fill="#b968e8" stroke="#4a3b8a" stroke-width="3"/>', simetrica:true},
+    {nome:'figura irregular', svg:'<polygon points="30,30 70,20 120,45 140,90 90,110 40,90 20,60" fill="#5ba8e8" stroke="#4a3b8a" stroke-width="3"/>', simetrica:false},
+    {nome:'letra F', svg:'<polygon points="50,20 110,20 110,40 70,40 70,55 100,55 100,75 70,75 70,100 50,100" fill="#f2a541" stroke="#4a3b8a" stroke-width="3"/>', simetrica:false}
+  ],
+  iniciar() {
+    const f = escolher(this.figs);
+    jogoState.resposta = f.simetrica; jogoState.nome = f.nome;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Esta figura tem eixo de simetria?</div>
+      <svg width="160" height="120" viewBox="0 0 160 120">${f.svg}</svg>
+      <div style="text-align:center;color:#4a3b8a;font-size:18px;font-weight:600;margin:8px 0">${f.nome}</div>
+      <div class="opcoes">
+        <button onclick="JOGOS.simetria.conferir(true)" style="background:#d4f5dd;border-color:#4ab3a5;color:#1b7a3a">Sim, é simétrica</button>
+        <button onclick="JOGOS.simetria.conferir(false)" style="background:#fde0e0;border-color:#ff7b6b;color:#a83232">Não é</button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${jogoState.nome} ${jogoState.resposta ? 'é simétrica' : 'não é simétrica'}`);
+    else feedbackErro(`Na verdade ${jogoState.resposta ? 'é simétrica' : 'não é simétrica'}`, DICAS.simetria());
+  }
+};
+
+
+JOGOS.arredonda = {
+  iniciar() {
+    const fx = pickNivel([[11,49],[11,99],[50,999]], 'arredonda');
+    const n = rand(fx[1], fx[0]);
+    const un = n % 10;
+    const dez = Math.floor(n / 10) * 10;
+    const resp = un >= 5 ? dez + 10 : dez;
+    jogoState.resposta = resp; jogoState.n = n;
+    const opcoes = new Set([resp, dez, dez + 10, Math.max(0, dez - 10), dez + 20]);
+    const arr = [...opcoes].slice(0, 4).sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Arredonde <span class="grande">${n}</span> para a dezena mais próxima</div>
+      <div class="opcoes q4">${arr.map(o => `<button onclick="JOGOS.arredonda.conferir(${o})" style="font-size:26px">${o}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${jogoState.n} → ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.arredonda(jogoState.n, jogoState.resposta));
+  }
+};
+
+initJogos();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

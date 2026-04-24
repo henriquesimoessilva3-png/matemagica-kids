@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jogos de Matemática — 2º Ano</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mat">
+<link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+<div class="container">
+  <h1>Jogos de Matemática</h1>
+  <div class="sub">2º Ano — Números, Formas e Espaços</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div id="menu-principal">
+    <div class="capitulos">
+      <button class="cap-card cap1" onclick="abrirCapitulo(1)">
+        <span class="num">1</span><h3>Números por todo lado</h3>
+        <p>Ordinais, antecessor, sucessor, sequências</p>
+      </button>
+      <button class="cap-card cap2" onclick="abrirCapitulo(2)">
+        <span class="num">2</span><h3>Dezenas e mais dezenas</h3>
+        <p>Agrupar de 10, compor números, faça 10</p>
+      </button>
+      <button class="cap-card cap3" onclick="abrirCapitulo(3)">
+        <span class="num">3</span><h3>Somar e subtrair</h3>
+        <p>Adição, subtração, troco do dinheiro</p>
+      </button>
+      <button class="cap-card cap4" onclick="abrirCapitulo(4)">
+        <span class="num">4</span><h3>Na medida certa</h3>
+        <p>Horas, calendário, peso, capacidade</p>
+      </button>
+      <button class="cap-card cap5" onclick="abrirCapitulo(5)">
+        <span class="num">5</span><h3>Um mundo de formas</h3>
+        <p>Sólidos, figuras, lados, lateralidade</p>
+      </button>
+    </div>
+    <div style="text-align:center;margin-top:20px">
+      <a href="index.html" style="display:inline-block;margin-right:8px;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#ede8fa">← Trocar ano</a>
+      <button class="acao sec" onclick="zerarProgresso()" style="font-size:12px;padding:8px 14px">Zerar Progresso</button>
+    </div>
+  </div>
+
+  <div id="menu-capitulo" class="hidden">
+    <button class="voltar" onclick="voltarMenu()">← Voltar</button>
+    <h2 id="titulo-cap" style="color:#4a3b8a; margin-bottom:16px;"></h2>
+    <div class="jogos-lista" id="lista-jogos"></div>
+  </div>
+
+  <div id="area-jogo" class="hidden">
+    <button class="voltar" onclick="voltarCapitulo()">← Voltar aos jogos</button>
+    <h2 id="titulo-jogo" style="color:#4a3b8a; margin-bottom:14px; font-size:20px;"></h2>
+    <div class="placar-jogo">
+      <div>Estrelas<strong id="j-acertos">0</strong></div>
+      <div>Tentativas<strong id="j-tentativas">0</strong></div>
+      <div>Sequência<strong id="j-streak">0</strong></div>
+    </div>
+    <div class="dica-inline" id="dica-inline"></div>
+    <div class="jogo-area" id="jogo-conteudo"></div>
+  </div>
+</div>
+
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script src="mascotes.js"></script>
+<script src="jogos_shared.js"></script>
+<script>
+STORAGE_KEY = 'jogosMat2ano_v1';
+
+CAPS = {
+  1: { nome: 'Capítulo 1 — Números por todo lado', jogos: [
+    { id: 'antSuc', nome: 'Antecessor e Sucessor', desc: 'Qual número vem antes e depois?' },
+    { id: 'ordinais', nome: 'Quem está na fila?', desc: '1º, 2º, 3º... descubra a posição' },
+    { id: 'sequencia', nome: 'Complete a Sequência', desc: 'De 2 em 2, 5 em 5, 10 em 10' }
+  ]},
+  2: { nome: 'Capítulo 2 — Dezenas e mais dezenas', jogos: [
+    { id: 'dezUn', nome: 'Conte os Palitos', desc: 'Quantos palitos tem ao todo?' },
+    { id: 'componha', nome: 'Componha o Número', desc: 'Junte dezenas com unidades' },
+    { id: 'faca10', nome: 'Faça 10', desc: 'Qual número falta para dar 10?' }
+  ]},
+  3: { nome: 'Capítulo 3 — Somar e Subtrair', jogos: [
+    { id: 'soma', nome: 'Soma Rápida', desc: 'Quanto dá a soma?' },
+    { id: 'subtracao', nome: 'Subtração', desc: 'Quanto sobra depois de tirar?' },
+    { id: 'troco', nome: 'Troco da Compra', desc: 'Quanto o caixa devolve?' },
+    { id: 'dobro2', nome: 'Dobro Rápido', desc: 'Dobre o número' }
+  ]},
+  4: { nome: 'Capítulo 4 — Na Medida Certa', jogos: [
+    { id: 'horas', nome: 'Que Horas São?', desc: 'Leia o relógio' },
+    { id: 'calendario', nome: 'Calendário', desc: 'Descubra o dia da semana' },
+    { id: 'pesa', nome: 'Pesa Mais?', desc: 'Compare pesos e tamanhos' }
+  ]},
+  5: { nome: 'Capítulo 5 — Um Mundo de Formas', jogos: [
+    { id: 'forma', nome: 'Que Forma é Essa?', desc: 'Cubo, esfera, cilindro...' },
+    { id: 'rola', nome: 'Rola ou Não Rola?', desc: 'Classifique os sólidos' },
+    { id: 'lados', nome: 'Quantos Lados?', desc: 'Triângulo, quadrado, pentágono' }
+  ]}
+};
+
+TUTORIAIS = {
+  antSuc: { emoji:'🔢', titulo:'Antecessor e Sucessor', corpo:`
+    <p>Escreva o número que vem <b>ANTES</b> (antecessor) e o que vem <b>DEPOIS</b> (sucessor).</p>
+    <div class="exemplo">Se o número é <b>7</b>: Antecessor = <b>6</b> · Sucessor = <b>8</b></div>`},
+  ordinais: { emoji:'🚶', titulo:'Quem está na fila?', corpo:`
+    <p>Descubra quem está na posição pedida: 1º, 2º, 3º...</p>
+    <div class="exemplo">Conta começando pelo 1º da esquerda.</div>`},
+  sequencia: { emoji:'📈', titulo:'Complete a Sequência', corpo:`
+    <p>Descubra de quanto em quanto os números estão pulando.</p>
+    <div class="exemplo"><b>2, 4, ?, 8, 10</b> → de 2 em 2 → o que falta é <b>6</b></div>`},
+  dezUn: { emoji:'🪵', titulo:'Conte os Palitos', corpo:`
+    <p>Feixes amarelos = 10 palitos · soltos = 1 palito cada.</p>
+    <div class="exemplo"><b>3 feixes + 4 soltos</b> = 30 + 4 = <b>34</b></div>`},
+  componha: { emoji:'🧩', titulo:'Componha o Número', corpo:`
+    <p>Junta dezenas (grupos de 10) com unidades (1 a 9).</p>
+    <div class="exemplo"><b>4 dezenas + 7 unidades</b> = 40 + 7 = <b>47</b></div>`},
+  faca10: { emoji:'🎯', titulo:'Faça 10', corpo:`
+    <p>Descubra quanto falta para chegar em 10.</p>
+    <div class="exemplo"><b>7 + ? = 10</b> → faltaram <b>3</b></div>`},
+  soma: { emoji:'➕', titulo:'Soma Rápida', corpo:`
+    <p>Soma os dois números.</p>
+    <div class="exemplo">Começa pelo maior, soma o menor contando pra frente.</div>`},
+  subtracao: { emoji:'➖', titulo:'Subtração', corpo:`
+    <p>Tira um número do outro.</p>
+    <div class="exemplo">Começa do maior e conta pra trás.</div>`},
+  troco: { emoji:'💵', titulo:'Troco da Compra', corpo:`
+    <p>Quanto o caixa devolve após a compra?</p>
+    <div class="exemplo">Comprei de R$3, paguei com R$10 → troco R$7</div>`},
+  horas: { emoji:'⏰', titulo:'Que Horas São?', corpo:`
+    <p>Ponteiro <b style="color:#ff7b6b">vermelho</b> = hora · <b style="color:#4ab3a5">verde</b> = minuto.</p>
+    <div class="exemplo">Vermelho no 3, verde no 6 → <b>3:30</b></div>`},
+  calendario: { emoji:'📅', titulo:'Calendário', corpo:`
+    <p>Descubra que dia será daqui a alguns dias.</p>
+    <div class="exemplo">Segunda + 3 dias → terça → quarta → <b>quinta</b></div>`},
+  pesa: { emoji:'⚖️', titulo:'Pesa Mais?', corpo:`
+    <p>Escolhe qual animal é mais pesado.</p>
+    <div class="exemplo">Pensa no tamanho real. Formiga vs Elefante → elefante!</div>`},
+  forma: { emoji:'🎲', titulo:'Que Forma é Essa?', corpo:`
+    <p>Cubo = dado · Esfera = bola · Cilindro = lata · Cone = casquinha</p>`},
+  rola: { emoji:'🎳', titulo:'Rola ou Não Rola?', corpo:`
+    <p>Formas arredondadas rolam. Com cantos retos não rolam.</p>
+    <div class="exemplo">Bola, lata, casquinha rolam ✓ · Dado, pirâmide não ✗</div>`},
+  lados: { emoji:'🔺', titulo:'Quantos Lados?', corpo:`
+    <p>Conta cada linha reta uma vez.</p>
+    <div class="exemplo">Triângulo=3 · Quadrado/Retângulo=4 · Pentágono=5 · Hexágono=6</div>`},
+  dobro2: { emoji:'2️⃣', titulo:'Dobro Rápido', corpo:`
+    <p>Dobro = o número + ele mesmo.</p>
+    <div class="exemplo">Dobro de 7 = 7 + 7 = <b>14</b></div>`}
+};
+
+DICAS = {
+  antSuc: () => `Antecessor é 1 a menos, sucessor é 1 a mais. Conta nos dedinhos!`,
+  ordinais: (pos) => `O ${pos} é quem está em ordem de chegada. Conta do 1º (esquerda) até chegar.`,
+  sequencia: (p) => `A sequência pulava de ${p} em ${p}. Soma ${p} ao número de antes.`,
+  dezUn: (d, u) => `${d} feixes × 10 = ${d*10}. Depois soma ${u} soltos → ${d*10 + u}.`,
+  componha: (d, u) => `${d} dezenas = ${d*10}. Depois soma as ${u} unidades.`,
+  faca10: (n) => `Conta de ${n} até 10 nos dedinhos: ${n},${n+1},... até 10.`,
+  soma: (a, b) => `Dica: começa pelo maior (${Math.max(a,b)}) e soma o menor (${Math.min(a,b)}) contando pra frente.`,
+  subtracao: (a, b) => `Começa do ${a} e conta ${b} pra trás nos dedinhos.`,
+  troco: (nota, preco) => `Troco = nota − preço = ${nota} − ${preco}.`,
+  horas: () => `Curto vermelho = hora. Longo verde: 12=0, 3=15, 6=30, 9=45.`,
+  calendario: () => `Semana tem 7 dias. Conta a partir de hoje somando os dias pedidos.`,
+  pesa: () => `Pensa no tamanho real do bicho pra decidir qual pesa mais.`,
+  forma: () => `Cubo = dado · Esfera = bola · Cilindro = lata · Cone = casquinha`,
+  rola: () => `Cantos retos não rolam. Partes arredondadas rolam.`,
+  lados: () => `Conta cada linha reta uma vez. Triângulo=3, quadrado=4, pentágono=5, hexágono=6.`,
+  dobro2: (n) => `Dobro de ${n} = ${n}+${n} = ${n*2}.`
+};
+
+// ============== JOGOS ==============
+JOGOS.antSuc = {
+  iniciar() {
+    const fx = pickNivel([[2,30],[2,99],[10,999]], 'antSuc');
+    const n = rand(fx[1], fx[0]); jogoState.n = n;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Escreva o <b style="color:#ff7b6b">antecessor</b> e o <b style="color:#4ab3a5">sucessor</b>:
+        <span class="grande">${n}</span></div>
+      <div class="opcoes" style="grid-template-columns: 1fr 1fr;">
+        <div><div style="font-size:12px;color:#888;margin-bottom:4px;">ANTECESSOR</div><input type="number" id="ant" placeholder="?"></div>
+        <div><div style="font-size:12px;color:#888;margin-bottom:4px;">SUCESSOR</div><input type="number" id="suc" placeholder="?"></div>
+      </div>
+      <div class="botoes"><button class="acao" onclick="JOGOS.antSuc.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('ant').focus();
+    document.getElementById('ant').addEventListener('keydown', e => { if (e.key==='Enter') document.getElementById('suc').focus(); });
+    document.getElementById('suc').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.antSuc.conferir(); });
+  },
+  conferir() {
+    const a = parseInt(document.getElementById('ant').value);
+    const s = parseInt(document.getElementById('suc').value);
+    if (isNaN(a) || isNaN(s)) return feedbackErro('Preencha os dois!');
+    if (a === jogoState.n - 1 && s === jogoState.n + 1) feedbackAcerto('Perfeito!');
+    else feedbackErro(`Antecessor é ${jogoState.n-1} e sucessor é ${jogoState.n+1}`, DICAS.antSuc());
+  }
+};
+
+JOGOS.ordinais = {
+  nomes: ['Ana','Beto','Clara','Davi','Elis','Téo','Gabi','Hugo','Iva','João','Kaio','Lia'],
+  ordinais: ['1º','2º','3º','4º','5º','6º','7º','8º','9º','10º','11º','12º'],
+  iniciar() {
+    const fx = pickNivel([[4,5],[5,7],[6,9]], 'ordinais');
+    const tam = rand(fx[1], fx[0]);
+    const nomesUsar = [...this.nomes].sort(() => Math.random() - 0.5).slice(0, tam);
+    const posPergunta = rand(tam - 1, 1);
+    jogoState.resposta = nomesUsar[posPergunta];
+    jogoState.posicao = this.ordinais[posPergunta];
+    const filaHtml = nomesUsar.map((n,i) =>
+      `<div class="pessoa"><span class="pos">${this.ordinais[i]}</span>${n}</div>`).join('');
+    const opcoes = [...nomesUsar].sort(() => Math.random() - 0.5).slice(0, 4);
+    if (!opcoes.includes(jogoState.resposta)) opcoes[0] = jogoState.resposta;
+    opcoes.sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quem é a(o) <span style="color:#ff9a44">${jogoState.posicao}</span> da fila?</div>
+      <div class="fila">${filaHtml}</div>
+      <div class="opcoes q4">${opcoes.map(o => `<button onclick="JOGOS.ordinais.conferir('${o}')">${o}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha} é a(o) ${jogoState.posicao}`);
+    else feedbackErro(`A(o) ${jogoState.posicao} é ${jogoState.resposta}`, DICAS.ordinais(jogoState.posicao));
+  }
+};
+
+JOGOS.sequencia = {
+  iniciar() {
+    const passosPorNivel = pickNivel([[1,2],[1,2,3,5],[2,3,5,10]], 'sequencia');
+    const passo = escolher(passosPorNivel);
+    const fx = pickNivel([[1,20],[1,50],[10,200]], 'sequencia');
+    const inicio = rand(fx[1], fx[0]);
+    const seq = [];
+    for (let i = 0; i < 6; i++) seq.push(inicio + i * passo);
+    const posFaltante = rand(5, 1);
+    jogoState.resposta = seq[posFaltante];
+    jogoState.passo = passo;
+    const htmlSeq = seq.map((n, i) =>
+      i === posFaltante ? `<div class="num-box falta">?</div>` : `<div class="num-box">${n}</div>`).join('');
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Complete a sequência (de ${passo} em ${passo}):</div>
+      <div class="seq-vis">${htmlSeq}</div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.sequencia.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.sequencia.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto('Mandou bem!');
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.sequencia(jogoState.passo));
+  }
+};
+
+JOGOS.dezUn = {
+  iniciar() {
+    const fd = pickNivel([[1,5],[1,9],[3,9]], 'dezUn');
+    const dez = rand(fd[1], fd[0]), un = rand(9, 0);
+    jogoState.resposta = dez * 10 + un; jogoState.dez = dez; jogoState.un = un;
+    let feixesHtml = ''; for (let i = 0; i < dez; i++) feixesHtml += `<div class="feixe">10</div>`;
+    let soltosHtml = ''; for (let i = 0; i < un; i++) soltosHtml += `<div class="solto">1</div>`;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quantos palitos têm ao todo?</div>
+      <div class="feixes">${feixesHtml}</div>
+      ${un > 0 ? `<div style="text-align:center;color:#888;font-size:13px;margin:6px 0">e mais estes soltos:</div><div class="feixes">${soltosHtml}</div>` : ''}
+      <div style="font-size:13px; color:#888; text-align:center; margin:10px 0;">${dez} dezena(s) + ${un} unidade(s)</div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.dezUn.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.dezUn.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto(`Isso! ${r} palitos`);
+    else feedbackErro(`Eram ${jogoState.resposta} palitos`, DICAS.dezUn(jogoState.dez, jogoState.un));
+  }
+};
+
+JOGOS.componha = {
+  iniciar() {
+    const fd = pickNivel([[1,4],[1,9],[3,9]], 'componha');
+    const dez = rand(fd[1], fd[0]), un = rand(9, 0);
+    jogoState.resposta = dez * 10 + un; jogoState.dez = dez; jogoState.un = un;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta"><span style="color:#4ab3a5">${dez} dezenas</span> + <span style="color:#ff9a44">${un} unidades</span> = ?</div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.componha.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.componha.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto('Isso mesmo!');
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.componha(jogoState.dez, jogoState.un));
+  }
+};
+
+JOGOS.faca10 = {
+  iniciar() {
+    const n = rand(9, 1); jogoState.n = n; jogoState.resposta = 10 - n;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quanto falta para <span style="color:#ff9a44">${n}</span> chegar em <span style="color:#4ab3a5">10</span>?
+        <span class="grande">${n} + ? = 10</span></div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.faca10.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.faca10.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto('Faz 10!');
+    else feedbackErro(`Faltava ${jogoState.resposta}`, DICAS.faca10(jogoState.n));
+  }
+};
+
+JOGOS.soma = {
+  iniciar() {
+    const fx = pickNivel([[1,10],[1,30],[10,99]], 'soma');
+    const a = rand(fx[1], fx[0]), b = rand(fx[1], fx[0]);
+    jogoState.resposta = a + b; jogoState.a = a; jogoState.b = b;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta"><span class="grande">${a} + ${b} = ?</span></div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.soma.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.soma.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto('Certo!');
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.soma(jogoState.a, jogoState.b));
+  }
+};
+
+JOGOS.subtracao = {
+  iniciar() {
+    const fx = pickNivel([[10,20],[20,50],[30,99]], 'subtracao');
+    const a = rand(fx[1], fx[0]), b = rand(a - 1, 1);
+    jogoState.resposta = a - b; jogoState.a = a; jogoState.b = b;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta"><span class="grande">${a} − ${b} = ?</span></div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.subtracao.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.subtracao.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto('Isso!');
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.subtracao(jogoState.a, jogoState.b));
+  }
+};
+
+JOGOS.troco = {
+  itens: ['sorvete','pão','suco','maçã','bala','chocolate','biscoito','pipoca'],
+  iniciar() {
+    const notas = pickNivel([[5,10],[5,10,20],[10,20,50]], 'troco');
+    const nota = escolher(notas);
+    const preco = rand(nota - 1, 1);
+    const item = escolher(this.itens);
+    jogoState.resposta = nota - preco; jogoState.nota = nota; jogoState.preco = preco;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:18px">
+        Comprei um <b>${item}</b> de <b style="color:#ff7b6b">R$${preco}</b><br>
+        e paguei com uma nota de <b style="color:#4ab3a5">R$${nota}</b>.<br>
+        Quanto recebo de troco?
+        <span class="grande">R$${nota} − R$${preco}</span></div>
+      <input type="number" id="resp" placeholder="R$ ?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.troco.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.troco.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um valor!');
+    if (r === jogoState.resposta) feedbackAcerto(`Exato! R$${r} de troco`);
+    else feedbackErro(`Eram R$${jogoState.resposta}`, DICAS.troco(jogoState.nota, jogoState.preco));
+  }
+};
+
+JOGOS.horas = {
+  iniciar() {
+    const h = rand(12, 1);
+    const m = escolher([0, 15, 30, 45]);
+    const respostaTxt = `${h}:${m.toString().padStart(2,'0')}`;
+    jogoState.resposta = respostaTxt;
+    const angH = (h % 12) * 30 + m * 0.5;
+    const angM = m * 6;
+    const relogio = `
+      <svg width="180" height="180" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="90" fill="#fff" stroke="#4a3b8a" stroke-width="4"/>
+        ${[1,2,3,4,5,6,7,8,9,10,11,12].map(n => {
+          const a = (n * 30 - 90) * Math.PI / 180;
+          const x = 100 + 72 * Math.cos(a), y = 100 + 72 * Math.sin(a) + 5;
+          return `<text x="${x}" y="${y}" text-anchor="middle" font-size="18" font-weight="700" fill="#4a3b8a">${n}</text>`;
+        }).join('')}
+        <line x1="100" y1="100" x2="${100 + 45 * Math.cos((angH - 90) * Math.PI / 180)}" y2="${100 + 45 * Math.sin((angH - 90) * Math.PI / 180)}" stroke="#ff7b6b" stroke-width="6" stroke-linecap="round"/>
+        <line x1="100" y1="100" x2="${100 + 70 * Math.cos((angM - 90) * Math.PI / 180)}" y2="${100 + 70 * Math.sin((angM - 90) * Math.PI / 180)}" stroke="#4ab3a5" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="100" cy="100" r="6" fill="#4a3b8a"/>
+      </svg>`;
+    const alternativas = new Set([respostaTxt]);
+    while (alternativas.size < 4) {
+      const hO = rand(12, 1), mO = escolher([0, 15, 30, 45]);
+      alternativas.add(`${hO}:${mO.toString().padStart(2,'0')}`);
+    }
+    const arr = [...alternativas].sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Que horas o relógio está marcando?</div>
+      ${relogio}
+      <div style="font-size:12px;color:#888;text-align:center;margin:10px 0">Ponteiro vermelho = hora · verde = minuto</div>
+      <div class="relogio-opcoes">${arr.map(a => `<button onclick="JOGOS.horas.conferir('${a}')">${a}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Certo! ${jogoState.resposta}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.horas());
+  }
+};
+
+JOGOS.calendario = {
+  dias: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+  iniciar() {
+    const hojeIdx = rand(6, 0);
+    const fd = pickNivel([[2,5],[2,10],[3,20]], 'calendario');
+    const dias = rand(fd[1], fd[0]);
+    jogoState.resposta = this.dias[(hojeIdx + dias) % 7];
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta" style="font-size:18px">
+        Hoje é <b style="color:#ff9a44">${this.dias[hojeIdx]}</b>.<br>
+        Que dia será daqui a <b style="color:#6b54d3">${dias} dias</b>?</div>
+      <div class="opcoes q4">${this.dias.map(d => `<button onclick="JOGOS.calendario.conferir('${d}')">${d}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.calendario());
+  }
+};
+
+JOGOS.pesa = {
+  animais: [
+    {nome:'formiga', kg:0.001}, {nome:'pintinho', kg:0.1}, {nome:'gato', kg:4},
+    {nome:'cachorro', kg:15}, {nome:'onça', kg:70}, {nome:'cavalo', kg:400},
+    {nome:'elefante', kg:5000}, {nome:'tatu', kg:3}, {nome:'arara', kg:1},
+    {nome:'boi', kg:500}, {nome:'coelho', kg:2}, {nome:'tubarão', kg:300}
+  ],
+  iniciar() {
+    let a = escolher(this.animais), b = escolher(this.animais);
+    while (a.kg === b.kg) b = escolher(this.animais);
+    jogoState.resposta = a.kg > b.kg ? 'a' : 'b';
+    jogoState.a = a; jogoState.b = b;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual pesa mais?</div>
+      <div class="itens-grid">
+        <button class="item-box" onclick="JOGOS.pesa.conferir('a')" style="cursor:pointer;background:#fff">
+          <h4>${a.nome}</h4><div class="valor">?</div></button>
+        <button class="item-box" onclick="JOGOS.pesa.conferir('b')" style="cursor:pointer;background:#fff">
+          <h4>${b.nome}</h4><div class="valor">?</div></button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    const a = jogoState.a, b = jogoState.b;
+    if (escolha === jogoState.resposta) feedbackAcerto(`Certo! ${a.kg > b.kg ? a.nome : b.nome} pesa mais`);
+    else feedbackErro(`Quem pesa mais é o ${a.kg > b.kg ? a.nome : b.nome}`, DICAS.pesa());
+  }
+};
+
+JOGOS.forma = {
+  formas: [
+    {nome:'cubo', svg:'<polygon points="40,80 40,30 80,10 120,30 120,80 80,100" fill="#ffd36b" stroke="#4a3b8a" stroke-width="3"/><line x1="40" y1="30" x2="80" y2="50" stroke="#4a3b8a" stroke-width="2"/><line x1="80" y1="50" x2="120" y2="30" stroke="#4a3b8a" stroke-width="2"/><line x1="80" y1="50" x2="80" y2="100" stroke="#4a3b8a" stroke-width="2"/>'},
+    {nome:'esfera', svg:'<circle cx="80" cy="60" r="45" fill="#ff9a44" stroke="#4a3b8a" stroke-width="3"/><ellipse cx="80" cy="60" rx="45" ry="14" fill="none" stroke="#4a3b8a" stroke-width="2" stroke-dasharray="3 3"/>'},
+    {nome:'cilindro', svg:'<ellipse cx="80" cy="20" rx="35" ry="10" fill="#4ab3a5" stroke="#4a3b8a" stroke-width="3"/><path d="M 45 20 L 45 90 A 35 10 0 0 0 115 90 L 115 20" fill="#4ab3a5" stroke="#4a3b8a" stroke-width="3"/>'},
+    {nome:'cone', svg:'<polygon points="80,10 40,90 120,90" fill="#ff7b6b" stroke="#4a3b8a" stroke-width="3"/><ellipse cx="80" cy="90" rx="40" ry="10" fill="#ff7b6b" stroke="#4a3b8a" stroke-width="3"/>'},
+    {nome:'pirâmide', svg:'<polygon points="80,10 30,90 130,90" fill="#b968e8" stroke="#4a3b8a" stroke-width="3"/><line x1="80" y1="10" x2="80" y2="90" stroke="#4a3b8a" stroke-width="2"/>'},
+    {nome:'bloco retangular', svg:'<polygon points="30,80 30,35 100,20 140,35 140,80 70,95" fill="#5ba8e8" stroke="#4a3b8a" stroke-width="3"/><line x1="30" y1="35" x2="70" y2="50" stroke="#4a3b8a" stroke-width="2"/><line x1="70" y1="50" x2="140" y2="35" stroke="#4a3b8a" stroke-width="2"/><line x1="70" y1="50" x2="70" y2="95" stroke="#4a3b8a" stroke-width="2"/>'}
+  ],
+  iniciar() {
+    const f = escolher(this.formas);
+    jogoState.resposta = f.nome;
+    const opcoes = [...this.formas].sort(() => Math.random() - 0.5).slice(0, 4);
+    if (!opcoes.find(o => o.nome === f.nome)) opcoes[0] = f;
+    opcoes.sort(() => Math.random() - 0.5);
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Que forma é essa?</div>
+      <svg width="160" height="110" viewBox="0 0 160 110">${f.svg}</svg>
+      <div class="opcoes q4" style="margin-top:14px">${opcoes.map(o => `<button onclick="JOGOS.forma.conferir('${o.nome}')">${o.nome}</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! É um ${escolha}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.forma());
+  }
+};
+
+JOGOS.rola = {
+  formas: [
+    {nome:'cubo', rola:false, svg:'<polygon points="40,80 40,30 80,10 120,30 120,80 80,100" fill="#ffd36b" stroke="#4a3b8a" stroke-width="3"/><line x1="40" y1="30" x2="80" y2="50" stroke="#4a3b8a" stroke-width="2"/><line x1="80" y1="50" x2="120" y2="30" stroke="#4a3b8a" stroke-width="2"/><line x1="80" y1="50" x2="80" y2="100" stroke="#4a3b8a" stroke-width="2"/>'},
+    {nome:'esfera', rola:true, svg:'<circle cx="80" cy="60" r="45" fill="#ff9a44" stroke="#4a3b8a" stroke-width="3"/><ellipse cx="80" cy="60" rx="45" ry="14" fill="none" stroke="#4a3b8a" stroke-width="2" stroke-dasharray="3 3"/>'},
+    {nome:'cilindro', rola:true, svg:'<ellipse cx="80" cy="20" rx="35" ry="10" fill="#4ab3a5" stroke="#4a3b8a" stroke-width="3"/><path d="M 45 20 L 45 90 A 35 10 0 0 0 115 90 L 115 20" fill="#4ab3a5" stroke="#4a3b8a" stroke-width="3"/>'},
+    {nome:'cone', rola:true, svg:'<polygon points="80,10 40,90 120,90" fill="#ff7b6b" stroke="#4a3b8a" stroke-width="3"/><ellipse cx="80" cy="90" rx="40" ry="10" fill="#ff7b6b" stroke="#4a3b8a" stroke-width="3"/>'},
+    {nome:'pirâmide', rola:false, svg:'<polygon points="80,10 30,90 130,90" fill="#b968e8" stroke="#4a3b8a" stroke-width="3"/><line x1="80" y1="10" x2="80" y2="90" stroke="#4a3b8a" stroke-width="2"/>'},
+    {nome:'bloco retangular', rola:false, svg:'<polygon points="30,80 30,35 100,20 140,35 140,80 70,95" fill="#5ba8e8" stroke="#4a3b8a" stroke-width="3"/><line x1="30" y1="35" x2="70" y2="50" stroke="#4a3b8a" stroke-width="2"/><line x1="70" y1="50" x2="140" y2="35" stroke="#4a3b8a" stroke-width="2"/><line x1="70" y1="50" x2="70" y2="95" stroke="#4a3b8a" stroke-width="2"/>'}
+  ],
+  iniciar() {
+    const f = escolher(this.formas);
+    jogoState.resposta = f.rola; jogoState.nome = f.nome;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Esta forma rola?</div>
+      <svg width="160" height="110" viewBox="0 0 160 110">${f.svg}</svg>
+      <div style="text-align:center;color:#4a3b8a;font-size:18px;font-weight:600;margin:8px 0">${f.nome}</div>
+      <div class="opcoes">
+        <button onclick="JOGOS.rola.conferir(true)" style="background:#d4f5dd;border-color:#4ab3a5;color:#1b7a3a">Rola</button>
+        <button onclick="JOGOS.rola.conferir(false)" style="background:#fde0e0;border-color:#ff7b6b;color:#a83232">Não rola</button>
+      </div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Isso! O ${jogoState.nome} ${jogoState.resposta ? 'rola' : 'não rola'}`);
+    else feedbackErro(`Na verdade ${jogoState.resposta ? 'rola' : 'não rola'}`, DICAS.rola());
+  }
+};
+
+JOGOS.lados = {
+  formas: [
+    {nome:'triângulo', lados:3, pts:'80,15 20,100 140,100', cor:'#ff7b6b'},
+    {nome:'quadrado', lados:4, pts:'30,20 130,20 130,100 30,100', cor:'#4ab3a5'},
+    {nome:'retângulo', lados:4, pts:'15,30 145,30 145,90 15,90', cor:'#5ba8e8'},
+    {nome:'pentágono', lados:5, pts:'80,15 145,55 120,105 40,105 15,55', cor:'#ffd36b'},
+    {nome:'hexágono', lados:6, pts:'80,15 140,45 140,85 80,115 20,85 20,45', cor:'#b968e8'}
+  ],
+  iniciar() {
+    const f = escolher(this.formas);
+    jogoState.resposta = f.lados;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Quantos lados tem esta figura?</div>
+      <svg width="160" height="130" viewBox="0 0 160 130">
+        <polygon points="${f.pts}" fill="${f.cor}" stroke="#4a3b8a" stroke-width="3"/></svg>
+      <div class="opcoes q3" style="margin-top:14px">${[3,4,5,6].map(n => `<button onclick="JOGOS.lados.conferir(${n})">${n} lados</button>`).join('')}</div>
+      <div class="feedback" id="feedback"></div>`;
+  },
+  conferir(escolha) {
+    if (escolha === jogoState.resposta) feedbackAcerto(`Eram ${jogoState.resposta} lados`, DICAS.lados());
+    else feedbackErro(`Eram ${jogoState.resposta} lados`, DICAS.lados());
+  }
+};
+
+// Corrige JOGOS.lados (bug no conferir)
+JOGOS.lados.conferir = function(escolha) {
+  if (escolha === jogoState.resposta) feedbackAcerto(`Certo! ${escolha} lados`);
+  else feedbackErro(`Eram ${jogoState.resposta} lados`, DICAS.lados());
+};
+
+
+JOGOS.dobro2 = {
+  iniciar() {
+    const fx = pickNivel([[1,10],[1,25],[10,50]], 'dobro2');
+    const n = rand(fx[1], fx[0]);
+    jogoState.resposta = n * 2; jogoState.n = n;
+    document.getElementById('jogo-conteudo').innerHTML = `
+      <div class="pergunta">Qual o <b style="color:#4ab3a5">DOBRO</b> de <span class="grande">${n}</span></div>
+      <input type="number" id="resp" placeholder="?">
+      <div class="botoes"><button class="acao" onclick="JOGOS.dobro2.conferir()">Conferir</button></div>
+      <div class="feedback" id="feedback"></div>`;
+    document.getElementById('resp').focus();
+    document.getElementById('resp').addEventListener('keydown', e => { if (e.key==='Enter') JOGOS.dobro2.conferir(); });
+  },
+  conferir() {
+    const r = parseInt(document.getElementById('resp').value);
+    if (isNaN(r)) return feedbackErro('Digite um número!');
+    if (r === jogoState.resposta) feedbackAcerto(`Isso! Dobro de ${jogoState.n} = ${r}`);
+    else feedbackErro(`Era ${jogoState.resposta}`, DICAS.dobro2(jogoState.n));
+  }
+};
+
+initJogos();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

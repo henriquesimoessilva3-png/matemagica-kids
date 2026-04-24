@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabela Numérica 1 a 100</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #e0dbf5;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .controles {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+  .controles .btn-print {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .controles .btn-voltar {
+    background: #ede8fa;
+    color: #6b54d3;
+    border: 2px solid #c5bbe9;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .controles .btn-versao {
+    background: #f7f5ff;
+    color: #4a3b8a;
+    border: 2px solid #c5bbe9;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .controles .btn-versao.ativo {
+    background: #6b54d3;
+    color: #fff;
+    border-color: #6b54d3;
+  }
+
+  .folha {
+    background: #fff;
+    width: 100%;
+    max-width: 900px;
+    padding: 36px 28px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    border-radius: 4px;
+  }
+  .cabecalho {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 3px solid #ffd36b;
+  }
+  .cabecalho h1 {
+    font-size: 32px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+  }
+  .cabecalho p {
+    font-size: 13px;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  .tabela {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 3px;
+  }
+  .celula {
+    aspect-ratio: 1;
+    background: #fff;
+    border: 1.5px solid #c5bbe9;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+  }
+  .celula .num {
+    font-size: 20px;
+    font-weight: 900;
+    color: #4a3b8a;
+    line-height: 1;
+  }
+  .celula .extenso {
+    font-size: 8px;
+    color: #666;
+    text-align: center;
+    margin-top: 2px;
+    line-height: 1.1;
+    font-weight: 600;
+  }
+  /* Linhas especiais */
+  .celula.dez { background: linear-gradient(135deg, #fff3d6, #ffd36b); border-color: #ff9a44; }
+  .celula.dez .num { color: #8a5a10; }
+  .celula.par { background: #f7f5ff; }
+  .celula.impar { background: #fff; }
+
+  .tabela.so-numeros .celula { aspect-ratio: 1; }
+  .tabela.so-numeros .celula .num { font-size: 26px; }
+  .tabela.so-numeros .extenso { display: none; }
+
+  @media (max-width: 700px) {
+    body { padding: 10px; }
+    .folha { padding: 18px 10px; }
+    .tabela { gap: 2px; }
+    .celula { padding: 2px; border-width: 1px; border-radius: 4px; }
+    .celula .num { font-size: 13px; }
+    .celula .extenso { font-size: 6px; margin-top: 1px; }
+    .tabela.so-numeros .celula .num { font-size: 16px; }
+    .cabecalho h1 { font-size: 22px; letter-spacing: 1px; }
+    .cabecalho p { font-size: 11px; }
+  }
+  @media (max-width: 400px) {
+    .celula .num { font-size: 11px; }
+    .celula .extenso { display: none; }
+    .tabela.so-numeros .celula .num { font-size: 14px; }
+  }
+
+  .rodape {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 10px;
+    color: #aaa;
+  }
+  .rodape .logo {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+
+  .legenda {
+    margin: 14px 0;
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: #666;
+  }
+  .legenda span { display: flex; align-items: center; gap: 4px; }
+  .legenda .amostra {
+    width: 14px; height: 14px;
+    border: 1.5px solid #c5bbe9;
+    border-radius: 3px;
+  }
+  .legenda .amostra.dez { background: linear-gradient(135deg, #fff3d6, #ffd36b); border-color: #ff9a44; }
+  .legenda .amostra.par { background: #f7f5ff; }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .controles { display: none; }
+    .folha {
+      box-shadow: none;
+      max-width: 100%;
+      width: 100%;
+      border-radius: 0;
+      padding: 16px;
+    }
+    @page { size: A4 portrait; margin: 10mm; }
+    .celula .num { font-size: 18px; }
+    .celula .extenso { font-size: 7px; }
+  }
+</style>
+</head>
+<body>
+<div class="controles">
+  <a href="imprimir.html" class="btn-voltar">← Voltar</a>
+  <button class="btn-versao ativo" id="btn-completo" onclick="mudarVersao('completo')">Com extenso</button>
+  <button class="btn-versao" id="btn-simples" onclick="mudarVersao('simples')">Só números</button>
+  <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+</div>
+
+<div class="folha">
+  <div class="cabecalho">
+    <h1>TABELA DO 1 AO 100</h1>
+    <p>Conta, aponta, pinta! Seu filho pode fazer o que quiser com ela.</p>
+  </div>
+  <div class="legenda">
+    <span><span class="amostra dez"></span> Múltiplos de 10</span>
+    <span><span class="amostra par"></span> Números pares</span>
+  </div>
+  <div class="tabela" id="tabela"></div>
+  <div class="rodape">Feito com ❤️ pelo <span class="logo">MATEMÁGICA</span></div>
+</div>
+
+<script>
+const EXTENSO = [
+  '','um','dois','três','quatro','cinco','seis','sete','oito','nove','dez',
+  'onze','doze','treze','catorze','quinze','dezesseis','dezessete','dezoito','dezenove','vinte',
+  'vinte e um','vinte e dois','vinte e três','vinte e quatro','vinte e cinco','vinte e seis','vinte e sete','vinte e oito','vinte e nove','trinta',
+  'trinta e um','trinta e dois','trinta e três','trinta e quatro','trinta e cinco','trinta e seis','trinta e sete','trinta e oito','trinta e nove','quarenta',
+  'quarenta e um','quarenta e dois','quarenta e três','quarenta e quatro','quarenta e cinco','quarenta e seis','quarenta e sete','quarenta e oito','quarenta e nove','cinquenta',
+  'cinquenta e um','cinquenta e dois','cinquenta e três','cinquenta e quatro','cinquenta e cinco','cinquenta e seis','cinquenta e sete','cinquenta e oito','cinquenta e nove','sessenta',
+  'sessenta e um','sessenta e dois','sessenta e três','sessenta e quatro','sessenta e cinco','sessenta e seis','sessenta e sete','sessenta e oito','sessenta e nove','setenta',
+  'setenta e um','setenta e dois','setenta e três','setenta e quatro','setenta e cinco','setenta e seis','setenta e sete','setenta e oito','setenta e nove','oitenta',
+  'oitenta e um','oitenta e dois','oitenta e três','oitenta e quatro','oitenta e cinco','oitenta e seis','oitenta e sete','oitenta e oito','oitenta e nove','noventa',
+  'noventa e um','noventa e dois','noventa e três','noventa e quatro','noventa e cinco','noventa e seis','noventa e sete','noventa e oito','noventa e nove','cem'
+];
+
+function renderTabela() {
+  const el = document.getElementById('tabela');
+  let html = '';
+  for (let n = 1; n <= 100; n++) {
+    const ehDez = n % 10 === 0;
+    const ehPar = n % 2 === 0 && !ehDez;
+    const classes = ['celula', ehDez ? 'dez' : (ehPar ? 'par' : 'impar')].join(' ');
+    html += `
+      <div class="${classes}">
+        <div class="num">${n}</div>
+        <div class="extenso">${EXTENSO[n]}</div>
+      </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function mudarVersao(v) {
+  const t = document.getElementById('tabela');
+  const bC = document.getElementById('btn-completo');
+  const bS = document.getElementById('btn-simples');
+  if (v === 'simples') {
+    t.classList.add('so-numeros');
+    bS.classList.add('ativo');
+    bC.classList.remove('ativo');
+  } else {
+    t.classList.remove('so-numeros');
+    bC.classList.add('ativo');
+    bS.classList.remove('ativo');
+  }
+}
+
+renderTabela();
+</script>
+</body>
+</html>

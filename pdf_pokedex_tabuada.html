@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pôster Pokédex Tabuada — Matemágica</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #e0dbf5;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .controles {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+  .controles .btn-voltar {
+    background: #ede8fa;
+    color: #6b54d3;
+    border: 2px solid #c5bbe9;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .controles .btn-print {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .instrucoes {
+    background: #fff3d6;
+    border-radius: 12px;
+    padding: 12px 14px;
+    max-width: 900px;
+    width: 100%;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #5a3a00;
+    line-height: 1.5;
+  }
+  .instrucoes b { color: #8a5a10; }
+
+  .folha {
+    background: linear-gradient(135deg, #f7f5ff 0%, #fff 60%);
+    width: 100%;
+    max-width: 900px;
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    border-radius: 4px;
+  }
+  .topo {
+    text-align: center;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 3px solid #ffd36b;
+  }
+  .topo h1 {
+    font-size: 30px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #6b54d3, #ff7b6b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+    line-height: 1.1;
+  }
+  .topo .sub {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .topo .info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 11px;
+    color: #666;
+  }
+  .topo .info input {
+    border: none;
+    border-bottom: 1.5px solid #c5bbe9;
+    padding: 2px 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4a3b8a;
+    background: transparent;
+    outline: none;
+    width: 140px;
+    font-family: inherit;
+  }
+
+  /* TABELA PITAGÓRICA (referência) */
+  .pitagorica {
+    display: grid;
+    grid-template-columns: 46px repeat(10, 1fr);
+    gap: 2px;
+    margin-bottom: 18px;
+  }
+  .pitagorica .cel {
+    aspect-ratio: 1;
+    background: #fff;
+    border: 1.5px solid #c5bbe9;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4a3b8a;
+  }
+  .pitagorica .cel.head {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 900;
+  }
+  .pitagorica .cel.diag {
+    background: linear-gradient(135deg, #ffd36b, #ff9a44);
+    color: #5a3a00;
+  }
+  .pitagorica .cel.par { background: #f7f5ff; }
+
+  .legendas {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 18px;
+  }
+  .legendas span { display: flex; align-items: center; gap: 4px; }
+  .legendas .amostra {
+    width: 14px; height: 14px;
+    border: 1px solid #c5bbe9;
+    border-radius: 3px;
+  }
+  .legendas .amostra.diag { background: linear-gradient(135deg, #ffd36b, #ff9a44); }
+  .legendas .amostra.par { background: #f7f5ff; }
+
+  /* CARDS POKÉDEX */
+  .secao-titulo {
+    font-size: 14px;
+    color: #4a3b8a;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .poke-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  .poke-card {
+    background: #fff;
+    border: 2.5px solid #c5bbe9;
+    border-radius: 10px;
+    padding: 8px 6px;
+    text-align: center;
+    position: relative;
+  }
+  .poke-card .num {
+    font-size: 30px;
+    font-weight: 900;
+    color: #6b54d3;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .poke-card .label {
+    font-size: 9px;
+    color: #888;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .poke-card .estrelas-box {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin: 6px 0 2px;
+  }
+  .poke-card .estrela {
+    width: 14px; height: 14px;
+    border: 1.5px solid #ffd36b;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .poke-card .macete {
+    font-size: 8px;
+    color: #666;
+    line-height: 1.25;
+    margin-top: 4px;
+    padding: 3px;
+    background: #fff3d6;
+    border-radius: 4px;
+    min-height: 28px;
+  }
+
+  .rodape {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 2px dashed #c5bbe9;
+    text-align: center;
+    font-size: 10px;
+    color: #aaa;
+  }
+  .rodape .logo {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .controles, .instrucoes { display: none; }
+    .folha {
+      box-shadow: none;
+      max-width: 100%;
+      width: 100%;
+      border-radius: 0;
+      padding: 10mm;
+    }
+    @page { size: A3 portrait; margin: 0; }
+    .poke-card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="controles">
+  <a href="imprimir.html" class="btn-voltar">← Voltar</a>
+  <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+</div>
+
+<div class="instrucoes">
+  <b>Pôster tamanho A3.</b> Ideal pra grudar no quarto ou na geladeira. Cada tabuada tem 3 bolinhas — pinte uma a cada prova no app. Tabela pitagórica em cima serve como mapa visual: cada quadradinho dourado é "3×3 = 9", "7×7 = 49" — os quadrados.
+</div>
+
+<div class="folha">
+  <div class="topo">
+    <h1>POKÉDEX DA TABUADA</h1>
+    <div class="sub">Matemágica · Matemática Mágica</div>
+    <div class="info">
+      <span>Matemago(a): <input type="text" id="nome" placeholder="Seu nome" value=""></span>
+      <span>Meta: dominar as 10 tabuadas ✨</span>
+    </div>
+  </div>
+
+  <div class="secao-titulo">Tabela Pitagórica — seu mapa visual</div>
+  <div class="pitagorica" id="pitagorica"></div>
+  <div class="legendas">
+    <span><span class="amostra diag"></span> Quadrados (n × n)</span>
+    <span><span class="amostra par"></span> Resultado par</span>
+  </div>
+
+  <div class="secao-titulo">Sua coleção de tabuadas</div>
+  <div class="poke-grid" id="pokedex"></div>
+
+  <div class="rodape">
+    Imprimir várias vezes é liberado — pinte, erre, recomece. <span class="logo">MATEMÁGICA</span>
+  </div>
+</div>
+
+<script>
+function renderPitagorica() {
+  const el = document.getElementById('pitagorica');
+  let html = '';
+  // Header row
+  html += '<div class="cel head">×</div>';
+  for (let c = 1; c <= 10; c++) html += `<div class="cel head">${c}</div>`;
+  // Rows
+  for (let r = 1; r <= 10; r++) {
+    html += `<div class="cel head">${r}</div>`;
+    for (let c = 1; c <= 10; c++) {
+      const val = r * c;
+      const ehDiag = r === c;
+      const ehPar = val % 2 === 0 && !ehDiag;
+      const classe = ehDiag ? 'diag' : (ehPar ? 'par' : '');
+      html += `<div class="cel ${classe}">${val}</div>`;
+    }
+  }
+  el.innerHTML = html;
+}
+
+const MACETES = {
+  1: 'Tudo fica igual. O 1 é invisível!',
+  2: 'Sempre dobro. 2×5 = 5+5.',
+  3: 'Dobro + 1 vez. 3×6 = 6+6+6.',
+  4: 'Dobro do dobro. 4×7 = (7+7)+(7+7).',
+  5: 'Termina em 0 ou 5. Par → 0, ímpar → 5.',
+  6: 'Par vezes par dá par. 6×par = par.',
+  7: 'A mais difícil — treine mais! 7×7=49.',
+  8: 'Dobro do dobro do dobro. 8×4 = 32.',
+  9: 'Truque dos dedos! Abaixe o dedo do número.',
+  10: 'Só acrescentar o zero. 10×7 = 70.'
+};
+
+function renderPokedex() {
+  const el = document.getElementById('pokedex');
+  let html = '';
+  for (let t = 1; t <= 10; t++) {
+    html += `
+      <div class="poke-card">
+        <div class="label">×${t}</div>
+        <div class="num">${t}</div>
+        <div class="estrelas-box">
+          <div class="estrela"></div>
+          <div class="estrela"></div>
+          <div class="estrela"></div>
+        </div>
+        <div class="macete">${MACETES[t]}</div>
+      </div>`;
+  }
+  el.innerHTML = html;
+}
+
+renderPitagorica();
+renderPokedex();
+</script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Certificado Matemágica</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', 'Segoe UI', serif;
+    background: #e0dbf5;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .controles {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .controles label {
+    font-size: 11px;
+    color: #666;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 2px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .controles input {
+    padding: 8px 10px;
+    border: 2px solid #c5bbe9;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
+    color: #4a3b8a;
+    font-weight: 600;
+    width: 100%;
+  }
+  .controles .grupo { flex: 1; min-width: 180px; }
+  .btn-print {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .btn-print:hover { transform: translateY(-1px); }
+  .btn-voltar {
+    background: #ede8fa;
+    color: #6b54d3;
+    border: 2px solid #c5bbe9;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .folha {
+    background: #fffbf2;
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 1.414 / 1; /* A4 paisagem */
+    padding: 40px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    position: relative;
+    border: 14px solid transparent;
+    background-image:
+      linear-gradient(#fffbf2, #fffbf2),
+      linear-gradient(135deg, #6b54d3, #ffd36b 50%, #b968e8);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    overflow: hidden;
+  }
+  .folha::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 2px dashed #c5bbe9;
+    border-radius: 6px;
+    pointer-events: none;
+  }
+  .titulo-grande {
+    font-size: 54px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-top: 20px;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .subtitulo {
+    text-align: center;
+    font-size: 18px;
+    color: #888;
+    font-style: italic;
+    margin-top: 4px;
+    margin-bottom: 20px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  .corpo {
+    text-align: center;
+    font-size: 20px;
+    color: #4a3b8a;
+    line-height: 1.6;
+    margin: 30px 40px;
+  }
+  .nome-crianca {
+    font-size: 40px;
+    font-weight: 900;
+    color: #6b54d3;
+    display: block;
+    margin: 14px 0;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    text-decoration: underline;
+    text-decoration-color: #ffd36b;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+  }
+  .conquista {
+    font-size: 22px;
+    color: #1b7a3a;
+    font-weight: 700;
+    margin-top: 8px;
+    font-family: 'Georgia', serif;
+  }
+  .rodape {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .data {
+    text-align: center;
+    font-family: 'Georgia', serif;
+  }
+  .data .linha {
+    border-top: 2px solid #4a3b8a;
+    width: 140px;
+    margin-bottom: 4px;
+  }
+  .data .label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+  .data .valor { font-size: 16px; color: #4a3b8a; font-weight: 700; margin-top: 2px; }
+
+  .selo {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, #ffd36b 40%, #ff9a44 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
+    box-shadow: 0 6px 14px rgba(255, 154, 68, 0.4);
+    border: 6px double #fff;
+    position: relative;
+    margin: 0 auto;
+  }
+  .selo::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 2px dashed #ff9a44;
+    border-radius: 50%;
+  }
+
+  .estrelas-deco {
+    position: absolute;
+    color: #ffd36b;
+    font-size: 22px;
+    opacity: 0.7;
+  }
+  .e1 { top: 20px; left: 30px; }
+  .e2 { top: 20px; right: 30px; }
+  .e3 { bottom: 20px; left: 30px; font-size: 18px; }
+  .e4 { bottom: 20px; right: 30px; font-size: 18px; }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .controles, .btn-voltar { display: none; }
+    .folha {
+      box-shadow: none;
+      max-width: 100%;
+      width: 100%;
+      aspect-ratio: auto;
+      min-height: 100vh;
+      page-break-inside: avoid;
+    }
+    @page { size: A4 landscape; margin: 0; }
+  }
+
+  @media (max-width: 700px) {
+    body { padding: 10px; }
+    .folha {
+      aspect-ratio: auto;
+      padding: 22px 14px;
+      border-width: 8px;
+    }
+    .titulo-grande { font-size: 30px; margin-top: 6px; letter-spacing: 1px; }
+    .subtitulo { font-size: 12px; letter-spacing: 2px; margin-bottom: 12px; }
+    .corpo { font-size: 14px; margin: 12px 6px; line-height: 1.5; }
+    .nome-crianca { font-size: 22px; margin: 8px 0; }
+    .conquista { font-size: 15px; margin-top: 4px; }
+    .selo { width: 70px; height: 70px; font-size: 30px; border-width: 4px; }
+    .rodape { position: static; margin-top: 18px; padding: 0; flex-wrap: wrap; gap: 14px; justify-content: center; }
+    .data .linha { width: 110px; }
+    .data .label { font-size: 10px; }
+    .data .valor { font-size: 14px; }
+    .estrelas-deco { font-size: 14px; }
+    .e1, .e2 { top: 10px; }
+    .e3, .e4 { bottom: 10px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="controles">
+  <a href="imprimir.html" class="btn-voltar">← Voltar</a>
+  <div class="grupo">
+    <label>Nome da criança</label>
+    <input type="text" id="nome" placeholder="Digite o nome" value="Joãozinho" oninput="atualizarCertificado()">
+  </div>
+  <div class="grupo">
+    <label>Conquista</label>
+    <input type="text" id="conquista" value="dominou a Tabuada do 3" oninput="atualizarCertificado()">
+  </div>
+  <div class="grupo">
+    <label>Data</label>
+    <input type="text" id="data" oninput="atualizarCertificado()">
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+</div>
+
+<div class="folha" id="folha">
+  <span class="estrelas-deco e1">★</span>
+  <span class="estrelas-deco e2">★</span>
+  <span class="estrelas-deco e3">✦</span>
+  <span class="estrelas-deco e4">✦</span>
+
+  <h1 class="titulo-grande">CERTIFICADO</h1>
+  <div class="subtitulo">Matemágica · Matemática Mágica</div>
+
+  <div class="corpo">
+    Este certificado é concedido a
+    <span class="nome-crianca" id="f-nome">Joãozinho</span>
+    por sua dedicação, coragem e brilho ao estudar matemática. Você <span id="f-conquista">dominou a Tabuada do 3</span>.
+    <div class="conquista">Parabéns, matemago(a)! ✨</div>
+  </div>
+
+  <div class="rodape">
+    <div class="data">
+      <div class="selo">🏆</div>
+    </div>
+    <div class="data">
+      <div class="linha"></div>
+      <div class="label">Data</div>
+      <div class="valor" id="f-data">—</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function formatarData(d) {
+  const dt = new Date(d);
+  return dt.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+}
+
+function atualizarCertificado() {
+  const nome = document.getElementById('nome').value.trim() || 'Matemago(a)';
+  const conquista = document.getElementById('conquista').value.trim() || 'conquistou uma estrela de ouro';
+  const data = document.getElementById('data').value.trim() || formatarData(new Date());
+  document.getElementById('f-nome').textContent = nome;
+  document.getElementById('f-conquista').textContent = conquista;
+  document.getElementById('f-data').textContent = data;
+}
+
+// Preenche data inicial
+document.getElementById('data').value = formatarData(new Date());
+atualizarCertificado();
+</script>
+</body>
+</html>

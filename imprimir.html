@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Para Imprimir — MATEMÁGICA</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  h1.titulo-imprimir {
+    font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    background: linear-gradient(135deg, #6b54d3 0%, #4ab3a5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-align: center;
+    margin: 6px 0 2px;
+    line-height: 1.1;
+  }
+  .sub-imprimir { text-align: center; color: #888; font-size: 13px; margin-bottom: 16px; }
+
+  .tier-header {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: #4a3b8a;
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px dashed #c5bbe9;
+  }
+  .tier-badge {
+    font-size: 11px; padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .tier-badge.gratis { background: #d4f5dd; color: #1b7a3a; }
+  .tier-badge.moedas { background: #fff3d6; color: #a87000; }
+  .tier-badge.pago { background: #ede8fa; color: #6b54d3; }
+
+  .pdfs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  @media (max-width: 500px) {
+    .pdfs-grid { grid-template-columns: 1fr; }
+  }
+
+  .pdf-card {
+    background: #fff;
+    border: 2.5px solid #e0dbf5;
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+  }
+  .pdf-card:hover {
+    transform: translateY(-3px);
+    border-color: #6b54d3;
+    box-shadow: 0 6px 14px rgba(107,84,211,0.15);
+  }
+  .pdf-card.bloqueado {
+    opacity: 0.85;
+    cursor: pointer;
+  }
+  .pdf-card.bloqueado:hover { border-color: #ffd36b; }
+
+  .pdf-preview {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border-radius: 10px;
+    aspect-ratio: 3 / 2.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 46px;
+    position: relative;
+    overflow: hidden;
+  }
+  .pdf-preview.cert { background: linear-gradient(135deg, #fff3d6, #ffd36b); }
+  .pdf-preview.tabela { background: linear-gradient(135deg, #dbedfb, #b8d9f5); }
+  .pdf-preview.flashcards { background: linear-gradient(135deg, #ffebe8, #ffb4a6); }
+  .pdf-preview.pokedex { background: linear-gradient(135deg, #d9c8f5, #b968e8); color: #fff; }
+
+  .pdf-cadeado {
+    position: absolute;
+    inset: 0;
+    background: rgba(74, 59, 138, 0.65);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    gap: 6px;
+  }
+  .pdf-cadeado .cad-icon { font-size: 32px; }
+  .pdf-cadeado .cad-preco {
+    background: #ffd36b;
+    color: #5a3a00;
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .pdf-nome {
+    font-size: 14px;
+    font-weight: 700;
+    color: #4a3b8a;
+    line-height: 1.25;
+  }
+  .pdf-desc {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.35;
+  }
+  .pdf-cta {
+    margin-top: auto;
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .pdf-cta.gratis {
+    background: linear-gradient(135deg, #4ab3a5, #1b7a3a);
+  }
+  .pdf-cta.bloq {
+    background: #ede8fa;
+    color: #6b54d3;
+    border: 2px solid #c5bbe9;
+  }
+  .pdf-cta.desbloqueado {
+    background: #d4f5dd;
+    color: #1b7a3a;
+  }
+
+  .hero-imprimir {
+    background: linear-gradient(135deg, #ede8fa, #fff3d6);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    text-align: center;
+    font-size: 13px;
+    color: #4a3b8a;
+    line-height: 1.45;
+  }
+  .hero-imprimir b { color: #6b54d3; }
+  .hero-imprimir .dica {
+    background: #fff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-top: 8px;
+    font-size: 11px;
+    color: #666;
+    display: inline-block;
+  }
+
+  .em-breve {
+    background: #f7f5ff;
+    border: 2px dashed #c5bbe9;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .em-breve .big { font-size: 32px; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1 class="titulo-imprimir">📄 Para Imprimir</h1>
+  <div class="sub-imprimir">Materiais físicos pro seu filho usar off-screen</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div class="hero-imprimir">
+    Cansou de tela? <b>Imprime aqui</b> e deixa seu filho treinar no papel. Tudo em PDF pronto — clica, imprime e pronto.
+    <div class="dica">💡 Dica: use papel mais grosso (ex: A4 90g) pra durar mais</div>
+  </div>
+
+  <div class="tier-header">
+    <span>🆓 Grátis pra você</span>
+    <span class="tier-badge gratis">FREE</span>
+  </div>
+  <div class="pdfs-grid" id="tier-gratis"></div>
+
+  <div class="tier-header">
+    <span>💛 Desbloqueie com moedas</span>
+    <span class="tier-badge moedas" id="badge-moedas">🪙 0</span>
+  </div>
+  <div class="pdfs-grid" id="tier-moedas"></div>
+
+  <div class="tier-header">
+    <span>💎 Pacotes premium</span>
+    <span class="tier-badge pago">EM BREVE</span>
+  </div>
+  <div class="em-breve">
+    <div class="big">📦</div>
+    <b>Kits completos</b> chegando em breve:<br>
+    Pokédex Tabuada Premium · SOS Prova por ano · Kit Frações Visual · Desafios por temas
+  </div>
+
+  <div style="text-align:center;margin-top:20px">
+    <a href="index.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#ede8fa">← Voltar ao início</a>
+  </div>
+</div>
+
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script src="mascotes.js"></script>
+<script src="jogos_shared.js"></script>
+<script>
+STORAGE_KEY = 'jogosMat_default';
+CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
+
+// ============== CATÁLOGO DE PDFs ==============
+const PDFS = [
+  // 🆓 GRÁTIS
+  {
+    id: 'certificado',
+    tier: 'gratis',
+    nome: 'Certificado de Matemágica',
+    desc: 'Pra imprimir quando dominar uma tabuada ou tirar 10/10 numa prova.',
+    icon: '🏆',
+    previewClasse: 'cert',
+    arquivo: 'pdf_certificado.html'
+  },
+  {
+    id: 'tabela100',
+    tier: 'gratis',
+    nome: 'Tabela Numérica 1 a 100',
+    desc: 'Pôster pra parede do quarto. Versão com extenso e versão só numerais.',
+    icon: '💯',
+    previewClasse: 'tabela',
+    arquivo: 'pdf_tabela_100.html'
+  },
+  // 💛 COM MOEDAS
+  {
+    id: 'flashcards',
+    tier: 'moedas',
+    preco: 150,
+    nome: 'Flashcards Tabuada',
+    desc: 'Cartas pra recortar e treinar no caderno. Tabuada do 2 ao 10.',
+    icon: '🃏',
+    previewClasse: 'flashcards',
+    arquivo: 'pdf_flashcards_tabuada.html'
+  },
+  {
+    id: 'pokedex',
+    tier: 'moedas',
+    preco: 300,
+    nome: 'Pôster Pokédex Tabuada',
+    desc: 'Pôster A3 pra acompanhar o progresso das 10 tabuadas no papel.',
+    icon: '🎴',
+    previewClasse: 'pokedex',
+    arquivo: 'pdf_pokedex_tabuada.html'
+  }
+];
+
+function pdfDesbloqueado(id) {
+  return (STATE.comprados.pdfs || []).includes(id);
+}
+
+function renderPDFs() {
+  const gratis = PDFS.filter(p => p.tier === 'gratis');
+  const moedas = PDFS.filter(p => p.tier === 'moedas');
+  document.getElementById('tier-gratis').innerHTML = gratis.map(cardHtml).join('');
+  document.getElementById('tier-moedas').innerHTML = moedas.map(cardHtml).join('');
+  document.getElementById('badge-moedas').textContent = `🪙 ${STATE.moedas}`;
+}
+
+function cardHtml(p) {
+  const bloqueado = p.tier === 'moedas' && !pdfDesbloqueado(p.id);
+  const jaDesbloqueado = p.tier === 'moedas' && pdfDesbloqueado(p.id);
+  const temGrana = p.preco ? STATE.moedas >= p.preco : true;
+
+  let cta;
+  if (p.tier === 'gratis') {
+    cta = `<button class="pdf-cta gratis" onclick="abrirPDF('${p.id}')">📄 Abrir e imprimir</button>`;
+  } else if (jaDesbloqueado) {
+    cta = `<button class="pdf-cta desbloqueado" onclick="abrirPDF('${p.id}')">✓ Abrir</button>`;
+  } else if (temGrana) {
+    cta = `<button class="pdf-cta bloq" onclick="desbloquearPDF('${p.id}')">🪙 ${p.preco} pra desbloquear</button>`;
+  } else {
+    cta = `<button class="pdf-cta bloq" disabled style="opacity:0.6">🪙 Faltam ${p.preco - STATE.moedas}</button>`;
+  }
+
+  return `
+    <div class="pdf-card ${bloqueado ? 'bloqueado' : ''}">
+      <div class="pdf-preview ${p.previewClasse}">
+        ${p.icon}
+        ${bloqueado ? `
+          <div class="pdf-cadeado">
+            <div class="cad-icon">🔒</div>
+            <div class="cad-preco">🪙 ${p.preco}</div>
+          </div>
+        ` : ''}
+      </div>
+      <div class="pdf-nome">${p.nome}</div>
+      <div class="pdf-desc">${p.desc}</div>
+      ${cta}
+    </div>
+  `;
+}
+
+function abrirPDF(id) {
+  const p = PDFS.find(x => x.id === id);
+  if (!p) return;
+  if (p.tier === 'moedas' && !pdfDesbloqueado(id)) {
+    desbloquearPDF(id);
+    return;
+  }
+  window.open(p.arquivo, '_blank');
+}
+
+function desbloquearPDF(id) {
+  const p = PDFS.find(x => x.id === id);
+  if (!p) return;
+  if (STATE.moedas < p.preco) {
+    alert('Moedas insuficientes! Joga mais pra ganhar.');
+    return;
+  }
+  if (!confirm(`Desbloquear "${p.nome}" por 🪙 ${p.preco} moedas?`)) return;
+  STATE.moedas -= p.preco;
+  STATE.comprados.pdfs = STATE.comprados.pdfs || [];
+  if (!STATE.comprados.pdfs.includes(id)) STATE.comprados.pdfs.push(id);
+  STATE.save();
+  somMoeda();
+  soltarConfete(40);
+  renderHeaderPlayer();
+  renderPDFs();
+  setTimeout(() => window.open(p.arquivo, '_blank'), 400);
+}
+
+// Init
+initJogos();
+renderPDFs();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
