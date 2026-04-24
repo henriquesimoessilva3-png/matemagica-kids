@@ -629,6 +629,22 @@ svg { display: block; margin: 0 auto; }
 @media (max-width: 420px) {
   .mascote-coach { width: 60px; opacity: 0.85; }
 }
+/* Telas muito estreitas (iPhone SE 1ª gen, Galaxy Fold fechado): encolhe mais e fica translúcido */
+@media (max-width: 360px) {
+  .mascote-coach { width: 46px; opacity: 0.7; bottom: 4px; right: 4px; }
+  .mascote-coach .coach-balao { font-size: 10px; max-width: 130px; padding: 4px 7px; }
+}
+@media (max-width: 320px) {
+  .mascote-coach { width: 38px; opacity: 0.55; }
+  .mascote-coach:hover { opacity: 0.95; }
+  /* Em telas minúsculas, esconde o balão pra não cobrir pergunta */
+  .mascote-coach .coach-balao { display: none; }
+}
+/* Encolher também quando o layout tá muito vertical (paisagem de celular pequeno) */
+@media (max-height: 420px) and (max-width: 600px) {
+  .mascote-coach { width: 52px; opacity: 0.75; }
+  .mascote-coach .coach-balao { font-size: 10px; max-width: 140px; }
+}
 
 /* RELOGIO OPÇÕES */
 .relogio-opcoes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }

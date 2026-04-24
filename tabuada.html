@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tabuada Mágica — MATEMÁGICA</title>
-<link rel="stylesheet" href="jogos_matematica_shared.css">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=13">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -60,6 +60,14 @@
     color: #8578b0;
     filter: grayscale(0.3);
   }
+  .poke-card.trivial {
+    background: linear-gradient(135deg, #e6f7ec, #c8eed4);
+    color: #1b4a2a;
+    border-color: #7ad09a;
+  }
+  .poke-card.trivial .poke-label { color: #2e7a4a; }
+  .poke-card.trivial .poke-num { color: #1b4a2a; opacity: 1; }
+  .poke-card.trivial .poke-num::before { content: none; }
   .poke-card.n1 { background: linear-gradient(135deg, #ffd8d0, #ffb4a6); color: #7a3020; border-color: #ff9a80; }
   .poke-card.n2 { background: linear-gradient(135deg, #ffe29a, #ffb347); color: #6a4020; border-color: #ff9a44; }
   .poke-card.n3 { background: linear-gradient(135deg, #c8f2d8, #7ae0a0); color: #1b4a2a; border-color: #3ac070; }
@@ -332,7 +340,7 @@
 </head>
 <body>
 <div class="container">
-  <h1 class="titulo-tabuada">🔢 Tabuada Mágica</h1>
+  <h1 class="titulo-tabuada">🧮 Tabuada Mágica</h1>
   <div class="sub-tabuada">Desbloqueie cada tabuada. Ordem não muda o total!</div>
 
   <div class="header-player" id="header-player"></div>
@@ -409,8 +417,8 @@
   </div>
 </div>
 
-<script src="mascotes.js?v=12"></script>
-<script src="jogos_shared.js?v=12"></script>
+<script src="mascotes.js?v=13"></script>
+<script src="jogos_shared.js?v=13"></script>
 <script>
 STORAGE_KEY = 'jogosMatTabuada_v1';
 CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
@@ -442,9 +450,15 @@ function renderPokedex() {
   for (let t = 1; t <= 10; t++) {
     const n = nivelTabuada(t);
     const d = TABUADA[t];
-    const classe = n === 0 ? 'bloq' : ('n' + n);
+    const trivial = (t === 1 || t === 10);
+    const classe = n === 0 ? (trivial ? 'trivial' : 'bloq') : ('n' + n);
     const estrelas = n === 0 ? '' : '★'.repeat(n) + '☆'.repeat(3 - n);
-    const label = n === 0 ? 'NÃO TESTADA' : (n === 3 ? 'DOMINADA' : n === 2 ? 'QUASE LÁ' : 'TREINANDO');
+    let label;
+    if (n === 0) {
+      label = trivial ? 'FÁCIL · VER MACETE' : 'NÃO TESTADA';
+    } else {
+      label = n === 3 ? 'DOMINADA' : n === 2 ? 'QUASE LÁ' : 'TREINANDO';
+    }
     html += `
       <button class="poke-card ${classe}" onclick="abrirEstudo(${t})" title="Tabuada do ${t}">
         <div class="poke-label">×${t}</div>
