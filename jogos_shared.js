@@ -646,9 +646,11 @@ function fecharModal() {
   document.getElementById('modal-overlay').classList.add('hidden');
 }
 
-// ============== TUTORIAL INSTALAR APP (PWA) ==============
-// Detecta plataforma e mostra instruções específicas de como "colar" o app
-// na tela inicial (iOS Safari, Android Chrome, Desktop Chrome/Edge, Safari).
+// ============== TUTORIAL ATALHO NA TELA (PWA) ==============
+// Detecta plataforma e mostra como criar um atalho na tela inicial.
+// Em iOS/Safari Mac é literalmente um atalho; em Chrome/Edge desktop e
+// Android Chrome o sistema chama de "instalar app" mas o resultado prático
+// pra criança é o mesmo: ícone na tela, abre tela cheia.
 function detectarPlataforma() {
   const ua = navigator.userAgent || '';
   const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
@@ -771,7 +773,7 @@ function mostrarTutorialInstalar() {
   const titulo = document.getElementById('m-titulo');
   const conteudo = document.getElementById('m-conteudo');
   const btn = document.getElementById('modal-btn');
-  if (emoji) emoji.textContent = plat === 'instalado' ? '✅' : '📲';
+  if (emoji) emoji.textContent = plat === 'instalado' ? '✅' : '📱';
   if (titulo) titulo.textContent = instr.titulo;
   if (conteudo) {
     // Mostra as instruções detectadas + link pra ver de outra plataforma
@@ -779,8 +781,8 @@ function mostrarTutorialInstalar() {
     conteudo.innerHTML = `
       <div style="text-align:left;font-size:14px;color:#4a3b8a;line-height:1.55">
         <div style="background:linear-gradient(135deg,#ede8fa,#d4e8f5);border-radius:10px;padding:12px 14px;margin-bottom:12px">
-          <div style="font-size:11px;font-weight:800;color:#6b54d3;letter-spacing:0.5px;margin-bottom:6px">POR QUE INSTALAR?</div>
-          Fica um <b>ícone direto na tela</b>. Abre tela cheia (sem barra do navegador). Funciona <b>offline</b> depois do primeiro uso. Parece um app de verdade.
+          <div style="font-size:11px;font-weight:800;color:#6b54d3;letter-spacing:0.5px;margin-bottom:6px">PRA QUÊ?</div>
+          Pra ter um <b>ícone direto na tela inicial</b>, sem precisar abrir o navegador toda vez. Abre tela cheia, sem barra de endereço, e funciona <b>até offline</b> depois do primeiro uso.
         </div>
         <div id="instr-atual">
           ${instr.corpo}
@@ -854,16 +856,16 @@ const ONBOARDING_SLIDES = [
       <p style="line-height:1.45;font-size:12px;color:#888;margin:12px 0 0">O app já usa essas frases. Vale imitar em casa.</p>`
   },
   {
-    emoji: '📲',
-    titulo: 'Quer no celular ou desktop?',
-    corpo: `<p style="line-height:1.55;margin:0 0 10px">O Matemágica funciona como <b>app instalado</b> — vira um ícone na tela inicial e abre tela cheia, sem barra de navegador.</p>
+    emoji: '📱',
+    titulo: 'Atalho na tela do celular ou PC',
+    corpo: `<p style="line-height:1.55;margin:0 0 10px">Você pode criar um <b>atalho na tela inicial</b> com 2 toques. Aí abre como se fosse um aplicativo: ícone próprio, tela cheia, sem barra de endereço.</p>
       <ul style="padding-left:20px;line-height:1.6;font-size:13px;margin:0 0 10px">
         <li><b>iPhone:</b> Safari → Compartilhar ⎘ → Adicionar à Tela de Início</li>
         <li><b>Android:</b> Chrome → ⋮ → Instalar app</li>
         <li><b>Computador:</b> Chrome/Edge → ícone ⊞ na barra de endereço</li>
       </ul>
-      <p style="font-size:12px;color:#666;line-height:1.45;background:#fff3d6;padding:8px 10px;border-radius:8px;border-left:3px solid #ffd36b;margin:0">💡 Depois de instalado, funciona até <b>offline</b> (sem internet).</p>
-      <p style="font-size:11px;color:#888;margin:10px 0 0;text-align:center">Pode pular agora — botão <b>📲 Instalar app</b> fica sempre na tela principal.</p>`
+      <p style="font-size:12px;color:#666;line-height:1.45;background:#fff3d6;padding:8px 10px;border-radius:8px;border-left:3px solid #ffd36b;margin:0">💡 Depois de criado, funciona até <b>offline</b> (sem internet).</p>
+      <p style="font-size:11px;color:#888;margin:10px 0 0;text-align:center">Pode deixar pra depois — botão verde <b>📱 Atalho na tela</b> fica sempre no canto da tela.</p>`
   },
   {
     emoji: '✨',

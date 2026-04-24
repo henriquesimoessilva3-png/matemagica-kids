@@ -106,6 +106,40 @@
   }
   .voltar-matemagica:hover { background: #dccbf5; }
 
+  /* ===== BOTÃO ATALHO NA TELA (canto superior direito) ===== */
+  .container { position: relative; }
+  #btn-atalho-topo {
+    position: absolute;
+    top: 10px; right: 10px;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: linear-gradient(135deg, #2ebd7c, #1b9a5e);
+    color: #fff; border: none;
+    padding: 9px 14px; border-radius: 22px;
+    font-size: 12px; font-weight: 800;
+    cursor: pointer; font-family: inherit;
+    box-shadow: 0 4px 12px rgba(46, 189, 124, 0.35);
+    z-index: 50;
+    animation: bat-pulse-ex 2.5s ease-in-out infinite;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  #btn-atalho-topo:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 16px rgba(46, 189, 124, 0.5);
+  }
+  #btn-atalho-topo .bat-icon { font-size: 16px; line-height: 1; }
+  @keyframes bat-pulse-ex {
+    0%, 100% { box-shadow: 0 4px 12px rgba(46, 189, 124, 0.35); }
+    50%      { box-shadow: 0 4px 12px rgba(46, 189, 124, 0.35), 0 0 0 8px rgba(46, 189, 124, 0.18); }
+  }
+  @media (max-width: 500px) {
+    #btn-atalho-topo { padding: 7px 11px; font-size: 11px; }
+    #btn-atalho-topo .bat-icon { font-size: 14px; }
+  }
+  @media (max-width: 380px) {
+    #btn-atalho-topo .bat-texto { display: none; }
+    #btn-atalho-topo { padding: 8px 10px; }
+  }
+
   /* ===== DESKTOP: COMPACTO, CABE EM 1 TELA ===== */
   @media (min-width: 780px) {
     .container { max-width: 980px; padding-top: 10px; padding-bottom: 10px; }
@@ -149,6 +183,10 @@
 </head>
 <body>
 <div class="container">
+  <button type="button" id="btn-atalho-topo" onclick="if(typeof mostrarTutorialInstalar==='function') mostrarTutorialInstalar(); else alert('Recarregue a página');" title="Cria um atalho na tela inicial">
+    <span class="bat-icon">📱</span>
+    <span class="bat-texto">Atalho na tela</span>
+  </button>
   <a href="../index.html" class="voltar-matemagica">← Voltar ao Matemágica</a>
   <h1 class="explora-titulo"><span class="deco">✦</span>EXPLORA<span class="deco">✦</span></h1>
   <div class="sub-explora">História e Geografia</div>
@@ -209,8 +247,20 @@
   </div>
 </div>
 
+<!-- Modal compartilhado (usado pelo tutorial Atalho na tela) -->
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">📱</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <script src="mascotes.js"></script>
-<script src="explora_shared.js?v=19"></script>
+<script src="explora_shared.js?v=20"></script>
 <script>
   initExplora({ storageKey: 'explora_home_v1' });
   atualizarProgressoAnos();

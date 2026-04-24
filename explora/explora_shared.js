@@ -7,6 +7,104 @@
 // Cada página define: STORAGE_KEY antes de chamar initExplora()
 let STORAGE_KEY = 'explora_default';
 
+// ============== TUTORIAL ATALHO NA TELA (PWA) ==============
+// Espelha a função do Matemágica jogos_shared.js. Detecta plataforma e
+// mostra como criar atalho na tela inicial.
+function detectarPlataforma() {
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+  const isAndroid = /Android/.test(ua);
+  const isSafari = /Safari/.test(ua) && !/Chrome|CriOS|FxiOS|EdgiOS/.test(ua);
+  const isChrome = /Chrome|CriOS/.test(ua) && !/Edg/.test(ua);
+  const isEdge = /Edg/.test(ua);
+  const isFirefox = /Firefox|FxiOS/.test(ua);
+  const isMobile = isIOS || isAndroid;
+  const isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  if (isStandalone) return 'instalado';
+  if (isIOS && isSafari) return 'ios-safari';
+  if (isIOS) return 'ios-outro';
+  if (isAndroid && isChrome) return 'android-chrome';
+  if (isAndroid) return 'android-outro';
+  if (!isMobile && isChrome) return 'desktop-chrome';
+  if (!isMobile && isEdge) return 'desktop-edge';
+  if (!isMobile && isSafari) return 'desktop-safari';
+  if (!isMobile && isFirefox) return 'desktop-firefox';
+  return 'desconhecido';
+}
+
+const INSTRUCOES_INSTALAR = {
+  'instalado': { titulo: '✅ Já instalado!', corpo: '<p>O atalho já tá na sua tela. Pode abrir direto pelo ícone.</p>' },
+  'ios-safari': {
+    titulo: '📱 iPhone ou iPad (Safari)',
+    corpo: `<ol style="padding-left:20px;line-height:1.7"><li>Toque no botão <b>Compartilhar</b> ⎘ (embaixo)</li><li>Role e toque em <b>"Adicionar à Tela de Início"</b></li><li>Confirme em <b>Adicionar</b></li></ol>`
+  },
+  'ios-outro': { titulo: '📱 iPhone ou iPad', corpo: `<p><b>Melhor jeito:</b> abra este site no <b>Safari</b> e toque em Compartilhar ⎘ → <b>Adicionar à Tela de Início</b>.</p>` },
+  'android-chrome': {
+    titulo: '📱 Android (Chrome)',
+    corpo: `<ol style="padding-left:20px;line-height:1.7"><li>Toque nos <b>3 pontos</b> ⋮ no canto superior</li><li>Escolha <b>"Instalar app"</b> ou <b>"Adicionar à tela inicial"</b></li><li>Confirme</li></ol>`
+  },
+  'android-outro': { titulo: '📱 Android', corpo: `<p>Abra no <b>Chrome</b> e siga: ⋮ → <b>Instalar app</b>.</p>` },
+  'desktop-chrome': {
+    titulo: '💻 Computador (Chrome)',
+    corpo: `<ol style="padding-left:20px;line-height:1.7"><li>Veja à direita da URL o ícone <b>⊞</b> (Instalar)</li><li>Clique e confirme</li></ol><p>Ou: <b>⋮ Menu → Instalar Matemágica</b>.</p>`
+  },
+  'desktop-edge': { titulo: '💻 Computador (Edge)', corpo: `<ol style="padding-left:20px;line-height:1.7"><li>Clique no ícone <b>⊞</b> na barra de endereço</li><li>Ou <b>… → Aplicativos → Instalar este site como aplicativo</b></li></ol>` },
+  'desktop-safari': { titulo: '💻 Mac (Safari)', corpo: `<ol style="padding-left:20px;line-height:1.7"><li>Menu <b>Arquivo → Adicionar ao Dock…</b></li><li>Confirme em <b>Adicionar</b></li></ol><p style="font-size:12px;color:#888">Funciona no macOS Sonoma+.</p>` },
+  'desktop-firefox': { titulo: '💻 Computador (Firefox)', corpo: `<p>Firefox desktop não suporta. Use <b>Chrome</b> ou <b>Edge</b> pra instalar, ou salve como favorito (Ctrl+D).</p>` },
+  'desconhecido': { titulo: '💻 Como criar atalho', corpo: `<ul style="padding-left:20px;line-height:1.7"><li><b>iPhone:</b> Safari → ⎘ → Adicionar à Tela de Início</li><li><b>Android:</b> Chrome → ⋮ → Instalar app</li><li><b>Computador:</b> Chrome/Edge → ⊞ na barra de endereço</li></ul>` }
+};
+
+function mostrarTutorialInstalar() {
+  const plat = detectarPlataforma();
+  const instr = INSTRUCOES_INSTALAR[plat] || INSTRUCOES_INSTALAR['desconhecido'];
+  // EXPLORA tem modal-overlay próprio nas páginas que precisam, ou usa alert simples
+  const m = document.getElementById('modal-overlay');
+  if (!m) {
+    // Página sem modal — usa alert básico
+    const txt = `${instr.titulo}\n\n${instr.corpo.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()}`;
+    alert(txt);
+    return;
+  }
+  const emoji = document.getElementById('m-emoji');
+  const titulo = document.getElementById('m-titulo');
+  const conteudo = document.getElementById('m-conteudo');
+  const btn = document.getElementById('modal-btn');
+  if (emoji) emoji.textContent = plat === 'instalado' ? '✅' : '📱';
+  if (titulo) titulo.textContent = instr.titulo;
+  if (conteudo) {
+    const outras = Object.keys(INSTRUCOES_INSTALAR).filter(k => k !== plat && k !== 'desconhecido' && k !== 'instalado');
+    conteudo.innerHTML = `
+      <div style="text-align:left;font-size:14px;color:#4a3b8a;line-height:1.55">
+        <div style="background:linear-gradient(135deg,#fff4dc,#ffe0a0);border-radius:10px;padding:12px 14px;margin-bottom:12px">
+          <div style="font-size:11px;font-weight:800;color:#8b5a2b;letter-spacing:0.5px;margin-bottom:6px">PRA QUÊ?</div>
+          Pra ter um <b>ícone direto na tela inicial</b>, sem abrir navegador. Tela cheia, e funciona <b>até offline</b> depois do primeiro uso.
+        </div>
+        <div id="instr-atual">${instr.corpo}</div>
+        <details style="margin-top:14px;font-size:12px;color:#888">
+          <summary style="cursor:pointer;font-weight:700;color:#8b5a2b">Outro dispositivo? Clique aqui</summary>
+          <div style="margin-top:10px;display:grid;gap:6px">
+            ${outras.map(k => `<button onclick="_mudarInstrInstalar('${k}')" style="text-align:left;background:#fff4dc;border:1.5px solid #c9a86b;padding:6px 10px;border-radius:8px;font-size:12px;color:#8b5a2b;font-weight:600;cursor:pointer;font-family:inherit">${INSTRUCOES_INSTALAR[k].titulo}</button>`).join('')}
+          </div>
+        </details>
+      </div>`;
+  }
+  if (btn) { btn.textContent = 'Entendi 👍'; btn.onclick = () => fecharModal(); }
+  m.classList.remove('hidden');
+}
+
+function _mudarInstrInstalar(plat) {
+  const instr = INSTRUCOES_INSTALAR[plat];
+  const titulo = document.getElementById('m-titulo');
+  const cont = document.getElementById('instr-atual');
+  if (titulo) titulo.textContent = instr.titulo;
+  if (cont) cont.innerHTML = instr.corpo;
+}
+
+function fecharModal() {
+  const m = document.getElementById('modal-overlay');
+  if (m) m.classList.add('hidden');
+}
+
 // ============== LICENÇA COMPARTILHADA COM MATEMÁGICA ==============
 // EXPLORA é entregue como BÔNUS de quem compra Matemágica.
 // Usa a mesma chave de licença — localStorage é compartilhado dentro do domínio.

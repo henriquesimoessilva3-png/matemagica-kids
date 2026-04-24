@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MATEMÁGICA — Escolha o Ano</title>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=19">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=20">
 <style>
   h1.matemagica-titulo {
     font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
@@ -284,6 +284,40 @@
     .mini-mascote { width: 42px; height: 46px; }
   }
 
+  /* ===== BOTÃO ATALHO NA TELA (canto superior direito) ===== */
+  .container { position: relative; }
+  #btn-atalho-topo {
+    position: absolute;
+    top: 10px; right: 10px;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: linear-gradient(135deg, #2ebd7c, #1b9a5e);
+    color: #fff; border: none;
+    padding: 9px 14px; border-radius: 22px;
+    font-size: 12px; font-weight: 800;
+    cursor: pointer; font-family: inherit;
+    box-shadow: 0 4px 12px rgba(46, 189, 124, 0.35);
+    z-index: 50;
+    animation: bat-pulse 2.5s ease-in-out infinite;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  #btn-atalho-topo:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 16px rgba(46, 189, 124, 0.5);
+  }
+  #btn-atalho-topo .bat-icon { font-size: 16px; line-height: 1; }
+  @keyframes bat-pulse {
+    0%, 100% { box-shadow: 0 4px 12px rgba(46, 189, 124, 0.35); }
+    50%      { box-shadow: 0 4px 12px rgba(46, 189, 124, 0.35), 0 0 0 8px rgba(46, 189, 124, 0.18); }
+  }
+  @media (max-width: 500px) {
+    #btn-atalho-topo { padding: 7px 11px; font-size: 11px; }
+    #btn-atalho-topo .bat-icon { font-size: 14px; }
+  }
+  @media (max-width: 380px) {
+    #btn-atalho-topo .bat-texto { display: none; }
+    #btn-atalho-topo { padding: 8px 10px; }
+  }
+
   /* ===== DESKTOP: COMPACTO, CABE EM 1 TELA ===== */
   @media (min-width: 760px) {
     .container { max-width: 980px; padding-top: 10px; padding-bottom: 10px; }
@@ -456,6 +490,10 @@
 </head>
 <body>
 <div class="container">
+  <button type="button" id="btn-atalho-topo" onclick="mostrarTutorialInstalar()" title="Cria um atalho na tela inicial — abre tela cheia, sem barra do navegador, funciona offline">
+    <span class="bat-icon">📱</span>
+    <span class="bat-texto">Atalho na tela</span>
+  </button>
   <h1 class="matemagica-titulo"><span class="estrela-tit">✦</span>MATEMÁGICA<span class="estrela-tit">✦</span></h1>
   <div class="sub" style="font-weight:700;color:#6b54d3">A criança joga. A matemática fica.</div>
   <div class="sub" style="margin-top:2px;font-size:12px;color:#888">Escolha o ano pra começar</div>
@@ -486,7 +524,6 @@
     <a href="imprimir.html" style="display:inline-block;color:#1b4a2a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:1px solid #4ab3a5">📄 Imprimir</a>
     <a href="provas.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px;background:#ede8fa;border:1px solid #d9cefa">📝 Provas</a>
     <a href="dashboard.html" style="display:inline-block;color:#666;text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px;background:#f7f5ff;border:1px solid #d9cefa">📊 Pais</a>
-    <button type="button" onclick="mostrarTutorialInstalar()" style="display:inline-flex;align-items:center;gap:4px;color:#1b4a2a;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:1px solid #4ab3a5;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit">📲 Instalar app</button>
   </div>
 
   <a href="explora/index.html" id="explora-card" style="display:flex;align-items:center;gap:14px;margin:0 0 14px;padding:14px 16px;background:linear-gradient(135deg,#fff4dc,#ffe0a0);border:2.5px solid #d4a574;border-radius:14px;text-decoration:none;color:#3a2818;transition:transform 0.2s,box-shadow 0.2s">
@@ -546,8 +583,8 @@
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="jogos_shared.js?v=19"></script>
-<script src="mascotes.js?v=19"></script>
+<script src="jogos_shared.js?v=20"></script>
+<script src="mascotes.js?v=20"></script>
 <script>
 // ============== MASCOTE DA TELA INICIAL ==============
 let _falaIdx = 0;
