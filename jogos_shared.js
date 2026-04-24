@@ -1194,12 +1194,18 @@ function sairDaProva() {
 const _feedbackAcerto_original = feedbackAcerto;
 const _feedbackErro_original = feedbackErro;
 feedbackAcerto = function(msg) {
+  if (jogoState.bloqueado) return;
+  jogoState.bloqueado = true;
   if (MODO_PROVA) feedbackAcertoProva(msg);
   else _feedbackAcerto_original(msg);
+  setTimeout(() => { jogoState.bloqueado = false; }, 1500);
 };
 feedbackErro = function(msg, dica) {
+  if (jogoState.bloqueado) return;
+  jogoState.bloqueado = true;
   if (MODO_PROVA) feedbackErroProva(msg, dica);
   else _feedbackErro_original(msg, dica);
+  setTimeout(() => { jogoState.bloqueado = false; }, 600);
 };
 
 // ============== MASCOTE COACH (canto inferior direito) ==============
