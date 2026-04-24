@@ -6,26 +6,46 @@
 <title>EXPLORA · 5º Ano</title>
 <link rel="stylesheet" href="historia_shared.css">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#8a4a8a">
+<meta name="theme-color" content="#7a4aa8">
 <style>
   .topo-ano { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
   .topo-ano h1 { font-size: 22px; margin: 0; flex: 1; text-align: center; }
   .abas { display: flex; gap: 6px; justify-content: center; margin: 8px 0 14px; flex-wrap: wrap; }
-  .aba {
-    background: #fff4dc; border: 2px solid #c9a86b;
-    color: #6b3a15; padding: 8px 14px; border-radius: 18px;
-    font-size: 13px; font-weight: 700; cursor: pointer;
-    font-family: inherit;
-  }
+  .aba { background: #fff4dc; border: 2px solid #c9a86b; color: #6b3a15; padding: 8px 14px; border-radius: 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
   .aba.ativa { background: linear-gradient(135deg, #8b5a2b, #b88247); color: #fff; border-color: #6b3a15; }
   .aba:hover:not(.ativa) { border-color: #8b5a2b; }
+
+  .capitulos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 8px; }
+  .cap-card { background: #fff4dc; border: 3px solid #d4a574; border-radius: 16px; padding: 14px 14px 12px; cursor: pointer; transition: all 0.22s; text-align: left; font-family: inherit; position: relative; display: flex; flex-direction: column; gap: 4px; }
+  .cap-card:hover { transform: translateY(-4px); box-shadow: 0 8px 18px rgba(139, 90, 43, 0.3); border-color: #8b5a2b; }
+  .cap-card .cap-rotulo { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; color: #8b5a2b; margin-bottom: 2px; }
+  .cap-card .cap-nome { font-size: 16px; font-weight: 800; color: #3a2818; line-height: 1.25; }
+  .cap-card .cap-desc { font-size: 12px; color: #6b3a15; line-height: 1.35; margin-top: 4px; }
+  .cap-card .cap-stats { font-size: 12px; color: #6b3a15; font-weight: 700; margin-top: 8px; display: flex; gap: 10px; align-items: center; }
+  .cap-card .cap-progresso-bar { margin-top: 6px; height: 6px; border-radius: 4px; background: #fef8ed; overflow: hidden; border: 1px solid #c9a86b; }
+  .cap-card .cap-progresso-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #d4a574, #8b5a2b); transition: width 0.5s; }
+  .cap-card .cap-num { position: absolute; top: -10px; right: -10px; background: linear-gradient(135deg, #8b5a2b, #b88247); color: #fff; width: 34px; height: 34px; border-radius: 50%; border: 3px solid #fef8ed; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+  .cap-card.h1 { background: linear-gradient(135deg, #fde8d0, #fad2a8); border-color: #d4794a; }
+  .cap-card.h2 { background: linear-gradient(135deg, #ffe8ba, #ffd58c); border-color: #d4a574; }
+  .cap-card.g1 { background: linear-gradient(135deg, #d8ecf5, #a8d0e8); border-color: #4a7aa8; }
+  .cap-card.g2 { background: linear-gradient(135deg, #ebdff5, #c8a8e0); border-color: #7a4aa8; }
+
+  .cap-separador { grid-column: 1 / -1; font-size: 13px; font-weight: 800; color: #6b3a15; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 0 2px; border-bottom: 2px dashed #c9a86b; margin-top: 6px; }
+  .cap-separador:first-child { margin-top: 0; }
+
+  .breadcrumb { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .breadcrumb .crumb { background: #fff4dc; padding: 5px 11px; border-radius: 12px; border: 1.5px solid #c9a86b; font-size: 12px; font-weight: 700; color: #6b3a15; cursor: pointer; font-family: inherit; }
+  .breadcrumb .crumb:hover { background: #ffe8ba; }
+  .breadcrumb .sep { color: #8b5a2b; font-weight: 700; }
+  .cap-titulo { font-size: 19px; font-weight: 800; color: #3a2818; margin: 4px 0 12px; line-height: 1.3; }
+  .cap-titulo .cap-sub { display: block; font-size: 13px; color: #8b5a2b; font-weight: 500; margin-top: 2px; font-style: italic; }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="topo-ano">
     <a href="index.html" class="btn-voltar">← Anos</a>
-    <h1>5º Ano · Brasil, Regiões e Povos</h1>
+    <h1>5º Ano · Brasil e Cidadania</h1>
     <span style="width:60px"></span>
   </div>
 
@@ -37,179 +57,704 @@
     <button class="aba" data-aba="geografia">🗺️ Geografia</button>
   </div>
 
-  <div id="tela-grid"><div class="jogos-grid" id="grid-container"></div></div>
+  <div id="tela-capitulos"><div class="capitulos-grid" id="capitulos-container"></div></div>
+
+  <div id="tela-jogos-cap" style="display:none">
+    <div class="breadcrumb">
+      <button class="crumb" onclick="voltarCapitulos()">← Capítulos</button>
+      <span class="sep">›</span>
+      <span class="crumb" id="breadcrumb-cap"></span>
+    </div>
+    <div class="cap-titulo" id="cap-titulo"></div>
+    <div class="jogos-grid" id="grid-container"></div>
+  </div>
+
   <div id="tela-jogo" class="jogo-area" style="display:none"></div>
 </div>
 
-<script src="mascotes.js"></script>
+<script src="mascotes.js?v=3"></script>
 <script src="explora_shared.js?v=5"></script>
 <script>
 initExplora({ storageKey: 'explora_ano5_v1' });
-let ABA_ATUAL = 'todos';
 
+// =====================================================
+// CAPÍTULOS — BNCC 5º ano
+// =====================================================
+const CAPS = {
+  h1: { ord: 1, materia: 'historia', num: 1,
+        nome: 'Povos que formaram o Brasil',
+        desc: 'Indígenas, africanos, portugueses e imigrantes de muitos países.',
+        jogos: ['povos_formaram', 'memoria_povos5', 'vf_escravidao'] },
+  h2: { ord: 2, materia: 'historia', num: 2,
+        nome: 'Cidadania e democracia',
+        desc: 'Direitos, deveres e a história política do Brasil.',
+        jogos: ['direitos_deveres', 'cloze_democracia', 'linha_brasil'] },
+
+  g1: { ord: 3, materia: 'geografia', num: 1,
+        nome: 'Regiões e estados',
+        desc: 'As 5 regiões, os 27 estados e suas capitais.',
+        jogos: ['regioes', 'estados_regiao', 'memoria_capitais'] },
+  g2: { ord: 4, materia: 'geografia', num: 2,
+        nome: 'Cartografia e meio ambiente',
+        desc: 'Tipos de mapa, biomas e cuidado com o planeta.',
+        jogos: ['tipos_mapa', 'biomas', 'vf_meio_ambiente'] }
+};
+
+// =====================================================
+// JOGOS — 5º ano
+// =====================================================
 const JOGOS = [
-  {
-    id: 'povos_formaram', emoji: '🤝', titulo: 'Povos que Formaram o Brasil',
-    desc: 'Indígenas, europeus, africanos e imigrantes.',
-    tipo: 'quiz', materia: 'historia',
-    perguntas: [
-      { pergunta: 'Qual grupo já habitava o Brasil ANTES da chegada dos europeus?',
-        opcoes: ['Povos indígenas', 'Italianos', 'Japoneses', 'Nenhum povo'],
-        correta: 0,
-        explica: 'Existiam centenas de povos indígenas com línguas e culturas diferentes.' },
-      { pergunta: 'Em que século os portugueses chegaram ao Brasil?',
-        opcoes: ['Século XVI (ano 1500)', 'Século X', 'Século XXI', 'Século VIII'],
-        correta: 0,
-        explica: '22 de abril de 1500 — a frota de Pedro Álvares Cabral aportou no que hoje é a Bahia.' },
-      { pergunta: 'Onde ficam as raízes da maioria dos africanos trazidos ao Brasil à força durante a escravidão?',
-        opcoes: [
-          'Oeste e centro da África (atuais Angola, Nigéria, Benin, Moçambique…)',
-          'Norte da Europa',
-          'Leste asiático',
-          'América do Norte'
-        ],
-        correta: 0,
-        explica: 'Diversos povos africanos foram escravizados e trazidos, como iorubás, bantos e muitos outros.' },
-      { pergunta: 'Depois do fim da escravidão (1888), o Brasil recebeu grandes ondas de imigrantes. De onde vieram em grande número?',
-        opcoes: ['Itália, Alemanha, Espanha, Japão, Líbano, Síria…',
-                 'Só da África', 'Só dos Estados Unidos', 'De nenhum lugar'],
-        correta: 0,
-        explica: 'Entre fim do século XIX e início do XX, milhões de imigrantes europeus e asiáticos chegaram ao Brasil.' },
-      { pergunta: 'O que é cidadania?',
-        opcoes: [
-          'Conjunto de direitos e deveres das pessoas que vivem em um país',
-          'Só quem tem dinheiro',
-          'Só os adultos',
-          'Só quem mora na cidade'
-        ],
-        correta: 0,
-        explica: 'Cidadão é quem tem direitos (educação, saúde, voto) e deveres (respeitar leis, pagar impostos quando adulto).' }
-    ]
-  },
-  {
-    id: 'regioes', emoji: '🗺️', titulo: '5 Regiões do Brasil',
-    desc: 'Norte, Nordeste, Centro-Oeste, Sudeste e Sul.',
-    tipo: 'quiz', materia: 'geografia',
-    perguntas: [
-      { pergunta: 'Quantas regiões tem o Brasil?',
-        opcoes: ['5', '3', '7', '27'],
-        correta: 0,
-        explica: 'Norte, Nordeste, Centro-Oeste, Sudeste e Sul. São 27 estados distribuídos nessas 5 regiões.' },
-      { pergunta: 'Em qual região fica a Floresta Amazônica?',
-        opcoes: ['Norte', 'Sul', 'Sudeste', 'Nordeste'],
-        correta: 0,
-        explica: 'A região Norte concentra a maior parte da Floresta Amazônica brasileira.' },
-      { pergunta: 'Qual região tem estados como Ceará, Pernambuco e Bahia?',
-        opcoes: ['Nordeste', 'Sul', 'Centro-Oeste', 'Norte'],
-        correta: 0,
-        explica: 'O Nordeste tem 9 estados: MA, PI, CE, RN, PB, PE, AL, SE, BA.' },
-      { pergunta: 'Qual região concentra mais indústrias e habitantes do Brasil?',
-        opcoes: ['Sudeste', 'Centro-Oeste', 'Norte', 'Sul'],
-        correta: 0,
-        explica: 'Sudeste (SP, RJ, MG, ES) tem grande parte da população e da economia do país.' },
-      { pergunta: 'A capital federal do Brasil, Brasília, fica em qual região?',
-        opcoes: ['Centro-Oeste', 'Sudeste', 'Sul', 'Nordeste'],
-        correta: 0,
-        explica: 'Brasília fica no Distrito Federal, no Centro-Oeste. Foi inaugurada em 1960.' }
-    ]
-  },
-  {
-    id: 'estados_regiao', emoji: '📍', titulo: 'Estados por Região',
-    desc: 'Onde cada estado se encaixa.',
-    tipo: 'classif', materia: 'geografia',
-    perguntas: [
-      {
-        pergunta: 'Em qual região fica cada estado?',
-        hint: 'NE tem muito litoral e cultura do sertão. SE é o mais populoso.',
-        bucketA: { label: 'Nordeste', emoji: '🌊' },
-        bucketB: { label: 'Sudeste', emoji: '🏙️' },
-        itens: [
-          { id: 'i1', label: 'Bahia (BA)' },
-          { id: 'i2', label: 'São Paulo (SP)' },
-          { id: 'i3', label: 'Ceará (CE)' },
-          { id: 'i4', label: 'Minas Gerais (MG)' },
-          { id: 'i5', label: 'Pernambuco (PE)' },
-          { id: 'i6', label: 'Rio de Janeiro (RJ)' }
-        ],
-        gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'a', i6: 'b' },
-        explica: 'Nordeste: BA, CE, PE, MA, PI, RN, PB, AL, SE. Sudeste: SP, RJ, MG, ES.'
-      },
-      {
-        pergunta: 'Norte ou Sul?',
-        bucketA: { label: 'Norte', emoji: '🌳' },
-        bucketB: { label: 'Sul', emoji: '❄️' },
-        itens: [
-          { id: 'i1', label: 'Amazonas (AM)' },
-          { id: 'i2', label: 'Rio Grande do Sul (RS)' },
-          { id: 'i3', label: 'Pará (PA)' },
-          { id: 'i4', label: 'Paraná (PR)' },
-          { id: 'i5', label: 'Santa Catarina (SC)' },
-          { id: 'i6', label: 'Acre (AC)' }
-        ],
-        gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'b', i6: 'a' },
-        explica: 'Norte tem 7 estados amazônicos. Sul tem só 3: PR, SC, RS.'
-      }
-    ]
-  },
-  {
-    id: 'tipos_mapa', emoji: '🗺️', titulo: 'Tipos de Mapa',
-    desc: 'Para que serve cada tipo.',
-    tipo: 'quiz', materia: 'geografia',
-    perguntas: [
-      { pergunta: 'Um mapa POLÍTICO mostra principalmente:',
-        opcoes: ['Fronteiras entre países e estados',
-                 'Montanhas e rios', 'Temperatura', 'Estrelas no céu'],
-        correta: 0,
-        explica: 'Mapa político mostra limites administrativos — onde começa e termina cada estado/país.' },
-      { pergunta: 'Um mapa FÍSICO mostra:',
-        opcoes: ['Relevo (montanhas, planícies), rios e vegetação',
-                 'Só estradas', 'O horário do dia', 'Apenas cidades'],
-        correta: 0,
-        explica: 'Mapa físico destaca o que existe na natureza: serras, vales, rios, florestas.' },
-      { pergunta: 'Mapa TEMÁTICO serve para:',
-        opcoes: [
-          'Mostrar um tema específico (clima, população, produção…)',
-          'Só decorar a parede',
-          'Brincar',
-          'Não serve para nada'
-        ],
-        correta: 0,
-        explica: 'Pode ter mapa de chuvas, de densidade populacional, de plantio — cada um com um tema.' },
-      { pergunta: 'A "rosa dos ventos" em um mapa indica:',
-        opcoes: ['Os pontos cardeais (N, S, L, O)',
-                 'Temperatura', 'O preço', 'A data'],
-        correta: 0,
-        explica: 'A rosa dos ventos mostra a orientação do mapa — sem ela, é difícil saber para qual lado é o norte.' },
-      { pergunta: 'O que é a ESCALA de um mapa?',
-        opcoes: [
-          'A relação entre o tamanho do mapa e o tamanho real do terreno',
-          'Uma régua para medir altura',
-          'O nome do criador do mapa',
-          'O ano em que o mapa foi feito'
-        ],
-        correta: 0,
-        explica: 'Se a escala é 1:100.000, cada 1cm no mapa vale 100.000cm na realidade (1 km).' }
-    ]
-  }
+
+// ============ HISTÓRIA · CAP 1 — POVOS QUE FORMARAM O BRASIL ============
+
+{ id: 'povos_formaram', emoji: '🤝', titulo: 'Povos que Formaram o Brasil', cap: 'h1',
+  desc: 'Entenda quem contribuiu pra formação do país.', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Qual grupo já habitava o Brasil ANTES da chegada dos europeus?',
+      opcoes: ['Povos indígenas', 'Italianos', 'Japoneses', 'Nenhum povo'], correta: 0,
+      explica: 'Existiam centenas de povos indígenas com línguas, costumes e organizações políticas diferentes.' },
+
+    { nivel: 'facil', pergunta: 'Em que século os portugueses chegaram ao Brasil?',
+      opcoes: ['Século XVI (ano 1500)', 'Século X', 'Século XXI', 'Século VIII'], correta: 0,
+      explica: 'A frota de Pedro Álvares Cabral aportou no que hoje é a Bahia em 22 de abril de 1500.' },
+
+    { nivel: 'medio', pergunta: 'A maioria dos africanos trazidos à força durante a escravidão veio:',
+      opcoes: [
+        'Do oeste e centro da África (atuais Angola, Nigéria, Benin, Moçambique)',
+        'Do norte da Europa',
+        'Do leste asiático',
+        'Da América do Norte'
+      ], correta: 0,
+      explica: 'Diversos povos africanos (iorubás, bantos, jejes) foram escravizados e trazidos por mais de 300 anos.' },
+
+    { nivel: 'medio', pergunta: 'Depois do fim da escravidão (1888), o Brasil recebeu grandes ondas de imigrantes vindos principalmente de:',
+      opcoes: [
+        'Itália, Alemanha, Espanha, Japão, Líbano e Síria',
+        'Só da África',
+        'Só dos Estados Unidos',
+        'De nenhum outro lugar'
+      ], correta: 0,
+      explica: 'Entre o fim do século 19 e início do 20, milhões de imigrantes europeus e asiáticos chegaram ao Brasil.' },
+
+    { nivel: 'medio', pergunta: 'O Brasil é considerado um país pluricultural porque:',
+      opcoes: [
+        'A cultura brasileira é o encontro de muitos povos (indígenas, africanos, europeus, asiáticos, árabes...)',
+        'Só tem uma cultura',
+        'É dividido em muitos países',
+        'Ninguém mora aqui'
+      ], correta: 0,
+      explica: 'Pluricultural significa "várias culturas juntas". A identidade brasileira se formou nesse encontro.' },
+
+    { nivel: 'medio', pergunta: 'O período em que o Brasil foi colônia de Portugal durou aproximadamente:',
+      opcoes: ['Mais de 300 anos (1500 a 1822)', '50 anos', '10 anos', '1.000 anos'], correta: 0,
+      explica: 'O Brasil foi colônia de 1500 até a independência, em 7 de setembro de 1822. Foram 322 anos.' },
+
+    { nivel: 'dificil', pergunta: 'O Quilombo dos Palmares, que resistiu à escravidão por quase 100 anos, ficava em qual região?',
+      opcoes: ['Nordeste (atual Alagoas)', 'Sul', 'Centro-Oeste', 'Norte'], correta: 0,
+      explica: 'Palmares foi o maior quilombo do Brasil. Zumbi dos Palmares foi seu último líder, morto em 1695.' },
+
+    { nivel: 'dificil', pergunta: 'A Lei Áurea, que aboliu a escravidão no Brasil, foi assinada em:',
+      opcoes: ['1888, pela Princesa Isabel', '1500, por Cabral', '1822, por Dom Pedro I', '2000, pela Câmara'], correta: 0,
+      explica: 'A Lei Áurea foi assinada em 13 de maio de 1888. Mas as desigualdades deixadas pela escravidão persistem até hoje.' },
+
+    { nivel: 'dificil', pergunta: 'A colaboração dos povos indígenas é perceptível até hoje em:',
+      opcoes: [
+        'Nomes de lugares, palavras, técnicas de plantio e culinária',
+        'Nada — eles desapareceram',
+        'Apenas no Norte do país',
+        'Só em museus'
+      ], correta: 0,
+      explica: 'Paraná, Ipanema, Maracanã, pipoca, tapioca, mandioca — tudo vem da herança indígena que vive entre nós.' }
+  ]
+},
+
+{ id: 'memoria_povos5', emoji: '🃏', titulo: 'Memória: Heranças dos Povos', cap: 'h1',
+  desc: 'Ligue cada povo à sua contribuição.', tipo: 'memoria',
+  perguntas: [
+    { nivel: 'facil',
+      pergunta: 'Combine cada povo com uma herança cultural importante:',
+      pares: [
+        { a: 'Indígenas', b: 'Língua tupi, redes, pajelança' },
+        { a: 'Africanos', b: 'Samba, capoeira, candomblé' },
+        { a: 'Portugueses', b: 'Língua e religião católica' },
+        { a: 'Japoneses', b: 'Sushi e imigração agrícola' }
+      ],
+      explica: 'O Brasil é um país formado por muitos povos, cada um deixou sua marca em diferentes áreas.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada data ou período com o evento histórico:',
+      pares: [
+        { a: '1500', b: 'Chegada dos portugueses' },
+        { a: '1822', b: 'Independência do Brasil' },
+        { a: '1888', b: 'Abolição da escravidão' },
+        { a: '1889', b: 'Proclamação da República' }
+      ],
+      explica: 'Essas são 4 datas marcantes da história brasileira — colônia, império, abolição e república.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada povo imigrante com uma marca que deixou no Brasil:',
+      pares: [
+        { a: 'Italianos', b: 'Pizzarias e cantina' },
+        { a: 'Alemães', b: 'Oktoberfest no Sul' },
+        { a: 'Japoneses', b: 'Bairro Liberdade em SP' },
+        { a: 'Libaneses e sírios', b: 'Esfiha e quibe' }
+      ],
+      explica: 'Os imigrantes trouxeram comidas, festas e negócios que hoje são parte do Brasil.' },
+
+    { nivel: 'dificil',
+      pergunta: 'Combine cada palavra com sua origem:',
+      pares: [
+        { a: 'Abacaxi', b: 'Tupi (indígena)' },
+        { a: 'Samba', b: 'Banto (africana)' },
+        { a: 'Sabonete', b: 'Árabe' },
+        { a: 'Bife', b: 'Inglês (beef)' }
+      ],
+      explica: 'A língua portuguesa do Brasil está cheia de palavras vindas de muitos povos. É uma mostra viva da nossa mistura cultural.' }
+  ]
+},
+
+{ id: 'vf_escravidao', emoji: '✓✗', titulo: 'V/F: Brasil e Escravidão', cap: 'h1',
+  desc: 'Verdadeiro ou falso sobre um capítulo difícil da nossa história.', tipo: 'vf',
+  perguntas: [
+    { nivel: 'facil', afirmacao: 'A escravidão no Brasil durou mais de 300 anos.', vf: true,
+      explica: 'Durou de cerca de 1540 até 1888 — mais de três séculos, o período mais longo de escravidão das Américas.' },
+
+    { nivel: 'facil', afirmacao: 'Os africanos escolheram voluntariamente vir pro Brasil.', vf: false,
+      explica: 'Eles foram sequestrados na África e trazidos à força em condições desumanas, em navios chamados "navios negreiros".' },
+
+    { nivel: 'medio', afirmacao: 'Quilombos eram comunidades formadas por africanos que fugiam da escravidão.', vf: true,
+      explica: 'Os quilombos foram espaços de liberdade e resistência. O Quilombo dos Palmares, em Alagoas, foi o maior deles.' },
+
+    { nivel: 'medio', afirmacao: 'Zumbi dos Palmares liderou a resistência contra a escravidão.', vf: true,
+      explica: 'Zumbi foi líder do Quilombo dos Palmares e hoje é símbolo da luta antirracista. 20 de novembro é o Dia da Consciência Negra.' },
+
+    { nivel: 'medio', afirmacao: 'A Lei Áurea, de 1888, tornou a escravidão legal no Brasil.', vf: false,
+      explica: 'Foi o contrário! A Lei Áurea ABOLIU a escravidão. Assinada em 13 de maio de 1888 pela Princesa Isabel.' },
+
+    { nivel: 'medio', afirmacao: 'A cultura afro-brasileira aparece em muitas áreas — música, dança, comida, religião.', vf: true,
+      explica: 'Samba, feijoada, capoeira, candomblé, umbanda — tudo vem da presença africana, que é central na cultura brasileira.' },
+
+    { nivel: 'dificil', afirmacao: 'Quando a escravidão acabou, os escravizados libertados receberam apoio do governo pra recomeçar a vida.', vf: false,
+      explica: 'Infelizmente não houve apoio. Isso gerou desigualdades que persistem até hoje — um dos problemas mais sérios do país.' },
+
+    { nivel: 'dificil', afirmacao: 'A palavra "senzala" era o nome do alojamento onde os escravizados eram forçados a dormir.', vf: true,
+      explica: 'Senzalas eram construções simples, onde africanos dormiam sem conforto ou privacidade. É um dos símbolos do horror da escravidão.' }
+  ]
+},
+
+// ============ HISTÓRIA · CAP 2 — CIDADANIA E DEMOCRACIA ============
+
+{ id: 'direitos_deveres', emoji: '⚖️', titulo: 'Direitos e Deveres', cap: 'h2',
+  desc: 'O que é ser cidadão no Brasil.', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'O que é cidadania?',
+      opcoes: [
+        'Conjunto de direitos e deveres das pessoas que vivem em um país',
+        'Só quem tem dinheiro',
+        'Só adultos',
+        'Só quem mora na cidade'
+      ], correta: 0,
+      explica: 'Cidadão tem direitos (educação, saúde, voto) e deveres (respeitar leis, cuidar do ambiente).' },
+
+    { nivel: 'facil', pergunta: 'Qual destes é um DIREITO de toda criança brasileira?',
+      opcoes: ['Estudar na escola gratuita', 'Ser empregada', 'Ficar na rua sozinha', 'Trabalhar numa fábrica'], correta: 0,
+      explica: 'Toda criança tem direito à educação gratuita, à saúde e à proteção — conforme o Estatuto da Criança e do Adolescente (ECA).' },
+
+    { nivel: 'facil', pergunta: 'Qual destes é um DEVER de toda pessoa num país?',
+      opcoes: ['Respeitar as leis', 'Ter casa grande', 'Ter carro', 'Trabalhar sem parar'], correta: 0,
+      explica: 'As leis foram criadas pra todo mundo viver bem junto. Cumpri-las é dever de cada cidadão.' },
+
+    { nivel: 'medio', pergunta: 'A escola pública é garantida por:',
+      opcoes: [
+        'A Constituição Federal do Brasil',
+        'O dono do supermercado',
+        'As famílias individualmente',
+        'As empresas privadas'
+      ], correta: 0,
+      explica: 'A Constituição de 1988 garante educação básica gratuita e de qualidade a todos os brasileiros.' },
+
+    { nivel: 'medio', pergunta: 'Numa democracia, as decisões políticas são tomadas:',
+      opcoes: [
+        'Pelo povo, através do voto em representantes',
+        'Por um rei absoluto',
+        'Por uma empresa',
+        'Por ninguém em especial'
+      ], correta: 0,
+      explica: 'Democracia vem do grego "demo" (povo) + "kracia" (poder). Nós escolhemos representantes pra decidir pela gente.' },
+
+    { nivel: 'medio', pergunta: 'Com que idade no Brasil uma pessoa passa a votar obrigatoriamente?',
+      opcoes: ['18 anos', '21 anos', '15 anos', '30 anos'], correta: 0,
+      explica: 'Voto é obrigatório dos 18 aos 69 anos. Entre 16 e 17 anos, e a partir dos 70, é facultativo (opcional).' },
+
+    { nivel: 'dificil', pergunta: 'O Estatuto da Criança e do Adolescente (ECA) é uma lei que:',
+      opcoes: [
+        'Garante direitos específicos pras crianças e adolescentes no Brasil',
+        'Obriga crianças a trabalhar',
+        'Proíbe de estudar',
+        'Não serve pra nada'
+      ], correta: 0,
+      explica: 'O ECA (Lei 8.069/1990) é uma das mais importantes leis do país. Protege crianças e adolescentes de 0 a 18 anos.' },
+
+    { nivel: 'dificil', pergunta: 'O presidente da república, no Brasil, é eleito a cada:',
+      opcoes: ['4 anos', '2 anos', '10 anos', '8 anos'], correta: 0,
+      explica: 'Presidente, governadores e prefeitos são eleitos pra mandatos de 4 anos. Podem ser reeleitos uma única vez seguida.' }
+  ]
+},
+
+{ id: 'cloze_democracia', emoji: '___', titulo: 'Complete: Democracia e Cidadania', cap: 'h2',
+  desc: 'Palavras-chave da vida política.', tipo: 'cloze',
+  perguntas: [
+    { nivel: 'facil', frase: 'Numa democracia, quem escolhe os representantes é o ___.',
+      opcoes: ['povo', 'rei', 'dono', 'vizinho'], correta: 0,
+      explica: 'Democracia é o governo do povo. Nós escolhemos pelo voto quem vai nos representar.' },
+
+    { nivel: 'facil', frase: 'O ___ é o ato de escolher candidatos pra cargos políticos.',
+      opcoes: ['voto', 'sonho', 'dever', 'trabalho'], correta: 0,
+      explica: 'O voto é a principal ferramenta da democracia. No Brasil, é obrigatório pra maiores de 18 anos.' },
+
+    { nivel: 'medio', frase: 'A lei mais importante do Brasil, que organiza o país, é a ___ Federal.',
+      opcoes: ['Constituição', 'Biblioteca', 'Rodovia', 'Escolha'], correta: 0,
+      explica: 'A Constituição de 1988 é a lei-mãe do Brasil. Todas as outras leis precisam seguir o que ela manda.' },
+
+    { nivel: 'medio', frase: 'O documento que identifica oficialmente uma pessoa no Brasil é a ___.',
+      opcoes: ['Carteira de identidade (RG)', 'Carteira de trabalho', 'Caderno da escola', 'Conta de luz'], correta: 0,
+      explica: 'O RG (Registro Geral) é o documento principal de identificação. Todo brasileiro tem direito a ele.' },
+
+    { nivel: 'medio', frase: 'No Brasil, o poder de governar é dividido em três partes: Executivo, Legislativo e ___.',
+      opcoes: ['Judiciário', 'Escolar', 'Esportivo', 'Musical'], correta: 0,
+      explica: 'Executivo (presidente, governadores, prefeitos) governa; Legislativo faz as leis; Judiciário julga quem cumpre ou não cumpre.' },
+
+    { nivel: 'dificil', frase: 'O ___ é o poder que faz as leis — formado pelos deputados e senadores.',
+      opcoes: ['Legislativo', 'Executivo', 'Comercial', 'Esportivo'], correta: 0,
+      explica: 'O Poder Legislativo é composto pelo Congresso Nacional: Câmara dos Deputados + Senado Federal.' },
+
+    { nivel: 'dificil', frase: 'Quando o Brasil se tornou independente de Portugal, em 7 de setembro de ___.',
+      opcoes: ['1822', '1500', '1988', '2000'], correta: 0,
+      explica: 'Dom Pedro I proclamou a Independência do Brasil em 7 de setembro de 1822, às margens do rio Ipiranga.' },
+
+    { nivel: 'dificil', frase: 'A Proclamação da República, quando o Brasil deixou de ser império, aconteceu em ___.',
+      opcoes: ['1889', '1822', '1822', '1500'], correta: 0,
+      explica: 'Em 15 de novembro de 1889, um grupo militar proclamou a República. Desde então, o Brasil não tem mais imperadores.' }
+  ]
+},
+
+{ id: 'linha_brasil', emoji: '📜', titulo: 'Linha do Tempo: Brasil', cap: 'h2',
+  desc: 'Ordene os grandes marcos da história brasileira.', tipo: 'ordenar',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Ordene do mais antigo ao mais recente:',
+      itens: [
+        { id: 'a', label: 'Povos indígenas antes de 1500', emoji: '🌿' },
+        { id: 'b', label: 'Chegada dos portugueses (1500)', emoji: '⛵' },
+        { id: 'c', label: 'Independência (1822)', emoji: '📜' },
+        { id: 'd', label: 'Brasil hoje (século 21)', emoji: '🏙️' }
+      ],
+      explica: 'Esses são os grandes blocos da história brasileira, em ordem.' },
+
+    { nivel: 'medio', pergunta: 'Ordene os eventos do século 19 e 20:',
+      itens: [
+        { id: 'a', label: 'Independência do Brasil (1822)', emoji: '📜' },
+        { id: 'b', label: 'Abolição da escravidão (1888)', emoji: '⛓️' },
+        { id: 'c', label: 'Proclamação da República (1889)', emoji: '🏛️' },
+        { id: 'd', label: 'Constituição Federal (1988)', emoji: '📖' }
+      ],
+      explica: 'Quatro datas que mudaram o Brasil: independência, abolição, república e a constituição atual.' },
+
+    { nivel: 'medio', pergunta: 'Ordene os períodos da história do Brasil:',
+      itens: [
+        { id: 'a', label: 'Pré-cabralino (antes de 1500)', emoji: '🏞️' },
+        { id: 'b', label: 'Brasil Colônia (1500-1822)', emoji: '⛵' },
+        { id: 'c', label: 'Brasil Império (1822-1889)', emoji: '👑' },
+        { id: 'd', label: 'Brasil República (1889-hoje)', emoji: '🇧🇷' }
+      ],
+      explica: 'A história do Brasil tem 4 grandes períodos. Cada um com características políticas diferentes.' },
+
+    { nivel: 'dificil', pergunta: 'Ordene as constituições brasileiras no século 20 e 21:',
+      itens: [
+        { id: 'a', label: 'Constituição de 1934', emoji: '📕' },
+        { id: 'b', label: 'Constituição de 1946', emoji: '📗' },
+        { id: 'c', label: 'Constituição de 1967 (militar)', emoji: '📘' },
+        { id: 'd', label: 'Constituição de 1988 (atual)', emoji: '📙' }
+      ],
+      explica: 'O Brasil já teve várias constituições. A de 1988 é chamada "Constituição Cidadã" por trazer muitos direitos.' }
+  ]
+},
+
+// ============ GEOGRAFIA · CAP 1 — REGIÕES E ESTADOS ============
+
+{ id: 'regioes', emoji: '🗺️', titulo: 'As 5 Regiões do Brasil', cap: 'g1',
+  desc: 'Norte, Nordeste, Centro-Oeste, Sudeste e Sul.', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Quantas regiões tem o Brasil?',
+      opcoes: ['5 regiões', '3 regiões', '7 regiões', '27 regiões'], correta: 0,
+      explica: 'Norte, Nordeste, Centro-Oeste, Sudeste e Sul. São 27 estados divididos entre elas.' },
+
+    { nivel: 'facil', pergunta: 'Em qual região fica a Floresta Amazônica?',
+      opcoes: ['Norte', 'Sul', 'Sudeste', 'Nordeste'], correta: 0,
+      explica: 'A região Norte concentra a maior parte da Floresta Amazônica brasileira.' },
+
+    { nivel: 'facil', pergunta: 'Qual região tem estados como Ceará, Pernambuco e Bahia?',
+      opcoes: ['Nordeste', 'Sul', 'Centro-Oeste', 'Norte'], correta: 0,
+      explica: 'O Nordeste tem 9 estados: MA, PI, CE, RN, PB, PE, AL, SE e BA.' },
+
+    { nivel: 'facil', pergunta: 'Qual região tem mais indústrias e habitantes do Brasil?',
+      opcoes: ['Sudeste', 'Centro-Oeste', 'Norte', 'Sul'], correta: 0,
+      explica: 'O Sudeste (SP, RJ, MG, ES) concentra grande parte da população e da economia brasileira.' },
+
+    { nivel: 'medio', pergunta: 'A capital federal do Brasil, Brasília, fica em qual região?',
+      opcoes: ['Centro-Oeste', 'Sudeste', 'Sul', 'Nordeste'], correta: 0,
+      explica: 'Brasília fica no Distrito Federal (Centro-Oeste). Foi inaugurada em 1960 pra ser a nova capital.' },
+
+    { nivel: 'medio', pergunta: 'Quantos estados tem o Sul do Brasil?',
+      opcoes: ['3 estados', '5 estados', '7 estados', '9 estados'], correta: 0,
+      explica: 'Sul tem PR, SC e RS. É a menor região em número de estados.' },
+
+    { nivel: 'medio', pergunta: 'O Pantanal, maior planície alagada do mundo, fica principalmente em qual região?',
+      opcoes: ['Centro-Oeste', 'Norte', 'Sul', 'Nordeste'], correta: 0,
+      explica: 'O Pantanal fica no MT e MS, que ficam no Centro-Oeste. É um bioma riquíssimo em fauna.' },
+
+    { nivel: 'dificil', pergunta: 'Qual região tem o clima mais frio do Brasil, podendo até nevar?',
+      opcoes: ['Sul', 'Norte', 'Nordeste', 'Sudeste'], correta: 0,
+      explica: 'Em Santa Catarina e Rio Grande do Sul pode nevar em algumas cidades no inverno — é a região mais fria do país.' },
+
+    { nivel: 'dificil', pergunta: 'Qual é o ESTADO mais populoso do Brasil?',
+      opcoes: ['São Paulo', 'Rio de Janeiro', 'Minas Gerais', 'Bahia'], correta: 0,
+      explica: 'São Paulo tem mais de 46 milhões de habitantes — é o estado mais populoso do Brasil, e um dos mais populosos do mundo.' }
+  ]
+},
+
+{ id: 'estados_regiao', emoji: '📍', titulo: 'Estados por Região', cap: 'g1',
+  desc: 'Onde cada estado se encaixa?', tipo: 'classif',
+  perguntas: [
+    { pergunta: 'Nordeste ou Sudeste?',
+      hint: 'Nordeste tem muito litoral e sertão. Sudeste é o mais populoso.',
+      bucketA: { label: 'Nordeste', emoji: '🌊' },
+      bucketB: { label: 'Sudeste', emoji: '🏙️' },
+      itens: [
+        { id: 'i1', label: 'Bahia (BA)' },
+        { id: 'i2', label: 'São Paulo (SP)' },
+        { id: 'i3', label: 'Ceará (CE)' },
+        { id: 'i4', label: 'Minas Gerais (MG)' },
+        { id: 'i5', label: 'Pernambuco (PE)' },
+        { id: 'i6', label: 'Rio de Janeiro (RJ)' }
+      ],
+      gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'a', i6: 'b' },
+      explica: 'Nordeste: BA, CE, PE, MA, PI, RN, PB, AL, SE. Sudeste: SP, RJ, MG, ES.' },
+
+    { pergunta: 'Norte ou Sul?',
+      bucketA: { label: 'Norte', emoji: '🌳' },
+      bucketB: { label: 'Sul', emoji: '❄️' },
+      itens: [
+        { id: 'j1', label: 'Amazonas (AM)' },
+        { id: 'j2', label: 'Rio Grande do Sul (RS)' },
+        { id: 'j3', label: 'Pará (PA)' },
+        { id: 'j4', label: 'Paraná (PR)' },
+        { id: 'j5', label: 'Santa Catarina (SC)' },
+        { id: 'j6', label: 'Acre (AC)' }
+      ],
+      gabarito: { j1: 'a', j2: 'b', j3: 'a', j4: 'b', j5: 'b', j6: 'a' },
+      explica: 'Norte tem 7 estados amazônicos (AM, PA, AC, RR, RO, AP, TO). Sul tem só 3: PR, SC, RS.' },
+
+    { pergunta: 'Centro-Oeste ou Nordeste?',
+      bucketA: { label: 'Centro-Oeste', emoji: '🌾' },
+      bucketB: { label: 'Nordeste', emoji: '🌵' },
+      itens: [
+        { id: 'k1', label: 'Mato Grosso (MT)' },
+        { id: 'k2', label: 'Maranhão (MA)' },
+        { id: 'k3', label: 'Goiás (GO)' },
+        { id: 'k4', label: 'Alagoas (AL)' },
+        { id: 'k5', label: 'Mato Grosso do Sul (MS)' },
+        { id: 'k6', label: 'Sergipe (SE)' }
+      ],
+      gabarito: { k1: 'a', k2: 'b', k3: 'a', k4: 'b', k5: 'a', k6: 'b' },
+      explica: 'Centro-Oeste tem 3 estados + DF: MT, MS, GO e Distrito Federal. Nordeste tem 9 estados.' }
+  ]
+},
+
+{ id: 'memoria_capitais', emoji: '🃏', titulo: 'Memória: Estados e Capitais', cap: 'g1',
+  desc: 'Combine cada estado com sua capital.', tipo: 'memoria',
+  perguntas: [
+    { nivel: 'facil',
+      pergunta: 'Combine estados do Sudeste com suas capitais:',
+      pares: [
+        { a: 'São Paulo', b: 'São Paulo' },
+        { a: 'Rio de Janeiro', b: 'Rio de Janeiro' },
+        { a: 'Minas Gerais', b: 'Belo Horizonte' },
+        { a: 'Espírito Santo', b: 'Vitória' }
+      ],
+      explica: 'Esses 4 estados formam o Sudeste. SP e RJ têm o mesmo nome da capital.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine estados do Nordeste com suas capitais:',
+      pares: [
+        { a: 'Bahia', b: 'Salvador' },
+        { a: 'Pernambuco', b: 'Recife' },
+        { a: 'Ceará', b: 'Fortaleza' },
+        { a: 'Maranhão', b: 'São Luís' }
+      ],
+      explica: 'O Nordeste tem 9 capitais. Essas são 4 das mais conhecidas.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine estados do Sul e Centro-Oeste com suas capitais:',
+      pares: [
+        { a: 'Paraná', b: 'Curitiba' },
+        { a: 'Rio Grande do Sul', b: 'Porto Alegre' },
+        { a: 'Goiás', b: 'Goiânia' },
+        { a: 'Distrito Federal', b: 'Brasília' }
+      ],
+      explica: 'Brasília é a capital do Brasil e também a sede do DF. Cada estado tem sua capital própria.' },
+
+    { nivel: 'dificil',
+      pergunta: 'Combine estados do Norte com suas capitais:',
+      pares: [
+        { a: 'Amazonas', b: 'Manaus' },
+        { a: 'Pará', b: 'Belém' },
+        { a: 'Acre', b: 'Rio Branco' },
+        { a: 'Amapá', b: 'Macapá' }
+      ],
+      explica: 'O Norte tem 7 estados amazônicos. Suas capitais são banhadas por grandes rios.' }
+  ]
+},
+
+// ============ GEOGRAFIA · CAP 2 — CARTOGRAFIA E MEIO AMBIENTE ============
+
+{ id: 'tipos_mapa', emoji: '🗺️', titulo: 'Tipos de Mapa', cap: 'g2',
+  desc: 'Pra que serve cada tipo de mapa.', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Um mapa POLÍTICO mostra principalmente:',
+      opcoes: [
+        'Fronteiras entre países e estados',
+        'Montanhas e rios',
+        'Temperatura',
+        'Estrelas no céu'
+      ], correta: 0,
+      explica: 'Mapa político mostra onde começa e termina cada estado ou país, com nomes das capitais.' },
+
+    { nivel: 'facil', pergunta: 'Um mapa FÍSICO mostra:',
+      opcoes: [
+        'Relevo (montanhas, planícies), rios e vegetação',
+        'Só estradas',
+        'O horário do dia',
+        'Apenas cidades'
+      ], correta: 0,
+      explica: 'Mapa físico destaca a natureza: serras, vales, rios, florestas.' },
+
+    { nivel: 'facil', pergunta: 'A "rosa dos ventos" num mapa indica:',
+      opcoes: ['Os pontos cardeais (Norte, Sul, Leste, Oeste)',
+               'Temperatura', 'O preço', 'A data'], correta: 0,
+      explica: 'A rosa dos ventos mostra a orientação do mapa — norte, sul, leste, oeste.' },
+
+    { nivel: 'medio', pergunta: 'Um mapa TEMÁTICO serve pra:',
+      opcoes: [
+        'Mostrar um tema específico (clima, população, produção)',
+        'Só decorar a parede',
+        'Brincar',
+        'Não serve pra nada'
+      ], correta: 0,
+      explica: 'Pode ter mapa de chuvas, de densidade populacional, de plantio — cada um com um tema.' },
+
+    { nivel: 'medio', pergunta: 'O que é a ESCALA de um mapa?',
+      opcoes: [
+        'A relação entre o tamanho do mapa e o tamanho real do terreno',
+        'Uma régua pra medir altura',
+        'O nome de quem criou o mapa',
+        'O ano em que o mapa foi feito'
+      ], correta: 0,
+      explica: 'Se a escala é 1:100.000, cada 1 cm no mapa vale 100.000 cm (1 km) no mundo real.' },
+
+    { nivel: 'medio', pergunta: 'A LEGENDA de um mapa explica:',
+      opcoes: [
+        'O que cada símbolo e cor significam',
+        'Quem fez o mapa',
+        'Qual é a estação do ano',
+        'Onde tem hospital'
+      ], correta: 0,
+      explica: 'Legenda = "dicionário" do mapa. Mostra o que cada desenho quer dizer (rio azul, cidade vermelha etc).' },
+
+    { nivel: 'medio', pergunta: 'Mapas com cores mais escuras pra valores maiores chamam-se:',
+      opcoes: [
+        'Mapas coropléticos (temáticos de quantidade)',
+        'Mapas de clima',
+        'Mapas políticos',
+        'Mapas antigos'
+      ], correta: 0,
+      explica: 'Mapas coropléticos usam tons de cor pra indicar quantidades — mais escuro = mais daquilo.' },
+
+    { nivel: 'dificil', pergunta: 'Qual instituto brasileiro é referência em mapas e pesquisas oficiais?',
+      opcoes: ['IBGE', 'Globo', 'Petrobras', 'Senac'], correta: 0,
+      explica: 'IBGE (Instituto Brasileiro de Geografia e Estatística) faz mapas, censo e pesquisas do país.' },
+
+    { nivel: 'dificil', pergunta: 'O globo terrestre é diferente de um mapa comum porque:',
+      opcoes: [
+        'Mantém a forma real da Terra (redonda), sem distorção',
+        'É só mais bonito',
+        'Tem outra linguagem',
+        'É menor'
+      ], correta: 0,
+      explica: 'Mapas planos sempre distorcem algo, pois a Terra é uma esfera. O globo é a representação mais fiel.' }
+  ]
+},
+
+{ id: 'biomas', emoji: '🌱', titulo: 'Biomas do Brasil', cap: 'g2',
+  desc: 'Classifique plantas e paisagens dos principais biomas.', tipo: 'classif',
+  perguntas: [
+    { pergunta: 'Amazônia ou Cerrado?',
+      bucketA: { label: 'Amazônia', emoji: '🌴' },
+      bucketB: { label: 'Cerrado', emoji: '🌾' },
+      itens: [
+        { id: 'i1', label: 'Árvores gigantes e muita umidade' },
+        { id: 'i2', label: 'Árvores baixas com troncos retorcidos' },
+        { id: 'i3', label: 'Maior rio do mundo (Amazonas)' },
+        { id: 'i4', label: 'Savana brasileira, muitas gramíneas' },
+        { id: 'i5', label: 'Onça-pintada e sauim' },
+        { id: 'i6', label: 'Lobo-guará e tamanduá-bandeira' }
+      ],
+      gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'a', i6: 'b' },
+      explica: 'Cada bioma tem características próprias: a Amazônia é floresta úmida; o Cerrado é savana seca.' },
+
+    { pergunta: 'Caatinga ou Mata Atlântica?',
+      bucketA: { label: 'Caatinga', emoji: '🌵' },
+      bucketB: { label: 'Mata Atlântica', emoji: '🌲' },
+      itens: [
+        { id: 'j1', label: 'Plantas com espinhos, clima seco' },
+        { id: 'j2', label: 'Floresta do litoral, muito verde' },
+        { id: 'j3', label: 'Mandacaru e xique-xique' },
+        { id: 'j4', label: 'Pau-brasil e jaqueira' },
+        { id: 'j5', label: 'Exclusivo do Nordeste brasileiro' },
+        { id: 'j6', label: 'Hoje resta só pequena parte' }
+      ],
+      gabarito: { j1: 'a', j2: 'b', j3: 'a', j4: 'b', j5: 'a', j6: 'b' },
+      explica: 'Caatinga só existe no Brasil (Nordeste). Mata Atlântica cobria todo o litoral mas foi muito desmatada.' },
+
+    { pergunta: 'Pantanal ou Pampa?',
+      bucketA: { label: 'Pantanal', emoji: '🐊' },
+      bucketB: { label: 'Pampa', emoji: '🐴' },
+      itens: [
+        { id: 'k1', label: 'Maior planície alagada do mundo' },
+        { id: 'k2', label: 'Campos no Sul do Brasil' },
+        { id: 'k3', label: 'Muitos jacarés, capivaras e aves' },
+        { id: 'k4', label: 'Cria o gaúcho tradicional' },
+        { id: 'k5', label: 'Fica no Centro-Oeste (MT e MS)', },
+        { id: 'k6', label: 'Fica no Rio Grande do Sul' }
+      ],
+      gabarito: { k1: 'a', k2: 'b', k3: 'a', k4: 'b', k5: 'a', k6: 'b' },
+      explica: 'Pantanal = grande pântano do Centro-Oeste. Pampa = campos planos do Sul, onde se cria muito gado.' }
+  ]
+},
+
+{ id: 'vf_meio_ambiente', emoji: '✓✗', titulo: 'V/F: Meio Ambiente e Planeta', cap: 'g2',
+  desc: 'Verdadeiro ou falso sobre a natureza e o futuro.', tipo: 'vf',
+  perguntas: [
+    { nivel: 'facil', afirmacao: 'A Amazônia é a maior floresta tropical do mundo.', vf: true,
+      explica: 'A Floresta Amazônica cobre 9 países da América do Sul e tem enorme biodiversidade.' },
+
+    { nivel: 'facil', afirmacao: 'Quando uma floresta é derrubada, todos os animais que vivem nela continuam bem.', vf: false,
+      explica: 'Os animais perdem seu habitat. Muitas espécies podem se extinguir. Por isso o desmatamento é tão sério.' },
+
+    { nivel: 'facil', afirmacao: 'Reciclar lixo ajuda a reduzir o impacto ambiental.', vf: true,
+      explica: 'Reciclagem evita que o lixo vá parar em rios, mares ou aterros gigantes. Transforma lixo em matéria-prima.' },
+
+    { nivel: 'facil', afirmacao: 'Todo recurso da natureza é ilimitado e nunca acaba.', vf: false,
+      explica: 'Muitos recursos podem acabar ou levar milhares de anos pra se renovar. Precisamos usar com cuidado.' },
+
+    { nivel: 'medio', afirmacao: 'Fontes de energia renováveis incluem a solar, a eólica (vento) e a hidrelétrica.', vf: true,
+      explica: 'Essas fontes se renovam naturalmente. Sol, vento e chuva continuam existindo — diferente de petróleo ou carvão.' },
+
+    { nivel: 'medio', afirmacao: 'O aquecimento global é causado principalmente pelos gases que poluem a atmosfera.', vf: true,
+      explica: 'Gás carbônico e outros gases da poluição retêm calor na atmosfera. O planeta esquenta — é o efeito estufa intensificado.' },
+
+    { nivel: 'medio', afirmacao: 'Plantar árvores em áreas desmatadas é uma forma de ajudar o planeta.', vf: true,
+      explica: 'Árvores absorvem gás carbônico, liberam oxigênio e ajudam a estabilizar o clima. Plantar é o que chamamos de reflorestamento.' },
+
+    { nivel: 'dificil', afirmacao: 'Os polos da Terra (Norte e Sul) estão derretendo por causa do aquecimento global.', vf: true,
+      explica: 'Geleiras estão derretendo, elevando o nível dos mares. Isso ameaça cidades litorâneas e biomas polares.' },
+
+    { nivel: 'dificil', afirmacao: 'Ações individuais como economizar água e energia NÃO fazem diferença pro planeta.', vf: false,
+      explica: 'Fazem sim! Pequenas atitudes de bilhões de pessoas somam muito. Cuidado pessoal é parte essencial da solução.' }
+  ]
+},
+
 ];
 
-function renderGrid() {
-  const cont = document.getElementById('grid-container');
-  const jogos = JOGOS.filter(j => ABA_ATUAL === 'todos' || j.materia === ABA_ATUAL);
-  if (jogos.length === 0) {
-    cont.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#8b5a2b;padding:24px">Nenhum jogo nessa matéria ainda.</div>';
-    return;
+// =====================================================
+// RENDER — capítulos
+// =====================================================
+let ABA_ATUAL = 'todos';
+let CAP_ATUAL = null;
+
+function listaCapsFiltrada() {
+  const arr = Object.entries(CAPS).map(([k, c]) => ({ k, ...c }));
+  arr.sort((a, b) => a.ord - b.ord);
+  if (ABA_ATUAL === 'todos') return arr;
+  return arr.filter(c => c.materia === ABA_ATUAL);
+}
+
+function renderCapitulos() {
+  document.getElementById('tela-capitulos').style.display = 'block';
+  document.getElementById('tela-jogos-cap').style.display = 'none';
+  document.getElementById('tela-jogo').style.display = 'none';
+  const cont = document.getElementById('capitulos-container');
+  const caps = listaCapsFiltrada();
+  const porMat = { historia: caps.filter(c => c.materia === 'historia'),
+                   geografia: caps.filter(c => c.materia === 'geografia') };
+  let html = '';
+  if (ABA_ATUAL !== 'geografia' && porMat.historia.length) {
+    html += '<div class="cap-separador">📜 História</div>';
+    html += porMat.historia.map(c => cardCap(c)).join('');
   }
+  if (ABA_ATUAL !== 'historia' && porMat.geografia.length) {
+    html += '<div class="cap-separador">🗺️ Geografia</div>';
+    html += porMat.geografia.map(c => cardCap(c)).join('');
+  }
+  cont.innerHTML = html || '<div style="text-align:center;color:#8b5a2b;padding:24px">Nenhum capítulo nessa matéria.</div>';
+}
+
+function cardCap(c) {
+  const jogos = c.jogos.map(id => JOGOS.find(j => j.id === id)).filter(Boolean);
+  const totalPerg = jogos.reduce((s, j) => s + (j.perguntas?.length || 0), 0);
+  const acertos = jogos.reduce((s, j) => s + (STATE.jogos[j.id]?.acertos || 0), 0);
+  const pct = totalPerg ? Math.min(100, Math.round((acertos / totalPerg) * 100)) : 0;
+  return `
+    <div class="cap-card ${c.k}" onclick="abrirCapitulo('${c.k}')">
+      <div class="cap-num">${c.num}</div>
+      <div class="cap-rotulo">Capítulo ${c.num} · ${c.materia === 'historia' ? 'História' : 'Geografia'}</div>
+      <div class="cap-nome">${c.nome}</div>
+      <div class="cap-desc">${c.desc}</div>
+      <div class="cap-stats">
+        🎮 ${jogos.length} jogos
+        ${acertos > 0 ? `<span>⭐ ${acertos}/${totalPerg}</span>` : ''}
+      </div>
+      <div class="cap-progresso-bar"><div class="cap-progresso-fill" style="width:${pct}%"></div></div>
+    </div>
+  `;
+}
+
+function abrirCapitulo(k) {
+  CAP_ATUAL = k;
+  const c = CAPS[k];
+  document.getElementById('tela-capitulos').style.display = 'none';
+  document.getElementById('tela-jogos-cap').style.display = 'block';
+  document.getElementById('tela-jogo').style.display = 'none';
+  document.getElementById('breadcrumb-cap').textContent = `Cap ${c.num} · ${c.materia === 'historia' ? 'História' : 'Geografia'}`;
+  document.getElementById('cap-titulo').innerHTML = `${c.nome}<span class="cap-sub">${c.desc}</span>`;
+  const jogos = c.jogos.map(id => JOGOS.find(j => j.id === id)).filter(Boolean);
+  const cont = document.getElementById('grid-container');
   cont.innerHTML = jogos.map(j => {
     const p = STATE.jogos[j.id] || { acertos: 0, erros: 0 };
     return `
-    <div class="jogo-card" onclick="iniciarJogo('${j.id}')">
-      <div class="emoji">${j.emoji}</div>
-      <div class="titulo">${j.titulo}</div>
-      <div class="desc">${j.desc}</div>
-      <div class="progresso">${p.acertos > 0 ? `<span class="estrelas">⭐ ${p.acertos}</span>` : '🎯 Bora!'}</div>
-    </div>`;
+      <div class="jogo-card" onclick="iniciarJogo('${j.id}')">
+        <div class="emoji">${j.emoji}</div>
+        <div class="titulo">${j.titulo}</div>
+        <div class="desc">${j.desc}</div>
+        <div class="progresso">${p.acertos > 0 ? `<span class="estrelas">⭐ ${p.acertos}</span>` : '🎯 Bora!'}</div>
+      </div>`;
   }).join('');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function voltarCapitulos() {
+  CAP_ATUAL = null;
+  renderCapitulos();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function iniciarJogo(id) {
@@ -217,18 +762,34 @@ function iniciarJogo(id) {
   if (jogo) abrirJogo(jogo);
 }
 
-function atualizarGridProgresso() { renderGrid(); }
+function atualizarGridProgresso() {
+  if (CAP_ATUAL) abrirCapitulo(CAP_ATUAL);
+  else renderCapitulos();
+}
+
+const _origVoltarGrid = voltarGrid;
+voltarGrid = function() {
+  document.getElementById('tela-jogo').style.display = 'none';
+  if (CAP_ATUAL) {
+    document.getElementById('tela-jogos-cap').style.display = 'block';
+    abrirCapitulo(CAP_ATUAL);
+  } else {
+    document.getElementById('tela-capitulos').style.display = 'block';
+    renderCapitulos();
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
 document.querySelectorAll('.aba').forEach(b => {
   b.addEventListener('click', () => {
     document.querySelectorAll('.aba').forEach(x => x.classList.remove('ativa'));
     b.classList.add('ativa');
     ABA_ATUAL = b.dataset.aba;
-    renderGrid();
+    renderCapitulos();
   });
 });
 
-renderGrid();
+renderCapitulos();
 </script>
 </body>
 </html>

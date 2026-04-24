@@ -172,7 +172,7 @@ const CAPS = {
   h1: { ord: 1, materia: 'historia', num: 1, cor: '#d4794a',
         nome: 'Os primeiros seres humanos',
         desc: 'Ancestrais humanos, Pré-História e arte rupestre.',
-        jogos: ['ancestrais', 'linha_tempo', 'arte_rupestre', 'memoria_ancestrais'] },
+        jogos: ['ancestrais', 'linha_tempo', 'arte_rupestre', 'memoria_ancestrais', 'cloze_humanos'] },
   h2: { ord: 2, materia: 'historia', num: 2, cor: '#d4a574',
         nome: 'Evolução e adaptação dos modos de vida',
         desc: 'Paleolítico, fogo, Neolítico e Idade dos Metais.',
@@ -180,12 +180,12 @@ const CAPS = {
   h3: { ord: 3, materia: 'historia', num: 3, cor: '#b8945a',
         nome: 'Os primeiros seres humanos na América',
         desc: 'Chegada à América, Luzia e povos pré-históricos do Brasil.',
-        jogos: ['america', 'brasil_prehist', 'luzia', 'marajoara', 'cloze_brasil_prehist'] },
+        jogos: ['america', 'brasil_prehist', 'luzia', 'marajoara', 'cloze_brasil_prehist', 'vf_brasil_prehist'] },
 
   g1: { ord: 4, materia: 'geografia', num: 1, cor: '#4a7aa8',
         nome: 'Qual é a direção?',
         desc: 'Pontos cardeais, orientação pelo Sol, bússola e GPS.',
-        jogos: ['rosa_ventos', 'orientar_sol', 'bussola_gps', 'memoria_cardeais'] },
+        jogos: ['rosa_ventos', 'orientar_sol', 'bussola_gps', 'memoria_cardeais', 'vf_direcao'] },
   g2: { ord: 5, materia: 'geografia', num: 2, cor: '#6a7ab8',
         nome: 'As voltas que o mundo dá',
         desc: 'Rotação da Terra, dia e noite, movimento aparente do Sol.',
@@ -197,7 +197,7 @@ const CAPS = {
   g4: { ord: 7, materia: 'geografia', num: 4, cor: '#7a4aa8',
         nome: 'Território brasileiro',
         desc: 'Município, estado, país, regiões e vizinhos.',
-        jogos: ['territorio_divisoes', 'formacao_estados', 'regioes_brasil_4', 'brasil_vizinhos', 'memoria_regioes'] }
+        jogos: ['territorio_divisoes', 'formacao_estados', 'regioes_brasil_4', 'brasil_vizinhos', 'memoria_regioes', 'cloze_regioes'] }
 };
 
 // =====================================================
@@ -5003,6 +5003,142 @@ const JOGOS = [
         { a: 'Uruguai', b: 'Faz fronteira ao sul' }
       ],
       explica: 'O Brasil faz fronteira com 10 países da América do Sul. Apenas Chile e Equador não encostam no território brasileiro.' }
+  ]
+},
+
+// ========== H1: Cloze — Primeiros Humanos ==========
+{ id: 'cloze_humanos', emoji: '___', titulo: 'Complete: Nossos Ancestrais', cap: 'h1',
+  desc: 'Escolha a palavra certa sobre os primeiros humanos.', tipo: 'cloze',
+  perguntas: [
+    { nivel: 'facil', frase: 'Os cientistas acreditam que a espécie humana surgiu na ___.',
+      opcoes: ['África', 'Europa', 'América', 'Austrália'], correta: 0,
+      explica: 'Os fósseis mais antigos de ancestrais humanos foram encontrados na África, há milhões de anos.' },
+
+    { nivel: 'facil', frase: 'A espécie humana atual chama-se Homo ___.',
+      opcoes: ['sapiens', 'erectus', 'habilis', 'neandertal'], correta: 0,
+      explica: '"Homo sapiens" significa "homem que pensa". É o nome científico da nossa espécie — somos todos nós.' },
+
+    { nivel: 'facil', frase: 'As pinturas feitas em paredes de cavernas pelos primeiros humanos chamam-se pinturas ___.',
+      opcoes: ['rupestres', 'modernas', 'pop', 'digitais'], correta: 0,
+      explica: 'Pintura rupestre é arte feita em pedra ou parede de caverna — alguns desenhos têm mais de 40 mil anos.' },
+
+    { nivel: 'medio', frase: 'A ciência que estuda fósseis e objetos antigos enterrados é a ___.',
+      opcoes: ['arqueologia', 'matemática', 'química', 'música'], correta: 0,
+      explica: 'Arqueólogos escavam a terra procurando rastros do passado — ossos, ferramentas, cerâmicas.' },
+
+    { nivel: 'medio', frase: 'As pessoas que se mudavam de lugar em lugar atrás de comida eram chamadas de ___.',
+      opcoes: ['nômades', 'sedentárias', 'letradas', 'urbanas'], correta: 0,
+      explica: 'Nômades eram grupos que viajavam muito — sem casa fixa. Quando começou a agricultura, ficaram sedentários.' },
+
+    { nivel: 'medio', frase: 'A invenção do ___ foi um marco: permitiu cozinhar, aquecer e afastar animais.',
+      opcoes: ['fogo', 'avião', 'computador', 'telefone'], correta: 0,
+      explica: 'O domínio do fogo foi uma das descobertas mais importantes da humanidade — mudou como vivíamos.' },
+
+    { nivel: 'dificil', frase: 'O período da Pré-História em que surgiu a agricultura e as primeiras vilas chama-se ___.',
+      opcoes: ['Neolítico', 'Paleolítico', 'Mesolítico', 'Idade do Bronze'], correta: 0,
+      explica: 'Neolítico = "pedra nova". Foi quando as pessoas começaram a plantar, criar animais e viver em um só lugar.' },
+
+    { nivel: 'dificil', frase: 'Uma famosa ancestral parente dos humanos, encontrada na Etiópia, foi batizada de ___.',
+      opcoes: ['Lucy', 'Marina', 'Ana', 'Julia'], correta: 0,
+      explica: 'Lucy é um esqueleto de Australopithecus afarensis, encontrado em 1974. Viveu há 3,2 milhões de anos.' }
+  ]
+},
+
+// ========== H3: V/F — Brasil Pré-Histórico ==========
+{ id: 'vf_brasil_prehist', emoji: '✓✗', titulo: 'V/F: Brasil Antigo', cap: 'h3',
+  desc: 'Leia e decida: verdade ou mentira sobre o Brasil antes de 1500?', tipo: 'vf',
+  perguntas: [
+    { nivel: 'facil', afirmacao: 'Antes de 1500, havia muitos povos indígenas morando no Brasil.', vf: true,
+      explica: 'Milhões de indígenas viviam aqui, organizados em muitos povos com línguas e costumes diferentes.' },
+
+    { nivel: 'facil', afirmacao: 'Os primeiros humanos das Américas chegaram de avião, vindos da Europa.', vf: false,
+      explica: 'Os primeiros humanos vieram da Ásia, a pé, pelo estreito de Bering congelado — muito antes de avião existir.' },
+
+    { nivel: 'facil', afirmacao: 'Luzia é o nome de um fóssil humano antigo encontrado no Brasil.', vf: true,
+      explica: 'Luzia viveu em Minas Gerais há cerca de 11 mil anos. Seu esqueleto foi encontrado na década de 1970.' },
+
+    { nivel: 'medio', afirmacao: 'Sambaquis são montanhas feitas de rocha que indígenas construíam no litoral.', vf: false,
+      explica: 'Sambaquis eram feitos de CONCHAS, ossos e restos de comida acumulados ao longo de muitas gerações.' },
+
+    { nivel: 'medio', afirmacao: 'Os marajoaras ficaram famosos pela cerâmica bem decorada que produziam na Ilha do Marajó.', vf: true,
+      explica: 'Os marajoaras viveram no Pará entre 400 e 1300 d.C. Sua cerâmica é famosa até hoje pela beleza e riqueza de detalhes.' },
+
+    { nivel: 'medio', afirmacao: 'Todas as pinturas rupestres do Brasil ficam numa caverna só no Rio de Janeiro.', vf: false,
+      explica: 'Existem sítios com pinturas rupestres em vários estados. O mais famoso é a Serra da Capivara, no Piauí.' },
+
+    { nivel: 'dificil', afirmacao: 'A Serra da Capivara, no Piauí, é Patrimônio da Humanidade pela UNESCO.', vf: true,
+      explica: 'Desde 1991, o Parque Nacional Serra da Capivara é Patrimônio Mundial. Tem milhares de pinturas rupestres antigas.' },
+
+    { nivel: 'dificil', afirmacao: 'Os povos que habitavam o Brasil antes de 1500 eram todos iguais, falavam a mesma língua.', vf: false,
+      explica: 'Havia enorme diversidade: centenas de povos com línguas, culturas, culinárias e religiões diferentes.' }
+  ]
+},
+
+// ========== G1: V/F — Pontos Cardeais e Orientação ==========
+{ id: 'vf_direcao', emoji: '✓✗', titulo: 'V/F: Orientação e Direção', cap: 'g1',
+  desc: 'Verdadeiro ou falso sobre como a gente se orienta.', tipo: 'vf',
+  perguntas: [
+    { nivel: 'facil', afirmacao: 'O Sol nasce no Leste e se põe no Oeste.', vf: true,
+      explica: 'Por causa da rotação da Terra, o Sol sempre parece nascer no Leste e se pôr no Oeste — em qualquer lugar do mundo.' },
+
+    { nivel: 'facil', afirmacao: 'Os pontos cardeais são apenas dois: norte e sul.', vf: false,
+      explica: 'São quatro pontos cardeais: Norte, Sul, Leste e Oeste. Entre eles ficam os colaterais (NE, SE, SO, NO).' },
+
+    { nivel: 'facil', afirmacao: 'A bússola é um instrumento que ajuda a encontrar o Norte.', vf: true,
+      explica: 'A bússola tem uma agulha magnetizada que aponta pro Norte. É usada há séculos pra orientação.' },
+
+    { nivel: 'medio', afirmacao: 'Nordeste é a direção entre Norte e Leste.', vf: true,
+      explica: 'Os pontos colaterais ficam entre dois cardeais. Nordeste = Norte + Leste; Sudoeste = Sul + Oeste.' },
+
+    { nivel: 'medio', afirmacao: 'O GPS usa estrelas pra descobrir onde você está.', vf: false,
+      explica: 'O GPS usa sinais de SATÉLITES no espaço — não estrelas. Por isso é tão preciso em qualquer lugar.' },
+
+    { nivel: 'medio', afirmacao: 'Nos mapas, o Norte fica sempre em cima por convenção.', vf: true,
+      explica: 'Quase todos os mapas colocam o Norte no topo. Isso é uma convenção, uma regra que todos seguem.' },
+
+    { nivel: 'dificil', afirmacao: 'Se você está olhando pro Sul, o Leste fica à sua esquerda.', vf: false,
+      explica: 'Na verdade, com o Sul na frente, o Leste fica à DIREITA (e o Oeste, à esquerda). Gire mentalmente: Norte nas costas.' },
+
+    { nivel: 'dificil', afirmacao: 'No hemisfério Sul, ao meio-dia, o Sol fica mais voltado pro Norte.', vf: true,
+      explica: 'No Brasil (hemisfério Sul), o Sol ao meio-dia está mais inclinado pro Norte. É uma dica natural de orientação.' }
+  ]
+},
+
+// ========== G4: Cloze — Regiões do Brasil ==========
+{ id: 'cloze_regioes', emoji: '___', titulo: 'Complete: Regiões do Brasil', cap: 'g4',
+  desc: 'Preencha a palavra certa sobre o território brasileiro.', tipo: 'cloze',
+  perguntas: [
+    { nivel: 'facil', frase: 'O Brasil é dividido em ___ grandes regiões.',
+      opcoes: ['cinco', 'duas', 'dez', 'vinte'], correta: 0,
+      explica: 'As 5 regiões são: Norte, Nordeste, Centro-Oeste, Sudeste e Sul.' },
+
+    { nivel: 'facil', frase: 'A Floresta Amazônica fica principalmente na região ___.',
+      opcoes: ['Norte', 'Sul', 'Nordeste', 'Sudeste'], correta: 0,
+      explica: 'A maior parte da Amazônia brasileira está na região Norte, em estados como AM e PA.' },
+
+    { nivel: 'facil', frase: 'A capital federal, ___, fica na região Centro-Oeste.',
+      opcoes: ['Brasília', 'São Paulo', 'Salvador', 'Manaus'], correta: 0,
+      explica: 'Brasília foi construída pra ser a nova capital do Brasil. Foi inaugurada em 21 de abril de 1960.' },
+
+    { nivel: 'medio', frase: 'O Brasil tem ___ estados + o Distrito Federal.',
+      opcoes: ['26', '20', '30', '50'], correta: 0,
+      explica: 'São 26 estados + DF = 27 unidades federativas. Cada uma com seu governador e Assembleia Legislativa.' },
+
+    { nivel: 'medio', frase: 'O maior estado em tamanho do Brasil é o ___.',
+      opcoes: ['Amazonas', 'Bahia', 'São Paulo', 'Minas Gerais'], correta: 0,
+      explica: 'Amazonas tem uma área enorme — é maior que muitos países juntos! Mas a população é pequena em comparação.' },
+
+    { nivel: 'medio', frase: 'A região com o clima mais frio do Brasil é o ___.',
+      opcoes: ['Sul', 'Norte', 'Nordeste', 'Centro-Oeste'], correta: 0,
+      explica: 'Em cidades do Sul (RS e SC) às vezes neva no inverno — são os lugares mais frios do Brasil.' },
+
+    { nivel: 'dificil', frase: 'O Brasil faz fronteira com ___ países da América do Sul.',
+      opcoes: ['10', '5', '15', '20'], correta: 0,
+      explica: 'São 10 vizinhos. Só Chile e Equador da América do Sul não encostam no Brasil.' },
+
+    { nivel: 'dificil', frase: 'O bioma com plantas retorcidas e clima seco, típico do Nordeste, é a ___.',
+      opcoes: ['Caatinga', 'Amazônia', 'Mata Atlântica', 'Pampa'], correta: 0,
+      explica: 'A Caatinga é um bioma só do Brasil — uma vegetação típica do sertão nordestino que se adapta à seca.' }
   ]
 }
 ];

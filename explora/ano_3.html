@@ -6,26 +6,46 @@
 <title>EXPLORA · 3º Ano</title>
 <link rel="stylesheet" href="historia_shared.css">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#6fa84a">
+<meta name="theme-color" content="#b8945a">
 <style>
   .topo-ano { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
   .topo-ano h1 { font-size: 22px; margin: 0; flex: 1; text-align: center; }
   .abas { display: flex; gap: 6px; justify-content: center; margin: 8px 0 14px; flex-wrap: wrap; }
-  .aba {
-    background: #fff4dc; border: 2px solid #c9a86b;
-    color: #6b3a15; padding: 8px 14px; border-radius: 18px;
-    font-size: 13px; font-weight: 700; cursor: pointer;
-    font-family: inherit;
-  }
+  .aba { background: #fff4dc; border: 2px solid #c9a86b; color: #6b3a15; padding: 8px 14px; border-radius: 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
   .aba.ativa { background: linear-gradient(135deg, #8b5a2b, #b88247); color: #fff; border-color: #6b3a15; }
   .aba:hover:not(.ativa) { border-color: #8b5a2b; }
+
+  .capitulos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 8px; }
+  .cap-card { background: #fff4dc; border: 3px solid #d4a574; border-radius: 16px; padding: 14px 14px 12px; cursor: pointer; transition: all 0.22s; text-align: left; font-family: inherit; position: relative; display: flex; flex-direction: column; gap: 4px; }
+  .cap-card:hover { transform: translateY(-4px); box-shadow: 0 8px 18px rgba(139, 90, 43, 0.3); border-color: #8b5a2b; }
+  .cap-card .cap-rotulo { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; color: #8b5a2b; margin-bottom: 2px; }
+  .cap-card .cap-nome { font-size: 16px; font-weight: 800; color: #3a2818; line-height: 1.25; }
+  .cap-card .cap-desc { font-size: 12px; color: #6b3a15; line-height: 1.35; margin-top: 4px; }
+  .cap-card .cap-stats { font-size: 12px; color: #6b3a15; font-weight: 700; margin-top: 8px; display: flex; gap: 10px; align-items: center; }
+  .cap-card .cap-progresso-bar { margin-top: 6px; height: 6px; border-radius: 4px; background: #fef8ed; overflow: hidden; border: 1px solid #c9a86b; }
+  .cap-card .cap-progresso-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #d4a574, #8b5a2b); transition: width 0.5s; }
+  .cap-card .cap-num { position: absolute; top: -10px; right: -10px; background: linear-gradient(135deg, #8b5a2b, #b88247); color: #fff; width: 34px; height: 34px; border-radius: 50%; border: 3px solid #fef8ed; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+  .cap-card.h1 { background: linear-gradient(135deg, #fde8d0, #fad2a8); border-color: #d4794a; }
+  .cap-card.h2 { background: linear-gradient(135deg, #ffe8ba, #ffd58c); border-color: #d4a574; }
+  .cap-card.g1 { background: linear-gradient(135deg, #d8ecf5, #a8d0e8); border-color: #4a7aa8; }
+  .cap-card.g2 { background: linear-gradient(135deg, #d8e8d5, #a8c8a0); border-color: #5a8a4a; }
+
+  .cap-separador { grid-column: 1 / -1; font-size: 13px; font-weight: 800; color: #6b3a15; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 0 2px; border-bottom: 2px dashed #c9a86b; margin-top: 6px; }
+  .cap-separador:first-child { margin-top: 0; }
+
+  .breadcrumb { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .breadcrumb .crumb { background: #fff4dc; padding: 5px 11px; border-radius: 12px; border: 1.5px solid #c9a86b; font-size: 12px; font-weight: 700; color: #6b3a15; cursor: pointer; font-family: inherit; }
+  .breadcrumb .crumb:hover { background: #ffe8ba; }
+  .breadcrumb .sep { color: #8b5a2b; font-weight: 700; }
+  .cap-titulo { font-size: 19px; font-weight: 800; color: #3a2818; margin: 4px 0 12px; line-height: 1.3; }
+  .cap-titulo .cap-sub { display: block; font-size: 13px; color: #8b5a2b; font-weight: 500; margin-top: 2px; font-style: italic; }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="topo-ano">
     <a href="index.html" class="btn-voltar">← Anos</a>
-    <h1>3º Ano · Cidade e Município</h1>
+    <h1>3º Ano · Minha Comunidade</h1>
     <span style="width:60px"></span>
   </div>
 
@@ -37,171 +57,731 @@
     <button class="aba" data-aba="geografia">🗺️ Geografia</button>
   </div>
 
-  <div id="tela-grid"><div class="jogos-grid" id="grid-container"></div></div>
+  <div id="tela-capitulos"><div class="capitulos-grid" id="capitulos-container"></div></div>
+
+  <div id="tela-jogos-cap" style="display:none">
+    <div class="breadcrumb">
+      <button class="crumb" onclick="voltarCapitulos()">← Capítulos</button>
+      <span class="sep">›</span>
+      <span class="crumb" id="breadcrumb-cap"></span>
+    </div>
+    <div class="cap-titulo" id="cap-titulo"></div>
+    <div class="jogos-grid" id="grid-container"></div>
+  </div>
+
   <div id="tela-jogo" class="jogo-area" style="display:none"></div>
 </div>
 
-<script src="mascotes.js"></script>
+<script src="mascotes.js?v=3"></script>
 <script src="explora_shared.js?v=5"></script>
 <script>
 initExplora({ storageKey: 'explora_ano3_v1' });
-let ABA_ATUAL = 'todos';
 
+// =====================================================
+// CAPÍTULOS — BNCC 3º ano
+// =====================================================
+const CAPS = {
+  h1: { ord: 1, materia: 'historia', num: 1,
+        nome: 'Povos que formaram o Brasil',
+        desc: 'Indígenas, africanos, portugueses e imigrantes.',
+        jogos: ['povos_brasil', 'memoria_povos', 'vf_imigracao'] },
+  h2: { ord: 2, materia: 'historia', num: 2,
+        nome: 'Patrimônio e memória',
+        desc: 'Festas, comidas, músicas e lugares que contam a história.',
+        jogos: ['patrimonio', 'marcos_cidade', 'cloze_patrimonio'] },
+
+  g1: { ord: 3, materia: 'geografia', num: 1,
+        nome: 'Meu município',
+        desc: 'Cidade, distrito rural, prefeitura e bairros.',
+        jogos: ['municipio', 'campo_cidade', 'memoria_espacos_publicos'] },
+  g2: { ord: 4, materia: 'geografia', num: 2,
+        nome: 'Recursos, água e lixo',
+        desc: 'O que a natureza fornece e como a gente cuida.',
+        jogos: ['recursos_naturais', 'lixo_reciclagem', 'vf_agua'] }
+};
+
+// =====================================================
+// JOGOS — 3º ano
+// =====================================================
 const JOGOS = [
-  {
-    id: 'campo_cidade', emoji: '🌆', titulo: 'Campo × Cidade',
-    desc: 'Diferenças entre zona rural e urbana.',
-    tipo: 'classif', materia: 'geografia',
-    perguntas: [
-      {
-        pergunta: 'Quais serviços são mais típicos de cada lugar?',
-        bucketA: { label: 'Campo (rural)', emoji: '🚜' },
-        bucketB: { label: 'Cidade (urbana)', emoji: '🏙️' },
-        itens: [
-          { id: 'i1', label: 'Plantação de hortaliças' },
-          { id: 'i2', label: 'Shopping e cinema' },
-          { id: 'i3', label: 'Pecuária (criação de gado)' },
-          { id: 'i4', label: 'Metrô e ônibus' },
-          { id: 'i5', label: 'Hospital grande' },
-          { id: 'i6', label: 'Sítio com galinheiro' }
-        ],
-        gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'b', i6: 'a' },
-        explica: 'Campo produz alimento e matéria-prima. Cidade concentra serviços, comércio e indústria.'
-      },
-      {
-        pergunta: 'De onde vem cada produto?',
-        bucketA: { label: 'Do campo', emoji: '🌾' },
-        bucketB: { label: 'Da fábrica (cidade)', emoji: '🏭' },
-        itens: [
-          { id: 'i1', label: 'Leite recém-ordenhado' },
-          { id: 'i2', label: 'Iogurte de pote' },
-          { id: 'i3', label: 'Feijão colhido' },
-          { id: 'i4', label: 'Feijão enlatado' },
-          { id: 'i5', label: 'Cana-de-açúcar' },
-          { id: 'i6', label: 'Açúcar em pacotinho' }
-        ],
-        gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'a', i6: 'b' },
-        explica: 'O campo produz a matéria-prima. A fábrica processa e embala — depois chega ao mercado.'
-      }
-    ]
-  },
-  {
-    id: 'povos_brasil', emoji: '🤝', titulo: 'Povos do Brasil',
-    desc: 'Quem faz parte do Brasil que conhecemos.',
-    tipo: 'quiz', materia: 'historia',
-    perguntas: [
-      { pergunta: 'Quem já vivia no território brasileiro antes dos portugueses chegarem em 1500?',
-        opcoes: ['Povos indígenas (vários grupos, como Tupinambá, Guarani, Xavante…)',
-                 'Europeus', 'Ninguém vivia aqui', 'Só animais'],
-        correta: 0,
-        explica: 'Os povos indígenas já viviam no que hoje é o Brasil há mais de 10 mil anos, com culturas muito diversas.' },
-      { pergunta: 'Muitos brasileiros têm ancestrais africanos porque:',
-        opcoes: [
-          'Milhões de africanos foram trazidos para o Brasil à força, escravizados, entre os séculos XVI e XIX',
-          'África fica do lado do Brasil',
-          'Todo mundo visita a África',
-          'Não há ancestrais africanos no Brasil'
-        ],
-        correta: 0,
-        explica: 'A escravidão foi uma injustiça histórica. A cultura africana influencia muito a comida, a música e a língua brasileira.' },
-      { pergunta: 'O que é imigração?',
-        opcoes: [
-          'Quando pessoas de outro país vêm viver aqui',
-          'Quando brasileiros viajam de férias',
-          'Quando alguém muda de escola',
-          'Quando se compra uma casa nova'
-        ],
-        correta: 0,
-        explica: 'Brasileiros têm ancestrais de muitos lugares: Portugal, Itália, Alemanha, Japão, Líbano, e muitos outros.' },
-      { pergunta: 'Como chamamos as festas, comidas e danças que passam de geração em geração?',
-        opcoes: ['Patrimônio cultural', 'Receita de família', 'Cardápio', 'Calendário'],
-        correta: 0,
-        explica: 'Patrimônio cultural é o que herdamos dos nossos antepassados — capoeira, frevo, maracatu, por exemplo.' }
-    ]
-  },
-  {
-    id: 'patrimonio', emoji: '🎭', titulo: 'Patrimônio Cultural',
-    desc: 'Festas, comidas e tradições do Brasil.',
-    tipo: 'quiz', materia: 'historia',
-    perguntas: [
-      { pergunta: 'A capoeira é:',
-        opcoes: [
-          'Uma luta/dança com origem nos africanos escravizados no Brasil',
-          'Um tipo de bolo',
-          'Um jogo japonês',
-          'Uma brincadeira europeia'
-        ],
-        correta: 0,
-        explica: 'Capoeira mistura luta, música e dança. É reconhecida como patrimônio cultural do Brasil.' },
-      { pergunta: 'Forró, frevo e baião são expressões culturais de qual região do Brasil?',
-        opcoes: ['Nordeste', 'Sul', 'Norte', 'Centro-Oeste'],
-        correta: 0,
-        explica: 'O Nordeste é rico em ritmos e festas populares. Cada região tem suas especialidades.' },
-      { pergunta: 'Feijoada, pão de queijo e acarajé são exemplos de:',
-        opcoes: [
-          'Comidas típicas da culinária brasileira',
-          'Marcas de roupa',
-          'Times de futebol',
-          'Cidades do Brasil'
-        ],
-        correta: 0,
-        explica: 'A comida brasileira é uma mistura de tradições indígenas, africanas, portuguesas e de outros povos.' },
-      { pergunta: 'As festas juninas acontecem em qual mês?',
-        opcoes: ['Junho', 'Dezembro', 'Janeiro', 'Setembro'],
-        correta: 0,
-        explica: 'Junho tem as festas de Santo Antônio, São João e São Pedro — quadrilha, milho e fogueira.' }
-    ]
-  },
-  {
-    id: 'municipio', emoji: '🏛️', titulo: 'Meu Município',
-    desc: 'Como a cidade se organiza.',
-    tipo: 'quiz', materia: 'geografia',
-    perguntas: [
-      { pergunta: 'O que é um município?',
-        opcoes: [
-          'Uma cidade junto com sua área rural ao redor, formando uma mesma unidade administrativa',
-          'Só o centro de uma cidade',
-          'Um bairro',
-          'Uma casa grande'
-        ],
-        correta: 0,
-        explica: 'Município = cidade + distritos rurais. Cada município tem seu prefeito e vereadores.' },
-      { pergunta: 'Quem administra o município?',
-        opcoes: ['O prefeito (e os vereadores fazem as leis)',
-                 'O presidente da república', 'O diretor da escola', 'Os pais dos alunos'],
-        correta: 0,
-        explica: 'O prefeito comanda a prefeitura. Os vereadores votam as leis municipais.' },
-      { pergunta: 'Qual destes serviços é responsabilidade principal do município?',
-        opcoes: ['Limpeza das ruas e coleta de lixo',
-                 'Controle das fronteiras do país', 'Defesa nacional', 'Aeroportos internacionais'],
-        correta: 0,
-        explica: 'Limpeza urbana, transporte local, escolas municipais — tudo é da prefeitura.' },
-      { pergunta: 'O endereço de uma pessoa geralmente inclui:',
-        opcoes: ['Rua, número, bairro, cidade e CEP',
-                 'Só o nome', 'Só a profissão', 'A cor preferida'],
-        correta: 0,
-        explica: 'O endereço ajuda a encontrar o lugar exato onde alguém mora.' }
-    ]
-  }
+
+// ============ HISTÓRIA · CAP 1 — POVOS QUE FORMARAM O BRASIL ============
+
+{ id: 'povos_brasil', emoji: '🤝', titulo: 'Povos que Formaram o Brasil', cap: 'h1',
+  desc: 'O Brasil é fruto do encontro de muitos povos.', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Quem já vivia no território brasileiro antes dos portugueses chegarem em 1500?',
+      opcoes: [
+        'Povos indígenas (Tupinambá, Guarani, Xavante e muitos outros)',
+        'Europeus',
+        'Ninguém vivia aqui',
+        'Só animais e plantas'
+      ], correta: 0,
+      explica: 'Os povos indígenas viviam aqui há mais de 10 mil anos, organizados em muitos grupos diferentes.' },
+
+    { nivel: 'facil', pergunta: 'Em que ano os portugueses chegaram ao Brasil?',
+      opcoes: ['1500', '1822', '1900', '2000'], correta: 0,
+      explica: 'Pedro Álvares Cabral chegou ao Brasil em 22 de abril de 1500.' },
+
+    { nivel: 'facil', pergunta: 'Muitos brasileiros têm ancestrais africanos porque:',
+      opcoes: [
+        'Milhões de africanos foram trazidos à força para o Brasil e escravizados',
+        'Todos nasceram na África',
+        'África fica ao lado do Brasil',
+        'Brasileiros sempre migraram pra África'
+      ], correta: 0,
+      explica: 'Entre os séculos 16 e 19, milhões de africanos foram sequestrados e trazidos ao Brasil como escravizados — um período triste da nossa história.' },
+
+    { nivel: 'medio', pergunta: 'O que é imigração?',
+      opcoes: [
+        'Quando pessoas de outro país vêm morar num novo lugar',
+        'Quando brasileiros viajam de férias',
+        'Quando alguém muda de escola',
+        'Quando se compra uma casa nova'
+      ], correta: 0,
+      explica: 'Imigrantes são pessoas que deixam seu país de origem e vêm viver em outro. O Brasil recebeu muita gente da Itália, Alemanha, Japão, Líbano...' },
+
+    { nivel: 'medio', pergunta: 'Feijoada, pão de queijo e acarajé são exemplos de:',
+      opcoes: [
+        'Comidas típicas que mostram a mistura de povos do Brasil',
+        'Marcas de roupa',
+        'Times de futebol',
+        'Cidades'
+      ], correta: 0,
+      explica: 'A cozinha brasileira é uma mistura de tradições indígenas, africanas, portuguesas e de outros imigrantes.' },
+
+    { nivel: 'medio', pergunta: 'Qual destas palavras que usamos todo dia tem origem INDÍGENA?',
+      opcoes: ['Pipoca', 'Hotel', 'Mouse', 'Pizza'], correta: 0,
+      explica: 'Muitas palavras do português brasileiro vêm de línguas indígenas: pipoca, abacaxi, jacaré, tatu, caju...' },
+
+    { nivel: 'medio', pergunta: 'A capoeira é:',
+      opcoes: [
+        'Uma luta/dança que surgiu entre africanos escravizados no Brasil',
+        'Um tipo de bolo',
+        'Um jogo japonês',
+        'Uma brincadeira europeia'
+      ], correta: 0,
+      explica: 'A capoeira mistura luta, música e dança. É reconhecida como patrimônio cultural brasileiro pela UNESCO.' },
+
+    { nivel: 'dificil', pergunta: 'Quem governava os povos indígenas nas suas aldeias?',
+      opcoes: [
+        'Caciques e pajés, escolhidos pela comunidade',
+        'Um rei vindo da Europa',
+        'Prefeitos eleitos',
+        'Ninguém — todos faziam o que queriam'
+      ], correta: 0,
+      explica: 'Caciques eram líderes das aldeias; pajés cuidavam da parte espiritual. Cada povo tinha sua organização própria.' },
+
+    { nivel: 'dificil', pergunta: 'A cidade brasileira com grande presença de imigrantes japoneses e o maior bairro japonês fora do Japão é:',
+      opcoes: ['São Paulo (Liberdade)', 'Manaus', 'Porto Alegre', 'Salvador'], correta: 0,
+      explica: 'A Liberdade, em São Paulo, tem o maior bairro japonês fora do Japão. Os japoneses começaram a chegar ao Brasil em 1908.' },
+
+    { nivel: 'dificil', pergunta: 'Qual foi o principal povo que contribuiu pra cultura do Rio Grande do Sul (gaúcho)?',
+      opcoes: [
+        'Imigrantes alemães e italianos',
+        'Povos do Oriente Médio',
+        'Egípcios',
+        'Gregos'
+      ], correta: 0,
+      explica: 'O Sul do Brasil recebeu muitos alemães e italianos a partir de 1800. Isso influenciou comida, música e costumes da região.' }
+  ]
+},
+
+{ id: 'memoria_povos', emoji: '🃏', titulo: 'Memória: Povos e Contribuições', cap: 'h1',
+  desc: 'Encontre os pares de povo e o que ele trouxe pra cultura brasileira.', tipo: 'memoria',
+  perguntas: [
+    { nivel: 'facil',
+      pergunta: 'Combine cada povo com uma contribuição pra cultura brasileira:',
+      pares: [
+        { a: 'Indígenas', b: 'Palavras como pipoca e abacaxi' },
+        { a: 'Africanos', b: 'Capoeira e samba' },
+        { a: 'Portugueses', b: 'Língua portuguesa' },
+        { a: 'Japoneses', b: 'Sushi popularizado no Brasil' }
+      ],
+      explica: 'O Brasil foi formado por vários povos. Cada um deixou marcas na comida, na música, na dança e na língua.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada comida típica com sua origem principal:',
+      pares: [
+        { a: 'Acarajé', b: 'Origem africana' },
+        { a: 'Pão de queijo', b: 'Origem mineira (Brasil)' },
+        { a: 'Bacalhau', b: 'Origem portuguesa' },
+        { a: 'Tapioca', b: 'Origem indígena' }
+      ],
+      explica: 'A comida brasileira é uma mistura de tradições de muitos povos. Cada receita tem uma história.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada manifestação cultural com sua origem:',
+      pares: [
+        { a: 'Capoeira', b: 'Africana' },
+        { a: 'Frevo e forró', b: 'Nordeste brasileiro' },
+        { a: 'Fandango', b: 'Portuguesa, adaptada no Sul' },
+        { a: 'Toré', b: 'Indígena' }
+      ],
+      explica: 'Cada dança ou festa carrega raízes de um povo. Conhecer essas origens é valorizar quem formou o Brasil.' }
+  ]
+},
+
+{ id: 'vf_imigracao', emoji: '✓✗', titulo: 'V/F: Povos e Imigração', cap: 'h1',
+  desc: 'Verdadeiro ou falso sobre os povos do Brasil?', tipo: 'vf',
+  perguntas: [
+    { nivel: 'facil', afirmacao: 'Antes de 1500, só havia animais e plantas no Brasil.', vf: false,
+      explica: 'Há mais de 10 mil anos já viviam aqui vários povos indígenas, com culturas próprias e organizadas em aldeias.' },
+
+    { nivel: 'facil', afirmacao: 'Pedro Álvares Cabral chegou ao Brasil em 1500.', vf: true,
+      explica: 'A esquadra portuguesa, comandada por Cabral, chegou em 22 de abril de 1500.' },
+
+    { nivel: 'facil', afirmacao: 'A escravidão no Brasil trouxe milhões de pessoas da África à força.', vf: true,
+      explica: 'Por mais de 300 anos, pessoas foram sequestradas na África e trazidas ao Brasil como escravizadas. Foi uma grave injustiça.' },
+
+    { nivel: 'facil', afirmacao: 'Todo brasileiro é descendente só de portugueses.', vf: false,
+      explica: 'A maioria dos brasileiros tem ancestrais de vários povos: indígenas, africanos, portugueses e outros imigrantes.' },
+
+    { nivel: 'medio', afirmacao: 'Palavras como abacaxi, jacaré e tatu vêm de línguas indígenas.', vf: true,
+      explica: 'Muitas palavras do nosso português vêm do tupi-guarani e outras línguas indígenas.' },
+
+    { nivel: 'medio', afirmacao: 'Os imigrantes japoneses só chegaram ao Brasil a partir de 1908.', vf: true,
+      explica: 'A imigração japonesa começou em 1908. Hoje, a maior comunidade japonesa fora do Japão vive em São Paulo.' },
+
+    { nivel: 'medio', afirmacao: 'Italianos e alemães se concentraram principalmente no Sul e Sudeste do Brasil.', vf: true,
+      explica: 'O Sul e o interior de São Paulo receberam muitos italianos e alemães no final do século 19. Isso marcou a cultura dessas regiões.' },
+
+    { nivel: 'dificil', afirmacao: 'A escravidão foi abolida no Brasil em 1888, pela Lei Áurea.', vf: true,
+      explica: 'A Princesa Isabel assinou a Lei Áurea em 13 de maio de 1888, terminando oficialmente a escravidão — mas os problemas deixados duraram muito mais.' },
+
+    { nivel: 'dificil', afirmacao: 'Capoeira é considerada patrimônio cultural pela UNESCO.', vf: true,
+      explica: 'Desde 2014, a capoeira é Patrimônio Cultural Imaterial da Humanidade, reconhecida pela UNESCO.' }
+  ]
+},
+
+// ============ HISTÓRIA · CAP 2 — PATRIMÔNIO E MEMÓRIA ============
+
+{ id: 'patrimonio', emoji: '🎭', titulo: 'Patrimônio Cultural', cap: 'h2',
+  desc: 'Festas, comidas e tradições que ficam na memória.', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Forró, frevo e baião são ritmos típicos de qual região do Brasil?',
+      opcoes: ['Nordeste', 'Sul', 'Norte', 'Sudeste'], correta: 0,
+      explica: 'O Nordeste é rico em ritmos e festas populares. Cada região tem seus sons próprios.' },
+
+    { nivel: 'facil', pergunta: 'As festas juninas acontecem principalmente em qual mês?',
+      opcoes: ['Junho', 'Dezembro', 'Janeiro', 'Setembro'], correta: 0,
+      explica: 'Em junho celebramos Santo Antônio, São João e São Pedro — com quadrilha, milho e fogueira.' },
+
+    { nivel: 'facil', pergunta: 'Um prédio muito antigo que é preservado porque tem história chama-se:',
+      opcoes: ['Patrimônio histórico', 'Construção comum', 'Casa moderna', 'Ruína inútil'], correta: 0,
+      explica: 'Patrimônio histórico é algo construído no passado que preservamos pra contar a história do lugar.' },
+
+    { nivel: 'medio', pergunta: 'Patrimônio cultural é:',
+      opcoes: [
+        'Tudo que herdamos dos antepassados e queremos preservar — como músicas, festas, comidas e prédios',
+        'Só dinheiro da família',
+        'Só uma lista de filmes',
+        'Só objetos de museu'
+      ], correta: 0,
+      explica: 'Patrimônio cultural é material (prédios, objetos) e imaterial (festas, músicas, receitas). Tudo isso faz parte da nossa identidade.' },
+
+    { nivel: 'medio', pergunta: 'O Carnaval é uma festa brasileira que mistura tradições:',
+      opcoes: [
+        'Europeias, africanas e indígenas',
+        'Só americanas',
+        'Só asiáticas',
+        'Só francesas'
+      ], correta: 0,
+      explica: 'O Carnaval chegou com os portugueses, ganhou ritmos africanos (samba) e incorporou elementos das culturas locais — virou o que é hoje.' },
+
+    { nivel: 'medio', pergunta: 'As ruas das cidades geralmente têm nomes de:',
+      opcoes: [
+        'Pessoas importantes, datas históricas ou lugares',
+        'Cores aleatórias',
+        'Times de futebol do ano',
+        'Números só'
+      ], correta: 0,
+      explica: 'Os nomes das ruas preservam memória — homenageiam pessoas, datas ou eventos importantes da história da cidade.' },
+
+    { nivel: 'dificil', pergunta: 'O Reinado ou Congada é uma festa tradicional com origem:',
+      opcoes: ['Africana', 'Portuguesa', 'Indígena', 'Italiana'], correta: 0,
+      explica: 'Congada e Reinado vêm da tradição africana. São celebrações com coroação de reis negros, música e dança — comuns em Minas Gerais.' },
+
+    { nivel: 'dificil', pergunta: 'Por que é importante preservar patrimônios históricos?',
+      opcoes: [
+        'Pra que as próximas gerações conheçam a história e a cultura do lugar',
+        'Pra ocupar espaço',
+        'Porque são velhos',
+        'Só pra ficar bonito'
+      ], correta: 0,
+      explica: 'Preservar o passado ajuda as crianças de hoje e os adultos do futuro a entenderem quem somos e de onde viemos.' }
+  ]
+},
+
+{ id: 'marcos_cidade', emoji: '🏛️', titulo: 'Marcos da Cidade', cap: 'h2',
+  desc: 'Classifique tipos de marcos históricos.', tipo: 'classif',
+  perguntas: [
+    { pergunta: 'Cada marco é de que tipo?',
+      bucketA: { label: 'Patrimônio material (coisas físicas)', emoji: '🏛️' },
+      bucketB: { label: 'Patrimônio imaterial (tradições)', emoji: '🎶' },
+      itens: [
+        { id: 'i1', label: 'Igreja muito antiga' },
+        { id: 'i2', label: 'Capoeira' },
+        { id: 'i3', label: 'Prédio histórico da prefeitura' },
+        { id: 'i4', label: 'Receita de feijoada tradicional' },
+        { id: 'i5', label: 'Estátua no centro da praça' },
+        { id: 'i6', label: 'Música de roda de samba' }
+      ],
+      gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'a', i6: 'b' },
+      explica: 'Material = podemos tocar e ver (prédios, objetos). Imaterial = tradições, saberes e jeitos de fazer.' },
+
+    { pergunta: 'Classifique os espaços:',
+      bucketA: { label: 'Público (de todos)', emoji: '🌳' },
+      bucketB: { label: 'Privado (particular)', emoji: '🏠' },
+      itens: [
+        { id: 'j1', label: 'Sua casa' },
+        { id: 'j2', label: 'Praça central da cidade' },
+        { id: 'j3', label: 'Quarto de um hotel' },
+        { id: 'j4', label: 'Rua onde você caminha' },
+        { id: 'j5', label: 'Loja fechada' },
+        { id: 'j6', label: 'Escola municipal' }
+      ],
+      gabarito: { j1: 'b', j2: 'a', j3: 'b', j4: 'a', j5: 'b', j6: 'a' },
+      explica: 'Espaço público é de todos — precisamos cuidar junto. Espaço privado tem dono e é pra uso só dele e de quem ele convida.' },
+
+    { pergunta: 'Em que tipo de fonte você encontra cada história?',
+      bucketA: { label: 'Fonte escrita', emoji: '📄' },
+      bucketB: { label: 'Fonte oral (contada)', emoji: '🗣️' },
+      itens: [
+        { id: 'k1', label: 'Jornal antigo' },
+        { id: 'k2', label: 'Histórias da avó sobre a infância' },
+        { id: 'k3', label: 'Livro de história' },
+        { id: 'k4', label: 'Lendas passadas de pai pra filho' },
+        { id: 'k5', label: 'Carta pessoal' },
+        { id: 'k6', label: 'Cantiga de roda' }
+      ],
+      gabarito: { k1: 'a', k2: 'b', k3: 'a', k4: 'b', k5: 'a', k6: 'b' },
+      explica: 'Historiadores pesquisam em fontes escritas (documentos) E em fontes orais (o que as pessoas contam). Cada uma tem algo único.' }
+  ]
+},
+
+{ id: 'cloze_patrimonio', emoji: '___', titulo: 'Complete: Patrimônio e Memória', cap: 'h2',
+  desc: 'Palavra certa pra cada frase.', tipo: 'cloze',
+  perguntas: [
+    { nivel: 'facil', frase: 'Um lugar onde a gente guarda objetos antigos pra estudar e visitar chama-se ___.',
+      opcoes: ['museu', 'padaria', 'cinema', 'shopping'], correta: 0,
+      explica: 'Museus guardam objetos que contam a história — da cidade, do país ou do mundo.' },
+
+    { nivel: 'facil', frase: 'Alguém que estuda o passado é um ___.',
+      opcoes: ['historiador', 'padeiro', 'motorista', 'jardineiro'], correta: 0,
+      explica: 'Historiadores usam livros, documentos e objetos pra descobrir como as pessoas viviam antigamente.' },
+
+    { nivel: 'medio', frase: 'Festas, danças e receitas passadas de geração em geração são ___ cultural.',
+      opcoes: ['patrimônio', 'novela', 'jornal', 'relógio'], correta: 0,
+      explica: 'Patrimônio cultural é o que recebemos dos antepassados e valorizamos pra passar adiante.' },
+
+    { nivel: 'medio', frase: 'Uma rua geralmente tem o nome de uma ___ ou data importante.',
+      opcoes: ['pessoa', 'fruta', 'cor', 'música'], correta: 0,
+      explica: 'As ruas preservam memória: homenageiam pessoas, líderes, datas históricas ou lugares.' },
+
+    { nivel: 'medio', frase: 'Quando preservamos um prédio histórico, estamos cuidando do ___ material.',
+      opcoes: ['patrimônio', 'carnaval', 'clima', 'estômago'], correta: 0,
+      explica: 'Patrimônio material = tudo que a gente consegue tocar e ver (prédios, monumentos, objetos).' },
+
+    { nivel: 'dificil', frase: 'Uma tradição que não é física — como uma música ou uma dança — é patrimônio ___.',
+      opcoes: ['imaterial', 'material', 'pedra', 'dinheiro'], correta: 0,
+      explica: 'Patrimônio imaterial é feito de saberes, jeitos de fazer, celebrações e línguas. Não dá pra tocar, mas dá pra viver.' },
+
+    { nivel: 'dificil', frase: 'O ___ é uma instituição do governo que cuida dos patrimônios históricos do Brasil.',
+      opcoes: ['IPHAN', 'IBGE', 'MEC', 'SUS'], correta: 0,
+      explica: 'IPHAN = Instituto do Patrimônio Histórico e Artístico Nacional. É quem reconhece e protege o patrimônio brasileiro.' }
+  ]
+},
+
+// ============ GEOGRAFIA · CAP 1 — MEU MUNICÍPIO ============
+
+{ id: 'municipio', emoji: '🏛️', titulo: 'Meu Município', cap: 'g1',
+  desc: 'Como uma cidade se organiza.', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'O que é um município?',
+      opcoes: [
+        'Uma cidade junto com sua área rural, formando uma mesma unidade administrativa',
+        'Só o centro de uma cidade',
+        'Um bairro',
+        'Uma casa grande'
+      ], correta: 0,
+      explica: 'Município = cidade + distritos rurais ao redor. Cada município tem seu prefeito e sua Câmara Municipal.' },
+
+    { nivel: 'facil', pergunta: 'Quem comanda a prefeitura de um município?',
+      opcoes: ['O prefeito', 'O presidente da república', 'O diretor da escola', 'Os pais dos alunos'], correta: 0,
+      explica: 'O prefeito é eleito pelo voto dos moradores. Ele comanda a prefeitura por 4 anos.' },
+
+    { nivel: 'facil', pergunta: 'Quem vota as leis do município?',
+      opcoes: ['Os vereadores, na Câmara Municipal', 'O prefeito sozinho', 'O governador', 'Os professores'], correta: 0,
+      explica: 'Vereadores são eleitos pra representar os cidadãos e fazer leis locais.' },
+
+    { nivel: 'medio', pergunta: 'Qual destes serviços é responsabilidade principal do município?',
+      opcoes: [
+        'Limpeza das ruas e coleta de lixo',
+        'Controle das fronteiras do país',
+        'Defesa nacional',
+        'Aeroportos internacionais'
+      ], correta: 0,
+      explica: 'O município cuida de limpeza urbana, escolas municipais, transporte local, saúde básica.' },
+
+    { nivel: 'medio', pergunta: 'O endereço de uma pessoa geralmente inclui:',
+      opcoes: [
+        'Rua, número, bairro, cidade e CEP',
+        'Só o nome completo',
+        'Só a profissão',
+        'Só a cor preferida'
+      ], correta: 0,
+      explica: 'O endereço é a localização exata. Facilita o correio, a ambulância e qualquer entrega achar o lugar.' },
+
+    { nivel: 'medio', pergunta: 'O bairro é:',
+      opcoes: [
+        'Uma parte da cidade, com nome próprio',
+        'Um país',
+        'Uma casa',
+        'Uma avenida'
+      ], correta: 0,
+      explica: 'Um município se divide em bairros. Cada bairro tem suas ruas, praças e características próprias.' },
+
+    { nivel: 'medio', pergunta: 'Prédio onde o prefeito trabalha chama-se:',
+      opcoes: ['Prefeitura', 'Supermercado', 'Quartel', 'Museu'], correta: 0,
+      explica: 'A prefeitura é o centro administrativo do município — onde ficam o gabinete do prefeito e várias secretarias.' },
+
+    { nivel: 'dificil', pergunta: 'Cada quantos anos acontecem as eleições pra prefeito no Brasil?',
+      opcoes: ['4 anos', '2 anos', '6 anos', '10 anos'], correta: 0,
+      explica: 'Prefeitos são eleitos pra um mandato de 4 anos e podem ser reeleitos uma vez seguida.' },
+
+    { nivel: 'dificil', pergunta: 'A CEP (Código de Endereçamento Postal) serve pra:',
+      opcoes: [
+        'Identificar com precisão um endereço pra entregas de correio',
+        'Ser o nome do bairro',
+        'Ser o nome do prefeito',
+        'Ser um número de telefone'
+      ], correta: 0,
+      explica: 'O CEP é um código de 8 números que ajuda o correio a achar endereços rapidamente. Cada rua tem um CEP próprio.' }
+  ]
+},
+
+{ id: 'campo_cidade', emoji: '🌆', titulo: 'Campo × Cidade', cap: 'g1',
+  desc: 'Diferenças entre zona rural e urbana.', tipo: 'classif',
+  perguntas: [
+    { pergunta: 'Quais serviços e lugares são mais típicos de cada zona?',
+      bucketA: { label: 'Campo (rural)', emoji: '🚜' },
+      bucketB: { label: 'Cidade (urbana)', emoji: '🏙️' },
+      itens: [
+        { id: 'i1', label: 'Plantação de hortaliças' },
+        { id: 'i2', label: 'Shopping e cinema' },
+        { id: 'i3', label: 'Pecuária (criação de gado)' },
+        { id: 'i4', label: 'Metrô e ônibus urbano' },
+        { id: 'i5', label: 'Hospital grande' },
+        { id: 'i6', label: 'Sítio com galinheiro' }
+      ],
+      gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'b', i6: 'a' },
+      explica: 'Campo produz alimento e matéria-prima. Cidade concentra serviços, comércio e indústria.' },
+
+    { pergunta: 'De onde vem cada produto?',
+      bucketA: { label: 'Do campo', emoji: '🌾' },
+      bucketB: { label: 'Da fábrica (cidade)', emoji: '🏭' },
+      itens: [
+        { id: 'j1', label: 'Leite recém-ordenhado' },
+        { id: 'j2', label: 'Iogurte de pote' },
+        { id: 'j3', label: 'Feijão colhido' },
+        { id: 'j4', label: 'Feijão enlatado' },
+        { id: 'j5', label: 'Cana-de-açúcar' },
+        { id: 'j6', label: 'Açúcar em pacotinho' }
+      ],
+      gabarito: { j1: 'a', j2: 'b', j3: 'a', j4: 'b', j5: 'a', j6: 'b' },
+      explica: 'O campo produz a matéria-prima. A fábrica processa e embala — depois chega ao mercado.' },
+
+    { pergunta: 'Comparação entre hábitos do campo e da cidade antigamente × hoje:',
+      bucketA: { label: 'Mais no passado', emoji: '⏳' },
+      bucketB: { label: 'Mais no presente', emoji: '📱' },
+      itens: [
+        { id: 'k1', label: 'Família moendo o próprio milho em casa' },
+        { id: 'k2', label: 'Comprar milho em lata no mercado' },
+        { id: 'k3', label: 'Carregar água do poço' },
+        { id: 'k4', label: 'Água direto pela torneira' },
+        { id: 'k5', label: 'Mandar carta pelo correio' },
+        { id: 'k6', label: 'Mandar mensagem pelo aplicativo' }
+      ],
+      gabarito: { k1: 'a', k2: 'b', k3: 'a', k4: 'b', k5: 'a', k6: 'b' },
+      explica: 'Comparar passado e presente mostra o quanto o modo de vida mudou. Algumas coisas ficaram bem mais fáceis.' }
+  ]
+},
+
+{ id: 'memoria_espacos_publicos', emoji: '🃏', titulo: 'Memória: Espaços Públicos', cap: 'g1',
+  desc: 'Pares de lugar público e sua função.', tipo: 'memoria',
+  perguntas: [
+    { nivel: 'facil',
+      pergunta: 'Combine cada espaço público com o que a gente faz lá:',
+      pares: [
+        { a: 'Praça', b: 'Passear e descansar' },
+        { a: 'Hospital público', b: 'Cuidar da saúde' },
+        { a: 'Escola municipal', b: 'Estudar' },
+        { a: 'Rodoviária', b: 'Pegar ônibus pra outra cidade' }
+      ],
+      explica: 'Espaços públicos são de todos. Cuidar deles é dever de cada morador.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada prédio público com quem trabalha lá:',
+      pares: [
+        { a: 'Prefeitura', b: 'Prefeito e funcionários' },
+        { a: 'Câmara Municipal', b: 'Vereadores' },
+        { a: 'Fórum', b: 'Juízes' },
+        { a: 'Biblioteca pública', b: 'Bibliotecários' }
+      ],
+      explica: 'Cada prédio público tem uma função. Juntos, eles mantêm a cidade funcionando.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada serviço público com quem paga por ele:',
+      pares: [
+        { a: 'Coleta de lixo', b: 'Prefeitura (imposto)' },
+        { a: 'Iluminação das ruas', b: 'Prefeitura (imposto)' },
+        { a: 'Escola particular', b: 'Família do aluno' },
+        { a: 'Condomínio do prédio', b: 'Moradores do prédio' }
+      ],
+      explica: 'Serviços públicos são pagos com impostos que todos contribuem. Serviços privados são pagos diretamente por quem usa.' }
+  ]
+},
+
+// ============ GEOGRAFIA · CAP 2 — RECURSOS, ÁGUA E LIXO ============
+
+{ id: 'recursos_naturais', emoji: '🌿', titulo: 'Recursos da Natureza', cap: 'g2',
+  desc: 'O que a gente tira da natureza pra viver.', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'De onde vem a madeira usada pra fazer móveis?',
+      opcoes: ['Das árvores', 'Das rochas', 'Dos oceanos', 'Do céu'], correta: 0,
+      explica: 'A madeira vem das árvores. É por isso que precisamos plantar árvores de novo — senão, acabam.' },
+
+    { nivel: 'facil', pergunta: 'De onde vem o peixe que a gente compra no mercado?',
+      opcoes: [
+        'Dos rios, lagos ou oceanos, pela pesca',
+        'De fábricas de plástico',
+        'De plantações de soja',
+        'Cresce no supermercado'
+      ], correta: 0,
+      explica: 'Os peixes são recursos da natureza, pescados em águas doces ou salgadas.' },
+
+    { nivel: 'facil', pergunta: 'A água da torneira vem principalmente:',
+      opcoes: [
+        'De rios e lagos, depois de ser tratada',
+        'De chocolate derretido',
+        'Do céu só',
+        'De um cano mágico'
+      ], correta: 0,
+      explica: 'A água vem de rios ou represas, passa por estações que limpam e chega na nossa casa pela rede de encanamento.' },
+
+    { nivel: 'medio', pergunta: 'Quando tiramos minerais como ferro ou ouro da terra, chamamos isso de:',
+      opcoes: ['Mineração (atividade extrativa)', 'Agricultura', 'Pecuária', 'Pesca'], correta: 0,
+      explica: 'Mineração tira minerais do solo. É um tipo de atividade extrativa, como a pesca e a caça.' },
+
+    { nivel: 'medio', pergunta: 'Recursos naturais renováveis são os que:',
+      opcoes: [
+        'Se renovam na natureza, como água de rio ou árvore plantada',
+        'Acabam pra sempre depois de usados',
+        'São invisíveis',
+        'Só existem no laboratório'
+      ], correta: 0,
+      explica: 'Recursos renováveis se recuperam com o tempo (árvores plantadas crescem, a chuva enche os rios). Mas precisam de tempo.' },
+
+    { nivel: 'medio', pergunta: 'Petróleo e carvão são recursos:',
+      opcoes: [
+        'Não renováveis (quando acabam, acabam)',
+        'Renováveis',
+        'Criados no mercado',
+        'Feitos em fábrica'
+      ], correta: 0,
+      explica: 'Petróleo e carvão levaram milhões de anos pra se formar. Quando acabarem, não têm como fabricar de novo.' },
+
+    { nivel: 'medio', pergunta: 'O que é "agricultura"?',
+      opcoes: [
+        'Plantar e colher alimentos na terra',
+        'Pescar peixes',
+        'Cuidar só de gado',
+        'Minerar ouro'
+      ], correta: 0,
+      explica: 'Agricultura é o cultivo de plantas (arroz, feijão, verduras, soja) pra alimentação e outros usos.' },
+
+    { nivel: 'dificil', pergunta: 'O que é "pecuária"?',
+      opcoes: [
+        'Criação de animais (gado, porco, galinha, ovelha)',
+        'Plantio de milho',
+        'Pesca em alto-mar',
+        'Minas de ferro'
+      ], correta: 0,
+      explica: 'Pecuária é a criação de animais, geralmente pra tirar carne, leite, ovos, lã ou couro.' },
+
+    { nivel: 'dificil', pergunta: 'A energia elétrica produzida em usinas hidrelétricas usa:',
+      opcoes: [
+        'A força da água que cai de uma represa',
+        'Somente petróleo queimado',
+        'Só o vento',
+        'Luz da lua'
+      ], correta: 0,
+      explica: 'Hidrelétricas transformam o movimento da água em eletricidade. O Brasil tem muitas hidrelétricas — como a de Itaipu.' }
+  ]
+},
+
+{ id: 'lixo_reciclagem', emoji: '♻️', titulo: 'Lixo e Reciclagem', cap: 'g2',
+  desc: 'Onde cada tipo de lixo vai?', tipo: 'classif',
+  perguntas: [
+    { pergunta: 'Separe o lixo corretamente:',
+      bucketA: { label: 'Reciclável (pode virar outra coisa)', emoji: '♻️' },
+      bucketB: { label: 'Orgânico (comida, casca, folha)', emoji: '🍎' },
+      itens: [
+        { id: 'i1', label: 'Lata de refrigerante' },
+        { id: 'i2', label: 'Casca de banana' },
+        { id: 'i3', label: 'Garrafa PET' },
+        { id: 'i4', label: 'Resto de comida' },
+        { id: 'i5', label: 'Jornal velho' },
+        { id: 'i6', label: 'Casca de ovo' }
+      ],
+      gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'a', i6: 'b' },
+      explica: 'Reciclagem transforma embalagens usadas em coisas novas. Lixo orgânico pode virar adubo em compostagem.' },
+
+    { pergunta: 'Separe pelas cores das lixeiras de reciclagem:',
+      bucketA: { label: 'Azul (papel)', emoji: '📰' },
+      bucketB: { label: 'Verde (vidro)', emoji: '🍾' },
+      itens: [
+        { id: 'j1', label: 'Revista velha' },
+        { id: 'j2', label: 'Garrafa de suco de vidro' },
+        { id: 'j3', label: 'Caderno usado' },
+        { id: 'j4', label: 'Pote de geleia de vidro' },
+        { id: 'j5', label: 'Jornal' },
+        { id: 'j6', label: 'Copo de vidro quebrado' }
+      ],
+      gabarito: { j1: 'a', j2: 'b', j3: 'a', j4: 'b', j5: 'a', j6: 'b' },
+      explica: 'As cores das lixeiras são um código: azul = papel, verde = vidro, amarelo = metal, vermelho = plástico.' },
+
+    { pergunta: 'Hábitos bons ou ruins pro meio ambiente?',
+      bucketA: { label: 'Ajuda o planeta', emoji: '🌍' },
+      bucketB: { label: 'Prejudica o planeta', emoji: '🚫' },
+      itens: [
+        { id: 'k1', label: 'Separar o lixo em casa' },
+        { id: 'k2', label: 'Jogar garrafa no rio' },
+        { id: 'k3', label: 'Fechar a torneira ao escovar' },
+        { id: 'k4', label: 'Deixar a TV ligada toda noite' },
+        { id: 'k5', label: 'Usar sacola reutilizável' },
+        { id: 'k6', label: 'Queimar plástico no quintal' }
+      ],
+      gabarito: { k1: 'a', k2: 'b', k3: 'a', k4: 'b', k5: 'a', k6: 'b' },
+      explica: 'Pequenos gestos do dia a dia somam muito. Cada escolha nossa tem efeito no planeta todo.' }
+  ]
+},
+
+{ id: 'vf_agua', emoji: '✓✗', titulo: 'V/F: Água e Recursos', cap: 'g2',
+  desc: 'Verdadeiro ou falso sobre a água e a natureza.', tipo: 'vf',
+  perguntas: [
+    { nivel: 'facil', afirmacao: 'A água que chega na nossa casa é limpa e pronta pra beber direto.', vf: true,
+      explica: 'Antes de chegar às torneiras, a água é tratada em estações especiais pra ficar segura pra beber.' },
+
+    { nivel: 'facil', afirmacao: 'A gente pode desperdiçar água à vontade porque ela nunca acaba.', vf: false,
+      explica: 'A água doce é limitada. Se todos desperdiçarmos, falta pra muita gente. Desperdício é problema sério.' },
+
+    { nivel: 'facil', afirmacao: 'Muita água do planeta é salgada (oceanos) e a gente não pode beber direto.', vf: true,
+      explica: 'Cerca de 97% da água do planeta é dos oceanos — salgada. Só uma pequena parte é doce e disponível pra gente.' },
+
+    { nivel: 'facil', afirmacao: 'Árvores ajudam a manter o ar limpo e o solo firme.', vf: true,
+      explica: 'Árvores absorvem gás carbônico, liberam oxigênio e suas raízes seguram o solo. Por isso plantar árvores ajuda muito.' },
+
+    { nivel: 'medio', afirmacao: 'O petróleo é um recurso que se renova a cada semana.', vf: false,
+      explica: 'Petróleo levou milhões de anos pra se formar. Quando acabar, não tem como fabricar em pouco tempo.' },
+
+    { nivel: 'medio', afirmacao: 'Reciclagem transforma lixo usado em matéria-prima pra produtos novos.', vf: true,
+      explica: 'Lata reciclada vira nova lata. Garrafa PET pode virar fio de camiseta. Reciclar poupa recursos naturais.' },
+
+    { nivel: 'medio', afirmacao: 'Queimar lixo no quintal não faz mal a ninguém.', vf: false,
+      explica: 'Queimar lixo (principalmente plástico) solta gases tóxicos que fazem mal pra quem respira — e poluem o ar do bairro todo.' },
+
+    { nivel: 'medio', afirmacao: 'O Brasil é um país com muita água doce, mas ainda assim precisa cuidar dela.', vf: true,
+      explica: 'O Brasil tem rios enormes, como o Amazonas. Mas a água não está bem distribuída, e o desperdício pode causar crise.' },
+
+    { nivel: 'dificil', afirmacao: 'Quando a gente economiza energia, também ajuda o planeta.', vf: true,
+      explica: 'Muita energia vem de usinas que usam recursos naturais. Economizar energia = usar menos recursos = menos impacto ambiental.' }
+  ]
+},
+
 ];
 
-function renderGrid() {
-  const cont = document.getElementById('grid-container');
-  const jogos = JOGOS.filter(j => ABA_ATUAL === 'todos' || j.materia === ABA_ATUAL);
-  if (jogos.length === 0) {
-    cont.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#8b5a2b;padding:24px">Nenhum jogo nessa matéria ainda.</div>';
-    return;
+// =====================================================
+// RENDER — capítulos
+// =====================================================
+let ABA_ATUAL = 'todos';
+let CAP_ATUAL = null;
+
+function listaCapsFiltrada() {
+  const arr = Object.entries(CAPS).map(([k, c]) => ({ k, ...c }));
+  arr.sort((a, b) => a.ord - b.ord);
+  if (ABA_ATUAL === 'todos') return arr;
+  return arr.filter(c => c.materia === ABA_ATUAL);
+}
+
+function renderCapitulos() {
+  document.getElementById('tela-capitulos').style.display = 'block';
+  document.getElementById('tela-jogos-cap').style.display = 'none';
+  document.getElementById('tela-jogo').style.display = 'none';
+  const cont = document.getElementById('capitulos-container');
+  const caps = listaCapsFiltrada();
+  const porMat = { historia: caps.filter(c => c.materia === 'historia'),
+                   geografia: caps.filter(c => c.materia === 'geografia') };
+  let html = '';
+  if (ABA_ATUAL !== 'geografia' && porMat.historia.length) {
+    html += '<div class="cap-separador">📜 História</div>';
+    html += porMat.historia.map(c => cardCap(c)).join('');
   }
+  if (ABA_ATUAL !== 'historia' && porMat.geografia.length) {
+    html += '<div class="cap-separador">🗺️ Geografia</div>';
+    html += porMat.geografia.map(c => cardCap(c)).join('');
+  }
+  cont.innerHTML = html || '<div style="text-align:center;color:#8b5a2b;padding:24px">Nenhum capítulo nessa matéria.</div>';
+}
+
+function cardCap(c) {
+  const jogos = c.jogos.map(id => JOGOS.find(j => j.id === id)).filter(Boolean);
+  const totalPerg = jogos.reduce((s, j) => s + (j.perguntas?.length || 0), 0);
+  const acertos = jogos.reduce((s, j) => s + (STATE.jogos[j.id]?.acertos || 0), 0);
+  const pct = totalPerg ? Math.min(100, Math.round((acertos / totalPerg) * 100)) : 0;
+  return `
+    <div class="cap-card ${c.k}" onclick="abrirCapitulo('${c.k}')">
+      <div class="cap-num">${c.num}</div>
+      <div class="cap-rotulo">Capítulo ${c.num} · ${c.materia === 'historia' ? 'História' : 'Geografia'}</div>
+      <div class="cap-nome">${c.nome}</div>
+      <div class="cap-desc">${c.desc}</div>
+      <div class="cap-stats">
+        🎮 ${jogos.length} jogos
+        ${acertos > 0 ? `<span>⭐ ${acertos}/${totalPerg}</span>` : ''}
+      </div>
+      <div class="cap-progresso-bar"><div class="cap-progresso-fill" style="width:${pct}%"></div></div>
+    </div>
+  `;
+}
+
+function abrirCapitulo(k) {
+  CAP_ATUAL = k;
+  const c = CAPS[k];
+  document.getElementById('tela-capitulos').style.display = 'none';
+  document.getElementById('tela-jogos-cap').style.display = 'block';
+  document.getElementById('tela-jogo').style.display = 'none';
+  document.getElementById('breadcrumb-cap').textContent = `Cap ${c.num} · ${c.materia === 'historia' ? 'História' : 'Geografia'}`;
+  document.getElementById('cap-titulo').innerHTML = `${c.nome}<span class="cap-sub">${c.desc}</span>`;
+  const jogos = c.jogos.map(id => JOGOS.find(j => j.id === id)).filter(Boolean);
+  const cont = document.getElementById('grid-container');
   cont.innerHTML = jogos.map(j => {
     const p = STATE.jogos[j.id] || { acertos: 0, erros: 0 };
     return `
-    <div class="jogo-card" onclick="iniciarJogo('${j.id}')">
-      <div class="emoji">${j.emoji}</div>
-      <div class="titulo">${j.titulo}</div>
-      <div class="desc">${j.desc}</div>
-      <div class="progresso">${p.acertos > 0 ? `<span class="estrelas">⭐ ${p.acertos}</span>` : '🎯 Bora!'}</div>
-    </div>`;
+      <div class="jogo-card" onclick="iniciarJogo('${j.id}')">
+        <div class="emoji">${j.emoji}</div>
+        <div class="titulo">${j.titulo}</div>
+        <div class="desc">${j.desc}</div>
+        <div class="progresso">${p.acertos > 0 ? `<span class="estrelas">⭐ ${p.acertos}</span>` : '🎯 Bora!'}</div>
+      </div>`;
   }).join('');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function voltarCapitulos() {
+  CAP_ATUAL = null;
+  renderCapitulos();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function iniciarJogo(id) {
@@ -209,18 +789,34 @@ function iniciarJogo(id) {
   if (jogo) abrirJogo(jogo);
 }
 
-function atualizarGridProgresso() { renderGrid(); }
+function atualizarGridProgresso() {
+  if (CAP_ATUAL) abrirCapitulo(CAP_ATUAL);
+  else renderCapitulos();
+}
+
+const _origVoltarGrid = voltarGrid;
+voltarGrid = function() {
+  document.getElementById('tela-jogo').style.display = 'none';
+  if (CAP_ATUAL) {
+    document.getElementById('tela-jogos-cap').style.display = 'block';
+    abrirCapitulo(CAP_ATUAL);
+  } else {
+    document.getElementById('tela-capitulos').style.display = 'block';
+    renderCapitulos();
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
 document.querySelectorAll('.aba').forEach(b => {
   b.addEventListener('click', () => {
     document.querySelectorAll('.aba').forEach(x => x.classList.remove('ativa'));
     b.classList.add('ativa');
     ABA_ATUAL = b.dataset.aba;
-    renderGrid();
+    renderCapitulos();
   });
 });
 
-renderGrid();
+renderCapitulos();
 </script>
 </body>
 </html>

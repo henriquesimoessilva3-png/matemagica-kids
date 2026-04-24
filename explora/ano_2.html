@@ -19,6 +19,36 @@
   }
   .aba.ativa { background: linear-gradient(135deg, #8b5a2b, #b88247); color: #fff; border-color: #6b3a15; }
   .aba:hover:not(.ativa) { border-color: #8b5a2b; }
+
+  .capitulos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 8px; }
+  .cap-card {
+    background: #fff4dc; border: 3px solid #d4a574; border-radius: 16px;
+    padding: 14px 14px 12px; cursor: pointer; transition: all 0.22s;
+    text-align: left; font-family: inherit; position: relative;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .cap-card:hover { transform: translateY(-4px); box-shadow: 0 8px 18px rgba(139, 90, 43, 0.3); border-color: #8b5a2b; }
+  .cap-card .cap-rotulo { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; color: #8b5a2b; margin-bottom: 2px; }
+  .cap-card .cap-nome { font-size: 16px; font-weight: 800; color: #3a2818; line-height: 1.25; }
+  .cap-card .cap-desc { font-size: 12px; color: #6b3a15; line-height: 1.35; margin-top: 4px; }
+  .cap-card .cap-stats { font-size: 12px; color: #6b3a15; font-weight: 700; margin-top: 8px; display: flex; gap: 10px; align-items: center; }
+  .cap-card .cap-progresso-bar { margin-top: 6px; height: 6px; border-radius: 4px; background: #fef8ed; overflow: hidden; border: 1px solid #c9a86b; }
+  .cap-card .cap-progresso-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #d4a574, #8b5a2b); transition: width 0.5s; }
+  .cap-card .cap-num { position: absolute; top: -10px; right: -10px; background: linear-gradient(135deg, #8b5a2b, #b88247); color: #fff; width: 34px; height: 34px; border-radius: 50%; border: 3px solid #fef8ed; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+  .cap-card.h1 { background: linear-gradient(135deg, #fde8d0, #fad2a8); border-color: #d4794a; }
+  .cap-card.h2 { background: linear-gradient(135deg, #ffe8ba, #ffd58c); border-color: #d4a574; }
+  .cap-card.g1 { background: linear-gradient(135deg, #d8ecf5, #a8d0e8); border-color: #4a7aa8; }
+  .cap-card.g2 { background: linear-gradient(135deg, #d8e8d5, #a8c8a0); border-color: #5a8a4a; }
+
+  .cap-separador { grid-column: 1 / -1; font-size: 13px; font-weight: 800; color: #6b3a15; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 0 2px; border-bottom: 2px dashed #c9a86b; margin-top: 6px; }
+  .cap-separador:first-child { margin-top: 0; }
+
+  .breadcrumb { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .breadcrumb .crumb { background: #fff4dc; padding: 5px 11px; border-radius: 12px; border: 1.5px solid #c9a86b; font-size: 12px; font-weight: 700; color: #6b3a15; cursor: pointer; font-family: inherit; }
+  .breadcrumb .crumb:hover { background: #ffe8ba; }
+  .breadcrumb .sep { color: #8b5a2b; font-weight: 700; }
+  .cap-titulo { font-size: 19px; font-weight: 800; color: #3a2818; margin: 4px 0 12px; line-height: 1.3; }
+  .cap-titulo .cap-sub { display: block; font-size: 13px; color: #8b5a2b; font-weight: 500; margin-top: 2px; font-style: italic; }
 </style>
 </head>
 <body>
@@ -37,144 +67,656 @@
     <button class="aba" data-aba="geografia">🗺️ Geografia</button>
   </div>
 
-  <div id="tela-grid"><div class="jogos-grid" id="grid-container"></div></div>
+  <div id="tela-capitulos"><div class="capitulos-grid" id="capitulos-container"></div></div>
+
+  <div id="tela-jogos-cap" style="display:none">
+    <div class="breadcrumb">
+      <button class="crumb" onclick="voltarCapitulos()">← Capítulos</button>
+      <span class="sep">›</span>
+      <span class="crumb" id="breadcrumb-cap"></span>
+    </div>
+    <div class="cap-titulo" id="cap-titulo"></div>
+    <div class="jogos-grid" id="grid-container"></div>
+  </div>
+
   <div id="tela-jogo" class="jogo-area" style="display:none"></div>
 </div>
 
-<script src="mascotes.js"></script>
+<script src="mascotes.js?v=3"></script>
 <script src="explora_shared.js?v=5"></script>
 <script>
 initExplora({ storageKey: 'explora_ano2_v1' });
-let ABA_ATUAL = 'todos';
 
+// =====================================================
+// CAPÍTULOS — BNCC 2º ano
+// =====================================================
+const CAPS = {
+  h1: { ord: 1, materia: 'historia', num: 1,
+        nome: 'Meu lugar no grupo',
+        desc: 'Família, amigos, turma e outros grupos da vida.',
+        jogos: ['grupos_sociais', 'memoria_grupos', 'vf_saude'] },
+  h2: { ord: 2, materia: 'historia', num: 2,
+        nome: 'Objetos, memória e tempo',
+        desc: 'Como as coisas mudam e o que guardamos de lembrança.',
+        jogos: ['antigo_novo', 'minha_linha', 'cloze_memoria'] },
+
+  g1: { ord: 3, materia: 'geografia', num: 1,
+        nome: 'Cidade e campo',
+        desc: 'Como é viver na cidade e como é viver no campo.',
+        jogos: ['campo_cidade', 'transportes', 'memoria_trabalho'] },
+  g2: { ord: 4, materia: 'geografia', num: 2,
+        nome: 'Paisagens, água e solo',
+        desc: 'Ritmos do dia e lugares que mudam com o tempo.',
+        jogos: ['rotina', 'agua_solo', 'vf_paisagem'] }
+};
+
+// =====================================================
+// JOGOS — 2º ano
+// =====================================================
 const JOGOS = [
-  {
-    id: 'antigo_novo', emoji: '📻', titulo: 'Antigo ou Novo?',
-    desc: 'Objetos do passado e do presente.',
-    tipo: 'classif', materia: 'historia',
-    perguntas: [
-      {
-        pergunta: 'Classifique cada objeto:',
-        bucketA: { label: 'Mais antigo', emoji: '📻' },
-        bucketB: { label: 'Mais novo', emoji: '📱' },
-        itens: [
-          { id: 'i1', label: 'Pena e tinteiro para escrever' },
-          { id: 'i2', label: 'Celular' },
-          { id: 'i3', label: 'Computador' },
-          { id: 'i4', label: 'Máquina de escrever' },
-          { id: 'i5', label: 'Carruagem puxada por cavalo' },
-          { id: 'i6', label: 'Carro elétrico' }
-        ],
-        gabarito: { i1: 'a', i2: 'b', i3: 'b', i4: 'a', i5: 'a', i6: 'b' },
-        explica: 'Os objetos mudam com o tempo — a tecnologia avança e coisas novas substituem as antigas.'
-      },
-      {
-        pergunta: 'Sobre comunicação:',
-        bucketA: { label: 'Antigo', emoji: '✉️' },
-        bucketB: { label: 'Atual', emoji: '📲' },
-        itens: [
-          { id: 'i1', label: 'Carta escrita à mão e mandada pelo correio' },
-          { id: 'i2', label: 'Mensagem pelo aplicativo' },
-          { id: 'i3', label: 'Telegrama' },
-          { id: 'i4', label: 'Ligação por vídeo' }
-        ],
-        gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b' },
-        explica: 'Hoje a gente se comunica muito mais rápido. Antes, levava dias ou semanas.'
-      }
-    ]
-  },
-  {
-    id: 'campo_cidade', emoji: '🏙️', titulo: 'Campo ou Cidade?',
-    desc: 'Trabalhos e paisagens diferentes.',
-    tipo: 'classif', materia: 'geografia',
-    perguntas: [
-      {
-        pergunta: 'Onde cada coisa é mais comum?',
-        bucketA: { label: 'Campo (zona rural)', emoji: '🌾' },
-        bucketB: { label: 'Cidade (zona urbana)', emoji: '🏙️' },
-        itens: [
-          { id: 'i1', label: 'Plantação de soja e milho' },
-          { id: 'i2', label: 'Prédios com muitos andares' },
-          { id: 'i3', label: 'Gado pastando' },
-          { id: 'i4', label: 'Semáforos e avenidas' },
-          { id: 'i5', label: 'Escola com quadra' },
-          { id: 'i6', label: 'Trator arando a terra' }
-        ],
-        gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'b', i6: 'a' },
-        explica: 'Campo = agricultura e animais. Cidade = casas, prédios, comércio.'
-      }
-    ]
-  },
-  {
-    id: 'rotina', emoji: '⏰', titulo: 'Hora de Quê?',
-    desc: 'A rotina do dia.',
-    tipo: 'quiz', materia: 'historia',
-    perguntas: [
-      { pergunta: 'O que a gente faz por volta das 12h (meio-dia)?',
-        opcoes: ['Almoçar', 'Dormir a noite toda', 'Tomar banho antes de dormir', 'Assistir a novela da noite'],
-        correta: 0,
-        explica: 'Meio-dia = hora do almoço, quando o Sol está mais alto no céu.' },
-      { pergunta: 'Geralmente, a que horas uma criança vai para a escola de manhã?',
-        opcoes: ['Entre 7h e 8h', 'À meia-noite', 'Depois do jantar', 'Às 23h'],
-        correta: 0,
-        explica: 'Aula de manhã costuma começar cedo, por volta das 7h ou 8h.' },
-      { pergunta: 'A palavra "ontem" se refere a:',
-        opcoes: ['Dia que já passou', 'Dia que ainda vai chegar', 'Hoje', 'Daqui a um ano'],
-        correta: 0,
-        explica: 'Ontem = passado próximo. Amanhã = futuro próximo. Hoje = agora.' },
-      { pergunta: 'Um ano tem quantos meses?',
-        opcoes: ['12', '7', '30', '365'],
-        correta: 0,
-        explica: 'Janeiro, fevereiro, março… até dezembro. São 12 meses no ano.' }
-    ]
-  },
-  {
-    id: 'minha_linha', emoji: '👣', titulo: 'Minha Linha do Tempo',
-    desc: 'Ordenar momentos da própria vida.',
-    tipo: 'ordenar', materia: 'historia',
-    perguntas: [
-      {
-        pergunta: 'Ordene os momentos da vida de uma criança:',
-        itens: [
-          { id: 'a', label: 'Nascer', emoji: '👶' },
-          { id: 'b', label: 'Aprender a andar', emoji: '🚶' },
-          { id: 'c', label: 'Começar a falar', emoji: '🗣️' },
-          { id: 'd', label: 'Entrar na escola', emoji: '🎒' },
-          { id: 'e', label: 'Estar hoje no 2º ano', emoji: '📚' }
-        ],
-        explica: 'Cada pessoa tem a própria linha do tempo. Os momentos vão se somando.'
-      },
-      {
-        pergunta: 'Ordene as estações do ano no Brasil (começando pela primavera):',
-        itens: [
-          { id: 'a', label: 'Primavera', emoji: '🌸' },
-          { id: 'b', label: 'Verão', emoji: '☀️' },
-          { id: 'c', label: 'Outono', emoji: '🍂' },
-          { id: 'd', label: 'Inverno', emoji: '❄️' }
-        ],
-        explica: 'A ordem das estações é sempre a mesma: primavera, verão, outono, inverno.'
-      }
-    ]
-  }
+
+// ============ HISTÓRIA · CAP 1 — MEU LUGAR NO GRUPO ============
+
+{ id: 'grupos_sociais', emoji: '👥', titulo: 'Grupos que Eu Faço Parte', cap: 'h1',
+  desc: 'Todo mundo faz parte de vários grupos!', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'O grupo de pessoas que mora com você e cuida de você é:',
+      opcoes: ['A família', 'A vizinhança inteira', 'A cidade', 'O país'], correta: 0,
+      explica: 'A família é o grupo mais próximo — convive e cuida todo dia.' },
+    { nivel: 'facil', pergunta: 'O grupo de pessoas que estuda com você na mesma sala é:',
+      opcoes: ['A turma', 'A família', 'O clube', 'A igreja'], correta: 0,
+      explica: 'Sua turma é o grupo que estuda junto na mesma sala, com a mesma professora.' },
+    { nivel: 'facil', pergunta: 'Amigos que você convive fora da escola formam:',
+      opcoes: ['Um grupo de amigos', 'Uma família nova', 'Uma turma de escola', 'Um time profissional'], correta: 0,
+      explica: 'Amigos também formam um grupo. Nem todos moram juntos ou estudam juntos.' },
+    { nivel: 'facil', pergunta: 'Pessoas que moram na mesma rua ou prédio são:',
+      opcoes: ['Vizinhos', 'Parentes', 'Colegas de turma', 'Professores'], correta: 0,
+      explica: 'Vizinhos são quem mora perto de você — mesma rua, mesmo prédio ou mesma comunidade.' },
+    { nivel: 'medio', pergunta: 'Quando muita gente vai junto num mesmo lugar religioso, forma-se:',
+      opcoes: [
+        'Uma comunidade religiosa',
+        'Uma turma de escola',
+        'Um time de futebol',
+        'Um grupo de viagem'
+      ], correta: 0,
+      explica: 'Quem tem a mesma religião pode se reunir em templos, igrejas ou terreiros — isso forma uma comunidade religiosa.' },
+    { nivel: 'medio', pergunta: 'O que diferencia os grupos de pessoas é:',
+      opcoes: [
+        'O que elas fazem junto e por que se reúnem',
+        'Só o tamanho do grupo',
+        'Só a cor da roupa',
+        'Só a altura'
+      ], correta: 0,
+      explica: 'Cada grupo tem um motivo pra se reunir: família cuida; turma estuda; time pratica esporte.' },
+    { nivel: 'medio', pergunta: 'Quando alguém é de outra cidade, raça ou religião diferente da sua, a atitude correta é:',
+      opcoes: [
+        'Respeitar as diferenças e conviver bem',
+        'Evitar falar com a pessoa',
+        'Fazer piada da diferença',
+        'Mudar de turma'
+      ], correta: 0,
+      explica: 'Conviver com pessoas diferentes torna a gente mais rico — a gente aprende costumes e jeitos novos.' },
+    { nivel: 'dificil', pergunta: 'Um mesmo menino pode fazer parte de:',
+      opcoes: [
+        'Vários grupos ao mesmo tempo (família, turma, time, amigos)',
+        'Só de um grupo por vez',
+        'Só de dois grupos',
+        'Nenhum grupo'
+      ], correta: 0,
+      explica: 'Todo mundo participa de vários grupos ao mesmo tempo — e em cada um tem um papel diferente.' }
+  ]
+},
+
+{ id: 'memoria_grupos', emoji: '🃏', titulo: 'Memória: Grupos e Atividades', cap: 'h1',
+  desc: 'Encontre os pares de grupo e o que ele faz junto.', tipo: 'memoria',
+  perguntas: [
+    { nivel: 'facil',
+      pergunta: 'Combine cada grupo com o que ele faz junto:',
+      pares: [
+        { a: 'Família', b: 'Mora e cuida' },
+        { a: 'Turma de escola', b: 'Estuda junto' },
+        { a: 'Time de futebol', b: 'Joga bola' },
+        { a: 'Amigos', b: 'Brincam e conversam' }
+      ],
+      explica: 'Cada grupo tem um motivo pra existir. A gente faz parte de muitos ao mesmo tempo.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada lugar com o grupo que costuma se encontrar lá:',
+      pares: [
+        { a: 'Sala de aula', b: 'Turma e professora' },
+        { a: 'Igreja ou templo', b: 'Comunidade religiosa' },
+        { a: 'Clube', b: 'Família e amigos' },
+        { a: 'Quadra', b: 'Time de esportes' }
+      ],
+      explica: 'Cada ambiente é palco pra um grupo diferente. Conhecer esses espaços é parte de crescer.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada pessoa com o papel que ela tem em um grupo:',
+      pares: [
+        { a: 'Professora', b: 'Ensina a turma' },
+        { a: 'Pai ou mãe', b: 'Cuida da família' },
+        { a: 'Técnico', b: 'Orienta o time' },
+        { a: 'Vizinho', b: 'Mora perto' }
+      ],
+      explica: 'Cada pessoa tem papéis diferentes em cada grupo da vida dela.' }
+  ]
+},
+
+{ id: 'vf_saude', emoji: '✓✗', titulo: 'V/F: Cuidar Bem de Mim', cap: 'h1',
+  desc: 'Leia e diga: é verdade ou mentira?', tipo: 'vf',
+  perguntas: [
+    { nivel: 'facil', afirmacao: 'Escovar os dentes todos os dias é importante pra saúde da boca.', vf: true,
+      explica: 'Escovar os dentes tira a comida que fica grudada e evita cárie (furinhos no dente).' },
+
+    { nivel: 'facil', afirmacao: 'Dormir bem à noite ajuda o corpo a crescer e a ter energia no dia seguinte.', vf: true,
+      explica: 'Durante o sono o corpo descansa e se recupera. Por isso é tão importante dormir bem.' },
+
+    { nivel: 'facil', afirmacao: 'Comer só doce o dia inteiro faz bem pra saúde.', vf: false,
+      explica: 'Doce tem muito açúcar. Comer muito dá cárie, dor de barriga e tira a vontade de comida que nutre.' },
+
+    { nivel: 'facil', afirmacao: 'Lavar as mãos antes de comer ajuda a não ficar doente.', vf: true,
+      explica: 'As mãos pegam em muitos lugares e pegam micróbios. Lavar tira essa sujeira invisível.' },
+
+    { nivel: 'medio', afirmacao: 'Passar o dia inteiro sem beber água é uma boa ideia.', vf: false,
+      explica: 'O corpo precisa de água o dia todo. Sem ela, a gente fica com dor de cabeça e cansado.' },
+
+    { nivel: 'medio', afirmacao: 'Brincar ao ar livre e fazer exercícios ajuda o corpo a ficar forte.', vf: true,
+      explica: 'Brincar correndo, pulando e se mexendo deixa o corpo mais forte e alegre.' },
+
+    { nivel: 'medio', afirmacao: 'Usar protetor solar faz mal pra pele.', vf: false,
+      explica: 'É o contrário — o protetor solar ajuda a evitar queimaduras e machucados na pele.' },
+
+    { nivel: 'dificil', afirmacao: 'Fazer uma refeição com arroz, feijão, verdura e proteína é alimentação equilibrada.', vf: true,
+      explica: 'Arroz, feijão, verdura e carne/ovo juntos dão ao corpo tudo que ele precisa pra funcionar bem.' }
+  ]
+},
+
+// ============ HISTÓRIA · CAP 2 — OBJETOS, MEMÓRIA E TEMPO ============
+
+{ id: 'antigo_novo', emoji: '📻', titulo: 'Antigo ou Novo?', cap: 'h2',
+  desc: 'Classifique objetos do passado e do presente.', tipo: 'classif',
+  perguntas: [
+    { pergunta: 'Classifique cada objeto de acordo com sua época:',
+      bucketA: { label: 'Mais antigo', emoji: '📻' },
+      bucketB: { label: 'Mais novo', emoji: '📱' },
+      itens: [
+        { id: 'i1', label: 'Pena e tinteiro pra escrever' },
+        { id: 'i2', label: 'Celular com câmera' },
+        { id: 'i3', label: 'Computador pessoal' },
+        { id: 'i4', label: 'Máquina de escrever' },
+        { id: 'i5', label: 'Carruagem puxada por cavalo' },
+        { id: 'i6', label: 'Carro elétrico' }
+      ],
+      gabarito: { i1: 'a', i2: 'b', i3: 'b', i4: 'a', i5: 'a', i6: 'b' },
+      explica: 'A tecnologia foi evoluindo. Hoje usamos coisas muito diferentes das que nossos bisavós usavam.' },
+
+    { pergunta: 'Sobre maneiras de se comunicar:',
+      bucketA: { label: 'Antigamente', emoji: '✉️' },
+      bucketB: { label: 'Hoje em dia', emoji: '📲' },
+      itens: [
+        { id: 'j1', label: 'Carta escrita à mão pelo correio' },
+        { id: 'j2', label: 'Mensagem de aplicativo' },
+        { id: 'j3', label: 'Telegrama' },
+        { id: 'j4', label: 'Chamada de vídeo' },
+        { id: 'j5', label: 'Fax (foto por telefone)' },
+        { id: 'j6', label: 'E-mail' }
+      ],
+      gabarito: { j1: 'a', j2: 'b', j3: 'a', j4: 'b', j5: 'a', j6: 'b' },
+      explica: 'A comunicação ficou muito mais rápida. Antes a mensagem demorava dias; hoje chega em segundos.' },
+
+    { pergunta: 'Sobre como a gente ouve música:',
+      bucketA: { label: 'Forma antiga', emoji: '📻' },
+      bucketB: { label: 'Forma atual', emoji: '🎧' },
+      itens: [
+        { id: 'k1', label: 'Disco de vinil' },
+        { id: 'k2', label: 'Aplicativo de música no celular' },
+        { id: 'k3', label: 'Fita cassete' },
+        { id: 'k4', label: 'Música na internet' },
+        { id: 'k5', label: 'Rádio de pilha' },
+        { id: 'k6', label: 'Fone bluetooth' }
+      ],
+      gabarito: { k1: 'a', k2: 'b', k3: 'a', k4: 'b', k5: 'a', k6: 'b' },
+      explica: 'A forma de ouvir música mudou. Hoje podemos levar milhares de músicas no bolso, em um aparelho pequeno.' }
+  ]
+},
+
+{ id: 'minha_linha', emoji: '👣', titulo: 'Minha Linha do Tempo', cap: 'h2',
+  desc: 'Ordene momentos da vida.', tipo: 'ordenar',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Ordene os momentos de uma criança desde o nascimento:',
+      itens: [
+        { id: 'a', label: 'Nascer', emoji: '👶' },
+        { id: 'b', label: 'Começar a engatinhar', emoji: '🐾' },
+        { id: 'c', label: 'Aprender a andar', emoji: '🚶' },
+        { id: 'd', label: 'Começar a falar', emoji: '🗣️' },
+        { id: 'e', label: 'Entrar na escola', emoji: '🎒' }
+      ],
+      explica: 'Cada criança tem uma linha do tempo só sua. Os momentos acontecem mais ou menos nessa ordem.' },
+
+    { nivel: 'facil', pergunta: 'Ordene as estações no Brasil, começando pela primavera:',
+      itens: [
+        { id: 'a', label: 'Primavera', emoji: '🌸' },
+        { id: 'b', label: 'Verão', emoji: '☀️' },
+        { id: 'c', label: 'Outono', emoji: '🍂' },
+        { id: 'd', label: 'Inverno', emoji: '❄️' }
+      ],
+      explica: 'As estações se repetem sempre na mesma ordem: primavera → verão → outono → inverno.' },
+
+    { nivel: 'medio', pergunta: 'Ordene os meses do ano (começando em janeiro):',
+      itens: [
+        { id: 'a', label: 'Janeiro', emoji: '🎉' },
+        { id: 'b', label: 'Abril', emoji: '🌧️' },
+        { id: 'c', label: 'Julho', emoji: '❄️' },
+        { id: 'd', label: 'Outubro', emoji: '🍁' },
+        { id: 'e', label: 'Dezembro', emoji: '🎄' }
+      ],
+      explica: 'O ano começa em janeiro e termina em dezembro, passando pelos outros meses em ordem.' },
+
+    { nivel: 'medio', pergunta: 'Ordene os dias da semana, começando pela segunda:',
+      itens: [
+        { id: 'a', label: 'Segunda', emoji: '1️⃣' },
+        { id: 'b', label: 'Quarta', emoji: '3️⃣' },
+        { id: 'c', label: 'Sexta', emoji: '5️⃣' },
+        { id: 'd', label: 'Sábado', emoji: '6️⃣' },
+        { id: 'e', label: 'Domingo', emoji: '7️⃣' }
+      ],
+      explica: 'A semana tem 7 dias. Segunda vem primeiro; domingo, por último.' },
+
+    { nivel: 'dificil', pergunta: 'Ordene transformações de objetos do mais antigo pro mais recente:',
+      itens: [
+        { id: 'a', label: 'Carruagem', emoji: '🐴' },
+        { id: 'b', label: 'Trem a vapor', emoji: '🚂' },
+        { id: 'c', label: 'Carro a gasolina', emoji: '🚗' },
+        { id: 'd', label: 'Carro elétrico', emoji: '🔌' }
+      ],
+      explica: 'A tecnologia de transporte evoluiu: força do animal → vapor → motor a combustível → motor elétrico.' }
+  ]
+},
+
+{ id: 'cloze_memoria', emoji: '___', titulo: 'Complete: Memória e Documentos', cap: 'h2',
+  desc: 'Escolha a palavra certa sobre objetos de memória.', tipo: 'cloze',
+  perguntas: [
+    { nivel: 'facil', frase: 'Um álbum com ___ guarda lembranças da família.',
+      opcoes: ['fotos', 'comidas', 'roupas', 'tintas'], correta: 0,
+      explica: 'Álbuns geralmente têm fotografias que registram momentos importantes.' },
+
+    { nivel: 'facil', frase: 'O documento que tem seu nome e a data em que você nasceu é a ___ de nascimento.',
+      opcoes: ['certidão', 'receita', 'carteira', 'revista'], correta: 0,
+      explica: 'A certidão de nascimento é um documento oficial da sua vida.' },
+
+    { nivel: 'medio', frase: 'Uma foto ___ mostra como seus avós eram quando jovens.',
+      opcoes: ['antiga', 'nova', 'colorida', 'verde'], correta: 0,
+      explica: 'Fotos antigas guardam momentos que já passaram. Muitas eram preto e branco.' },
+
+    { nivel: 'medio', frase: 'Quando uma família guarda histórias contadas de pai pra filho, chamamos de memória ___.',
+      opcoes: ['familiar', 'mineral', 'escolar', 'esportiva'], correta: 0,
+      explica: 'Memória familiar são as histórias que os parentes mais velhos contam e passam pros mais novos.' },
+
+    { nivel: 'medio', frase: 'Um objeto muito antigo que a família guarda com carinho chama-se ___.',
+      opcoes: ['relíquia', 'ticket', 'sacola', 'mapa'], correta: 0,
+      explica: 'Relíquia é um objeto especial que tem valor sentimental e é preservado ao longo do tempo.' },
+
+    { nivel: 'dificil', frase: 'Pessoas que trabalham organizando e guardando objetos antigos de cidades ou países trabalham em ___.',
+      opcoes: ['museus', 'padarias', 'cinemas', 'fábricas'], correta: 0,
+      explica: 'Museus guardam objetos que contam a história — da cidade, do país ou do mundo.' },
+
+    { nivel: 'dificil', frase: 'A pessoa que estuda o passado a partir de documentos e objetos é o ___.',
+      opcoes: ['historiador', 'padeiro', 'jardineiro', 'piloto'], correta: 0,
+      explica: 'Historiadores pesquisam como as pessoas viviam antigamente usando livros, fotos e objetos guardados.' },
+
+    { nivel: 'dificil', frase: 'Quando a gente guarda fotos ou vídeos no celular, estamos criando uma memória ___.',
+      opcoes: ['digital', 'de papel', 'de pedra', 'de madeira'], correta: 0,
+      explica: 'Memória digital é tudo que fica guardado dentro de computadores, celulares ou na internet.' }
+  ]
+},
+
+// ============ GEOGRAFIA · CAP 1 — CIDADE E CAMPO ============
+
+{ id: 'campo_cidade', emoji: '🏙️', titulo: 'Campo ou Cidade?', cap: 'g1',
+  desc: 'Classifique o que é mais típico de cada lugar.', tipo: 'classif',
+  perguntas: [
+    { pergunta: 'Onde cada coisa é mais comum?',
+      bucketA: { label: 'Campo (zona rural)', emoji: '🌾' },
+      bucketB: { label: 'Cidade (zona urbana)', emoji: '🏙️' },
+      itens: [
+        { id: 'i1', label: 'Plantação de soja e milho' },
+        { id: 'i2', label: 'Prédios com muitos andares' },
+        { id: 'i3', label: 'Gado pastando' },
+        { id: 'i4', label: 'Semáforos e avenidas' },
+        { id: 'i5', label: 'Escola com quadra esportiva' },
+        { id: 'i6', label: 'Trator arando a terra' }
+      ],
+      gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'b', i6: 'a' },
+      explica: 'O campo é onde se planta e se cria animais. A cidade tem muito comércio, trânsito e gente morando perto.' },
+
+    { pergunta: 'Trabalhos mais típicos de cada lugar:',
+      bucketA: { label: 'Campo', emoji: '🚜' },
+      bucketB: { label: 'Cidade', emoji: '🏢' },
+      itens: [
+        { id: 'j1', label: 'Agricultor que planta alimentos' },
+        { id: 'j2', label: 'Engenheiro num escritório' },
+        { id: 'j3', label: 'Caminhoneiro pela cidade' },
+        { id: 'j4', label: 'Vaqueiro cuidando do gado' },
+        { id: 'j5', label: 'Pedreiro construindo prédio' },
+        { id: 'j6', label: 'Quem cuida de horta' }
+      ],
+      gabarito: { j1: 'a', j2: 'b', j3: 'b', j4: 'a', j5: 'b', j6: 'a' },
+      explica: 'Cada ambiente tem trabalhos ligados ao que ele oferece. Mas hoje o caminhão ou o ônibus ligam campo e cidade.' },
+
+    { pergunta: 'Sons e paisagens:',
+      bucketA: { label: 'Mais no campo', emoji: '🌾' },
+      bucketB: { label: 'Mais na cidade', emoji: '🚌' },
+      itens: [
+        { id: 'k1', label: 'Barulho de ônibus e carro' },
+        { id: 'k2', label: 'Canto do galo de manhã' },
+        { id: 'k3', label: 'Buzinas no trânsito' },
+        { id: 'k4', label: 'Silêncio e passarinho' },
+        { id: 'k5', label: 'Cheiro de grama e terra' },
+        { id: 'k6', label: 'Luzes dos prédios à noite' }
+      ],
+      gabarito: { k1: 'b', k2: 'a', k3: 'b', k4: 'a', k5: 'a', k6: 'b' },
+      explica: 'Cada lugar tem sons, cheiros e paisagens próprias. Por isso os dois lugares têm experiências bem diferentes.' }
+  ]
+},
+
+{ id: 'transportes', emoji: '🚗', titulo: 'Meios de Transporte', cap: 'g1',
+  desc: 'Jeitos diferentes de ir de um lugar pro outro.', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Um meio de transporte que anda nos trilhos é o:',
+      opcoes: ['Trem', 'Carro', 'Barco', 'Helicóptero'], correta: 0,
+      explica: 'Trem, metrô e bondinho andam sobre trilhos feitos de ferro ou aço.' },
+
+    { nivel: 'facil', pergunta: 'Qual transporte voa pelo ar?',
+      opcoes: ['Avião', 'Ônibus', 'Metrô', 'Bicicleta'], correta: 0,
+      explica: 'Avião e helicóptero são transportes aéreos.' },
+
+    { nivel: 'facil', pergunta: 'Qual transporte anda sobre a água?',
+      opcoes: ['Navio', 'Carro', 'Avião', 'Ônibus'], correta: 0,
+      explica: 'Navio, barco e canoa são transportes aquáticos — andam em rios, lagos ou mar.' },
+
+    { nivel: 'facil', pergunta: 'Qual transporte usa apenas a força das pernas?',
+      opcoes: ['Bicicleta', 'Carro', 'Avião', 'Navio'], correta: 0,
+      explica: 'Bicicleta é movida pela pessoa pedalando — não polui o ar.' },
+
+    { nivel: 'medio', pergunta: 'Um ônibus que faz uma linha dentro da cidade é:',
+      opcoes: ['Transporte coletivo urbano', 'Transporte rural', 'Transporte aéreo', 'Transporte aquático'], correta: 0,
+      explica: 'O ônibus leva várias pessoas ao mesmo tempo por uma rota fixa — isso chama transporte coletivo.' },
+
+    { nivel: 'medio', pergunta: 'Quando um caminhão leva frutas do campo pra cidade, ele está fazendo:',
+      opcoes: ['Transporte de carga', 'Transporte de passageiros', 'Passeio turístico', 'Saída escolar'], correta: 0,
+      explica: 'Caminhões levam cargas (mercadorias), fazendo a ligação entre quem produz e quem consome.' },
+
+    { nivel: 'medio', pergunta: 'Transportes como bicicleta e patinete não soltam ___ no ar.',
+      opcoes: ['fumaça poluente', 'música', 'suor', 'luz'], correta: 0,
+      explica: 'Carros e ônibus a diesel soltam fumaça que polui o ar. Bicicleta e patinete não têm esse problema.' },
+
+    { nivel: 'dificil', pergunta: 'Antigamente, as pessoas viajavam longas distâncias principalmente:',
+      opcoes: [
+        'Com carroças puxadas por cavalos',
+        'De avião',
+        'De metrô',
+        'De foguete'
+      ], correta: 0,
+      explica: 'Antes de carros e aviões, viagens longas eram feitas em carroças ou a cavalo — e demoravam muito mais.' },
+
+    { nivel: 'dificil', pergunta: 'Por que as cidades grandes precisam de metrô ou trem urbano?',
+      opcoes: [
+        'Porque transportam muita gente de uma vez e reduzem o trânsito',
+        'Porque é moda',
+        'Porque todos os carros andam devagar',
+        'Porque são mais bonitos que ônibus'
+      ], correta: 0,
+      explica: 'Metrô e trem urbano levam milhares de pessoas ao mesmo tempo. Sem eles, as ruas ficariam cheias de carros.' }
+  ]
+},
+
+{ id: 'memoria_trabalho', emoji: '🃏', titulo: 'Memória: Trabalhos e Lugares', cap: 'g1',
+  desc: 'Encontre os pares de profissão e lugar de trabalho.', tipo: 'memoria',
+  perguntas: [
+    { nivel: 'facil',
+      pergunta: 'Combine cada profissão com seu lugar de trabalho:',
+      pares: [
+        { a: 'Professora', b: 'Escola' },
+        { a: 'Médico', b: 'Hospital' },
+        { a: 'Padeiro', b: 'Padaria' },
+        { a: 'Vaqueiro', b: 'Fazenda' }
+      ],
+      explica: 'Cada profissão acontece num lugar feito pra ela. Saber disso ajuda a conhecer os trabalhos da comunidade.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada tipo de trabalho com o produto ou serviço que ele gera:',
+      pares: [
+        { a: 'Agricultor', b: 'Alimentos e grãos' },
+        { a: 'Pescador', b: 'Peixes do rio ou mar' },
+        { a: 'Pedreiro', b: 'Casas e prédios' },
+        { a: 'Motorista de ônibus', b: 'Leva pessoas' }
+      ],
+      explica: 'Cada trabalhador produz algo importante pra comunidade. A vida da cidade depende de muitos deles.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada meio de transporte com o tipo:',
+      pares: [
+        { a: 'Avião', b: 'Transporte aéreo' },
+        { a: 'Navio', b: 'Transporte aquático' },
+        { a: 'Ônibus', b: 'Transporte terrestre' },
+        { a: 'Bicicleta', b: 'Movida sem motor' }
+      ],
+      explica: 'Os transportes se classificam pelo lugar onde andam (ar, água, terra) e pelo que usam pra se mover.' }
+  ]
+},
+
+// ============ GEOGRAFIA · CAP 2 — PAISAGENS, ÁGUA E SOLO ============
+
+{ id: 'rotina', emoji: '⏰', titulo: 'Hora, Dia, Mês', cap: 'g2',
+  desc: 'Como medimos o tempo na nossa rotina.', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Quantas horas tem um dia?',
+      opcoes: ['24 horas', '12 horas', '7 horas', '60 horas'], correta: 0,
+      explica: 'Um dia tem 24 horas — contando o tempo do amanhecer até o próximo amanhecer.' },
+
+    { nivel: 'facil', pergunta: 'Um ano tem quantos meses?',
+      opcoes: ['12 meses', '7 meses', '30 meses', '365 meses'], correta: 0,
+      explica: 'São 12 meses: janeiro, fevereiro, março… até dezembro.' },
+
+    { nivel: 'facil', pergunta: 'Uma semana tem quantos dias?',
+      opcoes: ['7 dias', '5 dias', '10 dias', '30 dias'], correta: 0,
+      explica: 'A semana tem 7 dias: segunda a domingo.' },
+
+    { nivel: 'facil', pergunta: 'A palavra "ontem" se refere a:',
+      opcoes: ['Dia que já passou', 'Dia que ainda vai chegar', 'Hoje', 'Daqui a um ano'], correta: 0,
+      explica: 'Ontem é o dia anterior a hoje. Amanhã é o próximo dia.' },
+
+    { nivel: 'medio', pergunta: 'O que fazemos no meio-dia (por volta das 12h)?',
+      opcoes: ['Almoçar', 'Dormir a noite toda', 'Tomar banho antes de dormir', 'Assistir a novela da noite'],
+      correta: 0,
+      explica: 'Meio-dia é o horário do almoço, quando o Sol está mais alto no céu.' },
+
+    { nivel: 'medio', pergunta: 'Quantos minutos tem uma hora?',
+      opcoes: ['60 minutos', '30 minutos', '100 minutos', '24 minutos'], correta: 0,
+      explica: 'Uma hora sempre tem 60 minutos. É assim que o relógio é feito.' },
+
+    { nivel: 'medio', pergunta: 'Um ano tem aproximadamente quantos dias?',
+      opcoes: ['365 dias', '100 dias', '600 dias', '30 dias'], correta: 0,
+      explica: 'O ano tem 365 dias — em anos bissextos, 366. Demora esse tempo pra Terra dar uma volta no Sol.' },
+
+    { nivel: 'dificil', pergunta: 'Antes do relógio ser inventado, as pessoas descobriam a hora olhando:',
+      opcoes: [
+        'A posição do Sol no céu',
+        'Uma luz no celular',
+        'O GPS',
+        'Um computador'
+      ], correta: 0,
+      explica: 'A posição do Sol (mais baixo de manhã e tarde; alto ao meio-dia) servia como relógio natural.' },
+
+    { nivel: 'dificil', pergunta: 'Qual objeto antigo servia pra medir o tempo usando sombra?',
+      opcoes: [
+        'Relógio de sol',
+        'Telefone',
+        'TV',
+        'Celular'
+      ], correta: 0,
+      explica: 'O relógio de sol era uma peça com uma haste que fazia sombra — e a sombra mostrava a hora do dia.' }
+  ]
+},
+
+{ id: 'agua_solo', emoji: '💧', titulo: 'Usos da Água e do Solo', cap: 'g2',
+  desc: 'Classifique os jeitos que a gente usa água e solo.', tipo: 'classif',
+  perguntas: [
+    { pergunta: 'Classifique cada uso:',
+      bucketA: { label: 'Uso da água', emoji: '💧' },
+      bucketB: { label: 'Uso do solo', emoji: '🌱' },
+      itens: [
+        { id: 'i1', label: 'Beber durante o dia' },
+        { id: 'i2', label: 'Plantar verduras na horta' },
+        { id: 'i3', label: 'Tomar banho' },
+        { id: 'i4', label: 'Construir casas' },
+        { id: 'i5', label: 'Lavar a louça' },
+        { id: 'i6', label: 'Criar gado' }
+      ],
+      gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'a', i6: 'b' },
+      explica: 'Água e solo são essenciais pra vida. A gente usa os dois de várias formas todos os dias.' },
+
+    { pergunta: 'Hábitos bons ou ruins?',
+      bucketA: { label: 'Ajuda a cuidar', emoji: '✨' },
+      bucketB: { label: 'Prejudica', emoji: '⚠️' },
+      itens: [
+        { id: 'j1', label: 'Fechar a torneira ao escovar os dentes' },
+        { id: 'j2', label: 'Jogar lixo no chão da praça' },
+        { id: 'j3', label: 'Plantar árvores' },
+        { id: 'j4', label: 'Desperdiçar água no banho' },
+        { id: 'j5', label: 'Reciclar lata e papel' },
+        { id: 'j6', label: 'Queimar folhas no quintal' }
+      ],
+      gabarito: { j1: 'a', j2: 'b', j3: 'a', j4: 'b', j5: 'a', j6: 'b' },
+      explica: 'Cuidar do ambiente é tarefa de todos. Pequenas atitudes ajudam muito — pra hoje e pro futuro.' },
+
+    { pergunta: 'Os usos da água:',
+      bucketA: { label: 'Em casa', emoji: '🏠' },
+      bucketB: { label: 'Na produção (fábrica/fazenda)', emoji: '🏭' },
+      itens: [
+        { id: 'k1', label: 'Descarga do banheiro' },
+        { id: 'k2', label: 'Regar uma plantação enorme' },
+        { id: 'k3', label: 'Fazer comida' },
+        { id: 'k4', label: 'Encher dar água pro gado' },
+        { id: 'k5', label: 'Lavar o corpo' },
+        { id: 'k6', label: 'Resfriar máquinas da fábrica' }
+      ],
+      gabarito: { k1: 'a', k2: 'b', k3: 'a', k4: 'b', k5: 'a', k6: 'b' },
+      explica: 'A água serve tanto dentro de casa quanto em atividades grandes de produção. Por isso precisamos usar com cuidado.' }
+  ]
+},
+
+{ id: 'vf_paisagem', emoji: '✓✗', titulo: 'V/F: Paisagens Mudam', cap: 'g2',
+  desc: 'Leia e diga se é verdade ou mentira sobre a paisagem.', tipo: 'vf',
+  perguntas: [
+    { nivel: 'facil', afirmacao: 'Uma paisagem é tudo que a gente vê num lugar — casas, ruas, árvores, rio, tudo junto.', vf: true,
+      explica: 'Paisagem é o conjunto do que enxergamos ao nosso redor. Pode ser natural (natureza) ou feita pelas pessoas.' },
+
+    { nivel: 'facil', afirmacao: 'Paisagens naturais têm muitas árvores, rios, montanhas — sem intervenção das pessoas.', vf: true,
+      explica: 'Paisagem natural é a que a natureza formou, sem mudanças feitas por humanos (floresta, montanha, praia).' },
+
+    { nivel: 'facil', afirmacao: 'Cidades, ruas e prédios são exemplos de paisagem natural.', vf: false,
+      explica: 'Tudo que foi construído pelas pessoas é paisagem humanizada (ou cultural). Natural é só a natureza sozinha.' },
+
+    { nivel: 'facil', afirmacao: 'Uma paisagem pode mudar ao longo do tempo.', vf: true,
+      explica: 'Sim! Uma rua simples pode virar uma avenida cheia de prédios. Uma floresta pode virar plantação.' },
+
+    { nivel: 'medio', afirmacao: 'Sem água, plantas e animais não conseguem viver.', vf: true,
+      explica: 'A água é essencial pra todos os seres vivos. Sem ela, nenhum ser vivo sobrevive muito tempo.' },
+
+    { nivel: 'medio', afirmacao: 'É possível cuidar da natureza mesmo morando na cidade.', vf: true,
+      explica: 'Podemos economizar água, reciclar, não jogar lixo na rua, plantar árvores. Tudo isso ajuda.' },
+
+    { nivel: 'medio', afirmacao: 'Quando muita gente desperdiça água, não tem problema pra ninguém.', vf: false,
+      explica: 'Tem sim! A água doce é limitada. Se muita gente desperdiça, pode faltar pra todos.' },
+
+    { nivel: 'dificil', afirmacao: 'Uma foto de uma rua há 50 anos mostra exatamente o mesmo lugar de hoje.', vf: false,
+      explica: 'Provavelmente mudou: novos prédios, carros diferentes, postes e placas diferentes. Comparar fotos antigas e novas mostra as mudanças.' }
+  ]
+},
+
 ];
 
-function renderGrid() {
-  const cont = document.getElementById('grid-container');
-  const jogos = JOGOS.filter(j => ABA_ATUAL === 'todos' || j.materia === ABA_ATUAL);
-  if (jogos.length === 0) {
-    cont.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#8b5a2b;padding:24px">Nenhum jogo nessa matéria ainda.</div>';
-    return;
+// =====================================================
+// RENDER — capítulos
+// =====================================================
+let ABA_ATUAL = 'todos';
+let CAP_ATUAL = null;
+
+function listaCapsFiltrada() {
+  const arr = Object.entries(CAPS).map(([k, c]) => ({ k, ...c }));
+  arr.sort((a, b) => a.ord - b.ord);
+  if (ABA_ATUAL === 'todos') return arr;
+  return arr.filter(c => c.materia === ABA_ATUAL);
+}
+
+function renderCapitulos() {
+  document.getElementById('tela-capitulos').style.display = 'block';
+  document.getElementById('tela-jogos-cap').style.display = 'none';
+  document.getElementById('tela-jogo').style.display = 'none';
+  const cont = document.getElementById('capitulos-container');
+  const caps = listaCapsFiltrada();
+  const porMat = { historia: caps.filter(c => c.materia === 'historia'),
+                   geografia: caps.filter(c => c.materia === 'geografia') };
+  let html = '';
+  if (ABA_ATUAL !== 'geografia' && porMat.historia.length) {
+    html += '<div class="cap-separador">📜 História</div>';
+    html += porMat.historia.map(c => cardCap(c)).join('');
   }
+  if (ABA_ATUAL !== 'historia' && porMat.geografia.length) {
+    html += '<div class="cap-separador">🗺️ Geografia</div>';
+    html += porMat.geografia.map(c => cardCap(c)).join('');
+  }
+  cont.innerHTML = html || '<div style="text-align:center;color:#8b5a2b;padding:24px">Nenhum capítulo nessa matéria.</div>';
+}
+
+function cardCap(c) {
+  const jogos = c.jogos.map(id => JOGOS.find(j => j.id === id)).filter(Boolean);
+  const totalPerg = jogos.reduce((s, j) => s + (j.perguntas?.length || 0), 0);
+  const acertos = jogos.reduce((s, j) => s + (STATE.jogos[j.id]?.acertos || 0), 0);
+  const pct = totalPerg ? Math.min(100, Math.round((acertos / totalPerg) * 100)) : 0;
+  return `
+    <div class="cap-card ${c.k}" onclick="abrirCapitulo('${c.k}')">
+      <div class="cap-num">${c.num}</div>
+      <div class="cap-rotulo">Capítulo ${c.num} · ${c.materia === 'historia' ? 'História' : 'Geografia'}</div>
+      <div class="cap-nome">${c.nome}</div>
+      <div class="cap-desc">${c.desc}</div>
+      <div class="cap-stats">
+        🎮 ${jogos.length} jogos
+        ${acertos > 0 ? `<span>⭐ ${acertos}/${totalPerg}</span>` : ''}
+      </div>
+      <div class="cap-progresso-bar"><div class="cap-progresso-fill" style="width:${pct}%"></div></div>
+    </div>
+  `;
+}
+
+function abrirCapitulo(k) {
+  CAP_ATUAL = k;
+  const c = CAPS[k];
+  document.getElementById('tela-capitulos').style.display = 'none';
+  document.getElementById('tela-jogos-cap').style.display = 'block';
+  document.getElementById('tela-jogo').style.display = 'none';
+  document.getElementById('breadcrumb-cap').textContent = `Cap ${c.num} · ${c.materia === 'historia' ? 'História' : 'Geografia'}`;
+  document.getElementById('cap-titulo').innerHTML = `${c.nome}<span class="cap-sub">${c.desc}</span>`;
+  const jogos = c.jogos.map(id => JOGOS.find(j => j.id === id)).filter(Boolean);
+  const cont = document.getElementById('grid-container');
   cont.innerHTML = jogos.map(j => {
     const p = STATE.jogos[j.id] || { acertos: 0, erros: 0 };
     return `
-    <div class="jogo-card" onclick="iniciarJogo('${j.id}')">
-      <div class="emoji">${j.emoji}</div>
-      <div class="titulo">${j.titulo}</div>
-      <div class="desc">${j.desc}</div>
-      <div class="progresso">${p.acertos > 0 ? `<span class="estrelas">⭐ ${p.acertos}</span>` : '🎯 Bora!'}</div>
-    </div>`;
+      <div class="jogo-card" onclick="iniciarJogo('${j.id}')">
+        <div class="emoji">${j.emoji}</div>
+        <div class="titulo">${j.titulo}</div>
+        <div class="desc">${j.desc}</div>
+        <div class="progresso">${p.acertos > 0 ? `<span class="estrelas">⭐ ${p.acertos}</span>` : '🎯 Bora!'}</div>
+      </div>`;
   }).join('');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function voltarCapitulos() {
+  CAP_ATUAL = null;
+  renderCapitulos();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function iniciarJogo(id) {
@@ -182,18 +724,34 @@ function iniciarJogo(id) {
   if (jogo) abrirJogo(jogo);
 }
 
-function atualizarGridProgresso() { renderGrid(); }
+function atualizarGridProgresso() {
+  if (CAP_ATUAL) abrirCapitulo(CAP_ATUAL);
+  else renderCapitulos();
+}
+
+const _origVoltarGrid = voltarGrid;
+voltarGrid = function() {
+  document.getElementById('tela-jogo').style.display = 'none';
+  if (CAP_ATUAL) {
+    document.getElementById('tela-jogos-cap').style.display = 'block';
+    abrirCapitulo(CAP_ATUAL);
+  } else {
+    document.getElementById('tela-capitulos').style.display = 'block';
+    renderCapitulos();
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
 document.querySelectorAll('.aba').forEach(b => {
   b.addEventListener('click', () => {
     document.querySelectorAll('.aba').forEach(x => x.classList.remove('ativa'));
     b.classList.add('ativa');
     ABA_ATUAL = b.dataset.aba;
-    renderGrid();
+    renderCapitulos();
   });
 });
 
-renderGrid();
+renderCapitulos();
 </script>
 </body>
 </html>
