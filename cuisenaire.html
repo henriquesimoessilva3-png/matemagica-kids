@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barras Mágicas — MATEMÁGICA</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=16">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  h1.titulo-cu {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 30px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(135deg, #ff7b6b, #4ab3a5);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-align: center; margin: 6px 0 2px;
+  }
+  .sub-cu { text-align: center; color: #888; font-size: 13px; margin-bottom: 14px; }
+  .voltar {
+    display: inline-block; color: #6b54d3; text-decoration: none;
+    font-size: 12px; font-weight: 700;
+    background: #ede8fa; border: 2px solid #c5bbe9;
+    padding: 6px 12px; border-radius: 10px; margin-bottom: 10px;
+  }
+
+  .cu-intro {
+    background: linear-gradient(135deg, #fff4dc, #ffe0a0);
+    border: 2px solid #d4a574; border-radius: 12px;
+    padding: 10px 12px; margin-bottom: 14px;
+    font-size: 12px; line-height: 1.5; color: #5a3818;
+  }
+  .cu-intro b { color: #8b5a2b; }
+
+  .cu-desafio {
+    background: #fff; border: 3px solid #6b54d3;
+    border-radius: 14px; padding: 16px;
+    text-align: center; margin-bottom: 12px;
+  }
+  .cu-desafio-expr {
+    font-size: 28px; font-weight: 900; color: #4a3b8a;
+    margin-bottom: 4px;
+  }
+  .cu-desafio-prompt {
+    font-size: 12px; color: #6b54d3; font-weight: 700;
+  }
+
+  /* Área onde a criança monta */
+  .cu-palco {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border: 2.5px dashed #c5bbe9;
+    border-radius: 14px;
+    padding: 16px; margin-bottom: 14px;
+    min-height: 120px;
+  }
+  .cu-palco-label {
+    font-size: 11px; color: #6b54d3; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    text-align: center; margin-bottom: 8px;
+  }
+  .cu-fileira {
+    display: flex; justify-content: center;
+    align-items: center; gap: 0;
+    background: #fff;
+    border: 2px solid #c5bbe9;
+    border-radius: 8px;
+    padding: 6px; min-height: 40px;
+  }
+  .cu-fileira .barra-vazia {
+    font-size: 11px; color: #999; font-style: italic;
+    padding: 6px; text-align: center;
+  }
+
+  /* Barras Cuisenaire — proporcionais ao valor, cores tradicionais */
+  .cu-barra {
+    height: 28px; border-radius: 4px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px; color: #fff;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.2);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: transform 0.15s;
+    position: relative;
+    margin: 2px 1px;
+  }
+  .cu-barra:hover { transform: translateY(-2px); }
+  .cu-barra.b1  { width: 22px;  background: #f0eadc; color: #333; text-shadow: none; } /* branco */
+  .cu-barra.b2  { width: 44px;  background: #c44a2a; } /* vermelho */
+  .cu-barra.b3  { width: 66px;  background: #7ae0a0; color: #1b4a2a; text-shadow: none; } /* verde claro */
+  .cu-barra.b4  { width: 88px;  background: #9848c8; } /* lilás/roxo */
+  .cu-barra.b5  { width: 110px; background: #ffd36b; color: #5a3a00; text-shadow: none; } /* amarelo */
+  .cu-barra.b6  { width: 132px; background: #2ebd7c; } /* verde escuro */
+  .cu-barra.b7  { width: 154px; background: #3a3a3a; } /* preto */
+  .cu-barra.b8  { width: 176px; background: #8b5a2b; } /* marrom */
+  .cu-barra.b9  { width: 198px; background: #4facfe; } /* azul */
+  .cu-barra.b10 { width: 220px; background: #ff7b2a; } /* laranja */
+
+  .cu-palco .cu-barra { cursor: default; }
+  .cu-palco .cu-barra .remover {
+    position: absolute; top: -6px; right: -6px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; color: #c44a2a;
+    font-size: 12px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    text-shadow: none;
+  }
+
+  .cu-seletor {
+    background: #fff; border: 2px solid #c5bbe9;
+    border-radius: 14px; padding: 12px;
+    margin-bottom: 12px;
+  }
+  .cu-seletor-titulo {
+    font-size: 11px; color: #6b54d3; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 8px; text-align: center;
+  }
+  .cu-barras-grid {
+    display: flex; flex-wrap: wrap; gap: 4px 2px;
+    justify-content: center; align-items: center;
+  }
+
+  .cu-total {
+    text-align: center; font-size: 20px; font-weight: 800;
+    color: #4a3b8a; margin-top: 8px;
+  }
+  .cu-total.ok { color: #1b7a3a; animation: flash 0.5s; }
+  .cu-total.quase { color: #c44a2a; }
+
+  .cu-feedback {
+    min-height: 44px; padding: 10px; border-radius: 10px;
+    font-size: 13px; font-weight: 700; text-align: center;
+    margin-bottom: 8px;
+  }
+  .cu-feedback.acerto { background: #d4f5dd; color: #1b4a2a; }
+  .cu-feedback.dica { background: #fff3d6; color: #5a3a00; }
+
+  .cu-controles {
+    display: flex; gap: 8px; justify-content: center;
+    margin-top: 8px; flex-wrap: wrap;
+  }
+  .cu-btn {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff; border: none;
+    padding: 9px 18px; border-radius: 10px;
+    font-weight: 700; font-size: 13px;
+    cursor: pointer; font-family: inherit;
+  }
+  .cu-btn.sec { background: #fff; color: #6b54d3; border: 2px solid #c5bbe9; }
+  .cu-btn.zap { background: linear-gradient(135deg, #ff7b6b, #c44a2a); }
+
+  .cu-modo {
+    display: flex; gap: 6px; justify-content: center;
+    margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .cu-modo-tab {
+    background: #f7f5ff; color: #6b54d3;
+    border: 2px solid #c5bbe9;
+    padding: 5px 12px; border-radius: 14px;
+    font-weight: 700; font-size: 12px;
+    cursor: pointer; font-family: inherit;
+  }
+  .cu-modo-tab.ativo { background: #6b54d3; color: #fff; border-color: #6b54d3; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="voltar">← Voltar ao início</a>
+  <h1 class="titulo-cu">🎨 Barras Mágicas</h1>
+  <div class="sub-cu">Método Cuisenaire — matemática que se toca.</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div class="cu-intro">
+    <b>💡 Como joga:</b> cada barra colorida tem um tamanho. <b>Branco=1, vermelho=2, verde=3…</b> até laranja=10. Clique nas barras lá embaixo pra <b>montar o valor pedido</b>. Pode usar quantas quiser.
+  </div>
+
+  <div class="cu-modo">
+    <button class="cu-modo-tab ativo" data-modo="livre" onclick="setModo('livre')">🎨 Livre</button>
+    <button class="cu-modo-tab" data-modo="soma" onclick="setModo('soma')">➕ Monta uma soma</button>
+    <button class="cu-modo-tab" data-modo="alvo" onclick="setModo('alvo')">🎯 Chegar no alvo</button>
+  </div>
+
+  <div class="cu-desafio" id="cu-desafio">
+    <div class="cu-desafio-expr" id="desafio-expr">Monte o que quiser!</div>
+    <div class="cu-desafio-prompt" id="desafio-prompt">Modo livre: explore as barras.</div>
+  </div>
+
+  <div class="cu-palco">
+    <div class="cu-palco-label">🧱 Sua construção</div>
+    <div class="cu-fileira" id="palco">
+      <div class="barra-vazia">Clica nas barras abaixo pra adicionar</div>
+    </div>
+    <div class="cu-total" id="cu-total">Total: 0</div>
+  </div>
+
+  <div class="cu-feedback" id="cu-feedback"></div>
+
+  <div class="cu-seletor">
+    <div class="cu-seletor-titulo">🎨 Barras disponíveis (clica pra adicionar)</div>
+    <div class="cu-barras-grid" id="barras-grid"></div>
+  </div>
+
+  <div class="cu-controles">
+    <button class="cu-btn zap" onclick="limpar()">🗑 Limpar</button>
+    <button class="cu-btn" onclick="novoDesafio()" id="btn-novo" style="display:none">🎲 Outro desafio</button>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<script src="mascotes.js?v=16"></script>
+<script src="jogos_shared.js?v=16"></script>
+<script>
+STORAGE_KEY = 'jogosMat_default';
+CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
+
+// ============== CUISENAIRE ==============
+let _modo = 'livre';
+let _construcao = []; // array de valores 1-10
+let _alvo = null;
+let _somaPedida = null;
+
+function renderBarrasDisponiveis() {
+  const grid = document.getElementById('barras-grid');
+  grid.innerHTML = '';
+  for (let v = 1; v <= 10; v++) {
+    const b = document.createElement('div');
+    b.className = `cu-barra b${v}`;
+    b.textContent = v;
+    b.onclick = () => adicionarBarra(v);
+    grid.appendChild(b);
+  }
+}
+
+function renderPalco() {
+  const palco = document.getElementById('palco');
+  if (_construcao.length === 0) {
+    palco.innerHTML = '<div class="barra-vazia">Clica nas barras abaixo pra adicionar</div>';
+  } else {
+    palco.innerHTML = _construcao.map((v, i) =>
+      `<div class="cu-barra b${v}" style="cursor:pointer" onclick="removerIdx(${i})">
+        ${v}<span class="remover">×</span>
+      </div>`
+    ).join('');
+  }
+  const total = _construcao.reduce((s, v) => s + v, 0);
+  const el = document.getElementById('cu-total');
+  el.textContent = `Total: ${total}`;
+  el.className = 'cu-total';
+  // Checa desafio
+  checarDesafio(total);
+}
+
+function adicionarBarra(v) {
+  _construcao.push(v);
+  renderPalco();
+  try { somMoeda(); } catch(e) {}
+}
+
+function removerIdx(i) {
+  _construcao.splice(i, 1);
+  renderPalco();
+}
+
+function limpar() {
+  _construcao = [];
+  renderPalco();
+  document.getElementById('cu-feedback').textContent = '';
+  document.getElementById('cu-feedback').className = 'cu-feedback';
+}
+
+function setModo(m) {
+  _modo = m;
+  document.querySelectorAll('.cu-modo-tab').forEach(t => {
+    t.classList.toggle('ativo', t.dataset.modo === m);
+  });
+  novoDesafio();
+}
+
+function rint(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function novoDesafio() {
+  _construcao = [];
+  document.getElementById('cu-feedback').textContent = '';
+  document.getElementById('cu-feedback').className = 'cu-feedback';
+  document.getElementById('btn-novo').style.display = 'none';
+
+  if (_modo === 'livre') {
+    _alvo = null; _somaPedida = null;
+    document.getElementById('desafio-expr').textContent = 'Monte o que quiser!';
+    document.getElementById('desafio-prompt').textContent = 'Modo livre: explore as barras.';
+  } else if (_modo === 'soma') {
+    const a = rint(2, 9);
+    const b = rint(2, 10 - a);
+    _somaPedida = { a, b, res: a + b };
+    _alvo = a + b;
+    document.getElementById('desafio-expr').textContent = `${a} + ${b} = ?`;
+    document.getElementById('desafio-prompt').innerHTML = `Coloque <b>1 barra de ${a}</b> e <b>1 barra de ${b}</b>. Juntas somam ${a + b}.`;
+  } else if (_modo === 'alvo') {
+    _alvo = rint(6, 15);
+    _somaPedida = null;
+    document.getElementById('desafio-expr').textContent = `Alvo: ${_alvo}`;
+    document.getElementById('desafio-prompt').textContent = 'Use qualquer combinação de barras pra chegar exatamente nesse valor.';
+  }
+  renderPalco();
+}
+
+function checarDesafio(total) {
+  if (_alvo == null) return;
+  if (total === _alvo) {
+    const fb = document.getElementById('cu-feedback');
+    fb.className = 'cu-feedback acerto';
+    let msg = `✨ Chegou em ${_alvo}!`;
+    if (_somaPedida && _construcao.length === 2 &&
+        ((_construcao[0] === _somaPedida.a && _construcao[1] === _somaPedida.b) ||
+         (_construcao[0] === _somaPedida.b && _construcao[1] === _somaPedida.a))) {
+      msg += ' Exatamente como a soma pedia!';
+    } else if (_modo === 'alvo') {
+      msg += ` Usou ${_construcao.length} barra${_construcao.length > 1 ? 's' : ''}. Tenta achar outra combinação!`;
+    }
+    fb.innerHTML = msg + ' ' + fraseSorteada(FRASES_ACERTO);
+    try {
+      jogoAtivo = 'cuisenaire_' + _modo;
+      STATE.acertou(jogoAtivo);
+      window._acertosSessao = (window._acertosSessao || 0) + 1;
+      if (window._acertosSessao % 5 === 0 && typeof mostrarCapsulaMundoReal === 'function') {
+        setTimeout(mostrarCapsulaMundoReal, 1200);
+      }
+      renderHeaderPlayer();
+      soltarConfete(40); reagirMascoteCoach('acerto');
+    } catch(e) {}
+    document.getElementById('btn-novo').style.display = 'inline-block';
+    document.getElementById('cu-total').className = 'cu-total ok';
+  } else if (total > _alvo) {
+    const fb = document.getElementById('cu-feedback');
+    fb.className = 'cu-feedback dica';
+    fb.innerHTML = `🔥 Passou do alvo! Tá em ${total}, precisa de ${_alvo}. Tira alguma barra e tenta outra.`;
+    document.getElementById('cu-total').className = 'cu-total quase';
+  } else if (total > 0) {
+    const fb = document.getElementById('cu-feedback');
+    fb.className = 'cu-feedback dica';
+    fb.innerHTML = `Tá em ${total}. Faltam <b>${_alvo - total}</b> pra chegar em ${_alvo}.`;
+  }
+}
+
+// Init
+initJogos();
+renderBarrasDisponiveis();
+renderPalco();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frações com Pizza — MATEMÁGICA</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=16">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  h1.titulo-fr {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 32px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(135deg, #ff7b6b, #ff9a44);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-align: center; margin: 6px 0 2px;
+  }
+  .sub-fr { text-align: center; color: #888; font-size: 13px; margin-bottom: 14px; }
+  .voltar {
+    display: inline-block; color: #6b54d3; text-decoration: none;
+    font-size: 12px; font-weight: 700;
+    background: #ede8fa; border: 2px solid #c5bbe9;
+    padding: 6px 12px; border-radius: 10px; margin-bottom: 10px;
+  }
+
+  .modo-tabs {
+    display: flex; gap: 8px; margin-bottom: 14px;
+    justify-content: center;
+  }
+  .modo-tab {
+    background: #f7f5ff; border: 2px solid #c5bbe9;
+    color: #6b54d3; padding: 8px 18px; border-radius: 20px;
+    font-weight: 700; cursor: pointer; font-size: 13px;
+    font-family: inherit;
+  }
+  .modo-tab.ativo { background: #6b54d3; color: #fff; border-color: #6b54d3; }
+
+  /* ===== CONCEITO (ESTUDAR) ===== */
+  .fr-card {
+    background: linear-gradient(135deg, #fff4dc, #ffe0a0);
+    border: 3px solid #d4a574;
+    border-radius: 14px;
+    padding: 16px; margin-bottom: 12px;
+    text-align: center;
+  }
+  .pizza-svg {
+    display: block; margin: 0 auto;
+  }
+  .fracao-label {
+    font-size: 40px; font-weight: 900;
+    color: #4a3b8a; margin: 10px 0 4px;
+    font-family: 'Courier New', monospace;
+  }
+  .fracao-label .linha {
+    display: block; width: 60px; height: 3px;
+    background: #4a3b8a; margin: 0 auto;
+  }
+  .fracao-texto {
+    font-size: 14px; color: #6b3a15;
+    line-height: 1.5; margin-bottom: 8px;
+  }
+  .fracao-texto b { color: #8b5a2b; }
+  .fr-controles {
+    display: flex; gap: 8px; justify-content: center;
+    margin: 10px 0; flex-wrap: wrap;
+  }
+  .fr-btn {
+    background: #fff; border: 2px solid #d4a574;
+    color: #8b5a2b;
+    padding: 6px 12px; border-radius: 10px;
+    font-weight: 700; font-size: 13px;
+    cursor: pointer; font-family: inherit;
+  }
+  .fr-btn.principal {
+    background: linear-gradient(135deg, #ff9a44, #c44a2a);
+    color: #fff; border-color: #ff9a44;
+  }
+  .fr-insight {
+    margin-top: 12px;
+    background: #fff; border-left: 4px solid #ff9a44;
+    border-radius: 8px; padding: 10px 12px;
+    font-size: 13px; color: #5a3a00; line-height: 1.45;
+    text-align: left;
+  }
+  .fr-insight b { color: #c44a2a; }
+
+  /* ===== TREINO ===== */
+  .treino-pergunta {
+    background: #fff; border: 3px solid #ff9a44;
+    border-radius: 14px; padding: 18px 16px;
+    text-align: center; margin-bottom: 14px;
+  }
+  .treino-expr {
+    font-size: 20px; font-weight: 700; color: #4a3b8a;
+    margin-bottom: 10px;
+  }
+  .treino-opcoes {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .treino-opcoes button {
+    padding: 14px; font-size: 20px; font-weight: 800;
+    background: #f7f5ff; color: #4a3b8a;
+    border: 3px solid #c5bbe9; border-radius: 12px;
+    cursor: pointer; font-family: 'Courier New', monospace;
+    transition: all 0.15s;
+  }
+  .treino-opcoes button:hover:not(:disabled) {
+    background: #ede8fa; transform: scale(1.03);
+  }
+  .treino-opcoes button.acerto {
+    background: #d4f5dd; border-color: #3ac070; color: #1b4a2a;
+    animation: flash 0.4s;
+  }
+  .treino-opcoes button.erro {
+    background: #fde0e0; border-color: #d04040; color: #801818;
+    animation: shake 0.3s;
+  }
+
+  .treino-hud {
+    background: linear-gradient(135deg, #ffd4a0, #ffb060);
+    color: #6b3a15;
+    padding: 10px 14px; border-radius: 12px;
+    margin-bottom: 12px;
+    display: flex; justify-content: space-between;
+    font-size: 13px; font-weight: 700;
+  }
+  .treino-hud b { font-size: 18px; color: #8b5a2b; }
+
+  .treino-fb {
+    min-height: 40px; padding: 10px; border-radius: 10px;
+    font-size: 13px; font-weight: 700; text-align: center;
+    margin-bottom: 10px;
+  }
+  .treino-fb.acerto { background: #d4f5dd; color: #1b4a2a; }
+  .treino-fb.erro { background: #fde0e0; color: #801818; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="voltar">← Voltar ao início</a>
+  <h1 class="titulo-fr">🍕 Frações com Pizza</h1>
+  <div class="sub-fr">Conceito antes de conta. Pizza antes de papel.</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div class="modo-tabs">
+    <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
+    <button class="modo-tab" id="tab-treino" onclick="mudarModo('treino')">⚡ Treinar</button>
+  </div>
+
+  <!-- ESTUDO -->
+  <div id="view-estudo">
+    <div class="fr-card">
+      <svg class="pizza-svg" id="pizza-estudo" width="200" height="200" viewBox="0 0 200 200"></svg>
+      <div class="fracao-label">
+        <span id="num">1</span>
+        <span class="linha"></span>
+        <span id="den">4</span>
+      </div>
+      <div class="fracao-texto" id="texto-explicacao"></div>
+    </div>
+
+    <div class="fr-controles">
+      <button class="fr-btn" onclick="mudarDen(-1)">Menos pedaços</button>
+      <button class="fr-btn" onclick="mudarDen(1)">Mais pedaços</button>
+    </div>
+    <div class="fr-controles">
+      <button class="fr-btn" onclick="mudarNum(-1)">Come menos</button>
+      <button class="fr-btn" onclick="mudarNum(1)">Come mais</button>
+    </div>
+
+    <div class="fr-insight" id="fr-insight"></div>
+
+    <div class="fr-controles" style="margin-top:14px">
+      <button class="fr-btn principal" onclick="iniciarTreino()">🎯 Já entendi — bora treinar</button>
+    </div>
+  </div>
+
+  <!-- TREINO -->
+  <div id="view-treino" class="hidden">
+    <div class="treino-hud">
+      <span>Acertos: <b id="hud-acertos">0</b></span>
+      <span>Rodada: <b id="hud-rodada">1</b>/10</span>
+      <span>Nível: <b id="hud-nivel">1</b></span>
+    </div>
+
+    <div class="treino-pergunta" id="treino-pergunta">
+      <div id="pergunta-viz"></div>
+      <div class="treino-expr" id="pergunta-texto"></div>
+    </div>
+
+    <div class="treino-opcoes" id="treino-opcoes"></div>
+    <div class="treino-fb" id="treino-fb"></div>
+
+    <div class="fr-controles">
+      <button class="fr-btn" onclick="mudarModo('estudo')">📖 Estudar mais</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<script src="mascotes.js?v=16"></script>
+<script src="jogos_shared.js?v=16"></script>
+<script>
+STORAGE_KEY = 'jogosMat_default';
+CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
+
+// ============== FRAÇÕES ==============
+let _num = 1;
+let _den = 4;
+
+const CORES_PIZZA = ['#ff9a44', '#4ab3a5', '#b968e8', '#ffd36b', '#ff7b6b', '#2ebd7c'];
+
+function renderPizza(num, den, svgId) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  svg.innerHTML = '';
+  const cx = 100, cy = 100, r = 80;
+  const bg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  bg.setAttribute('cx', cx); bg.setAttribute('cy', cy); bg.setAttribute('r', r);
+  bg.setAttribute('fill', '#fff4dc'); bg.setAttribute('stroke', '#8b5a2b'); bg.setAttribute('stroke-width', 2);
+  svg.appendChild(bg);
+  // Fatias
+  for (let i = 0; i < den; i++) {
+    const a0 = (i / den) * 2 * Math.PI - Math.PI / 2;
+    const a1 = ((i + 1) / den) * 2 * Math.PI - Math.PI / 2;
+    const x0 = cx + r * Math.cos(a0);
+    const y0 = cy + r * Math.sin(a0);
+    const x1 = cx + r * Math.cos(a1);
+    const y1 = cy + r * Math.sin(a1);
+    const large = (a1 - a0) > Math.PI ? 1 : 0;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${cx} ${cy} L ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} Z`);
+    if (i < num) {
+      path.setAttribute('fill', CORES_PIZZA[i % CORES_PIZZA.length]);
+      path.setAttribute('stroke', '#fff'); path.setAttribute('stroke-width', 2);
+    } else {
+      path.setAttribute('fill', '#fff4dc');
+      path.setAttribute('stroke', '#c9a86b'); path.setAttribute('stroke-width', 1.5);
+      path.setAttribute('stroke-dasharray', '3,2');
+    }
+    svg.appendChild(path);
+  }
+}
+
+function atualizarEstudo() {
+  if (_num > _den) _num = _den;
+  if (_num < 0) _num = 0;
+  if (_den < 1) _den = 1;
+  if (_den > 8) _den = 8;
+  document.getElementById('num').textContent = _num;
+  document.getElementById('den').textContent = _den;
+  renderPizza(_num, _den, 'pizza-estudo');
+  const nomes = { 2: 'meios', 3: 'terços', 4: 'quartos', 5: 'quintos', 6: 'sextos', 7: 'sétimos', 8: 'oitavos' };
+  const nomeSing = { 2: 'meio', 3: 'terço', 4: 'quarto', 5: 'quinto', 6: 'sexto', 7: 'sétimo', 8: 'oitavo' };
+  const pedacos = nomes[_den] || 'pedaços';
+  const pedaco = nomeSing[_den] || 'pedaço';
+  let texto = '';
+  if (_num === 0) {
+    texto = `A pizza foi dividida em <b>${_den} ${pedacos}</b>, mas <b>ninguém comeu</b>. Fração = <b>0/${_den}</b>.`;
+  } else if (_num === _den) {
+    texto = `Comeu a pizza <b>inteira</b>! ${_num} de ${_den} = <b>${_den}/${_den} = 1 (um inteiro)</b>.`;
+  } else {
+    texto = `Divide a pizza em <b>${_den} ${pedacos} iguais</b> e pegue <b>${_num}</b>. Isso é <b>${_num} ${_num === 1 ? pedaco : pedacos}</b>.`;
+  }
+  document.getElementById('texto-explicacao').innerHTML = texto;
+
+  // Insight da semana
+  let insight = '';
+  if (_den === 2) insight = `<b>💡 Meio</b> é dividir em 2 partes iguais. Metade da pizza = ½.`;
+  else if (_den === 4) insight = `<b>💡 Quartos</b> são fáceis: 4 pedaços iguais. <b>2/4 = 1/2</b>, é a mesma coisa escrita de dois jeitos!`;
+  else if (_num > 0 && _num === _den) insight = `<b>💡 Curiosidade:</b> ${_den}/${_den} = 1 inteiro. Sempre que em cima = embaixo, vale 1.`;
+  else if (_num > 0 && _num < _den && _num * 2 === _den) insight = `<b>💡 Igualdade:</b> ${_num}/${_den} é o <b>mesmo que 1/2</b>! ${_num} de ${_den} pedaços = metade.`;
+  else insight = `<b>💡 Regra:</b> o número <b>embaixo</b> (${_den}) diz em <b>quantos pedaços cortei</b>. O <b>de cima</b> (${_num}) diz <b>quantos peguei</b>.`;
+  document.getElementById('fr-insight').innerHTML = insight;
+}
+
+function mudarNum(d) { _num += d; atualizarEstudo(); }
+function mudarDen(d) { _den += d; if (_num > _den) _num = _den; atualizarEstudo(); }
+
+function mudarModo(m) {
+  document.getElementById('tab-estudo').classList.toggle('ativo', m === 'estudo');
+  document.getElementById('tab-treino').classList.toggle('ativo', m === 'treino');
+  document.getElementById('view-estudo').classList.toggle('hidden', m !== 'estudo');
+  document.getElementById('view-treino').classList.toggle('hidden', m !== 'treino');
+  if (m === 'estudo') atualizarEstudo();
+}
+
+// ============== TREINO ADAPTATIVO ==============
+let _treinoIdx = 0;
+let _treinoAcertos = 0;
+let _treinoAtual = null;
+const TOTAL_TREINO = 10;
+
+function rint(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function iniciarTreino() {
+  _treinoIdx = 0;
+  _treinoAcertos = 0;
+  mudarModo('treino');
+  proximaPerguntaTreino();
+}
+
+function proximaPerguntaTreino() {
+  if (_treinoIdx >= TOTAL_TREINO) return mostrarResultadoTreino();
+  _treinoIdx++;
+
+  const nivel = STATE.dificuldadeJogo ? STATE.dificuldadeJogo('fracoes') : 1;
+  document.getElementById('hud-nivel').textContent = nivel;
+  document.getElementById('hud-rodada').textContent = _treinoIdx;
+  document.getElementById('hud-acertos').textContent = _treinoAcertos;
+
+  // Tipos de pergunta por nível
+  let tipo;
+  if (nivel === 1) tipo = 'identifica'; // "Que fração é essa pizza?"
+  else if (nivel === 2) tipo = 'desenha'; // "Qual pizza é 2/5?"
+  else if (nivel === 3) tipo = Math.random() < 0.5 ? 'equivalente' : 'identifica';
+  else if (nivel === 4) tipo = Math.random() < 0.5 ? 'maior' : 'equivalente';
+  else tipo = Math.random() < 0.5 ? 'soma-simples' : 'maior';
+
+  if (tipo === 'identifica') gerarIdentifica();
+  else if (tipo === 'desenha') gerarDesenha();
+  else if (tipo === 'equivalente') gerarEquivalente();
+  else if (tipo === 'maior') gerarMaior();
+  else gerarSomaSimples();
+}
+
+function gerarIdentifica() {
+  const den = rint(2, 6);
+  const num = rint(1, den);
+  _treinoAtual = { tipo: 'identifica', num, den, certa: `${num}/${den}` };
+  document.getElementById('pergunta-viz').innerHTML = `<svg width="140" height="140" viewBox="0 0 200 200" id="pergunta-pizza-sv"></svg>`;
+  renderPizza(num, den, 'pergunta-pizza-sv');
+  document.getElementById('pergunta-texto').innerHTML = `<b>Que fração é essa pizza?</b>`;
+  const set = new Set([`${num}/${den}`]);
+  while (set.size < 4) {
+    const n2 = rint(1, 6), d2 = rint(2, 6);
+    if (n2 <= d2) set.add(`${n2}/${d2}`);
+  }
+  renderOpcoes([...set].sort(() => Math.random() - 0.5));
+}
+
+function gerarDesenha() {
+  const den = rint(2, 6);
+  const num = rint(1, den);
+  _treinoAtual = { tipo: 'desenha', num, den, certa: `${num}/${den}` };
+  document.getElementById('pergunta-viz').innerHTML = '';
+  document.getElementById('pergunta-texto').innerHTML = `Qual pizza representa <b style="font-family:'Courier New',monospace;font-size:26px">${num}/${den}</b>?`;
+  // 4 opções visuais
+  const corretas = [{ num, den }];
+  while (corretas.length < 4) {
+    const n2 = rint(0, den - 1) + (Math.random() < 0.5 ? 0 : 1);
+    const d2 = den + (Math.random() < 0.5 ? 0 : rint(-1, 1));
+    if (d2 >= 2 && d2 <= 8 && n2 >= 0 && n2 <= d2 && !corretas.some(c => c.num === n2 && c.den === d2)) {
+      corretas.push({ num: n2, den: d2 });
+    }
+  }
+  corretas.sort(() => Math.random() - 0.5);
+  document.getElementById('treino-opcoes').innerHTML = corretas.map((c, i) => {
+    const acertar = c.num === num && c.den === den;
+    return `<button onclick="responderDesenha(${c.num}, ${c.den}, ${acertar}, this)">
+      <svg width="70" height="70" viewBox="0 0 200 200" id="op-pizza-${i}"></svg>
+    </button>`;
+  }).join('');
+  // Renderiza as pizzas dentro dos botões
+  setTimeout(() => corretas.forEach((c, i) => renderPizza(c.num, c.den, 'op-pizza-' + i)), 50);
+  document.getElementById('treino-fb').textContent = '';
+  document.getElementById('treino-fb').className = 'treino-fb';
+}
+
+function responderDesenha(n, d, correta, btn) {
+  const todos = document.querySelectorAll('#treino-opcoes button');
+  todos.forEach(b => b.disabled = true);
+  if (correta) {
+    btn.classList.add('acerto');
+    trataAcerto();
+  } else {
+    btn.classList.add('erro');
+    trataErro(`A resposta era uma pizza com ${_treinoAtual.num} de ${_treinoAtual.den} fatias coloridas.`);
+  }
+}
+
+function gerarEquivalente() {
+  // Ex: 1/2 = ?/4. Múltiplo simples.
+  const denBase = [2, 3, 4][rint(0, 2)];
+  const num = rint(1, denBase - 1);
+  const mult = rint(2, 3);
+  const denNovo = denBase * mult;
+  const numNovo = num * mult;
+  _treinoAtual = { tipo: 'equivalente', certa: `${numNovo}/${denNovo}` };
+  document.getElementById('pergunta-viz').innerHTML = '';
+  document.getElementById('pergunta-texto').innerHTML = `<b>${num}/${denBase}</b> é o mesmo que quanto <b>sobre ${denNovo}</b>?`;
+  const set = new Set([`${numNovo}/${denNovo}`]);
+  while (set.size < 4) {
+    const falso = `${rint(1, denNovo - 1)}/${denNovo}`;
+    set.add(falso);
+  }
+  renderOpcoes([...set].sort(() => Math.random() - 0.5));
+}
+
+function gerarMaior() {
+  const den = rint(3, 6);
+  const a = rint(1, den - 1);
+  let b;
+  do { b = rint(1, den - 1); } while (b === a);
+  _treinoAtual = { tipo: 'maior', certa: a > b ? `${a}/${den}` : `${b}/${den}` };
+  document.getElementById('pergunta-viz').innerHTML = '';
+  document.getElementById('pergunta-texto').innerHTML = `Qual é <b>maior</b>: ${a}/${den} ou ${b}/${den}?`;
+  renderOpcoes([`${a}/${den}`, `${b}/${den}`]);
+  // Apenas 2 opções
+  document.getElementById('treino-opcoes').style.gridTemplateColumns = '1fr 1fr';
+}
+
+function gerarSomaSimples() {
+  // ex: 1/4 + 2/4
+  const den = rint(3, 6);
+  const a = rint(1, den - 1);
+  const b = rint(1, den - a);
+  _treinoAtual = { tipo: 'soma', certa: `${a + b}/${den}` };
+  document.getElementById('pergunta-viz').innerHTML = '';
+  document.getElementById('pergunta-texto').innerHTML = `<b>${a}/${den} + ${b}/${den}</b> = ?`;
+  const set = new Set([`${a + b}/${den}`]);
+  while (set.size < 4) {
+    const n = rint(1, den);
+    const d2 = Math.random() < 0.5 ? den : den * 2;
+    set.add(`${n}/${d2}`);
+  }
+  renderOpcoes([...set].sort(() => Math.random() - 0.5));
+}
+
+function renderOpcoes(opcs) {
+  document.getElementById('treino-opcoes').innerHTML = opcs.map(o =>
+    `<button onclick="responderFracao('${o}', this)">${o}</button>`
+  ).join('');
+  document.getElementById('treino-fb').textContent = '';
+  document.getElementById('treino-fb').className = 'treino-fb';
+}
+
+function responderFracao(v, btn) {
+  const todos = document.querySelectorAll('#treino-opcoes button');
+  todos.forEach(b => b.disabled = true);
+  if (v === _treinoAtual.certa) {
+    btn.classList.add('acerto');
+    trataAcerto();
+  } else {
+    btn.classList.add('erro');
+    todos.forEach(b => { if (b.textContent.trim() === _treinoAtual.certa) b.classList.add('acerto'); });
+    trataErro(`A resposta certa era <b>${_treinoAtual.certa}</b>.`);
+  }
+}
+
+function trataAcerto() {
+  _treinoAcertos++;
+  document.getElementById('hud-acertos').textContent = _treinoAcertos;
+  try {
+    jogoAtivo = 'fracoes';
+    STATE.acertou(jogoAtivo);
+    somAcerto();
+    renderHeaderPlayer();
+    window._acertosSessao = (window._acertosSessao || 0) + 1;
+    if (window._acertosSessao % 5 === 0 && typeof mostrarCapsulaMundoReal === 'function') {
+      setTimeout(mostrarCapsulaMundoReal, 1000);
+    }
+  } catch(e) {}
+  const fb = document.getElementById('treino-fb');
+  fb.className = 'treino-fb acerto';
+  fb.innerHTML = `✨ ${fraseSorteada(FRASES_ACERTO)}`;
+  reagirMascoteCoach('acerto');
+  setTimeout(proximaPerguntaTreino, 1200);
+}
+
+function trataErro(detalhe) {
+  try {
+    jogoAtivo = 'fracoes';
+    STATE.errou(jogoAtivo);
+    somErro();
+    reagirMascoteCoach('erro');
+  } catch(e) {}
+  const fb = document.getElementById('treino-fb');
+  fb.className = 'treino-fb erro';
+  fb.innerHTML = `Respira. ${detalhe} Tenta o próximo.`;
+  setTimeout(proximaPerguntaTreino, 2400);
+}
+
+function mostrarResultadoTreino() {
+  const nivel = STATE.dificuldadeJogo ? STATE.dificuldadeJogo('fracoes') : 1;
+  let emoji, texto;
+  const pct = _treinoAcertos / TOTAL_TREINO;
+  if (pct === 1) { emoji = '🏆'; texto = 'PERFEITO!'; try{ soltarConfete(100); somCelebracao(); }catch(e){} }
+  else if (pct >= 0.8) { emoji = '🌟'; texto = 'Muito bom!'; try{ soltarConfete(50); }catch(e){} }
+  else if (pct >= 0.5) { emoji = '👍'; texto = 'No caminho!'; }
+  else { emoji = '💪'; texto = 'Treina mais um pouquinho!'; }
+  document.getElementById('view-treino').innerHTML = `
+    <div style="text-align:center;padding:30px 20px">
+      <div style="font-size:70px">${emoji}</div>
+      <div style="font-size:28px;font-weight:900;color:#4a3b8a;margin:6px 0">${texto}</div>
+      <div style="font-size:22px;font-weight:800;color:#6b54d3">${_treinoAcertos}/${TOTAL_TREINO}</div>
+      <div style="font-size:13px;color:#888;margin-top:8px">Nível atingido: ${nivel}/5 — <i>a dificuldade se ajustou pro seu jeito de jogar.</i></div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:18px;flex-wrap:wrap">
+        <button class="fr-btn principal" onclick="iniciarTreino()">🔄 De novo</button>
+        <button class="fr-btn" onclick="mudarModo('estudo')">📖 Estudar mais</button>
+      </div>
+    </div>
+  `;
+}
+
+initJogos();
+atualizarEstudo();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Senso Numérico — MATEMÁGICA</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=16">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  h1.titulo-sn {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 32px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(135deg, #2ebd7c, #6b54d3);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-align: center; margin: 6px 0 2px;
+  }
+  .sub-sn { text-align: center; color: #888; font-size: 13px; margin-bottom: 14px; }
+  .voltar {
+    display: inline-block; color: #6b54d3; text-decoration: none;
+    font-size: 12px; font-weight: 700;
+    background: #ede8fa; border: 2px solid #c5bbe9;
+    padding: 6px 12px; border-radius: 10px; margin-bottom: 10px;
+  }
+
+  .sn-intro {
+    background: linear-gradient(135deg, #ede8fa, #d4f5dd);
+    border: 2px solid #7ad09a; border-radius: 12px;
+    padding: 12px 14px; margin-bottom: 14px;
+    font-size: 13px; line-height: 1.5; color: #4a3b8a;
+  }
+  .sn-intro b { color: #1b7a3a; }
+
+  .sn-conta {
+    background: #fff; border: 3px solid #6b54d3;
+    border-radius: 16px; padding: 22px 16px;
+    text-align: center; margin-bottom: 14px;
+  }
+  .sn-conta-expr {
+    font-size: 44px; font-weight: 900; color: #4a3b8a;
+    margin-bottom: 4px;
+  }
+  .sn-conta-prompt {
+    font-size: 13px; color: #6b54d3; font-weight: 700;
+  }
+
+  .sn-jeitos {
+    display: grid; gap: 10px; margin-bottom: 14px;
+  }
+  .sn-jeito {
+    background: #fff; border: 2.5px solid #c5bbe9;
+    border-radius: 14px; padding: 14px;
+    cursor: pointer; transition: all 0.2s;
+    text-align: left;
+  }
+  .sn-jeito:hover {
+    transform: translateY(-2px);
+    border-color: #6b54d3;
+    box-shadow: 0 6px 14px rgba(107,84,211,0.18);
+  }
+  .sn-jeito.aberto {
+    background: linear-gradient(135deg, #fff4dc, #ffe5a3);
+    border-color: #ff9a44;
+  }
+  .sn-jeito-titulo {
+    font-size: 15px; font-weight: 800; color: #4a3b8a;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sn-jeito-titulo .emoji { font-size: 22px; }
+  .sn-jeito-sub {
+    font-size: 12px; color: #888; margin-top: 3px;
+    font-style: italic;
+  }
+  .sn-jeito-passos {
+    display: none;
+    margin-top: 10px;
+    background: #fff; border-radius: 8px;
+    padding: 12px; font-family: 'Courier New', monospace;
+    font-size: 14px; color: #4a3b8a;
+    line-height: 2;
+    border-left: 4px solid #6b54d3;
+  }
+  .sn-jeito.aberto .sn-jeito-passos { display: block; }
+  .sn-jeito-passos .passo {
+    padding: 4px 0;
+    animation: passoIn 0.3s ease-out;
+  }
+  @keyframes passoIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+  .sn-jeito-passos b { color: #2ebd7c; }
+  .sn-jeito-passos .hl { background: #fff3d6; padding: 0 4px; border-radius: 4px; }
+
+  .sn-btn {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff; border: none;
+    padding: 10px 20px; border-radius: 10px;
+    font-weight: 700; font-size: 14px;
+    cursor: pointer; display: block;
+    margin: 12px auto; font-family: inherit;
+  }
+  .sn-btn.sec { background: #fff; color: #6b54d3; border: 2px solid #c5bbe9; }
+
+  .sn-controles-conta {
+    display: flex; gap: 8px; justify-content: center;
+    margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .chip-dif {
+    background: #f7f5ff; color: #6b54d3;
+    border: 2px solid #c5bbe9;
+    padding: 5px 12px; border-radius: 14px;
+    font-weight: 700; font-size: 12px;
+    cursor: pointer; font-family: inherit;
+  }
+  .chip-dif.ativo { background: #6b54d3; color: #fff; border-color: #6b54d3; }
+
+  .sn-feedback {
+    min-height: 40px; padding: 10px;
+    border-radius: 10px; text-align: center;
+    font-weight: 700; font-size: 13px;
+    margin-bottom: 10px;
+  }
+  .sn-feedback.acerto { background: #d4f5dd; color: #1b4a2a; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="voltar">← Voltar ao início</a>
+  <h1 class="titulo-sn">🧠 Senso Numérico</h1>
+  <div class="sub-sn">Toda conta tem vários caminhos. Escolha o seu.</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div class="sn-intro">
+    <b>Estudos da Jo Boaler (Stanford):</b> crianças que aprendem <b>vários jeitos</b> de resolver uma conta desenvolvem senso numérico — <b>intuição</b> pra matemática.
+    <br>Aqui não tem "jeito certo". Tem <b>vários jeitos válidos</b>, e você escolhe o que faz sentido pra você.
+  </div>
+
+  <div class="sn-controles-conta">
+    <button class="chip-dif ativo" data-dif="facil" onclick="setDif('facil')">🌱 Fácil</button>
+    <button class="chip-dif" data-dif="medio" onclick="setDif('medio')">🔥 Médio</button>
+    <button class="chip-dif" data-dif="dificil" onclick="setDif('dificil')">⚡ Difícil</button>
+  </div>
+
+  <div class="sn-conta">
+    <div class="sn-conta-expr" id="conta-expr">29 + 56</div>
+    <div class="sn-conta-prompt">Olha 3 jeitos diferentes de resolver:</div>
+  </div>
+
+  <div class="sn-jeitos" id="sn-jeitos"></div>
+
+  <div class="sn-feedback" id="sn-feedback"></div>
+
+  <button class="sn-btn" onclick="novaConta()">🎲 Outra conta</button>
+</div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<script src="mascotes.js?v=16"></script>
+<script src="jogos_shared.js?v=16"></script>
+<script>
+STORAGE_KEY = 'jogosMat_default';
+CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
+
+// ============== SENSO NUMÉRICO ==============
+let _dif = 'facil';
+let _contaAtual = null;
+
+function rint(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function gerarConta() {
+  let a, b;
+  if (_dif === 'facil') { a = rint(10, 39); b = rint(10, 29); }
+  else if (_dif === 'medio') { a = rint(20, 69); b = rint(20, 39); }
+  else { a = rint(30, 99); b = rint(30, 59); }
+  // Privilegia números com unidades próximas de 0 ou 5 pra truques funcionarem bem
+  return { a, b, res: a + b };
+}
+
+function setDif(d) {
+  _dif = d;
+  document.querySelectorAll('.chip-dif').forEach(c => {
+    c.classList.toggle('ativo', c.dataset.dif === d);
+  });
+  novaConta();
+}
+
+// Gera 3 jeitos pra somar A + B
+function gerarJeitos(a, b) {
+  const jeitos = [];
+
+  // JEITO 1: ARREDONDAR — ajuste compensatório
+  // Ex: 29 + 56 → 30 + 55 (roubou 1 de b, deu 1 pra a). Ou 28 + 47 → 30 + 45
+  const ra = Math.round(a / 10) * 10;
+  if (ra !== a) {
+    const ajuste = ra - a;       // 30 - 29 = +1
+    const novoB = b - ajuste;    // 56 - 1 = 55
+    if (novoB > 0) {
+      jeitos.push({
+        emoji: '⚖️',
+        titulo: 'Ajustar dos dois lados',
+        sub: 'Arredonda um, tira do outro.',
+        passos: [
+          `<b>${a}</b> ${ajuste > 0 ? '+' : '-'} <b>${Math.abs(ajuste)}</b> = <span class="hl">${ra}</span>`,
+          `<b>${b}</b> ${ajuste > 0 ? '-' : '+'} <b>${Math.abs(ajuste)}</b> = <span class="hl">${novoB}</span>`,
+          `<span class="hl">${ra}</span> + <span class="hl">${novoB}</span> = <b>${a + b}</b>`
+        ]
+      });
+    }
+  }
+
+  // JEITO 2: DECOMPOR
+  // 29 + 56 = (20+9) + (50+6) = 20+50 + 9+6 = 70 + 15 = 85
+  const dezA = Math.floor(a / 10) * 10;
+  const unA = a - dezA;
+  const dezB = Math.floor(b / 10) * 10;
+  const unB = b - dezB;
+  jeitos.push({
+    emoji: '🧩',
+    titulo: 'Quebrar em dezena e unidade',
+    sub: 'Separa em partes que você já sabe somar.',
+    passos: [
+      `<b>${a}</b> = ${dezA} + ${unA}`,
+      `<b>${b}</b> = ${dezB} + ${unB}`,
+      `Dezenas: <span class="hl">${dezA} + ${dezB} = ${dezA + dezB}</span>`,
+      `Unidades: <span class="hl">${unA} + ${unB} = ${unA + unB}</span>`,
+      `Junta: <b>${dezA + dezB} + ${unA + unB} = ${a + b}</b>`
+    ]
+  });
+
+  // JEITO 3: COMPLETA O DEZ
+  // 29 + 56 = 29 + 1 + 55 = 30 + 55 = 85
+  // Ou 56 + 29 = 56 + 4 + 25 = 60 + 25 = 85
+  const parComplemento = 10 - (a % 10);
+  if (parComplemento > 0 && parComplemento < 10 && b >= parComplemento) {
+    jeitos.push({
+      emoji: '🔟',
+      titulo: 'Completa o 10 (ou o 100)',
+      sub: 'Primeiro fecha uma dezena redonda.',
+      passos: [
+        `Pega <b>${parComplemento}</b> do ${b} e dá pro ${a}:`,
+        `<b>${a} + ${parComplemento}</b> = <span class="hl">${a + parComplemento}</span>`,
+        `Sobra do outro: <b>${b} - ${parComplemento}</b> = <span class="hl">${b - parComplemento}</span>`,
+        `Soma o que virou redondo: <span class="hl">${a + parComplemento} + ${b - parComplemento} = ${a + b}</span>`
+      ]
+    });
+  } else {
+    // Fallback: contagem progressiva
+    jeitos.push({
+      emoji: '🪜',
+      titulo: 'Subir de 10 em 10',
+      sub: 'Começa pelo maior e vai pulando.',
+      passos: [
+        `Começa em <b>${a}</b>.`,
+        `Soma ${dezB}: <span class="hl">${a + dezB}</span>`,
+        `Agora soma os ${unB} que faltam: <span class="hl">${a + dezB} + ${unB} = ${a + b}</span>`
+      ]
+    });
+  }
+
+  return jeitos.slice(0, 3);
+}
+
+function renderJeitos() {
+  if (!_contaAtual) return;
+  const jeitos = gerarJeitos(_contaAtual.a, _contaAtual.b);
+  document.getElementById('sn-jeitos').innerHTML = jeitos.map((j, i) => `
+    <button class="sn-jeito" onclick="toggleJeito(${i})" data-idx="${i}">
+      <div class="sn-jeito-titulo">
+        <span class="emoji">${j.emoji}</span>
+        <span>${j.titulo}</span>
+      </div>
+      <div class="sn-jeito-sub">${j.sub}</div>
+      <div class="sn-jeito-passos">
+        ${j.passos.map(p => `<div class="passo">${p}</div>`).join('')}
+      </div>
+    </button>
+  `).join('');
+}
+
+function toggleJeito(i) {
+  const el = document.querySelector(`.sn-jeito[data-idx="${i}"]`);
+  if (!el) return;
+  const aberto = el.classList.contains('aberto');
+  document.querySelectorAll('.sn-jeito').forEach(j => j.classList.remove('aberto'));
+  if (!aberto) {
+    el.classList.add('aberto');
+    const fb = document.getElementById('sn-feedback');
+    fb.className = 'sn-feedback acerto';
+    fb.innerHTML = `✨ Esse jeito vale! Não tem "jeito certo único" — escolhe o que faz sentido pra você.`;
+    try {
+      jogoAtivo = 'senso_' + _dif;
+      STATE.acertou(jogoAtivo);
+      renderHeaderPlayer();
+      window._acertosSessao = (window._acertosSessao || 0) + 1;
+      if (window._acertosSessao % 5 === 0 && typeof mostrarCapsulaMundoReal === 'function') {
+        setTimeout(mostrarCapsulaMundoReal, 1500);
+      }
+      somMoeda();
+    } catch(e) {}
+  } else {
+    document.getElementById('sn-feedback').textContent = '';
+    document.getElementById('sn-feedback').className = 'sn-feedback';
+  }
+}
+
+function novaConta() {
+  _contaAtual = gerarConta();
+  document.getElementById('conta-expr').textContent = `${_contaAtual.a} + ${_contaAtual.b}`;
+  document.getElementById('sn-feedback').textContent = '';
+  document.getElementById('sn-feedback').className = 'sn-feedback';
+  renderJeitos();
+}
+
+initJogos();
+novaConta();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

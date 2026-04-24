@@ -159,6 +159,8 @@ const STATE = {
     this.temaAtivo = u.temaAtivo || 'padrao';
     this.bichinhoAtivo = u.bichinhoAtivo || null;
     this.persistencias = u.persistencias || 0;
+    this.histAdapt = u.histAdapt || {};
+    this._nivelAdapt = u._nivelAdapt || {};
   },
 
   // Campos por ano: estrelas, streak, recorde, porJogo, xp, badges, streakDiario, ultimoDia, diasJogados
@@ -1885,6 +1887,63 @@ function abrirExplicaELI5(id) {
   }
   m.classList.remove('hidden');
 }
+
+// ============== DIFICULDADE ADAPTATIVA (Vygotsky ZDP) ==============
+// Calcula o nível ideal (1-5) pra um jogo baseado no histórico da criança.
+// Zona de desenvolvimento proximal: alvo 70-85% de acerto.
+// Acima de 85% → sobe de nível. Abaixo de 55% → desce. Entre → mantém.
+//
+// Uso pelos jogos:
+//   const n = STATE.dificuldadeJogo(jogoId);  // retorna 1-5
+//   // gere perguntas: n=1 mais simples, n=5 mais complexas
+function _getHistAdapt() {
+  try {
+    if (!STATE.histAdapt) STATE.histAdapt = {};
+    return STATE.histAdapt;
+  } catch(e) { return {}; }
+}
+
+STATE.registrarTentativaAdapt = function(jogoId, acertou) {
+  const h = _getHistAdapt();
+  if (!h[jogoId]) h[jogoId] = [];
+  h[jogoId].push(acertou ? 1 : 0);
+  if (h[jogoId].length > 20) h[jogoId] = h[jogoId].slice(-20);
+  try {
+    const u = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '{}');
+    u.histAdapt = h;
+    u._nivelAdapt = STATE._nivelAdapt || {};
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(u));
+  } catch(e) {}
+};
+
+STATE.dificuldadeJogo = function(jogoId) {
+  const h = _getHistAdapt()[jogoId] || [];
+  if (h.length < 5) return 1; // sem histórico → começa fácil
+  const recentes = h.slice(-10);
+  const pct = recentes.reduce((s, v) => s + v, 0) / recentes.length;
+  const nivelArmazenado = (STATE._nivelAdapt && STATE._nivelAdapt[jogoId]) || 1;
+  let novoNivel = nivelArmazenado;
+  if (pct >= 0.85 && nivelArmazenado < 5) novoNivel = nivelArmazenado + 1;
+  else if (pct < 0.55 && nivelArmazenado > 1) novoNivel = nivelArmazenado - 1;
+  if (!STATE._nivelAdapt) STATE._nivelAdapt = {};
+  STATE._nivelAdapt[jogoId] = novoNivel;
+  return novoNivel;
+};
+
+// Monkey-patch transparente: acertou/errou do STATE agora também registram
+// no histórico adaptativo. Jogos existentes ganham adaptatividade de graça.
+(function() {
+  const origAcertou = STATE.acertou.bind(STATE);
+  const origErrou = STATE.errou.bind(STATE);
+  STATE.acertou = function(id) {
+    origAcertou(id);
+    try { STATE.registrarTentativaAdapt(id, true); } catch(e) {}
+  };
+  STATE.errou = function(id) {
+    origErrou(id);
+    try { STATE.registrarTentativaAdapt(id, false); } catch(e) {}
+  };
+})();
 
 // ============== "COMO MEU FILHO PENSOU?" (Boaler) ==============
 // Dado um contexto {a, b, op, esperado, errado}, tenta inferir qual

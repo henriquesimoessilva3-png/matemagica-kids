@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beleza da Matemática — MATEMÁGICA</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=16">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  h1.titulo-bz {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 32px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(135deg, #b968e8, #ffd36b);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-align: center; margin: 6px 0 2px;
+  }
+  .sub-bz { text-align: center; color: #888; font-size: 13px; margin-bottom: 14px; }
+  .voltar {
+    display: inline-block; color: #6b54d3; text-decoration: none;
+    font-size: 12px; font-weight: 700;
+    background: #ede8fa; border: 2px solid #c5bbe9;
+    padding: 6px 12px; border-radius: 10px; margin-bottom: 10px;
+  }
+
+  .bz-intro {
+    background: linear-gradient(135deg, #ede8fa, #fff3d6);
+    border: 2px solid #c5bbe9; border-radius: 12px;
+    padding: 12px 14px; margin-bottom: 14px;
+    font-size: 13px; line-height: 1.5; color: #4a3b8a;
+    text-align: center;
+  }
+  .bz-intro b { color: #6b54d3; }
+
+  .bz-cards {
+    display: grid; gap: 12px; grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 520px) { .bz-cards { grid-template-columns: 1fr; } }
+
+  .bz-card {
+    background: #fff;
+    border: 2.5px solid #d9cefa;
+    border-radius: 16px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: center;
+    display: flex; flex-direction: column;
+  }
+  .bz-card:hover {
+    transform: translateY(-4px);
+    border-color: #b968e8;
+    box-shadow: 0 10px 22px rgba(185,104,232,0.25);
+  }
+  .bz-viz {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border-radius: 10px;
+    padding: 8px; margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 90px;
+  }
+  .bz-viz svg { max-width: 100%; max-height: 120px; }
+  .bz-nome {
+    font-size: 14px; font-weight: 800; color: #4a3b8a;
+  }
+  .bz-nome-sub {
+    font-size: 10px; color: #888; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  /* Modal expandido */
+  .bz-modal-inner { text-align: left; font-size: 14px; line-height: 1.55; color: #4a3b8a; }
+  .bz-modal-viz {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border-radius: 12px; padding: 14px;
+    display: flex; justify-content: center;
+    margin-bottom: 12px;
+  }
+  .bz-modal-viz svg { max-width: 100%; max-height: 200px; }
+  .bz-modal-inner p { margin: 6px 0 10px; }
+  .bz-modal-inner b { color: #6b54d3; }
+  .bz-modal-inner .uau {
+    background: linear-gradient(135deg, #fff3d6, #ffe5a3);
+    border-left: 4px solid #ff9a44;
+    padding: 10px 12px; border-radius: 8px;
+    margin-top: 10px;
+    color: #5a3a00;
+  }
+  .bz-modal-inner .uau b { color: #8a5a10; }
+
+  /* Animações dos SVGs */
+  .girar-lento { animation: girar 24s linear infinite; transform-origin: center; }
+  @keyframes girar { to { transform: rotate(360deg); } }
+  .pulsar { animation: pulsarBeleza 3s ease-in-out infinite; transform-origin: center; }
+  @keyframes pulsarBeleza { 50% { transform: scale(1.04); } }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="voltar">← Voltar ao início</a>
+  <h1 class="titulo-bz">✨ Beleza da Matemática</h1>
+  <div class="sub-bz">A matemática vive no mundo — e é linda.</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div class="bz-intro">
+    Matemática não é só <b>conta</b>. Ela aparece em <b>flores, conchas, música, arte, gelo, árvores…</b><br>
+    Toque em cada card pra descobrir.
+  </div>
+
+  <div class="bz-cards" id="bz-cards"></div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal" style="max-width:480px">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Que legal!</button>
+    </div>
+  </div>
+</div>
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<script src="mascotes.js?v=16"></script>
+<script src="jogos_shared.js?v=16"></script>
+<script>
+STORAGE_KEY = 'jogosMat_default';
+CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
+
+// ============== BANCO DE CÁPSULAS DE BELEZA ==============
+const CARDS_BELEZA = [
+  {
+    id: 'fibonacci',
+    emoji: '🐚',
+    nome: 'Sequência de Fibonacci',
+    sub: 'concha · girassol · pinha',
+    vizCard: svgConchaFibonacci(90),
+    vizModal: svgConchaFibonacci(180),
+    intro: 'Uma sequência mágica que aparece na <b>natureza</b> o tempo todo.',
+    corpo: `
+      <p>Olha essa sequência de números:</p>
+      <p style="text-align:center;font-family:monospace;font-size:17px;color:#6b54d3;font-weight:800">1, 1, 2, 3, 5, 8, 13, 21, 34, 55…</p>
+      <p>Cada número é a <b>soma dos dois anteriores</b>. 1+1=2. 1+2=3. 2+3=5. 3+5=8.</p>
+      <p>Esses mesmos números aparecem: nas <b>sementes do girassol</b>, nas <b>escamas da pinha</b>, no jeito que a <b>concha</b> cresce, em <b>folhas na árvore</b>.</p>
+      <div class="uau"><b>✨ Uau:</b> um monge italiano chamado <b>Fibonacci</b> descobriu isso em 1202. Mas a natureza já usava há milhões de anos!</div>
+    `
+  },
+  {
+    id: 'simetria',
+    emoji: '🦋',
+    nome: 'Simetria',
+    sub: 'borboleta · floco de neve · rosto',
+    vizCard: svgBorboleta(90),
+    vizModal: svgBorboleta(180),
+    intro: 'Metade igualzinha à outra metade.',
+    corpo: `
+      <p><b>Simetria</b> é quando um lado é o <b>espelho do outro</b>.</p>
+      <p>Borboleta tem simetria — dobra ela no meio, os dois lados encaixam. Mesma coisa com:</p>
+      <ul style="padding-left:20px;margin:0 0 10px">
+        <li>🧊 <b>Flocos de neve</b> (simetria de 6 lados — sempre!)</li>
+        <li>🌸 Muitas <b>flores</b></li>
+        <li>😊 Nossa <b>cara</b> (quase perfeita)</li>
+        <li>🏛️ Muitos <b>prédios</b></li>
+      </ul>
+      <div class="uau"><b>✨ Uau:</b> todo floco de neve tem <b>6 pontas</b> porque a água congela em cristais de 6 lados. Nunca 5, nunca 7. Sempre 6.</div>
+    `
+  },
+  {
+    id: 'fractais',
+    emoji: '🌳',
+    nome: 'Fractais',
+    sub: 'árvore · brócolis · costa · raio',
+    vizCard: svgFractalArvore(90),
+    vizModal: svgFractalArvore(180),
+    intro: 'Pequenas partes que são iguais ao todo.',
+    corpo: `
+      <p>Olha uma <b>árvore</b>: o tronco se divide em galhos. Cada galho se divide em galhinhos. Cada galhinho se divide em mais.</p>
+      <p>Uma parte da árvore <b>parece uma árvore inteira</b>. Isso é <b>fractal</b>.</p>
+      <p>Fractais aparecem também em:</p>
+      <ul style="padding-left:20px;margin:0 0 10px">
+        <li>🥦 <b>Brócolis romanesco</b> (impressionante!)</li>
+        <li>⚡ <b>Raios</b> no céu</li>
+        <li>🏔️ Linha de <b>costa</b> vista do alto</li>
+        <li>🫁 Nossos <b>pulmões</b></li>
+        <li>❄️ Cristais de <b>gelo</b></li>
+      </ul>
+      <div class="uau"><b>✨ Uau:</b> quanto mais você dá zoom num fractal, mais <b>detalhes iguais</b> aparecem. É infinito!</div>
+    `
+  },
+  {
+    id: 'razaoaurea',
+    emoji: '🏛️',
+    nome: 'Razão áurea (φ)',
+    sub: 'Partenon · Mona Lisa · cartão',
+    vizCard: svgRazaoAurea(90),
+    vizModal: svgRazaoAurea(180),
+    intro: 'O número mais bonito da história.',
+    corpo: `
+      <p>Tem um número especial: <b>φ ≈ 1,618</b>. Chamam de <b>razão áurea</b>.</p>
+      <p>Quando um retângulo tem os lados nessa proporção (um é 1,618× maior que o outro), o olho humano acha <b>bonito naturalmente</b>.</p>
+      <p>Aparece:</p>
+      <ul style="padding-left:20px;margin:0 0 10px">
+        <li>🏛️ No <b>Partenon</b> grego (2.500 anos!)</li>
+        <li>🎨 Na <b>Mona Lisa</b> do Leonardo</li>
+        <li>💳 No seu <b>cartão de crédito</b></li>
+        <li>📺 No formato da sua <b>TV</b></li>
+      </ul>
+      <div class="uau"><b>✨ Uau:</b> φ vem da <b>mesma sequência de Fibonacci</b>! Divida um número por outro da sequência (55÷34, 89÷55) e chega cada vez mais perto de 1,618.</div>
+    `
+  },
+  {
+    id: 'hexagonos',
+    emoji: '🐝',
+    nome: 'Hexágonos das abelhas',
+    sub: 'colmeia · sabão · tartaruga',
+    vizCard: svgHexagonos(90),
+    vizModal: svgHexagonos(180),
+    intro: 'A forma mais eficiente da natureza.',
+    corpo: `
+      <p>Por que a colmeia é feita de <b>hexágonos</b> (6 lados)?</p>
+      <p>Porque é a <b>forma que gasta menos cera</b> pra guardar <b>mais mel</b>. Quadrado e triângulo gastam mais. Círculo deixa buracos.</p>
+      <p>O hexágono encaixa perfeitamente, sem sobras.</p>
+      <p>Aparece também:</p>
+      <ul style="padding-left:20px;margin:0 0 10px">
+        <li>🧼 Nas <b>bolhas de sabão</b> juntas</li>
+        <li>🐢 No casco da <b>tartaruga</b></li>
+        <li>🌋 Nas <b>pedras vulcânicas</b> (Giant's Causeway, Irlanda)</li>
+      </ul>
+      <div class="uau"><b>✨ Uau:</b> as abelhas não aprendem geometria. A <b>evolução</b> fez elas escolherem a forma mais eficiente. Matemática <b>sem professor</b>.</div>
+    `
+  },
+  {
+    id: 'zero',
+    emoji: '0️⃣',
+    nome: 'O zero é invenção',
+    sub: 'um dia alguém inventou',
+    vizCard: svgZero(90),
+    vizModal: svgZero(180),
+    intro: 'Nem sempre existiu. Alguém precisou inventar.',
+    corpo: `
+      <p>Os romanos antigos tinham números: I, II, III, IV, V… mas <b>não tinham o zero</b>. Imagina tentar escrever "100" sem zero!</p>
+      <p>O zero foi <b>inventado na Índia</b> há uns 1.500 anos. Um matemático chamado <b>Brahmagupta</b> escreveu as regras de como usar.</p>
+      <p>Depois os árabes levaram pra Europa. Foi uma <b>revolução</b>.</p>
+      <div class="uau"><b>✨ Uau:</b> sem o zero, <b>nenhum computador funcionaria</b>. Eles falam só em 0 e 1. Todo jogo, todo app, toda foto — é 0 e 1.</div>
+    `
+  },
+  {
+    id: 'infinito',
+    emoji: '∞',
+    nome: 'O infinito',
+    sub: 'número maior que todos',
+    vizCard: svgInfinito(90),
+    vizModal: svgInfinito(180),
+    intro: 'Um tamanho que nunca acaba.',
+    corpo: `
+      <p>Quanto é <b>o maior número do mundo</b>? 100? 1 bilhão? 1 googol (10¹⁰⁰)?</p>
+      <p>Resposta: <b>não existe</b>. Qualquer número que você pensar, eu somo 1 e fica maior.</p>
+      <p>Chamamos isso de <b>infinito</b>: o símbolo é ∞.</p>
+      <p>Existe <b>infinito</b> em:</p>
+      <ul style="padding-left:20px;margin:0 0 10px">
+        <li>Números naturais (1, 2, 3, 4…)</li>
+        <li>Pontos dentro de uma linha</li>
+        <li>Casas decimais de π (3,14159265…)</li>
+      </ul>
+      <div class="uau"><b>✨ Uau:</b> um matemático alemão chamado <b>Cantor</b> provou que existem <b>infinitos maiores que outros</b>! 🤯</div>
+    `
+  },
+  {
+    id: 'pi',
+    emoji: '🥧',
+    nome: 'Número π (pi)',
+    sub: 'todo círculo tem',
+    vizCard: svgPi(90),
+    vizModal: svgPi(180),
+    intro: 'Esconde em toda roda, bola e pneu.',
+    corpo: `
+      <p>Pega qualquer <b>círculo</b>: moeda, roda, prato, pizza.</p>
+      <p>Se você medir a <b>volta</b> (circunferência) e o <b>diâmetro</b> (largura passando pelo meio), a volta é sempre <b>3,14 vezes o diâmetro</b>.</p>
+      <p>Esse número é o <b>π (pi)</b>. É igual em TODO círculo do universo.</p>
+      <p>Começa com 3,14159265358979... e <b>nunca se repete, nunca acaba</b>.</p>
+      <div class="uau"><b>✨ Uau:</b> já calcularam mais de <b>100 trilhões de casas decimais</b> de π. Existe o "dia do pi": 14 de março (3/14 em inglês).</div>
+    `
+  }
+];
+
+// ============== GERADORES DE SVG ==============
+function svgConchaFibonacci(size) {
+  return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">
+    <g class="girar-lento">
+      <rect x="55" y="55" width="5" height="5" fill="#e8d6fa" stroke="#9848c8" stroke-width="0.5"/>
+      <rect x="60" y="55" width="5" height="5" fill="#d9c8f5" stroke="#9848c8" stroke-width="0.5"/>
+      <rect x="55" y="45" width="10" height="10" fill="#c5a8f0" stroke="#9848c8" stroke-width="0.5"/>
+      <rect x="35" y="45" width="20" height="20" fill="#b589e8" stroke="#9848c8" stroke-width="0.5"/>
+      <rect x="35" y="20" width="30" height="25" fill="#9848c8" stroke="#6b1c9e" stroke-width="0.5"/>
+      <rect x="35" y="65" width="55" height="55" fill="#7a2ca8" stroke="#4a0e6e" stroke-width="0.5"/>
+      <path d="M60 60 Q60 55 65 55 Q65 60 60 60 Q55 60 55 55 Q55 45 65 45 Q65 55 55 55 Q35 55 35 45 Q35 20 65 20 Q65 45 35 45 Q35 120 90 120 Q90 65 35 65" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.8"/>
+    </g>
+  </svg>`;
+}
+
+function svgBorboleta(size) {
+  return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">
+    <g class="pulsar">
+      <ellipse cx="60" cy="60" rx="4" ry="30" fill="#3a2818"/>
+      <!-- asa esquerda -->
+      <path d="M56 40 Q20 20 15 55 Q20 75 40 70 Q55 65 56 55 Z" fill="#ff7b6b" stroke="#c44a2a" stroke-width="1.5"/>
+      <path d="M56 65 Q25 75 20 95 Q30 100 45 90 Q55 80 56 75 Z" fill="#ffd36b" stroke="#b08800" stroke-width="1.5"/>
+      <!-- asa direita (espelhada) -->
+      <path d="M64 40 Q100 20 105 55 Q100 75 80 70 Q65 65 64 55 Z" fill="#ff7b6b" stroke="#c44a2a" stroke-width="1.5"/>
+      <path d="M64 65 Q95 75 100 95 Q90 100 75 90 Q65 80 64 75 Z" fill="#ffd36b" stroke="#b08800" stroke-width="1.5"/>
+      <!-- detalhes -->
+      <circle cx="30" cy="50" r="4" fill="#fff" opacity="0.7"/>
+      <circle cx="90" cy="50" r="4" fill="#fff" opacity="0.7"/>
+      <circle cx="35" cy="85" r="3" fill="#fff" opacity="0.7"/>
+      <circle cx="85" cy="85" r="3" fill="#fff" opacity="0.7"/>
+      <!-- antenas -->
+      <path d="M60 32 Q55 22 50 18" stroke="#3a2818" stroke-width="1.5" fill="none"/>
+      <path d="M60 32 Q65 22 70 18" stroke="#3a2818" stroke-width="1.5" fill="none"/>
+      <circle cx="50" cy="18" r="2" fill="#3a2818"/>
+      <circle cx="70" cy="18" r="2" fill="#3a2818"/>
+    </g>
+    <!-- linha de simetria -->
+    <line x1="60" y1="10" x2="60" y2="110" stroke="#9848c8" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.5"/>
+  </svg>`;
+}
+
+function svgFractalArvore(size) {
+  // Árvore fractal recursiva desenhada manualmente em linhas
+  return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">
+    <g stroke="#6b3a15" stroke-linecap="round" fill="none">
+      <line x1="60" y1="115" x2="60" y2="85" stroke-width="5"/>
+      <line x1="60" y1="85" x2="40" y2="65" stroke-width="3.5"/>
+      <line x1="60" y1="85" x2="80" y2="65" stroke-width="3.5"/>
+      <line x1="40" y1="65" x2="28" y2="50" stroke-width="2.5"/>
+      <line x1="40" y1="65" x2="45" y2="48" stroke-width="2.5"/>
+      <line x1="80" y1="65" x2="75" y2="48" stroke-width="2.5"/>
+      <line x1="80" y1="65" x2="92" y2="50" stroke-width="2.5"/>
+      <line x1="28" y1="50" x2="22" y2="40" stroke-width="1.5"/>
+      <line x1="28" y1="50" x2="32" y2="38" stroke-width="1.5"/>
+      <line x1="45" y1="48" x2="42" y2="38" stroke-width="1.5"/>
+      <line x1="45" y1="48" x2="52" y2="40" stroke-width="1.5"/>
+      <line x1="75" y1="48" x2="78" y2="38" stroke-width="1.5"/>
+      <line x1="75" y1="48" x2="68" y2="40" stroke-width="1.5"/>
+      <line x1="92" y1="50" x2="98" y2="40" stroke-width="1.5"/>
+      <line x1="92" y1="50" x2="88" y2="38" stroke-width="1.5"/>
+    </g>
+    <g fill="#4ab3a5" opacity="0.85">
+      <circle cx="22" cy="40" r="4"/>
+      <circle cx="32" cy="38" r="4"/>
+      <circle cx="42" cy="38" r="4"/>
+      <circle cx="52" cy="40" r="4"/>
+      <circle cx="68" cy="40" r="4"/>
+      <circle cx="78" cy="38" r="4"/>
+      <circle cx="88" cy="38" r="4"/>
+      <circle cx="98" cy="40" r="4"/>
+    </g>
+  </svg>`;
+}
+
+function svgRazaoAurea(size) {
+  return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">
+    <rect x="15" y="25" width="90" height="55" fill="none" stroke="#b968e8" stroke-width="2"/>
+    <rect x="15" y="25" width="55" height="55" fill="#ede8fa" stroke="#b968e8" stroke-width="2"/>
+    <rect x="70" y="25" width="35" height="35" fill="#d9c8f5" stroke="#b968e8" stroke-width="2"/>
+    <rect x="70" y="60" width="20" height="20" fill="#c0a0e8" stroke="#b968e8" stroke-width="2"/>
+    <rect x="90" y="60" width="15" height="15" fill="#a080d8" stroke="#b968e8" stroke-width="2"/>
+    <path d="M 15 80 Q 15 25 70 25 Q 70 60 90 60 Q 90 75 105 75 Q 105 80 100 80" stroke="#6b54d3" stroke-width="2" fill="none"/>
+    <text x="60" y="102" text-anchor="middle" font-size="11" font-weight="800" fill="#6b54d3">φ ≈ 1,618</text>
+  </svg>`;
+}
+
+function svgHexagonos(size) {
+  return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">
+    <defs>
+      <pattern id="pattern-hex" x="0" y="0" width="22" height="24" patternUnits="userSpaceOnUse">
+        <polygon points="11,0 22,6 22,18 11,24 0,18 0,6" fill="#ffd36b" stroke="#b08800" stroke-width="0.8"/>
+      </pattern>
+    </defs>
+    <circle cx="60" cy="60" r="52" fill="url(#pattern-hex)"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="#b08800" stroke-width="2"/>
+  </svg>`;
+}
+
+function svgZero(size) {
+  return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">
+    <ellipse cx="60" cy="60" rx="38" ry="48" fill="none" stroke="#6b54d3" stroke-width="6"/>
+    <text x="60" y="75" text-anchor="middle" font-size="54" font-weight="800" fill="#6b54d3">0</text>
+  </svg>`;
+}
+
+function svgInfinito(size) {
+  return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">
+    <path d="M 30 60 Q 30 30 60 60 Q 90 90 90 60 Q 90 30 60 60 Q 30 90 30 60 Z" fill="none" stroke="#6b54d3" stroke-width="8" stroke-linecap="round" class="pulsar"/>
+  </svg>`;
+}
+
+function svgPi(size) {
+  return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">
+    <circle cx="60" cy="60" r="45" fill="none" stroke="#4ab3a5" stroke-width="3" stroke-dasharray="6,2"/>
+    <line x1="15" y1="60" x2="105" y2="60" stroke="#4ab3a5" stroke-width="2" stroke-dasharray="3,3"/>
+    <text x="60" y="72" text-anchor="middle" font-size="46" font-weight="800" fill="#6b54d3">π</text>
+    <text x="60" y="32" text-anchor="middle" font-size="9" font-weight="700" fill="#666">3,14159…</text>
+  </svg>`;
+}
+
+// ============== RENDER ==============
+function renderCards() {
+  const grid = document.getElementById('bz-cards');
+  grid.innerHTML = CARDS_BELEZA.map(c => `
+    <button class="bz-card" onclick="abrirCard('${c.id}')">
+      <div class="bz-viz">${c.vizCard}</div>
+      <div class="bz-nome">${c.emoji} ${c.nome}</div>
+      <div class="bz-nome-sub">${c.sub}</div>
+    </button>
+  `).join('');
+}
+
+function abrirCard(id) {
+  const c = CARDS_BELEZA.find(x => x.id === id);
+  if (!c) return;
+  const m = document.getElementById('modal-overlay');
+  document.getElementById('m-emoji').textContent = c.emoji;
+  document.getElementById('m-titulo').textContent = c.nome;
+  document.getElementById('m-conteudo').innerHTML = `
+    <div class="bz-modal-inner">
+      <div class="bz-modal-viz">${c.vizModal}</div>
+      <p style="font-size:15px;color:#6b54d3;font-weight:700;text-align:center">${c.intro}</p>
+      ${c.corpo}
+    </div>
+  `;
+  document.getElementById('modal-btn').textContent = 'Que legal!';
+  document.getElementById('modal-btn').onclick = () => {
+    fecharModal();
+    try {
+      jogoAtivo = 'beleza_' + id;
+      STATE.acertou(jogoAtivo);
+      renderHeaderPlayer();
+    } catch(e) {}
+  };
+  m.classList.remove('hidden');
+  try { somAcerto(); } catch(e) {}
+}
+
+initJogos();
+renderCards();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
