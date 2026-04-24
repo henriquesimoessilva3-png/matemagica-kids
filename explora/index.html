@@ -96,33 +96,6 @@
     .ano-card { flex: 0 0 140px; min-height: 170px; }
   }
 
-  .ano-card { position: relative; }
-  .ano-card .cadeado-premium {
-    position: absolute; top: 6px; right: 6px;
-    background: #d4a574; color: #3a2818;
-    width: 22px; height: 22px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-  }
-  .ano-card.premium-free-tag::after {
-    content: 'GRÁTIS';
-    position: absolute; top: 6px; left: 6px;
-    background: #2ebd7c; color: #fff;
-    font-size: 9px; font-weight: 800;
-    padding: 2px 6px; border-radius: 8px;
-    letter-spacing: 0.5px;
-  }
-  .explora-banner {
-    margin: 10px 0 12px;
-    background: linear-gradient(135deg, #fff4dc, #ffe0a0);
-    border: 2px solid #d4a574; color: #6b3a15;
-    padding: 10px 14px; border-radius: 12px;
-    display: flex; align-items: center; gap: 10px;
-    font-size: 12px; line-height: 1.4;
-  }
-  .explora-banner .eb-emoji { font-size: 22px; }
-  .explora-banner b { color: #8b5a2b; }
   .voltar-matemagica {
     display: inline-block;
     color: #4a3b8a; text-decoration: none;
@@ -132,6 +105,44 @@
     margin-bottom: 10px;
   }
   .voltar-matemagica:hover { background: #dccbf5; }
+
+  /* ===== DESKTOP: COMPACTO, CABE EM 1 TELA ===== */
+  @media (min-width: 780px) {
+    .container { max-width: 980px; padding-top: 10px; padding-bottom: 10px; }
+    h1.explora-titulo { font-size: 30px; letter-spacing: 2px; margin: 2px 0 0; }
+    .explora-titulo .deco { font-size: 22px; }
+    .sub-explora { font-size: 11px; margin-bottom: 4px; }
+    .sub-texto { font-size: 12px; margin: 2px 0 8px; }
+
+    .mascote-wrap {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      align-items: center;
+      gap: 16px;
+      text-align: left;
+      margin: 6px 0;
+    }
+    .mascote-holder svg.mascote { width: 130px; }
+    .mascote-balao {
+      display: inline-block;
+      margin: 0 0 4px 0;
+      font-size: 12px;
+      padding: 5px 12px;
+    }
+    .mascote-balao::before, .mascote-balao::after { display: none; }
+    .mascote-seletor { justify-content: flex-start; margin: 6px 0 2px; }
+    .mascote-seletor-label { text-align: left; margin-top: 2px; }
+    .mini-mascote { width: 52px; height: 56px; }
+
+    .chips-materia { margin: 4px 0 8px; }
+    .chip-materia { padding: 3px 12px; font-size: 11px; }
+
+    .ano-grid { gap: 8px; padding: 2px 0 6px; }
+    .ano-card { min-height: 140px; padding: 12px 10px 10px; }
+    .ano-num { font-size: 32px; }
+    .ano-label { font-size: 11px; margin-bottom: 4px; }
+    .ano-tema { font-size: 10px; line-height: 1.25; }
+  }
 </style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#8b5a2b">
@@ -191,6 +202,7 @@
 
   <div style="text-align:center;margin-top:18px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
     <a href="provas.html" style="display:inline-flex;align-items:center;gap:4px;color:#8b1a10;background:linear-gradient(135deg,#ffe0d0,#fac8a8);border:2px solid #d4794a;font-size:13px;font-weight:800;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit;text-decoration:none">🚨 SOS Prova · 📝 Provas</a>
+    <a href="../dashboard.html" style="display:inline-flex;align-items:center;gap:4px;color:#4a7aa8;background:linear-gradient(135deg,#d4e8f5,#a8c8e0);border:2px solid #4a7aa8;font-size:13px;font-weight:800;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit;text-decoration:none">📊 Pais</a>
   </div>
   <div style="text-align:center;margin-top:14px;font-size:12px;color:#8b5a2b">
     📜 Feito para criançada curiosa · Salva seu progresso no navegador
@@ -198,7 +210,7 @@
 </div>
 
 <script src="mascotes.js"></script>
-<script src="explora_shared.js?v=18"></script>
+<script src="explora_shared.js?v=19"></script>
 <script>
   initExplora({ storageKey: 'explora_home_v1' });
   atualizarProgressoAnos();
