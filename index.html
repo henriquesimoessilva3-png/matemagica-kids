@@ -284,6 +284,73 @@
     .mini-mascote { width: 42px; height: 46px; }
   }
 
+  /* ===== DESKTOP: COMPACTO, CABE EM 1 TELA ===== */
+  @media (min-width: 760px) {
+    .container { max-width: 980px; padding-top: 10px; padding-bottom: 10px; }
+    h1.matemagica-titulo { font-size: 32px; margin: 2px 0 0; }
+    h1.matemagica-titulo .estrela-tit { font-size: 26px; }
+    .sub { margin: 0 !important; font-size: 14px; }
+    .intro { font-size: 12px; margin-bottom: 10px; }
+
+    /* Mascote side-by-side com seletor */
+    .mascote-wrap {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      align-items: center;
+      gap: 16px;
+      text-align: left;
+      margin: 6px 0;
+    }
+    .mascote-holder svg.mascote { width: 130px; }
+    .mascote-balao {
+      display: inline-block;
+      margin: 0 0 4px 0;
+      font-size: 12px;
+      padding: 5px 12px;
+    }
+    .mascote-balao::before, .mascote-balao::after { display: none; }
+    .mascote-seletor { justify-content: flex-start; margin: 6px 0 2px; }
+    .mascote-seletor-label { text-align: left; margin-top: 2px; }
+    .mini-mascote { width: 52px; height: 56px; }
+
+    /* Banner premium mais compacto */
+    .premium-ativo {
+      margin: 6px 0 !important;
+      padding: 5px 12px !important;
+      font-size: 11px !important;
+    }
+    .premium-banner {
+      margin: 6px 0 !important;
+      padding: 8px 12px !important;
+    }
+    .premium-banner .pb-texto { font-size: 11px !important; }
+
+    /* Botões de navegação compactos */
+    #premium-slot + div[style*="margin-bottom:14px"] {
+      margin-bottom: 8px !important;
+      gap: 6px !important;
+    }
+    #premium-slot + div[style*="margin-bottom:14px"] > * {
+      padding: 6px 12px !important;
+      font-size: 12px !important;
+    }
+
+    /* Card EXPLORA mais baixo */
+    #explora-card {
+      padding: 10px 14px !important;
+      margin: 6px 0 10px !important;
+    }
+    #explora-card > div[style*="font-size:32px"] { font-size: 24px !important; }
+    #explora-card .eb-emoji { font-size: 24px !important; }
+
+    /* Cards de ano menores verticalmente */
+    .ano-grid { gap: 8px; padding: 2px 0 6px; }
+    .ano-card { min-height: 140px; padding: 12px 10px 10px; }
+    .ano-num { font-size: 32px; }
+    .ano-label { font-size: 11px; margin-bottom: 4px; }
+    .ano-tema { font-size: 10px; line-height: 1.25; }
+  }
+
   /* ===== Cadeado premium nos cards ===== */
   .ano-card { position: relative; }
   .ano-card .cadeado-premium {
