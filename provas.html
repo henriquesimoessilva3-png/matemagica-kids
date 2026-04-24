@@ -262,6 +262,56 @@
     width: 100%;
   }
   .sos-acao-comecar:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+
+  /* ===== BÔNUS: módulos complementares ===== */
+  .bonus-wrap {
+    margin-top: 18px;
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border: 2px solid #d9cefa;
+    border-radius: 14px;
+    padding: 14px 14px 12px;
+  }
+  .bonus-titulo {
+    font-size: 13px; font-weight: 800; color: #4a3b8a;
+    letter-spacing: 0.3px; margin-bottom: 4px;
+  }
+  .bonus-sub {
+    font-size: 11px; color: #888;
+    margin-bottom: 12px; line-height: 1.4;
+  }
+  .bonus-grid {
+    display: grid; gap: 8px;
+  }
+  .bonus-card {
+    display: flex; align-items: center; gap: 12px;
+    background: #fff;
+    border: 2px solid #c5bbe9;
+    border-radius: 12px;
+    padding: 10px 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s;
+  }
+  .bonus-card:hover {
+    transform: translateX(3px);
+    box-shadow: 0 4px 10px rgba(107,84,211,0.12);
+  }
+  .bonus-emoji {
+    font-size: 26px; flex-shrink: 0; line-height: 1;
+  }
+  .bonus-info { flex: 1; min-width: 0; }
+  .bonus-nome {
+    font-size: 13px; font-weight: 800;
+    line-height: 1.2; margin-bottom: 2px;
+  }
+  .bonus-descricao {
+    font-size: 11px; color: #666;
+    line-height: 1.35;
+  }
+  .bonus-seta {
+    font-size: 20px; color: #b968e8; flex-shrink: 0;
+    font-weight: 700;
+  }
 </style>
 </head>
 <body>
@@ -679,7 +729,8 @@ function gerarSos() {
       <div class="sos-analise-vazio">
         <div style="font-size:32px;margin-bottom:6px">🤔</div>
         Ainda não tem dados suficientes desse ano. Joga um pouco primeiro (pelo menos 3 tentativas por jogo) e eu consigo identificar onde você precisa reforçar.
-      </div>`;
+      </div>
+      ${renderBonusHtml(sugerirBonus([], ano), 'sos')}`;
     return;
   }
 
@@ -688,7 +739,8 @@ function gerarSos() {
       <div class="sos-analise-vazio" style="background:#d4f5dd;border-color:#4ab3a5;color:#1b4a2a">
         <div style="font-size:32px;margin-bottom:6px">🎉</div>
         Tá tudo bem! Você acerta pelo menos 80% em todos os jogos que jogou. Se quiser, monta uma prova manual na aba <b>+ Nova</b>.
-      </div>`;
+      </div>
+      ${renderBonusHtml(sugerirBonus(testados, ano), 'sos')}`;
     return;
   }
 
@@ -727,6 +779,9 @@ function gerarSos() {
     </div>`;
   }
 
+  // Módulos bônus contextuais baseados nos pontos fracos detectados
+  html += renderBonusHtml(sugerirBonus(selecao, ano), 'sos');
+
   // Armazena pra iniciar no próximo clique
   _sosProva = {
     id: 'sos-' + ano + '-' + Date.now(),
@@ -736,6 +791,98 @@ function gerarSos() {
   };
 
   el.innerHTML = html;
+}
+
+// ============== BÔNUS: módulos complementares ==============
+// Sugere outros jogos da casa baseado no tipo de fraqueza detectada.
+const BONUS_MODULOS = {
+  flash:      { emoji: '⚡', nome: 'Flash Mágico',        sub: 'Reconhecer quantidade sem contar',     url: 'flash.html',     cor: '#b968e8' },
+  soma:       { emoji: '➕', nome: 'Soma & Sub até 20',    sub: 'Pokédex de somas — nível por nível',   url: 'soma.html',      cor: '#2ebd7c' },
+  tabuada:    { emoji: '🧮', nome: 'Tabuada Mágica',       sub: 'Pokédex × 1 a 10 + macete dos dedos',  url: 'tabuada.html',   cor: '#ff9a44' },
+  problemas:  { emoji: '📖', nome: 'Problemas do Dia',     sub: 'Matemática com história e nomes BR',   url: 'problemas.html', cor: '#4ab3a5' },
+  cozinha:    { emoji: '🍰', nome: 'Matemática da Cozinha', sub: 'Recalcular receita · fração viva',     url: 'cozinha.html',   cor: '#c44a2a' },
+  fracoes:    { emoji: '🍕', nome: 'Frações com Pizza',    sub: 'Conceito + treino adaptativo',         url: 'fracoes.html',   cor: '#ff7b6b' },
+  inventa:    { emoji: '💡', nome: 'Inventa!',             sub: 'Todas as formas de fazer um número',   url: 'inventa.html',   cor: '#ff9a44' },
+  senso:      { emoji: '🧠', nome: 'Senso Numérico',       sub: 'Três jeitos de fazer a mesma conta',   url: 'senso.html',     cor: '#2ebd7c' },
+  cuisenaire: { emoji: '🎨', nome: 'Barras Mágicas',       sub: 'Cuisenaire — tocar a matemática',      url: 'cuisenaire.html', cor: '#9848c8' },
+  beleza:     { emoji: '✨', nome: 'Beleza da Matemática', sub: 'Fibonacci, simetria, fractais',        url: 'beleza.html',    cor: '#b968e8' }
+};
+
+function detectarTipoGenerico(id, nome) {
+  const s = ((id || '') + ' ' + (nome || '')).toLowerCase();
+  if (/tabuada|tab_|\bmult|vezes|produto/.test(s)) return 'multiplicacao';
+  if (/divis|divide|reparte/.test(s)) return 'divisao';
+  if (/frac|fra[cç]/.test(s)) return 'fracao';
+  if (/decimal|virgula/.test(s)) return 'decimal';
+  if (/sub|menos|diferen[cç]a/.test(s)) return 'subtracao';
+  if (/soma|adi[cç][aã]o|mais\b/.test(s)) return 'soma';
+  if (/dinheiro|real|moeda|troco/.test(s)) return 'dinheiro';
+  if (/medida|metro|centim|litro|grama/.test(s)) return 'medida';
+  if (/hora|rel[oó]gio|minuto/.test(s)) return 'horas';
+  if (/contagem|conta|numero|sucessor|antecessor|\bsuc\b|\bant\b/.test(s)) return 'contagem';
+  return null;
+}
+
+function sugerirBonus(fracosOuVazio, ano) {
+  const tipos = new Set();
+  (fracosOuVazio || []).forEach(f => {
+    const t = detectarTipoGenerico(f.id, f.nome);
+    if (t) tipos.add(t);
+  });
+  const sugestoes = [];
+  const add = (key) => {
+    if (!sugestoes.find(s => s === key)) sugestoes.push(key);
+  };
+  // Regras contextuais
+  if (tipos.has('soma') || tipos.has('subtracao') || tipos.has('contagem')) {
+    add('soma'); add('flash'); add('inventa');
+  }
+  if (tipos.has('multiplicacao')) {
+    add('tabuada'); add('cozinha'); add('cuisenaire');
+  }
+  if (tipos.has('divisao')) {
+    add('cozinha'); add('problemas');
+  }
+  if (tipos.has('fracao') || tipos.has('decimal')) {
+    add('fracoes'); add('cozinha');
+  }
+  if (tipos.has('medida') || tipos.has('dinheiro') || tipos.has('horas')) {
+    add('problemas'); add('cozinha');
+  }
+  // Universal — sempre 1-2 gerais
+  if (sugestoes.length < 3) {
+    add('problemas'); add('inventa'); add('senso');
+  }
+  // Beleza sempre por último (espaço descompromissado)
+  if (!sugestoes.includes('beleza')) add('beleza');
+  return sugestoes.slice(0, 5).map(k => BONUS_MODULOS[k]).filter(Boolean);
+}
+
+function renderBonusHtml(sugestoes, contexto) {
+  if (!sugestoes || !sugestoes.length) return '';
+  const titulo = contexto === 'sos'
+    ? '🌟 Pratique também nos módulos bônus'
+    : '🌟 Quer praticar em outro formato?';
+  const sub = contexto === 'sos'
+    ? 'Baseado nos pontos que detectamos, esses módulos complementam a prova.'
+    : 'Escolhe um tema que curtir — a matemática aparece diferente em cada.';
+  return `
+    <div class="bonus-wrap">
+      <div class="bonus-titulo">${titulo}</div>
+      <div class="bonus-sub">${sub}</div>
+      <div class="bonus-grid">
+        ${sugestoes.map(s => `
+          <a href="${s.url}" class="bonus-card" style="border-color:${s.cor}">
+            <div class="bonus-emoji">${s.emoji}</div>
+            <div class="bonus-info">
+              <div class="bonus-nome" style="color:${s.cor}">${s.nome}</div>
+              <div class="bonus-descricao">${s.sub}</div>
+            </div>
+            <div class="bonus-seta">→</div>
+          </a>
+        `).join('')}
+      </div>
+    </div>`;
 }
 
 let _sosProva = null;
@@ -912,10 +1059,11 @@ function renderLista() {
       <div class="big-emoji">📝</div>
       Você ainda não tem nenhuma prova.<br>
       Clica em <b>+ Nova Prova</b> pra criar uma.
-    </div>`;
+    </div>
+    ${renderBonusHtml(sugerirBonus([], 4), 'lista')}`;
     return;
   }
-  el.innerHTML = provas.map(p => {
+  const cardsProvas = provas.map(p => {
     const totalEx = p.roteiro.reduce((s, r) => s + r.vezes, 0);
     const ultimaExec = p.historico?.length ? p.historico[p.historico.length - 1] : null;
     return `
@@ -933,6 +1081,9 @@ function renderLista() {
       </div>
     `;
   }).join('');
+  // Coleta tipos dos jogos das provas existentes pra sugerir bônus contextuais
+  const jogosFlat = provas.flatMap(p => p.roteiro.map(r => ({ id: r.jogoId, nome: r.jogoNome })));
+  el.innerHTML = cardsProvas + renderBonusHtml(sugerirBonus(jogosFlat, 4), 'lista');
 }
 
 // Init
