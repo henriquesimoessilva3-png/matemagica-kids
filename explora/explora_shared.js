@@ -33,25 +33,16 @@ function detectarPlataforma() {
 }
 
 const INSTRUCOES_INSTALAR = {
-  'instalado': { titulo: '✅ Já instalado!', corpo: '<p>O atalho já tá na sua tela. Pode abrir direto pelo ícone.</p>' },
-  'ios-safari': {
-    titulo: '📱 iPhone ou iPad (Safari)',
-    corpo: `<ol style="padding-left:20px;line-height:1.7"><li>Toque no botão <b>Compartilhar</b> ⎘ (embaixo)</li><li>Role e toque em <b>"Adicionar à Tela de Início"</b></li><li>Confirme em <b>Adicionar</b></li></ol>`
-  },
-  'ios-outro': { titulo: '📱 iPhone ou iPad', corpo: `<p><b>Melhor jeito:</b> abra este site no <b>Safari</b> e toque em Compartilhar ⎘ → <b>Adicionar à Tela de Início</b>.</p>` },
-  'android-chrome': {
-    titulo: '📱 Android (Chrome)',
-    corpo: `<ol style="padding-left:20px;line-height:1.7"><li>Toque nos <b>3 pontos</b> ⋮ no canto superior</li><li>Escolha <b>"Instalar app"</b> ou <b>"Adicionar à tela inicial"</b></li><li>Confirme</li></ol>`
-  },
-  'android-outro': { titulo: '📱 Android', corpo: `<p>Abra no <b>Chrome</b> e siga: ⋮ → <b>Instalar app</b>.</p>` },
-  'desktop-chrome': {
-    titulo: '💻 Computador (Chrome)',
-    corpo: `<ol style="padding-left:20px;line-height:1.7"><li>Veja à direita da URL o ícone <b>⊞</b> (Instalar)</li><li>Clique e confirme</li></ol><p>Ou: <b>⋮ Menu → Instalar Matemágica</b>.</p>`
-  },
-  'desktop-edge': { titulo: '💻 Computador (Edge)', corpo: `<ol style="padding-left:20px;line-height:1.7"><li>Clique no ícone <b>⊞</b> na barra de endereço</li><li>Ou <b>… → Aplicativos → Instalar este site como aplicativo</b></li></ol>` },
-  'desktop-safari': { titulo: '💻 Mac (Safari)', corpo: `<ol style="padding-left:20px;line-height:1.7"><li>Menu <b>Arquivo → Adicionar ao Dock…</b></li><li>Confirme em <b>Adicionar</b></li></ol><p style="font-size:12px;color:#888">Funciona no macOS Sonoma+.</p>` },
-  'desktop-firefox': { titulo: '💻 Computador (Firefox)', corpo: `<p>Firefox desktop não suporta. Use <b>Chrome</b> ou <b>Edge</b> pra instalar, ou salve como favorito (Ctrl+D).</p>` },
-  'desconhecido': { titulo: '💻 Como criar atalho', corpo: `<ul style="padding-left:20px;line-height:1.7"><li><b>iPhone:</b> Safari → ⎘ → Adicionar à Tela de Início</li><li><b>Android:</b> Chrome → ⋮ → Instalar app</li><li><b>Computador:</b> Chrome/Edge → ⊞ na barra de endereço</li></ul>` }
+  'instalado': { titulo: '✅ Já tá na tela', corpo: '<p>Já tá tudo certo. Abra pelo ícone direto.</p>' },
+  'ios-safari': { titulo: '📱 iPhone (Safari)', corpo: `<ol><li>Toca no <b>Compartilhar</b> ⎘</li><li><b>Adicionar à Tela de Início</b></li><li><b>Adicionar</b></li></ol>` },
+  'ios-outro': { titulo: '📱 iPhone', corpo: `<p>Abra no <b>Safari</b> → ⎘ → <b>Adicionar à Tela de Início</b>.</p>` },
+  'android-chrome': { titulo: '📱 Android (Chrome)', corpo: `<ol><li><b>⋮</b> no canto superior</li><li><b>Instalar app</b></li><li>Confirma</li></ol>` },
+  'android-outro': { titulo: '📱 Android', corpo: `<p>Abra no <b>Chrome</b> → ⋮ → <b>Instalar app</b>.</p>` },
+  'desktop-chrome': { titulo: '💻 Chrome (PC/Mac)', corpo: `<ol><li>Ícone <b>⊞</b> à direita da URL</li><li><b>Instalar</b></li></ol><p style="font-size:11px;color:#888;margin-top:6px">Não vê? <b>⋮ → Instalar Matemágica</b>.</p>` },
+  'desktop-edge': { titulo: '💻 Edge', corpo: `<p>Ícone <b>⊞</b> na barra de endereço → <b>Instalar</b>.</p>` },
+  'desktop-safari': { titulo: '💻 Mac (Safari)', corpo: `<p>Menu <b>Arquivo → Adicionar ao Dock…</b> (macOS 14+)</p>` },
+  'desktop-firefox': { titulo: '💻 Firefox', corpo: `<p>Use <b>Chrome</b> ou <b>Edge</b>. Ou Ctrl+D pra favoritar.</p>` },
+  'desconhecido': { titulo: '📱 Como criar atalho', corpo: `<ul><li><b>iPhone:</b> Safari → ⎘ → Adicionar à Tela</li><li><b>Android:</b> Chrome → ⋮ → Instalar</li><li><b>PC:</b> Chrome/Edge → ⊞ na URL</li></ul>` }
 };
 
 function mostrarTutorialInstalar() {
@@ -74,21 +65,29 @@ function mostrarTutorialInstalar() {
   if (conteudo) {
     const outras = Object.keys(INSTRUCOES_INSTALAR).filter(k => k !== plat && k !== 'desconhecido' && k !== 'instalado');
     conteudo.innerHTML = `
-      <div style="text-align:left;font-size:14px;color:#4a3b8a;line-height:1.55">
-        <div style="background:linear-gradient(135deg,#fff4dc,#ffe0a0);border-radius:10px;padding:12px 14px;margin-bottom:12px">
-          <div style="font-size:11px;font-weight:800;color:#8b5a2b;letter-spacing:0.5px;margin-bottom:6px">PRA QUÊ?</div>
-          Pra ter um <b>ícone direto na tela inicial</b>, sem abrir navegador. Tela cheia, e funciona <b>até offline</b> depois do primeiro uso.
+      <style>
+        .ti-mini { font-size: 12.5px; color: #4a3b8a; line-height: 1.5; text-align: left; }
+        .ti-mini ol, .ti-mini ul { padding-left: 18px; margin: 4px 0; }
+        .ti-mini li { margin: 2px 0; }
+        .ti-mini p { margin: 4px 0; }
+        .ti-mini b { color: #8b5a2b; }
+      </style>
+      <div class="ti-mini">
+        <div style="background:#fff4dc;border-radius:6px;padding:6px 10px;margin-bottom:8px;font-size:11px;color:#8b5a2b">
+          Ícone na tela · tela cheia · funciona offline.
         </div>
         <div id="instr-atual">${instr.corpo}</div>
-        <details style="margin-top:14px;font-size:12px;color:#888">
-          <summary style="cursor:pointer;font-weight:700;color:#8b5a2b">Outro dispositivo? Clique aqui</summary>
-          <div style="margin-top:10px;display:grid;gap:6px">
-            ${outras.map(k => `<button onclick="_mudarInstrInstalar('${k}')" style="text-align:left;background:#fff4dc;border:1.5px solid #c9a86b;padding:6px 10px;border-radius:8px;font-size:12px;color:#8b5a2b;font-weight:600;cursor:pointer;font-family:inherit">${INSTRUCOES_INSTALAR[k].titulo}</button>`).join('')}
+        <details style="margin-top:10px;font-size:11px;color:#888">
+          <summary style="cursor:pointer;color:#8b5a2b;font-weight:700">Outro dispositivo?</summary>
+          <div style="margin-top:6px;display:grid;gap:4px">
+            ${outras.map(k => `<button onclick="_mudarInstrInstalar('${k}')" style="text-align:left;background:#fff4dc;border:1px solid #c9a86b;padding:4px 8px;border-radius:6px;font-size:11px;color:#8b5a2b;cursor:pointer;font-family:inherit">${INSTRUCOES_INSTALAR[k].titulo}</button>`).join('')}
           </div>
         </details>
       </div>`;
   }
-  if (btn) { btn.textContent = 'Entendi 👍'; btn.onclick = () => fecharModal(); }
+  if (titulo) { titulo.style.fontSize = '17px'; titulo.style.margin = '4px 0 8px'; }
+  if (emoji) { emoji.style.fontSize = '32px'; }
+  if (btn) { btn.textContent = 'OK 👍'; btn.onclick = () => fecharModal(); }
   m.classList.remove('hidden');
 }
 

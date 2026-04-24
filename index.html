@@ -4,7 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MATEMÁGICA — Escolha o Ano</title>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=20">
+
+<!-- Meta Pixel — substituir SEU_PIXEL_ID_AQUI pelo ID real após criar no Business Manager -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'SEU_PIXEL_ID_AQUI');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
+
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=21">
 <style>
   h1.matemagica-titulo {
     font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
@@ -583,8 +601,8 @@
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="jogos_shared.js?v=20"></script>
-<script src="mascotes.js?v=20"></script>
+<script src="jogos_shared.js?v=21"></script>
+<script src="mascotes.js?v=21"></script>
 <script>
 // ============== MASCOTE DA TELA INICIAL ==============
 let _falaIdx = 0;

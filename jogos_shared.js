@@ -676,91 +676,44 @@ function detectarPlataforma() {
 
 const INSTRUCOES_INSTALAR = {
   'instalado': {
-    titulo: '✅ Já instalado!',
-    corpo: '<p>O app já tá instalado no seu dispositivo. Você pode abrir direto do ícone na tela inicial, sem precisar do navegador.</p>'
+    titulo: '✅ Já tá na tela',
+    corpo: '<p>Já tá tudo certo. Abra pelo ícone direto.</p>'
   },
   'ios-safari': {
-    titulo: '📱 iPhone ou iPad (Safari)',
-    corpo: `
-      <ol style="padding-left:20px;line-height:1.7">
-        <li>Toque no botão de <b>Compartilhar</b> <span style="display:inline-block;padding:2px 6px;background:#f0f0f5;border-radius:4px">⎘</span> (embaixo da tela)</li>
-        <li>Role a lista e toque em <b>"Adicionar à Tela de Início"</b></li>
-        <li>Confirme no botão <b>Adicionar</b> no canto superior</li>
-      </ol>
-      <p style="margin-top:10px;font-size:12px;color:#888">Vai aparecer um ícone roxo ✦ MATEMÁGICA na tela principal. Abre direto, sem barra de endereço.</p>`
+    titulo: '📱 iPhone (Safari)',
+    corpo: `<ol><li>Toca no <b>Compartilhar</b> ⎘</li><li><b>Adicionar à Tela de Início</b></li><li><b>Adicionar</b></li></ol>`
   },
   'ios-outro': {
-    titulo: '📱 iPhone ou iPad',
-    corpo: `
-      <p><b>Melhor jeito:</b> abra este site no <b>Safari</b> (não Chrome/Firefox), depois toque em Compartilhar ⎘ e escolha <b>Adicionar à Tela de Início</b>.</p>
-      <p style="font-size:12px;color:#888;margin-top:8px">Outros navegadores no iPhone não conseguem instalar o app igual ao Safari.</p>`
+    titulo: '📱 iPhone',
+    corpo: `<p>Abra no <b>Safari</b> → ⎘ → <b>Adicionar à Tela de Início</b>.</p>`
   },
   'android-chrome': {
     titulo: '📱 Android (Chrome)',
-    corpo: `
-      <ol style="padding-left:20px;line-height:1.7">
-        <li>Toque nos <b>3 pontos</b> ⋮ no canto superior direito</li>
-        <li>Escolha <b>"Instalar app"</b> ou <b>"Adicionar à tela inicial"</b></li>
-        <li>Confirme em <b>Instalar</b></li>
-      </ol>
-      <p style="margin-top:10px;font-size:12px;color:#888">Às vezes o Chrome já mostra um banner "Instalar Matemágica" embaixo — é só tocar nele.</p>`
+    corpo: `<ol><li><b>⋮</b> no canto superior</li><li><b>Instalar app</b></li><li>Confirma</li></ol>`
   },
   'android-outro': {
     titulo: '📱 Android',
-    corpo: `
-      <p>Abra este site no <b>Chrome</b> (recomendado) e depois:</p>
-      <ol style="padding-left:20px;line-height:1.7;margin-top:6px">
-        <li>Toque nos <b>3 pontos</b> ⋮ no canto superior</li>
-        <li>Escolha <b>"Instalar app"</b></li>
-      </ol>`
+    corpo: `<p>Abra no <b>Chrome</b> → ⋮ → <b>Instalar app</b>.</p>`
   },
   'desktop-chrome': {
-    titulo: '💻 Computador (Chrome)',
-    corpo: `
-      <p>Tem um atalho na barra de endereço:</p>
-      <ol style="padding-left:20px;line-height:1.7;margin-top:6px">
-        <li>Olhe à direita da URL, procure o ícone <b>⊞ Instalar</b> (um quadradinho com seta)</li>
-        <li>Clique nele e confirme em <b>Instalar</b></li>
-      </ol>
-      <p style="margin-top:10px">Se não aparecer, vá em <b>⋮ Menu → Instalar Matemágica</b>.</p>
-      <p style="font-size:12px;color:#888;margin-top:8px">O app vira um ícone no Dock/barra de tarefas, abre como um programa de verdade.</p>`
+    titulo: '💻 Chrome (PC/Mac)',
+    corpo: `<ol><li>Ícone <b>⊞</b> à direita da URL</li><li><b>Instalar</b></li></ol><p style="font-size:11px;color:#888;margin-top:6px">Não vê? <b>⋮ → Instalar Matemágica</b>.</p>`
   },
   'desktop-edge': {
-    titulo: '💻 Computador (Edge)',
-    corpo: `
-      <ol style="padding-left:20px;line-height:1.7">
-        <li>Clique no ícone <b>⊞</b> (Instalar) na barra de endereço, à direita da URL</li>
-        <li>Ou vá em <b>… Menu → Aplicativos → Instalar este site como aplicativo</b></li>
-      </ol>`
+    titulo: '💻 Edge',
+    corpo: `<p>Ícone <b>⊞</b> na barra de endereço → <b>Instalar</b>.</p>`
   },
   'desktop-safari': {
     titulo: '💻 Mac (Safari)',
-    corpo: `
-      <ol style="padding-left:20px;line-height:1.7">
-        <li>Com a página aberta, vá no menu <b>Arquivo → Adicionar ao Dock…</b></li>
-        <li>Confirme em <b>Adicionar</b></li>
-      </ol>
-      <p style="font-size:12px;color:#888;margin-top:8px">Funciona no macOS Sonoma (14+). Em versões anteriores, use Chrome ou Edge pra instalar.</p>`
+    corpo: `<p>Menu <b>Arquivo → Adicionar ao Dock…</b> (macOS 14+)</p>`
   },
   'desktop-firefox': {
-    titulo: '💻 Computador (Firefox)',
-    corpo: `
-      <p>O Firefox desktop ainda não suporta instalação de PWA nativamente.</p>
-      <p style="margin-top:6px"><b>Alternativas:</b></p>
-      <ul style="padding-left:20px;line-height:1.7">
-        <li>Use <b>Chrome</b>, <b>Edge</b> ou <b>Brave</b> pra instalar</li>
-        <li>Ou salve o site como <b>favorito</b> (Ctrl+D) pra acesso rápido</li>
-      </ul>`
+    titulo: '💻 Firefox',
+    corpo: `<p>Use <b>Chrome</b> ou <b>Edge</b> pra instalar. Ou Ctrl+D pra favoritar.</p>`
   },
   'desconhecido': {
-    titulo: '💻 Instalação',
-    corpo: `
-      <p>Pra ter o Matemágica como app na tela inicial:</p>
-      <ul style="padding-left:20px;line-height:1.7">
-        <li><b>iPhone/iPad:</b> Safari → Compartilhar ⎘ → Adicionar à Tela de Início</li>
-        <li><b>Android:</b> Chrome → ⋮ → Instalar app</li>
-        <li><b>Computador:</b> Chrome/Edge → ícone de instalação na barra de endereço</li>
-      </ul>`
+    titulo: '📱 Como criar atalho',
+    corpo: `<ul><li><b>iPhone:</b> Safari → ⎘ → Adicionar à Tela</li><li><b>Android:</b> Chrome → ⋮ → Instalar</li><li><b>PC:</b> Chrome/Edge → ⊞ na URL</li></ul>`
   }
 };
 
@@ -774,30 +727,33 @@ function mostrarTutorialInstalar() {
   const conteudo = document.getElementById('m-conteudo');
   const btn = document.getElementById('modal-btn');
   if (emoji) emoji.textContent = plat === 'instalado' ? '✅' : '📱';
-  if (titulo) titulo.textContent = instr.titulo;
+  if (titulo) { titulo.textContent = instr.titulo; titulo.style.fontSize = '17px'; titulo.style.margin = '4px 0 8px'; }
+  if (emoji) { emoji.style.fontSize = '32px'; }
   if (conteudo) {
-    // Mostra as instruções detectadas + link pra ver de outra plataforma
     const outras = Object.keys(INSTRUCOES_INSTALAR).filter(k => k !== plat && k !== 'desconhecido' && k !== 'instalado');
     conteudo.innerHTML = `
-      <div style="text-align:left;font-size:14px;color:#4a3b8a;line-height:1.55">
-        <div style="background:linear-gradient(135deg,#ede8fa,#d4e8f5);border-radius:10px;padding:12px 14px;margin-bottom:12px">
-          <div style="font-size:11px;font-weight:800;color:#6b54d3;letter-spacing:0.5px;margin-bottom:6px">PRA QUÊ?</div>
-          Pra ter um <b>ícone direto na tela inicial</b>, sem precisar abrir o navegador toda vez. Abre tela cheia, sem barra de endereço, e funciona <b>até offline</b> depois do primeiro uso.
+      <style>
+        .ti-mini { font-size: 12.5px; color: #4a3b8a; line-height: 1.5; text-align: left; }
+        .ti-mini ol, .ti-mini ul { padding-left: 18px; margin: 4px 0; }
+        .ti-mini li { margin: 2px 0; }
+        .ti-mini p { margin: 4px 0; }
+        .ti-mini b { color: #6b54d3; }
+      </style>
+      <div class="ti-mini">
+        <div style="background:#ede8fa;border-radius:6px;padding:6px 10px;margin-bottom:8px;font-size:11px;color:#6b54d3">
+          Ícone na tela · tela cheia · funciona offline.
         </div>
-        <div id="instr-atual">
-          ${instr.corpo}
-        </div>
-        <details style="margin-top:14px;font-size:12px;color:#888">
-          <summary style="cursor:pointer;font-weight:700;color:#6b54d3">Usando outro dispositivo? Clique aqui</summary>
-          <div style="margin-top:10px;display:grid;gap:6px">
-            ${outras.map(k => `<button onclick="_mudarInstrInstalar('${k}')" style="text-align:left;background:#f7f5ff;border:1.5px solid #c5bbe9;padding:6px 10px;border-radius:8px;font-size:12px;color:#6b54d3;font-weight:600;cursor:pointer;font-family:inherit">${INSTRUCOES_INSTALAR[k].titulo}</button>`).join('')}
+        <div id="instr-atual">${instr.corpo}</div>
+        <details style="margin-top:10px;font-size:11px;color:#888">
+          <summary style="cursor:pointer;color:#6b54d3;font-weight:700">Outro dispositivo?</summary>
+          <div style="margin-top:6px;display:grid;gap:4px">
+            ${outras.map(k => `<button onclick="_mudarInstrInstalar('${k}')" style="text-align:left;background:#f7f5ff;border:1px solid #c5bbe9;padding:4px 8px;border-radius:6px;font-size:11px;color:#6b54d3;cursor:pointer;font-family:inherit">${INSTRUCOES_INSTALAR[k].titulo}</button>`).join('')}
           </div>
         </details>
-      </div>
-    `;
+      </div>`;
   }
   if (btn) {
-    btn.textContent = 'Entendi 👍';
+    btn.textContent = 'OK 👍';
     btn.onclick = () => fecharModal();
   }
   m.classList.remove('hidden');
@@ -1000,6 +956,12 @@ async function ativarLicenca(key) {
         STATE.moedas = (STATE.moedas || 0) + 500;
         if (!STATE.badges.includes('matemagico')) STATE.badges.push('matemagico');
         STATE.save();
+        // Meta Pixel — evento Purchase só na primeira ativação (compra real)
+        try {
+          if (typeof fbq === 'function') {
+            fbq('track', 'Purchase', { value: 17.00, currency: 'BRL' });
+          }
+        } catch(e) {}
       }
       fecharModal();
       if (typeof soltarConfete === 'function') soltarConfete(120);
