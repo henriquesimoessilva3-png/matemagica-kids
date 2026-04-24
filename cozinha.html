@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matemática da Cozinha — MATEMÁGICA</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=15">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  h1.titulo-cz {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 32px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(135deg, #ff7b6b, #ff9a44);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-align: center; margin: 6px 0 2px; line-height: 1.1;
+  }
+  .sub-cz { text-align: center; color: #888; font-size: 13px; margin-bottom: 14px; }
+
+  .receitas-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 420px) { .receitas-grid { grid-template-columns: 1fr; } }
+  .receita-card {
+    background: #fff; border: 2.5px solid #ffd4a0;
+    border-radius: 14px; padding: 12px; cursor: pointer;
+    transition: all 0.2s; text-align: left;
+  }
+  .receita-card:hover {
+    transform: translateY(-3px);
+    border-color: #ff9a44;
+    box-shadow: 0 6px 14px rgba(255,154,68,0.2);
+  }
+  .receita-card.ativa {
+    background: linear-gradient(135deg, #fff4dc, #ffe0a0);
+    border-color: #ff9a44;
+  }
+  .receita-emoji { font-size: 36px; text-align: center; line-height: 1; }
+  .receita-nome { font-size: 14px; font-weight: 800; color: #6b3a15; text-align: center; margin: 4px 0 2px; }
+  .receita-meta { font-size: 10px; color: #8b5a2b; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .cz-controles {
+    background: linear-gradient(135deg, #fff4dc, #ffe8ba);
+    border: 2.5px solid #d4a574;
+    border-radius: 14px; padding: 14px 16px;
+    margin-bottom: 12px; text-align: center;
+  }
+  .cz-pessoas-label {
+    font-size: 11px; font-weight: 800; color: #8b5a2b;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .cz-pessoas-controle {
+    display: flex; gap: 8px; justify-content: center; align-items: center;
+  }
+  .cz-pessoas-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: #ff9a44; color: #fff; border: none;
+    font-size: 22px; font-weight: 900; cursor: pointer;
+    font-family: inherit;
+  }
+  .cz-pessoas-btn:hover { background: #ff7b2a; }
+  .cz-pessoas-num {
+    font-size: 36px; font-weight: 900; color: #6b3a15;
+    min-width: 60px;
+  }
+  .cz-hint { font-size: 11px; color: #888; margin-top: 6px; }
+
+  .cz-ingredientes {
+    background: #fff; border-radius: 14px;
+    border: 2.5px solid #ffd4a0;
+    padding: 14px; margin-bottom: 12px;
+  }
+  .cz-titulo-ing {
+    font-size: 13px; font-weight: 800; color: #6b3a15;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .cz-pessoa-badge {
+    background: #ff9a44; color: #fff;
+    padding: 3px 8px; border-radius: 10px;
+    font-size: 11px;
+  }
+  .cz-lista-ing {
+    display: grid; gap: 8px;
+  }
+  .cz-ing-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 12px; border-radius: 10px;
+    background: #fff4dc;
+    font-size: 14px; color: #3a2818;
+  }
+  .cz-ing-item b { color: #8b5a2b; font-family: 'Courier New', monospace; font-size: 15px; }
+  .cz-ing-item.piscou {
+    animation: piscaSuave 0.5s 2;
+  }
+  @keyframes piscaSuave {
+    0%, 100% { background: #fff4dc; }
+    50% { background: #ffd48a; }
+  }
+
+  .cz-desafio {
+    background: linear-gradient(135deg, #ede8fa, #d9c8f5);
+    border: 2.5px solid #b968e8;
+    border-radius: 14px; padding: 14px;
+    margin-bottom: 12px;
+  }
+  .cz-desafio-titulo {
+    font-size: 12px; font-weight: 800; color: #6b54d3;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+  .cz-desafio-pergunta {
+    font-size: 15px; color: #4a3b8a; font-weight: 600;
+    line-height: 1.4; margin-bottom: 10px;
+  }
+  .cz-desafio-pergunta b { color: #8b45b8; }
+  .cz-opcoes {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .cz-opcoes button {
+    padding: 12px 6px;
+    font-size: 17px; font-weight: 800;
+    background: #fff; color: #4a3b8a;
+    border: 2.5px solid #c5bbe9; border-radius: 10px;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.15s;
+  }
+  .cz-opcoes button:hover:not(:disabled) { background: #ede8fa; transform: scale(1.03); }
+  .cz-opcoes button.acerto { background: #d4f5dd; border-color: #3ac070; color: #1b4a2a; animation: flash 0.4s; }
+  .cz-opcoes button.erro { background: #fde0e0; border-color: #d04040; color: #801818; animation: shake 0.3s; }
+  .cz-feedback {
+    min-height: 40px; padding: 10px; border-radius: 10px;
+    font-size: 13px; font-weight: 700; text-align: center;
+    margin-top: 10px;
+  }
+  .cz-feedback.acerto { background: #d4f5dd; color: #1b4a2a; }
+  .cz-feedback.erro { background: #fde0e0; color: #801818; }
+
+  .voltar {
+    display: inline-block;
+    color: #6b54d3; text-decoration: none;
+    font-size: 12px; font-weight: 700;
+    background: #ede8fa; border: 2px solid #c5bbe9;
+    padding: 6px 12px; border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .cz-explicacao {
+    background: #fff3d6;
+    border-left: 4px solid #ffd36b;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px; color: #5a3a00; line-height: 1.45;
+    margin-bottom: 12px;
+  }
+  .cz-explicacao b { color: #8a5a10; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="voltar">← Voltar ao início</a>
+  <h1 class="titulo-cz">🍰 Matemática da Cozinha</h1>
+  <div class="sub-cz">Matemática real: dobrar receita, mudar porção, calcular no feijão.</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div class="cz-explicacao">
+    <b>💡 Como funciona:</b> escolhe uma receita, muda o <b>número de pessoas</b> e a matemágica mostra <b>quanto de cada ingrediente</b> precisa. Depois responde o desafio. É frações + proporção + multiplicação <b>de verdade</b>.
+  </div>
+
+  <div class="receitas-grid" id="receitas-grid"></div>
+
+  <div id="receita-ativa" class="hidden">
+    <div class="cz-controles">
+      <div class="cz-pessoas-label">Pra quantas pessoas?</div>
+      <div class="cz-pessoas-controle">
+        <button class="cz-pessoas-btn" onclick="mudarPessoas(-1)">−</button>
+        <div class="cz-pessoas-num" id="pessoas-num">4</div>
+        <button class="cz-pessoas-btn" onclick="mudarPessoas(1)">+</button>
+      </div>
+      <div class="cz-hint">Receita original faz pra <b id="pessoas-base">4</b></div>
+    </div>
+
+    <div class="cz-ingredientes">
+      <div class="cz-titulo-ing">
+        <span>🛒 Ingredientes</span>
+        <span class="cz-pessoa-badge"><span id="badge-pessoas">4</span> pessoas</span>
+      </div>
+      <div class="cz-lista-ing" id="lista-ing"></div>
+    </div>
+
+    <div class="cz-desafio" id="desafio">
+      <div class="cz-desafio-titulo">🎯 Desafio de matemática</div>
+      <div class="cz-desafio-pergunta" id="desafio-pergunta"></div>
+      <div class="cz-opcoes" id="desafio-opcoes"></div>
+      <div class="cz-feedback" id="desafio-fb"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<script src="mascotes.js?v=15"></script>
+<script src="jogos_shared.js?v=15"></script>
+<script>
+STORAGE_KEY = 'jogosMat_default';
+CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
+
+// ============== RECEITAS BR ==============
+// Estrutura: base_pessoas = pra quantas a receita "original" rende
+// Cada ingrediente tem quantidade/unidade e pode ser fracionário
+const RECEITAS = [
+  {
+    id: 'brigadeiro', nome: 'Brigadeiro', emoji: '🍫',
+    meta: 'Clássico · 15min', base: 20, // 20 brigadeiros
+    unidade_base: 'brigadeiros',
+    ingredientes: [
+      { nome: 'leite condensado', qtd: 1, unidade: 'lata' },
+      { nome: 'chocolate em pó', qtd: 3, unidade: 'col. de sopa' },
+      { nome: 'manteiga', qtd: 1, unidade: 'col. de sopa' },
+      { nome: 'granulado', qtd: 100, unidade: 'g' }
+    ]
+  },
+  {
+    id: 'pao-queijo', nome: 'Pão de Queijo', emoji: '🧀',
+    meta: 'Mineiro · 40min', base: 30, // 30 unidades
+    unidade_base: 'pães',
+    ingredientes: [
+      { nome: 'polvilho azedo', qtd: 500, unidade: 'g' },
+      { nome: 'queijo minas ralado', qtd: 300, unidade: 'g' },
+      { nome: 'leite', qtd: 200, unidade: 'mL' },
+      { nome: 'óleo', qtd: 100, unidade: 'mL' },
+      { nome: 'ovos', qtd: 2, unidade: 'un' },
+      { nome: 'sal', qtd: 1, unidade: 'col. de chá' }
+    ]
+  },
+  {
+    id: 'bolo-cenoura', nome: 'Bolo de Cenoura', emoji: '🥕',
+    meta: 'Clássico · 50min', base: 8, // 8 fatias
+    unidade_base: 'fatias',
+    ingredientes: [
+      { nome: 'cenouras médias', qtd: 3, unidade: 'un' },
+      { nome: 'ovos', qtd: 3, unidade: 'un' },
+      { nome: 'óleo', qtd: 1, unidade: 'xíc.' },
+      { nome: 'açúcar', qtd: 2, unidade: 'xíc.' },
+      { nome: 'farinha de trigo', qtd: 2.5, unidade: 'xíc.' },
+      { nome: 'fermento', qtd: 1, unidade: 'col. de sopa' }
+    ]
+  },
+  {
+    id: 'suco-laranja', nome: 'Suco de Laranja', emoji: '🍊',
+    meta: 'Rápido · 5min', base: 4, // 4 copos
+    unidade_base: 'copos',
+    ingredientes: [
+      { nome: 'laranjas', qtd: 8, unidade: 'un' },
+      { nome: 'água', qtd: 500, unidade: 'mL' },
+      { nome: 'açúcar (opcional)', qtd: 2, unidade: 'col. de sopa' }
+    ]
+  },
+  {
+    id: 'feijao', nome: 'Feijão', emoji: '🫘',
+    meta: 'Brasileirão · 1h', base: 6, // 6 pessoas
+    unidade_base: 'porções',
+    ingredientes: [
+      { nome: 'feijão preto', qtd: 500, unidade: 'g' },
+      { nome: 'alho (dentes)', qtd: 4, unidade: 'un' },
+      { nome: 'cebola média', qtd: 1, unidade: 'un' },
+      { nome: 'louro (folhas)', qtd: 2, unidade: 'un' },
+      { nome: 'sal', qtd: 1, unidade: 'col. de sopa' },
+      { nome: 'água', qtd: 2, unidade: 'L' }
+    ]
+  },
+  {
+    id: 'vitamina', nome: 'Vitamina de Banana', emoji: '🍌',
+    meta: 'Café da manhã · 3min', base: 2, // 2 copos
+    unidade_base: 'copos',
+    ingredientes: [
+      { nome: 'banana madura', qtd: 2, unidade: 'un' },
+      { nome: 'leite', qtd: 500, unidade: 'mL' },
+      { nome: 'aveia', qtd: 2, unidade: 'col. de sopa' },
+      { nome: 'mel', qtd: 1, unidade: 'col. de sopa' }
+    ]
+  }
+];
+
+let _receitaAtiva = null;
+let _pessoasAtual = 4;
+let _desafioAtual = null;
+
+function renderReceitas() {
+  const el = document.getElementById('receitas-grid');
+  el.innerHTML = RECEITAS.map(r => `
+    <button class="receita-card ${_receitaAtiva && _receitaAtiva.id === r.id ? 'ativa' : ''}" onclick="escolherReceita('${r.id}')">
+      <div class="receita-emoji">${r.emoji}</div>
+      <div class="receita-nome">${r.nome}</div>
+      <div class="receita-meta">${r.meta}</div>
+    </button>
+  `).join('');
+}
+
+function escolherReceita(id) {
+  _receitaAtiva = RECEITAS.find(r => r.id === id);
+  _pessoasAtual = _receitaAtiva.base;
+  document.getElementById('pessoas-base').textContent = _receitaAtiva.base + ' ' + _receitaAtiva.unidade_base;
+  document.getElementById('receita-ativa').classList.remove('hidden');
+  renderReceitas();
+  renderIngredientes();
+  gerarDesafio();
+  document.getElementById('receita-ativa').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function mudarPessoas(delta) {
+  const novo = Math.max(1, Math.min(50, _pessoasAtual + delta));
+  if (novo === _pessoasAtual) return;
+  _pessoasAtual = novo;
+  renderIngredientes(true);
+  gerarDesafio();
+}
+
+function formatarQtd(q) {
+  if (q === Math.floor(q)) return String(q);
+  // Converte decimal em fração amigável
+  const frac = { 0.5: '½', 0.25: '¼', 0.75: '¾', 0.33: '⅓', 0.67: '⅔', 0.2: '⅕' };
+  const int = Math.floor(q);
+  const resto = q - int;
+  for (const [k, v] of Object.entries(frac)) {
+    if (Math.abs(resto - parseFloat(k)) < 0.02) return int === 0 ? v : `${int} ${v}`;
+  }
+  return (Math.round(q * 100) / 100).toFixed(2).replace(/\.?0+$/, '').replace('.', ',');
+}
+
+function renderIngredientes(piscar) {
+  if (!_receitaAtiva) return;
+  const razao = _pessoasAtual / _receitaAtiva.base;
+  document.getElementById('pessoas-num').textContent = _pessoasAtual;
+  document.getElementById('badge-pessoas').textContent = _pessoasAtual;
+  const lista = _receitaAtiva.ingredientes.map(ing => {
+    const novaQtd = ing.qtd * razao;
+    return `<div class="cz-ing-item ${piscar ? 'piscou' : ''}">
+      <span>${ing.nome}</span>
+      <b>${formatarQtd(novaQtd)} ${ing.unidade}</b>
+    </div>`;
+  }).join('');
+  document.getElementById('lista-ing').innerHTML = lista;
+}
+
+// ============== DESAFIOS ==============
+function gerarDesafio() {
+  if (!_receitaAtiva) return;
+  const razao = _pessoasAtual / _receitaAtiva.base;
+  const ingComQtdInt = _receitaAtiva.ingredientes.filter(i => Number.isInteger(i.qtd * razao) && i.qtd * razao > 0);
+  if (ingComQtdInt.length === 0) {
+    // Fallback: pega o primeiro ingrediente qualquer
+    const ing = _receitaAtiva.ingredientes[0];
+    _desafioAtual = null;
+    document.getElementById('desafio-pergunta').textContent = 'Mude o número de pessoas pra gerar um desafio novo!';
+    document.getElementById('desafio-opcoes').innerHTML = '';
+    return;
+  }
+  const ing = ingComQtdInt[Math.floor(Math.random() * ingComQtdInt.length)];
+  const certa = ing.qtd * razao;
+  _desafioAtual = { ing, certa, razao };
+
+  const tipos = [];
+  // Pergunta 1: "Pra X pessoas, quantos Y?"
+  tipos.push({
+    pergunta: `Pra <b>${_pessoasAtual} ${_receitaAtiva.unidade_base}</b>, quantos <b>${ing.unidade}</b> de ${ing.nome}?`,
+    certa: certa,
+    op: 'multiplicacao'
+  });
+  // Pergunta 2: "Quanto a mais/menos vs receita original?"
+  if (_pessoasAtual !== _receitaAtiva.base) {
+    const delta = certa - ing.qtd;
+    if (delta !== 0) {
+      tipos.push({
+        pergunta: `A receita original pede ${ing.qtd} ${ing.unidade} de ${ing.nome}. <b>Quantos ${delta > 0 ? 'a mais' : 'a menos'}</b> pra ${_pessoasAtual} ${_receitaAtiva.unidade_base}?`,
+        certa: Math.abs(delta),
+        op: delta > 0 ? 'subtracao' : 'subtracao'
+      });
+    }
+  }
+  // Pergunta 3: "Se eu já tenho N, quanto falta?"
+  if (certa > 3) {
+    const tenho = Math.floor(certa / 2);
+    tipos.push({
+      pergunta: `Você já tem <b>${tenho} ${ing.unidade}</b> de ${ing.nome}. <b>Quanto falta comprar</b>?`,
+      certa: certa - tenho,
+      op: 'subtracao'
+    });
+  }
+
+  const escolhida = tipos[Math.floor(Math.random() * tipos.length)];
+  _desafioAtual = { ...escolhida, ing };
+  document.getElementById('desafio-pergunta').innerHTML = escolhida.pergunta;
+
+  // Gera 4 opções
+  const set = new Set([escolhida.certa]);
+  while (set.size < 4) {
+    const delta = Math.floor(Math.random() * 6) - 3;
+    const v = Math.max(0, escolhida.certa + delta);
+    if (v !== escolhida.certa) set.add(v);
+  }
+  const arr = Array.from(set).sort((a, b) => a - b);
+  document.getElementById('desafio-opcoes').innerHTML = arr.map(v =>
+    `<button onclick="responderDesafio(${v}, this)">${formatarQtd(v)} ${_desafioAtual.ing.unidade}</button>`
+  ).join('');
+  document.getElementById('desafio-fb').textContent = '';
+  document.getElementById('desafio-fb').className = 'cz-feedback';
+}
+
+function responderDesafio(v, btn) {
+  if (!_desafioAtual) return;
+  const botoes = document.querySelectorAll('#desafio-opcoes button');
+  botoes.forEach(b => b.disabled = true);
+  const fb = document.getElementById('desafio-fb');
+  if (Math.abs(v - _desafioAtual.certa) < 0.01) {
+    btn.classList.add('acerto');
+    try { somAcerto(); } catch(e) {}
+    try {
+      jogoAtivo = 'cozinha_' + _receitaAtiva.id;
+      STATE.acertou(jogoAtivo);
+      window._acertosSessao = (window._acertosSessao || 0) + 1;
+      if (window._acertosSessao % 5 === 0 && typeof mostrarCapsulaMundoReal === 'function') {
+        setTimeout(mostrarCapsulaMundoReal, 1000);
+      }
+      renderHeaderPlayer();
+    } catch(e) {}
+    fb.className = 'cz-feedback acerto';
+    fb.innerHTML = `✨ Isso! ${formatarQtd(_desafioAtual.certa)} ${_desafioAtual.ing.unidade}. ${fraseSorteada(FRASES_ACERTO)}`;
+    try { soltarConfete(20); reagirMascoteCoach('acerto'); } catch(e) {}
+    setTimeout(gerarDesafio, 1800);
+  } else {
+    btn.classList.add('erro');
+    botoes.forEach(b => {
+      const txt = b.textContent.trim().split(' ')[0].replace(',', '.');
+      if (Math.abs(parseFloat(txt) - _desafioAtual.certa) < 0.01) b.classList.add('acerto');
+    });
+    try { somErro(); reagirMascoteCoach('erro'); } catch(e) {}
+    try {
+      jogoAtivo = 'cozinha_' + _receitaAtiva.id;
+      STATE.errou(jogoAtivo);
+    } catch(e) {}
+    fb.className = 'cz-feedback erro';
+    fb.innerHTML = `A resposta era <b>${formatarQtd(_desafioAtual.certa)} ${_desafioAtual.ing.unidade}</b>. Respira e confere a razão (<b>${formatarQtd(_desafioAtual.razao || (_pessoasAtual / _receitaAtiva.base))}×</b>).`;
+    if (typeof mostrarHipoteseErroInline === 'function' && _desafioAtual.op) {
+      const a = _receitaAtiva.base, b = _pessoasAtual;
+      mostrarHipoteseErroInline({ a: _desafioAtual.ing.qtd, b: _pessoasAtual, op: _desafioAtual.op, esperado: _desafioAtual.certa, errado: v }, '#desafio-fb');
+    }
+    setTimeout(gerarDesafio, 3200);
+  }
+}
+
+// Init
+initJogos();
+renderReceitas();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

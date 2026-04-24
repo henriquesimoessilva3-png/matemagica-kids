@@ -843,14 +843,12 @@ async function ativarLicenca(key) {
     const params = new URLSearchParams(location.search);
     const key = params.get('ativar');
     if (!key) return;
-    // Limpa URL depois de processar pra não ficar compartilhável
-    ativarLicenca(key.trim().toUpperCase()).finally(() => {
-      try {
-        const url = new URL(location.href);
-        url.searchParams.delete('ativar');
-        history.replaceState({}, '', url.pathname + (url.search || '') + url.hash);
-      } catch(e) {}
-    });
+    try {
+      const url = new URL(location.href);
+      url.searchParams.delete('ativar');
+      history.replaceState({}, '', url.pathname + (url.search || '') + url.hash);
+    } catch(e) {}
+    ativarLicenca(key.trim().toUpperCase());
   } catch(e) {}
 })();
 
@@ -1886,6 +1884,64 @@ function abrirExplicaELI5(id) {
     btn.onclick = () => fecharModal();
   }
   m.classList.remove('hidden');
+}
+
+// ============== "COMO MEU FILHO PENSOU?" (Boaler) ==============
+// Dado um contexto {a, b, op, esperado, errado}, tenta inferir qual
+// confusão a criança fez e devolver uma hipótese acolhedora.
+// Jogos chamam gerarHipoteseErro(ctx) e mostram inline no feedback.
+function gerarHipoteseErro(ctx) {
+  if (!ctx || ctx.errado == null || ctx.esperado == null) return null;
+  const { a, b, op, esperado, errado } = ctx;
+
+  if (op === 'soma' || op === '+') {
+    if (errado === a - b || errado === b - a) return `Você pode ter <b>subtraído em vez de somar</b>. O sinal + pede pra <b>juntar</b>.`;
+    if (errado === a * b && a > 0 && b > 0) return `Você pode ter <b>multiplicado em vez de somar</b>. "+" é juntar 1 vez, "×" é juntar várias.`;
+    if (errado === esperado + 1 || errado === esperado - 1) return `Faltou um ou sobrou um. Tente <b>contar de novo começando pelo número maior</b>.`;
+    if (errado === parseInt(String(a) + String(b))) return `Você pode ter <b>colado os números</b> em vez de somar. ${a} + ${b} não é "${a}${b}" — é contar ${a} e depois mais ${b}.`;
+  }
+
+  if (op === 'subtracao' || op === '-' || op === '−') {
+    if (errado === a + b) return `Você pode ter <b>somado em vez de subtrair</b>. O sinal "−" pede pra <b>tirar</b>, não juntar.`;
+    if (errado === esperado + 1 || errado === esperado - 1) return `Passou ou faltou 1. Tente contar "de ${b} até ${a}" pulando de 1 em 1.`;
+    if (errado === b - a) return `Você pode ter <b>invertido os números</b>. ${a} − ${b} é tirar ${b} <b>de</b> ${a} (o primeiro manda).`;
+  }
+
+  if (op === 'multiplicacao' || op === '*' || op === '×') {
+    if (errado === a + b) return `Você pode ter <b>somado em vez de multiplicar</b>. ${a} × ${b} é "${a} grupos de ${b}" (somar ${b} ${a} vezes).`;
+    if (errado === a * b + a || errado === a * b + b) return `Você pode ter somado <b>1 grupo a mais</b>. Conte de novo: são ${a} grupos de ${b} (nem mais, nem menos).`;
+    if (errado === esperado - b || errado === esperado - a) return `Você pode ter somado <b>1 grupo a menos</b>. Revisa: são ${a} grupos de ${b}.`;
+  }
+
+  if (op === 'divisao' || op === '/' || op === '÷') {
+    if (errado === a - b) return `Você pode ter <b>subtraído em vez de dividir</b>. ${a} ÷ ${b} é "quantos grupos de ${b} cabem em ${a}?"`;
+    if (errado === a * b) return `Você pode ter <b>multiplicado em vez de dividir</b>. Dividir é o contrário: repartir em grupos iguais.`;
+  }
+
+  // Hipótese genérica quando não consegue detectar padrão
+  const diff = Math.abs(errado - esperado);
+  if (diff <= 2) return `Tá quase! Você errou por <b>${diff === 1 ? '1 só' : `${diff}`}</b>. Respira e confere de novo, com calma.`;
+  return null;
+}
+
+function mostrarHipoteseErroInline(ctx, containerSelector) {
+  const hip = gerarHipoteseErro(ctx);
+  if (!hip) return;
+  const cont = typeof containerSelector === 'string'
+    ? document.querySelector(containerSelector)
+    : containerSelector;
+  if (!cont) return;
+  // Remove hipóteses anteriores
+  const antigas = cont.querySelectorAll('.hipotese-erro');
+  antigas.forEach(a => a.remove());
+  const div = document.createElement('div');
+  div.className = 'hipotese-erro';
+  div.style.cssText = 'background:linear-gradient(135deg,#ede8fa,#dccbf5);border-left:4px solid #6b54d3;border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13px;color:#4a3b8a;line-height:1.5;text-align:left';
+  div.innerHTML = `
+    <div style="font-size:10px;font-weight:800;color:#6b54d3;letter-spacing:0.5px;margin-bottom:4px">🤔 OLHA O QUE PODE TER ACONTECIDO</div>
+    ${hip}
+  `;
+  cont.appendChild(div);
 }
 
 // Injeta botão "💡 Me explica" no container de feedback dos jogos

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Problemas do Dia a Dia — MATEMÁGICA</title>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=14">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=15">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -176,8 +176,8 @@
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="mascotes.js?v=14"></script>
-<script src="jogos_shared.js?v=14"></script>
+<script src="mascotes.js?v=15"></script>
+<script src="jogos_shared.js?v=15"></script>
 <script>
 STORAGE_KEY = 'jogosMat_default';
 CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
@@ -326,6 +326,15 @@ function responder(v, btn) {
     } catch(e) {}
     fb.className = 'prob-feedback erro';
     fb.innerHTML = `Respira. A resposta era <b>${_probAtual.resposta}</b>. Tenta o próximo — cada erro ensina.`;
+    // "Como meu filho pensou?" — hipótese do erro
+    try {
+      const txt = _probAtual.texto.replace(/<[^>]+>/g, '');
+      const nums = (txt.match(/\d+/g) || []).map(Number);
+      const a = nums[0], b = nums[1];
+      if (a != null && b != null && typeof mostrarHipoteseErroInline === 'function') {
+        mostrarHipoteseErroInline({ a, b, op: _probAtual.tipo, esperado: _probAtual.resposta, errado: v }, '#prob-feedback');
+      }
+    } catch(e) {}
   }
   atualizarHUD();
 }

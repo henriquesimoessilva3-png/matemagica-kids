@@ -164,6 +164,8 @@
     <p>Acompanhe a evolução dos seus filhos</p>
   </div>
 
+  <div id="dica-boaler-slot"></div>
+
   <div class="ano-tabs">
     <button class="ano-tab ativo" onclick="trocarAno('todos', event)">Todos</button>
     <button class="ano-tab" onclick="trocarAno('1', event)">1º</button>
@@ -185,6 +187,100 @@ const CHAVES = {
   1: 'jogosMat1ano_v1', 2: 'jogosMat2ano_v1', 3: 'jogosMat3ano_v1',
   4: 'jogosMat4ano_v1', 5: 'jogosMat5ano_v1'
 };
+
+// ============== DICAS BOALER ROTATIVAS (12 semanas) ==============
+// Baseado em "Mentalidades Matemáticas" de Jo Boaler (Stanford) + material Youcubed.
+// Cada dica é acionável pra mãe/pai aplicar no dia a dia.
+const DICAS_BOALER = [
+  {
+    semana: 'Nunca diga "eu era ruim em matemática"',
+    corpo: 'A criança aprende que "mat é genético" e desiste antes de tentar. Substitua por: <b>"Matemática exige esforço, e esforço todo mundo tem."</b>',
+    exemplo: 'Se ela perguntar se você sabe: "Sei algumas coisas. Outras, eu aprendo se precisar. Matemática é assim."'
+  },
+  {
+    semana: 'Elogie o esforço, não a inteligência',
+    corpo: 'Pesquisa Stanford: elogio como "você é tão inteligente" <b>machuca</b> quando a criança falha depois (pensa: "perdi minha inteligência"). Elogio de esforço cria resiliência.',
+    exemplo: 'Troque "que esperto!" por <b>"que legal como você tentou de um jeito diferente"</b> ou <b>"você não desistiu — isso é mais importante que acertar"</b>.'
+  },
+  {
+    semana: 'Pergunte: "Como você pensou?"',
+    corpo: 'Antes de corrigir um erro, peça pra criança <b>mostrar o caminho do pensamento</b>. Muitas vezes o raciocínio tem lógica — só confundiu um passo.',
+    exemplo: 'Ela erra 3+4=6. Pergunte: "Como você fez?" Se responder "contei 3, 4, 5, 6, que é 4 números", vai ver que contou o 3 errado. Aí ensina o pulo correto.'
+  },
+  {
+    semana: 'Erro é treino, literalmente',
+    corpo: 'Estudos neurológicos mostram que o cérebro <b>cria mais conexões quando erra</b> do que quando acerta. Ou seja, errar é o cérebro crescendo — não o contrário.',
+    exemplo: 'Quando ela errar: "Seu cérebro tá fortalecendo um músculo agora. A próxima vai sair."'
+  },
+  {
+    semana: 'Mostre a matemática em tudo',
+    corpo: 'A mat fica abstrata quando só aparece na folha de exercício. <b>Conecte com o dia a dia</b>: receita, troco, horário, dividir lanche, medir altura.',
+    exemplo: 'Cozinhando: "Essa receita é pra 4 mas somos 6. Quanto a mais de cada ingrediente? Me ajuda a calcular."'
+  },
+  {
+    semana: 'Não tenha pressa nas respostas',
+    corpo: 'Crianças "lentas" em mat frequentemente são as mais <b>profundas</b> — estão pensando, não travando. Cronômetro e pressão mental <b>bloqueiam aprendizado</b>.',
+    exemplo: 'Se ela pausar pensando: silêncio. Não sugira, não termine a frase. Espere. Pergunte "quer falar o que tá pensando?"'
+  },
+  {
+    semana: 'Mostre múltiplos caminhos pra um problema',
+    corpo: 'Matemática não tem "um jeito certo". <b>Há sempre 2, 3, 5 formas</b> de resolver. Quando a criança vê isso, entende que pode escolher o jeito que faz sentido pra ela.',
+    exemplo: '12 + 9: pode ser "10 + 9 = 19, + 2 = 21". Ou "12 + 10 = 22, − 1 = 21". Ou 12+9 direto. Pergunte qual ela preferiu.'
+  },
+  {
+    semana: 'Celebre os "erros inteligentes"',
+    corpo: 'Um erro revelador vale mais que um acerto mecânico. Se a criança errou <b>mas o raciocínio foi criativo</b>, <b>comemore</b> o processo.',
+    exemplo: '"Você calculou 5×8 como 5+5+5+5+5+5+5+5 e se perdeu no meio. O MÉTODO tá certo! Só precisa aprender o atalho."'
+  },
+  {
+    semana: 'Evite "matemática de menina" e "matemática de menino"',
+    corpo: 'Dados mostram que o <b>estereótipo mata o interesse</b> de meninas antes dos 10 anos. Evite comentar "é difícil, mas você consegue" só pra ela.',
+    exemplo: 'Se ela falar "não sou boa em mat": <b>"Ninguém nasce bom ou ruim. Você tá aprendendo."</b> Mostrar Maryam Mirzakhani, Ada Lovelace ajuda.'
+  },
+  {
+    semana: 'Pergunte "o que você notou?" em vez de "quanto dá?"',
+    corpo: 'Matemática <b>viva é ver padrões</b>, não só calcular. Mostrar números e perguntar o que a criança vê ativa a parte criativa.',
+    exemplo: 'Tabela do 5: 5, 10, 15, 20, 25… "O que você nota?" Ela pode dizer "termina em 0 ou 5". Isso É matemática — descoberta.'
+  },
+  {
+    semana: 'Faça perguntas sem resposta única',
+    corpo: 'Problemas com <b>várias respostas válidas</b> desenvolvem mais que contas fechadas. É o princípio do jogo "Inventa!" no app.',
+    exemplo: '"Quantas maneiras você consegue fazer 10?" ou "Me dá 3 objetos em casa que caibam na palma da mão". A criança explora.'
+  },
+  {
+    semana: 'Quando travar, volte pro concreto',
+    corpo: 'Se abstrato não entra, <b>use objetos reais</b>: feijão, tampinha, moeda. O cérebro infantil precisa tocar antes de representar no papel.',
+    exemplo: 'Fração confunde? Corte uma maçã em 4 partes. Tire 3. É 3/4. Guarde 1/4. Volta pro papel depois.'
+  }
+];
+
+function dicaBoalerDaSemana() {
+  // Usa a semana do ano pra determinar qual dica mostrar (rotação consistente ao longo da semana).
+  const hoje = new Date();
+  const jan1 = new Date(hoje.getFullYear(), 0, 1);
+  const dias = Math.floor((hoje - jan1) / 86400000);
+  const semana = Math.floor(dias / 7);
+  return DICAS_BOALER[semana % DICAS_BOALER.length];
+}
+
+function renderDicaBoaler() {
+  const slot = document.getElementById('dica-boaler-slot');
+  if (!slot) return;
+  const d = dicaBoalerDaSemana();
+  slot.innerHTML = `
+    <div style="background:linear-gradient(135deg,#ede8fa,#fff3d6);border:2px solid #c5bbe9;border-radius:14px;padding:14px 16px;margin-bottom:16px;position:relative">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:20px">🌱</span>
+        <span style="font-size:10px;font-weight:800;color:#6b54d3;letter-spacing:1px;text-transform:uppercase">Dica da semana · Pesquisa de Stanford</span>
+      </div>
+      <div style="font-size:15px;font-weight:700;color:#4a3b8a;margin-bottom:6px">${d.semana}</div>
+      <div style="font-size:13px;color:#4a3b8a;line-height:1.55;margin-bottom:8px">${d.corpo}</div>
+      <div style="font-size:12px;color:#666;line-height:1.5;background:#fff;border-left:3px solid #ffd36b;padding:8px 10px;border-radius:6px"><b style="color:#8a5a10">Na prática:</b> ${d.exemplo}</div>
+      <div style="font-size:10px;color:#999;margin-top:8px;text-align:right">baseado em Jo Boaler · <a href="https://www.youcubed.org" target="_blank" rel="noopener" style="color:#6b54d3">youcubed.org</a></div>
+    </div>
+  `;
+}
+renderDicaBoaler();
 
 // Estrutura completa BNCC: capítulo → jogos (pra visão por tipo/capítulo)
 const ESTRUTURA_ANOS = {

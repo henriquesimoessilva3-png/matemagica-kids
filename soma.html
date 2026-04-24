@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soma e Subtração até 20 — MATEMÁGICA</title>
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=15">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6b54d3">
+<style>
+  h1.titulo-soma {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 32px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(135deg, #4ab3a5, #ff9a44);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-align: center; margin: 6px 0 2px; line-height: 1.1;
+  }
+  .sub-soma { text-align: center; color: #888; font-size: 13px; margin-bottom: 14px; }
+
+  .op-tabs {
+    display: flex; gap: 6px; justify-content: center;
+    margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .op-tab {
+    background: #f7f5ff; color: #6b54d3;
+    border: 2px solid #c5bbe9;
+    padding: 6px 14px; border-radius: 16px;
+    font-weight: 700; font-size: 13px;
+    cursor: pointer; font-family: inherit;
+  }
+  .op-tab.ativo.soma { background: #2ebd7c; color: #fff; border-color: #2ebd7c; }
+  .op-tab.ativo.subtracao { background: #c44a2a; color: #fff; border-color: #c44a2a; }
+
+  .pokedex-titulo {
+    font-size: 12px; color: #4a3b8a; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin: 14px 0 8px; text-align: center;
+  }
+  .pokedex-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 7px; margin-bottom: 12px;
+  }
+  @media (max-width: 400px) {
+    .pokedex-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .poke-card {
+    aspect-ratio: 3 / 4; border-radius: 11px;
+    padding: 6px; text-align: center;
+    display: flex; flex-direction: column; justify-content: space-between;
+    cursor: pointer; transition: all 0.2s;
+    border: 2.5px solid transparent; position: relative; overflow: hidden;
+  }
+  .poke-card:hover { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+  .poke-card.bloq {
+    background: linear-gradient(135deg, #d9d3e8, #ede8fa);
+    color: #8578b0; filter: grayscale(0.3);
+  }
+  .poke-card.n1 { background: linear-gradient(135deg, #ffd8d0, #ffb4a6); color: #7a3020; border-color: #ff9a80; }
+  .poke-card.n2 { background: linear-gradient(135deg, #ffe29a, #ffb347); color: #6a4020; border-color: #ff9a44; }
+  .poke-card.n3 { background: linear-gradient(135deg, #c8f2d8, #7ae0a0); color: #1b4a2a; border-color: #3ac070; }
+
+  .poke-num { font-size: 22px; font-weight: 900; line-height: 1; margin-top: 4px; }
+  .poke-label { font-size: 9px; font-weight: 700; opacity: 0.75;
+    text-transform: uppercase; letter-spacing: 0.5px; }
+  .poke-estrelas { font-size: 10px; letter-spacing: -1px; min-height: 12px; }
+  .poke-card.bloq .poke-num::before {
+    content: '?'; position: absolute;
+    font-size: 38px; left: 0; right: 0; top: 16px;
+    color: #6b54d3; opacity: 0.4;
+  }
+  .poke-card.bloq .poke-num { opacity: 0; }
+
+  .modo-tabs {
+    display: flex; gap: 8px; margin: 12px 0; justify-content: center;
+  }
+  .modo-tab {
+    background: #f7f5ff; border: 2px solid #c5bbe9; color: #6b54d3;
+    padding: 8px 16px; border-radius: 20px; font-weight: 700;
+    cursor: pointer; font-size: 13px; font-family: inherit;
+  }
+  .modo-tab.ativo { background: #6b54d3; color: #fff; border-color: #6b54d3; }
+
+  .estudo-area {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border-radius: 16px; padding: 16px; margin-bottom: 14px;
+  }
+  .estudo-titulo {
+    font-size: 16px; font-weight: 700; color: #4a3b8a;
+    text-align: center; margin-bottom: 12px;
+  }
+
+  .soma-visual {
+    background: #fff; border: 2.5px solid #c5bbe9;
+    border-radius: 12px; padding: 16px; text-align: center;
+  }
+  .soma-expr {
+    font-size: 28px; font-weight: 800; color: #4a3b8a;
+    margin-bottom: 12px;
+  }
+  .soma-expr b { color: #2ebd7c; }
+  .soma-expr b.menos { color: #c44a2a; }
+  .soma-bolinhas {
+    display: flex; justify-content: center; align-items: center;
+    gap: 18px; flex-wrap: wrap; margin: 10px 0;
+  }
+  .grupo-bolinhas {
+    display: grid; grid-template-columns: repeat(5, 16px); gap: 3px;
+    padding: 8px; border-radius: 8px;
+  }
+  .grupo-bolinhas.g1 { background: #e6f7ec; }
+  .grupo-bolinhas.g2 { background: #fff3d6; }
+  .grupo-bolinhas.g3 { background: #fde0e0; }
+  .bolinha {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffd36b, #ff9a44);
+  }
+  .bolinha.removida { opacity: 0.25; background: #aaa; }
+  .sep {
+    font-size: 32px; font-weight: 800; color: #4a3b8a;
+  }
+  .sep.menos { color: #c44a2a; }
+  .sep.igual { color: #2ebd7c; }
+  .soma-resultado {
+    font-size: 22px; font-weight: 800; color: #1b7a3a;
+    margin-top: 8px;
+  }
+
+  .macete-soma {
+    margin-top: 12px;
+    background: linear-gradient(135deg, #fff3d6, #ffe5a3);
+    border-left: 4px solid #ffd36b;
+    border-radius: 8px;
+    padding: 10px 12px; font-size: 13px;
+    color: #5a3a00; line-height: 1.45;
+  }
+  .macete-soma b { color: #8a5a10; }
+
+  .estudo-controles {
+    display: flex; gap: 8px; justify-content: center;
+    margin-top: 10px;
+  }
+  .estudo-btn {
+    background: #fff; border: 2px solid #c5bbe9; color: #6b54d3;
+    padding: 6px 12px; border-radius: 10px; font-weight: 700;
+    font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  .estudo-btn.principal {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff; border-color: #6b54d3;
+  }
+
+  .treino-header {
+    background: linear-gradient(135deg, #4ab3a5, #2ebd7c);
+    color: #fff; border-radius: 12px;
+    padding: 12px 14px; margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .treino-header.sub { background: linear-gradient(135deg, #ff7b6b, #c44a2a); }
+  .treino-placar { font-size: 24px; font-weight: 900; }
+  .treino-label { font-size: 11px; opacity: 0.9; text-transform: uppercase; }
+
+  .treino-pergunta {
+    background: #fff; border: 3px solid #2ebd7c;
+    border-radius: 14px; padding: 22px 16px;
+    text-align: center; margin-bottom: 14px;
+  }
+  .treino-pergunta.sub { border-color: #c44a2a; }
+  .treino-expr {
+    font-size: 40px; font-weight: 800; color: #4a3b8a;
+    margin-bottom: 6px;
+  }
+  .treino-hint { font-size: 12px; color: #888; }
+
+  .treino-opcoes {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .treino-opcoes button {
+    padding: 16px; font-size: 22px; font-weight: 800;
+    background: #f7f5ff; color: #4a3b8a;
+    border: 3px solid #c5bbe9; border-radius: 12px;
+    cursor: pointer; transition: all 0.15s;
+    font-family: inherit;
+  }
+  .treino-opcoes button:hover:not(:disabled) {
+    background: #ede8fa; transform: scale(1.03);
+  }
+  .treino-opcoes button.acerto {
+    background: #d4f5dd; border-color: #3ac070; color: #1b4a2a;
+    animation: flash 0.4s;
+  }
+  .treino-opcoes button.erro {
+    background: #fde0e0; border-color: #d04040; color: #801818;
+    animation: shake 0.3s;
+  }
+
+  .voltar {
+    display: inline-block;
+    color: #6b54d3; text-decoration: none;
+    font-size: 12px; font-weight: 700;
+    background: #ede8fa; border: 2px solid #c5bbe9;
+    padding: 6px 12px; border-radius: 10px;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="voltar">← Voltar ao início</a>
+  <h1 class="titulo-soma">➕ Soma e Subtração até 20</h1>
+  <div class="sub-soma">Coleciona cada númeroR da operação.</div>
+
+  <div class="header-player" id="header-player"></div>
+
+  <div class="op-tabs">
+    <button class="op-tab ativo soma" id="op-soma" onclick="setOp('soma')">➕ Somar</button>
+    <button class="op-tab" id="op-sub" onclick="setOp('subtracao')">➖ Subtrair</button>
+  </div>
+
+  <div class="pokedex-titulo">🎖️ Sua coleção <span id="coleta-titulo">de somas</span></div>
+  <div class="pokedex-grid" id="pokedex-grid"></div>
+  <div style="text-align:center;font-size:11px;color:#888" id="resumo-txt"></div>
+
+  <div class="modo-tabs">
+    <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
+    <button class="modo-tab" id="tab-treino" onclick="mudarModo('treino')">⚡ Treinar</button>
+  </div>
+
+  <div id="view-estudo">
+    <div class="estudo-area">
+      <div class="estudo-titulo" id="estudo-titulo-principal">Resultado <span id="estudo-alvo">5</span></div>
+      <div class="soma-visual" id="soma-visual"></div>
+      <div class="macete-soma" id="macete-soma"></div>
+      <div class="estudo-controles">
+        <button class="estudo-btn" onclick="mudarAlvo(-1)">← Anterior</button>
+        <button class="estudo-btn principal" onclick="iniciarTreino(_alvoAtual)">🎯 Treinar esse</button>
+        <button class="estudo-btn" onclick="mudarAlvo(1)">Próximo →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-treino" class="hidden">
+    <div class="treino-header" id="treino-header">
+      <div><div class="treino-label" id="treino-label-header">Somas que dão</div>
+           <div class="treino-placar" id="treino-placar">0/10</div></div>
+      <button class="estudo-btn" style="background:rgba(255,255,255,0.25);border-color:rgba(255,255,255,0.5);color:#fff" onclick="mudarModo('estudo')">Sair</button>
+    </div>
+    <div class="treino-pergunta" id="treino-pergunta">
+      <div class="treino-expr" id="treino-expr">?</div>
+      <div class="treino-hint" id="treino-hint"></div>
+    </div>
+    <div class="treino-opcoes" id="treino-opcoes"></div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <div class="emoji-grande" id="m-emoji">✨</div>
+    <h2 id="m-titulo"></h2>
+    <div id="m-conteudo"></div>
+    <div class="botoes">
+      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+<div class="confete-layer" id="confete-layer"></div>
+<div class="toast-celebra" id="toast-celebra"></div>
+
+<script src="mascotes.js?v=15"></script>
+<script src="jogos_shared.js?v=15"></script>
+<script>
+STORAGE_KEY = 'jogosMat_default';
+CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
+
+// ============== SOMA/SUBTRAÇÃO POKÉDEX ==============
+const STORAGE_SOMA = 'matemagica_soma_v1';
+const RESULTADOS_SOMA = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]; // possíveis resultados
+
+let COLECAO_SOMA = { soma: {}, subtracao: {} };
+try { COLECAO_SOMA = JSON.parse(localStorage.getItem(STORAGE_SOMA)) || COLECAO_SOMA; } catch(e) {}
+
+let _op = 'soma';
+let _alvoAtual = 5;
+let _treinoAlvo = 5;
+let _treinoIdx = 0;
+let _treinoAcertos = 0;
+let _treinoPerguntas = [];
+
+function salvarColecao() {
+  try { localStorage.setItem(STORAGE_SOMA, JSON.stringify(COLECAO_SOMA)); } catch(e) {}
+}
+
+function nivelDoAlvo(alvo) {
+  const d = COLECAO_SOMA[_op][alvo];
+  if (!d || !d.tentativas) return 0;
+  const media = d.acertos / Math.max(1, d.tentativas);
+  if (media >= 0.9 && d.tentativas >= 10) return 3;
+  if (media >= 0.7 && d.tentativas >= 5) return 2;
+  return 1;
+}
+
+// ============== MACETES POR RESULTADO ==============
+function macetePorAlvoSoma(alvo) {
+  if (alvo <= 5) return `Soma <b>até 5</b> geralmente sai contando nos <b>dedos</b>. Sem vergonha — dedo é a primeira calculadora.`;
+  if (alvo === 10) return `<b>Marcos de 10</b> são os mais importantes! Decore os pares que dão 10: <b>1+9, 2+8, 3+7, 4+6, 5+5</b>.`;
+  if (alvo > 10 && alvo <= 15) return `Se passa do 10, use o <b>truque do dez</b>: <b>8+5 = (8+2) + 3 = 10+3 = 13</b>. Completa o 10 primeiro.`;
+  if (alvo >= 16) return `Decoração ajuda: <b>9+9=18, 8+9=17, 8+8=16</b>. Também: faça pares (<b>10+x</b>). <b>12 = 10+2 = 9+3 = 8+4</b>.`;
+  return '';
+}
+function macetePorAlvoSub(alvo) {
+  if (alvo <= 5) return `Subtração <b>pequena</b> sai nos dedos. Outra forma: "quanto falta pra ir de X até Y?" dá o mesmo resultado.`;
+  if (alvo === 10) return `Marca <b>10</b> é fácil por subtração: <b>20−10, 15−5, 12−2</b>. Achar o 10 destrava tudo.`;
+  return `Truque: em vez de "tirar", conte <b>quanto falta do menor pro maior</b>. <b>15−8 = "de 8 até 15"</b> = 2 pra 10 + 5 = 7.`;
+}
+
+// ============== GERAÇÃO DE PARES ==============
+function paresSoma(alvo) {
+  // Retorna todos os (a,b) com a <= b e a+b = alvo e 0 <= a,b
+  const pares = [];
+  for (let a = 0; a <= Math.floor(alvo/2); a++) {
+    const b = alvo - a;
+    if (b >= 0 && b <= 20) pares.push([a, b]);
+  }
+  return pares;
+}
+function paresSub(alvo) {
+  // (a,b) com a - b = alvo, a >= b >= 0, a <= 20
+  const pares = [];
+  for (let a = alvo; a <= 20; a++) {
+    const b = a - alvo;
+    pares.push([a, b]);
+  }
+  return pares;
+}
+
+// ============== ESTUDO ==============
+function renderPokedex() {
+  const el = document.getElementById('pokedex-grid');
+  const coletaTitulo = document.getElementById('coleta-titulo');
+  coletaTitulo.textContent = _op === 'soma' ? 'de somas' : 'de subtrações';
+  let html = '';
+  RESULTADOS_SOMA.forEach(alvo => {
+    const n = nivelDoAlvo(alvo);
+    const classe = n === 0 ? 'bloq' : ('n' + n);
+    const estrelas = n === 0 ? '' : '★'.repeat(n) + '☆'.repeat(3 - n);
+    const label = n === 0 ? 'NOVA' : (n === 3 ? 'TOP' : n === 2 ? 'QUASE' : 'TREINO');
+    html += `
+      <button class="poke-card ${classe}" onclick="abrirEstudo(${alvo})" title="${_op === 'soma' ? 'Somas que dão' : 'Subtrações que dão'} ${alvo}">
+        <div class="poke-label">= ${alvo}</div>
+        <div class="poke-num">${alvo}</div>
+        <div>
+          <div class="poke-estrelas">${estrelas}</div>
+          <div class="poke-label" style="font-size:8px">${label}</div>
+        </div>
+      </button>`;
+  });
+  el.innerHTML = html;
+
+  const total = RESULTADOS_SOMA.length;
+  const dominados = RESULTADOS_SOMA.filter(a => nivelDoAlvo(a) === 3).length;
+  const treinados = RESULTADOS_SOMA.filter(a => nivelDoAlvo(a) >= 1).length;
+  document.getElementById('resumo-txt').textContent =
+    dominados === total
+      ? `🏆 Todos os ${total} dominados!`
+      : `${dominados}/${total} dominados · ${treinados}/${total} treinados`;
+}
+
+function renderEstudo() {
+  document.getElementById('estudo-alvo').textContent = _alvoAtual;
+  const el = document.getElementById('soma-visual');
+  if (_op === 'soma') {
+    const pares = paresSoma(_alvoAtual);
+    // Mostra 2-3 decomposições
+    const amostra = pares.slice(0, Math.min(4, pares.length));
+    let html = '';
+    amostra.forEach(([a, b]) => {
+      const bolA = '<div class="bolinha"></div>'.repeat(a);
+      const bolB = '<div class="bolinha"></div>'.repeat(b);
+      html += `
+        <div style="margin-bottom:14px">
+          <div class="soma-expr"><b>${a}</b> + <b>${b}</b> = <span style="color:#1b7a3a">${_alvoAtual}</span></div>
+          <div class="soma-bolinhas">
+            <div class="grupo-bolinhas g1">${bolA || '<div style="font-size:14px;color:#888">(zero)</div>'}</div>
+            <div class="sep">+</div>
+            <div class="grupo-bolinhas g2">${bolB || '<div style="font-size:14px;color:#888">(zero)</div>'}</div>
+          </div>
+        </div>`;
+    });
+    el.innerHTML = html;
+    document.getElementById('macete-soma').innerHTML =
+      `<b>💡 Macete:</b> ${macetePorAlvoSoma(_alvoAtual)}`;
+  } else {
+    const pares = paresSub(_alvoAtual);
+    const amostra = pares.slice(0, Math.min(3, pares.length));
+    let html = '';
+    amostra.forEach(([a, b]) => {
+      const bolAll = '<div class="bolinha"></div>'.repeat(a - b) + '<div class="bolinha removida"></div>'.repeat(b);
+      html += `
+        <div style="margin-bottom:14px">
+          <div class="soma-expr"><b class="menos">${a}</b> − <b class="menos">${b}</b> = <span style="color:#1b7a3a">${_alvoAtual}</span></div>
+          <div class="soma-bolinhas">
+            <div class="grupo-bolinhas g3">${bolAll}</div>
+          </div>
+          <div style="font-size:11px;color:#888;margin-top:4px">(${b} bolinhas somem, ${a - b} ficam)</div>
+        </div>`;
+    });
+    el.innerHTML = html;
+    document.getElementById('macete-soma').innerHTML =
+      `<b>💡 Macete:</b> ${macetePorAlvoSub(_alvoAtual)}`;
+  }
+  document.getElementById('estudo-titulo-principal').innerHTML =
+    _op === 'soma' ? `Somas que dão <span style="color:#2ebd7c">${_alvoAtual}</span>` : `Subtrações que dão <span style="color:#c44a2a">${_alvoAtual}</span>`;
+}
+
+function mudarAlvo(delta) {
+  const idx = RESULTADOS_SOMA.indexOf(_alvoAtual);
+  const novoIdx = Math.max(0, Math.min(RESULTADOS_SOMA.length - 1, idx + delta));
+  _alvoAtual = RESULTADOS_SOMA[novoIdx];
+  renderEstudo();
+  renderPokedex();
+}
+function abrirEstudo(alvo) {
+  _alvoAtual = alvo;
+  mudarModo('estudo');
+  renderEstudo();
+  renderPokedex();
+}
+
+function setOp(op) {
+  _op = op;
+  document.getElementById('op-soma').classList.toggle('ativo', op === 'soma');
+  document.getElementById('op-sub').classList.toggle('ativo', op === 'subtracao');
+  renderEstudo();
+  renderPokedex();
+}
+
+function mudarModo(m) {
+  document.getElementById('tab-estudo').classList.toggle('ativo', m === 'estudo');
+  document.getElementById('tab-treino').classList.toggle('ativo', m === 'treino');
+  document.getElementById('view-estudo').classList.toggle('hidden', m !== 'estudo');
+  document.getElementById('view-treino').classList.toggle('hidden', m !== 'treino');
+  if (m === 'estudo') renderEstudo();
+}
+
+// ============== TREINO ==============
+function gerarPerguntasTreino(alvo) {
+  const pares = _op === 'soma' ? paresSoma(alvo) : paresSub(alvo);
+  // Gera 10 perguntas sorteando entre os pares
+  const n = 10;
+  const out = [];
+  for (let i = 0; i < n; i++) {
+    const [a, b] = pares[Math.floor(Math.random() * pares.length)];
+    if (_op === 'soma') out.push({ a, b, res: a + b });
+    else out.push({ a, b, res: a - b });
+  }
+  return out;
+}
+
+function iniciarTreino(alvo) {
+  _treinoAlvo = alvo;
+  _treinoPerguntas = gerarPerguntasTreino(alvo);
+  _treinoIdx = 0;
+  _treinoAcertos = 0;
+  // Header + cores
+  const tHeader = document.getElementById('treino-header');
+  const tLabel = document.getElementById('treino-label-header');
+  tHeader.classList.toggle('sub', _op === 'subtracao');
+  tLabel.textContent = _op === 'soma' ? `Somas que dão ${alvo}` : `Subtrações que dão ${alvo}`;
+  mudarModo('treino');
+  renderPerguntaTreino();
+}
+
+function renderPerguntaTreino() {
+  if (_treinoIdx >= _treinoPerguntas.length) return mostrarResultadoTreino();
+  const p = _treinoPerguntas[_treinoIdx];
+  const sinal = _op === 'soma' ? '+' : '−';
+  document.getElementById('treino-expr').innerHTML = `${p.a} ${sinal} ${p.b} = <span style="opacity:0.4">?</span>`;
+  document.getElementById('treino-placar').textContent = `${_treinoAcertos}/${_treinoPerguntas.length}`;
+  document.getElementById('treino-hint').textContent =
+    _op === 'soma' ? `Dica: conta a partir do maior. É o mesmo que ${p.b}+${p.a}.` : `Dica: "de ${p.b} até ${p.a}" é quanto?`;
+  document.getElementById('treino-pergunta').classList.toggle('sub', _op === 'subtracao');
+
+  const certo = p.res;
+  const set = new Set([certo]);
+  while (set.size < 4) {
+    const delta = Math.floor(Math.random() * 5) - 2;
+    const v = Math.max(0, certo + delta);
+    if (v !== certo) set.add(v);
+  }
+  const arr = Array.from(set).sort((a, b) => a - b);
+  document.getElementById('treino-opcoes').innerHTML = arr.map(v =>
+    `<button onclick="responderTreino(${v}, this)">${v}</button>`
+  ).join('');
+}
+
+function responderTreino(valor, btn) {
+  const p = _treinoPerguntas[_treinoIdx];
+  const todos = document.querySelectorAll('#treino-opcoes button');
+  todos.forEach(b => b.disabled = true);
+
+  COLECAO_SOMA[_op][_treinoAlvo] = COLECAO_SOMA[_op][_treinoAlvo] || { acertos: 0, tentativas: 0 };
+  COLECAO_SOMA[_op][_treinoAlvo].tentativas++;
+
+  if (valor === p.res) {
+    _treinoAcertos++;
+    COLECAO_SOMA[_op][_treinoAlvo].acertos++;
+    btn.classList.add('acerto');
+    try { somAcerto(); } catch(e) {}
+    try {
+      jogoAtivo = _op + '_' + _treinoAlvo;
+      STATE.acertou(jogoAtivo);
+      window._acertosSessao = (window._acertosSessao || 0) + 1;
+      if (window._acertosSessao % 5 === 0 && typeof mostrarCapsulaMundoReal === 'function') {
+        setTimeout(mostrarCapsulaMundoReal, 1000);
+      }
+      renderHeaderPlayer();
+    } catch(e) {}
+  } else {
+    btn.classList.add('erro');
+    todos.forEach(b => { if (parseInt(b.textContent) === p.res) b.classList.add('acerto'); });
+    try { somErro(); } catch(e) {}
+    try {
+      jogoAtivo = _op + '_' + _treinoAlvo;
+      STATE.errou(jogoAtivo);
+    } catch(e) {}
+    // "Como meu filho pensou?" — hipótese do erro
+    if (typeof mostrarHipoteseErroInline === 'function') {
+      mostrarHipoteseErroInline(
+        { a: p.a, b: p.b, op: _op, esperado: p.res, errado: valor },
+        '.treino-pergunta'
+      );
+    }
+  }
+  salvarColecao();
+
+  setTimeout(() => {
+    _treinoIdx++;
+    renderPerguntaTreino();
+  }, valor === p.res ? 700 : 1400);
+}
+
+function mostrarResultadoTreino() {
+  renderPokedex();
+  let emoji, texto, sub;
+  if (_treinoAcertos === 10) { emoji = '🏆'; texto = 'PERFEITO!'; sub = `Você dominou ${_op === 'soma' ? 'as somas' : 'as subtrações'} que dão ${_treinoAlvo}!`; try { soltarConfete(120); somCelebracao(); } catch(e){} }
+  else if (_treinoAcertos >= 8) { emoji = '🌟'; texto = 'Dominado!'; sub = 'Quase perfeito — tá no nível 3!'; try { soltarConfete(60); } catch(e){} }
+  else if (_treinoAcertos >= 6) { emoji = '👍'; texto = 'No caminho!'; sub = 'Mais um treino e domina.'; }
+  else if (_treinoAcertos >= 4) { emoji = '🙂'; texto = 'Começando'; sub = 'Usa o modo Estudar pra ver o macete.'; }
+  else { emoji = '💪'; texto = 'Treina mais!'; sub = 'Sem pressa. Volta no Estudar.'; }
+
+  document.getElementById('view-treino').innerHTML = `
+    <div style="text-align:center;padding:30px 20px">
+      <div style="font-size:70px">${emoji}</div>
+      <div style="font-size:28px;font-weight:900;color:#4a3b8a;margin:6px 0">${texto}</div>
+      <div style="font-size:22px;font-weight:800;color:#6b54d3">${_treinoAcertos}/10</div>
+      <div style="font-size:13px;color:#888;margin-top:8px">${sub}</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:18px;flex-wrap:wrap">
+        <button class="estudo-btn principal" onclick="iniciarTreino(${_treinoAlvo})">🔄 De novo</button>
+        <button class="estudo-btn" onclick="mudarModo('estudo')">📖 Estudar mais</button>
+      </div>
+    </div>
+  `;
+}
+
+// Init
+initJogos();
+renderPokedex();
+renderEstudo();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
