@@ -239,8 +239,8 @@
   </div>
 </div>
 
-<script src="mascotes.js?v=5"></script>
-<script src="jogos_shared.js?v=5"></script>
+<script src="mascotes.js?v=11"></script>
+<script src="jogos_shared.js?v=11"></script>
 <script>
 STORAGE_KEY = 'jogosMat_default';
 CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
@@ -290,6 +290,7 @@ const PDFS = [
 ];
 
 function pdfDesbloqueado(id) {
+  if (STATE.isPremium && STATE.isPremium()) return true;
   return (STATE.comprados.pdfs || []).includes(id);
 }
 
@@ -302,6 +303,7 @@ function renderPDFs() {
 }
 
 function cardHtml(p) {
+  const ehPremium = STATE.isPremium && STATE.isPremium();
   const bloqueado = p.tier === 'moedas' && !pdfDesbloqueado(p.id);
   const jaDesbloqueado = p.tier === 'moedas' && pdfDesbloqueado(p.id);
   const temGrana = p.preco ? STATE.moedas >= p.preco : true;
@@ -309,6 +311,8 @@ function cardHtml(p) {
   let cta;
   if (p.tier === 'gratis') {
     cta = `<button class="pdf-cta gratis" onclick="abrirPDF('${p.id}')">📄 Abrir e imprimir</button>`;
+  } else if (ehPremium) {
+    cta = `<button class="pdf-cta desbloqueado" onclick="abrirPDF('${p.id}')">✨ Abrir (premium)</button>`;
   } else if (jaDesbloqueado) {
     cta = `<button class="pdf-cta desbloqueado" onclick="abrirPDF('${p.id}')">✓ Abrir</button>`;
   } else if (temGrana) {

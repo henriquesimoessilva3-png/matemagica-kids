@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5a2b"/>
+      <stop offset="1" stop-color="#d4a574"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="90" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="150" fill="#4a8fdc" stroke="#fef8ed" stroke-width="10"/>
+  <path d="M134 214 Q188 192 240 208 Q294 224 350 202 Q384 246 368 278 Q320 294 268 284 Q216 272 160 298 Q122 270 134 214 Z" fill="#4a8f5a"/>
+  <path d="M186 334 Q240 320 296 334 Q340 350 374 334" stroke="#4a8f5a" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <ellipse cx="256" cy="256" rx="150" ry="58" fill="none" stroke="#fef8ed" stroke-width="4" opacity="0.5"/>
+  <ellipse cx="256" cy="256" rx="58" ry="150" fill="none" stroke="#fef8ed" stroke-width="4" opacity="0.5"/>
+  <g transform="translate(370,370)">
+    <rect x="-38" y="-58" width="76" height="12" rx="3" fill="#6b3a15"/>
+    <rect x="-38" y="46" width="76" height="12" rx="3" fill="#6b3a15"/>
+    <path d="M-32 -48 L32 -48 L10 0 L32 48 L-32 48 L-10 0 Z" fill="#fef8ed" stroke="#6b3a15" stroke-width="5"/>
+    <path d="M-28 -44 L28 -44 L10 -10 Q0 -8 -10 -10 Z" fill="#d4a574"/>
+    <path d="M-10 10 Q0 8 10 10 L22 42 L-22 42 Z" fill="#d4a574"/>
+  </g>
+  <polygon points="256,62 268,100 308,100 276,122 288,158 256,136 224,158 236,122 204,100 244,100"
+           fill="#ffd36b" stroke="#b07010" stroke-width="4"/>
+</svg>

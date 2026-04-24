@@ -1,0 +1,10 @@
+{
+  "name": "matemagica-kids",
+  "version": "1.0.0",
+  "description": "Matemágica — jogos de matemática kids BNCC",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "^8.0.0"
+  }
+}

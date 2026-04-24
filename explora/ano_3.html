@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EXPLORA · 3º Ano</title>
+<link rel="stylesheet" href="historia_shared.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6fa84a">
+<style>
+  .topo-ano { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
+  .topo-ano h1 { font-size: 22px; margin: 0; flex: 1; text-align: center; }
+  .abas { display: flex; gap: 6px; justify-content: center; margin: 8px 0 14px; flex-wrap: wrap; }
+  .aba {
+    background: #fff4dc; border: 2px solid #c9a86b;
+    color: #6b3a15; padding: 8px 14px; border-radius: 18px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    font-family: inherit;
+  }
+  .aba.ativa { background: linear-gradient(135deg, #8b5a2b, #b88247); color: #fff; border-color: #6b3a15; }
+  .aba:hover:not(.ativa) { border-color: #8b5a2b; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topo-ano">
+    <a href="index.html" class="btn-voltar">← Anos</a>
+    <h1>3º Ano · Cidade e Município</h1>
+    <span style="width:60px"></span>
+  </div>
+
+  <div id="explora-header" class="header-player"></div>
+
+  <div class="abas">
+    <button class="aba ativa" data-aba="todos">🎯 Todos</button>
+    <button class="aba" data-aba="historia">📜 História</button>
+    <button class="aba" data-aba="geografia">🗺️ Geografia</button>
+  </div>
+
+  <div id="tela-grid"><div class="jogos-grid" id="grid-container"></div></div>
+  <div id="tela-jogo" class="jogo-area" style="display:none"></div>
+</div>
+
+<script src="mascotes.js"></script>
+<script src="explora_shared.js?v=5"></script>
+<script>
+initExplora({ storageKey: 'explora_ano3_v1' });
+let ABA_ATUAL = 'todos';
+
+const JOGOS = [
+  {
+    id: 'campo_cidade', emoji: '🌆', titulo: 'Campo × Cidade',
+    desc: 'Diferenças entre zona rural e urbana.',
+    tipo: 'classif', materia: 'geografia',
+    perguntas: [
+      {
+        pergunta: 'Quais serviços são mais típicos de cada lugar?',
+        bucketA: { label: 'Campo (rural)', emoji: '🚜' },
+        bucketB: { label: 'Cidade (urbana)', emoji: '🏙️' },
+        itens: [
+          { id: 'i1', label: 'Plantação de hortaliças' },
+          { id: 'i2', label: 'Shopping e cinema' },
+          { id: 'i3', label: 'Pecuária (criação de gado)' },
+          { id: 'i4', label: 'Metrô e ônibus' },
+          { id: 'i5', label: 'Hospital grande' },
+          { id: 'i6', label: 'Sítio com galinheiro' }
+        ],
+        gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'b', i6: 'a' },
+        explica: 'Campo produz alimento e matéria-prima. Cidade concentra serviços, comércio e indústria.'
+      },
+      {
+        pergunta: 'De onde vem cada produto?',
+        bucketA: { label: 'Do campo', emoji: '🌾' },
+        bucketB: { label: 'Da fábrica (cidade)', emoji: '🏭' },
+        itens: [
+          { id: 'i1', label: 'Leite recém-ordenhado' },
+          { id: 'i2', label: 'Iogurte de pote' },
+          { id: 'i3', label: 'Feijão colhido' },
+          { id: 'i4', label: 'Feijão enlatado' },
+          { id: 'i5', label: 'Cana-de-açúcar' },
+          { id: 'i6', label: 'Açúcar em pacotinho' }
+        ],
+        gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'a', i6: 'b' },
+        explica: 'O campo produz a matéria-prima. A fábrica processa e embala — depois chega ao mercado.'
+      }
+    ]
+  },
+  {
+    id: 'povos_brasil', emoji: '🤝', titulo: 'Povos do Brasil',
+    desc: 'Quem faz parte do Brasil que conhecemos.',
+    tipo: 'quiz', materia: 'historia',
+    perguntas: [
+      { pergunta: 'Quem já vivia no território brasileiro antes dos portugueses chegarem em 1500?',
+        opcoes: ['Povos indígenas (vários grupos, como Tupinambá, Guarani, Xavante…)',
+                 'Europeus', 'Ninguém vivia aqui', 'Só animais'],
+        correta: 0,
+        explica: 'Os povos indígenas já viviam no que hoje é o Brasil há mais de 10 mil anos, com culturas muito diversas.' },
+      { pergunta: 'Muitos brasileiros têm ancestrais africanos porque:',
+        opcoes: [
+          'Milhões de africanos foram trazidos para o Brasil à força, escravizados, entre os séculos XVI e XIX',
+          'África fica do lado do Brasil',
+          'Todo mundo visita a África',
+          'Não há ancestrais africanos no Brasil'
+        ],
+        correta: 0,
+        explica: 'A escravidão foi uma injustiça histórica. A cultura africana influencia muito a comida, a música e a língua brasileira.' },
+      { pergunta: 'O que é imigração?',
+        opcoes: [
+          'Quando pessoas de outro país vêm viver aqui',
+          'Quando brasileiros viajam de férias',
+          'Quando alguém muda de escola',
+          'Quando se compra uma casa nova'
+        ],
+        correta: 0,
+        explica: 'Brasileiros têm ancestrais de muitos lugares: Portugal, Itália, Alemanha, Japão, Líbano, e muitos outros.' },
+      { pergunta: 'Como chamamos as festas, comidas e danças que passam de geração em geração?',
+        opcoes: ['Patrimônio cultural', 'Receita de família', 'Cardápio', 'Calendário'],
+        correta: 0,
+        explica: 'Patrimônio cultural é o que herdamos dos nossos antepassados — capoeira, frevo, maracatu, por exemplo.' }
+    ]
+  },
+  {
+    id: 'patrimonio', emoji: '🎭', titulo: 'Patrimônio Cultural',
+    desc: 'Festas, comidas e tradições do Brasil.',
+    tipo: 'quiz', materia: 'historia',
+    perguntas: [
+      { pergunta: 'A capoeira é:',
+        opcoes: [
+          'Uma luta/dança com origem nos africanos escravizados no Brasil',
+          'Um tipo de bolo',
+          'Um jogo japonês',
+          'Uma brincadeira europeia'
+        ],
+        correta: 0,
+        explica: 'Capoeira mistura luta, música e dança. É reconhecida como patrimônio cultural do Brasil.' },
+      { pergunta: 'Forró, frevo e baião são expressões culturais de qual região do Brasil?',
+        opcoes: ['Nordeste', 'Sul', 'Norte', 'Centro-Oeste'],
+        correta: 0,
+        explica: 'O Nordeste é rico em ritmos e festas populares. Cada região tem suas especialidades.' },
+      { pergunta: 'Feijoada, pão de queijo e acarajé são exemplos de:',
+        opcoes: [
+          'Comidas típicas da culinária brasileira',
+          'Marcas de roupa',
+          'Times de futebol',
+          'Cidades do Brasil'
+        ],
+        correta: 0,
+        explica: 'A comida brasileira é uma mistura de tradições indígenas, africanas, portuguesas e de outros povos.' },
+      { pergunta: 'As festas juninas acontecem em qual mês?',
+        opcoes: ['Junho', 'Dezembro', 'Janeiro', 'Setembro'],
+        correta: 0,
+        explica: 'Junho tem as festas de Santo Antônio, São João e São Pedro — quadrilha, milho e fogueira.' }
+    ]
+  },
+  {
+    id: 'municipio', emoji: '🏛️', titulo: 'Meu Município',
+    desc: 'Como a cidade se organiza.',
+    tipo: 'quiz', materia: 'geografia',
+    perguntas: [
+      { pergunta: 'O que é um município?',
+        opcoes: [
+          'Uma cidade junto com sua área rural ao redor, formando uma mesma unidade administrativa',
+          'Só o centro de uma cidade',
+          'Um bairro',
+          'Uma casa grande'
+        ],
+        correta: 0,
+        explica: 'Município = cidade + distritos rurais. Cada município tem seu prefeito e vereadores.' },
+      { pergunta: 'Quem administra o município?',
+        opcoes: ['O prefeito (e os vereadores fazem as leis)',
+                 'O presidente da república', 'O diretor da escola', 'Os pais dos alunos'],
+        correta: 0,
+        explica: 'O prefeito comanda a prefeitura. Os vereadores votam as leis municipais.' },
+      { pergunta: 'Qual destes serviços é responsabilidade principal do município?',
+        opcoes: ['Limpeza das ruas e coleta de lixo',
+                 'Controle das fronteiras do país', 'Defesa nacional', 'Aeroportos internacionais'],
+        correta: 0,
+        explica: 'Limpeza urbana, transporte local, escolas municipais — tudo é da prefeitura.' },
+      { pergunta: 'O endereço de uma pessoa geralmente inclui:',
+        opcoes: ['Rua, número, bairro, cidade e CEP',
+                 'Só o nome', 'Só a profissão', 'A cor preferida'],
+        correta: 0,
+        explica: 'O endereço ajuda a encontrar o lugar exato onde alguém mora.' }
+    ]
+  }
+];
+
+function renderGrid() {
+  const cont = document.getElementById('grid-container');
+  const jogos = JOGOS.filter(j => ABA_ATUAL === 'todos' || j.materia === ABA_ATUAL);
+  if (jogos.length === 0) {
+    cont.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#8b5a2b;padding:24px">Nenhum jogo nessa matéria ainda.</div>';
+    return;
+  }
+  cont.innerHTML = jogos.map(j => {
+    const p = STATE.jogos[j.id] || { acertos: 0, erros: 0 };
+    return `
+    <div class="jogo-card" onclick="iniciarJogo('${j.id}')">
+      <div class="emoji">${j.emoji}</div>
+      <div class="titulo">${j.titulo}</div>
+      <div class="desc">${j.desc}</div>
+      <div class="progresso">${p.acertos > 0 ? `<span class="estrelas">⭐ ${p.acertos}</span>` : '🎯 Bora!'}</div>
+    </div>`;
+  }).join('');
+}
+
+function iniciarJogo(id) {
+  const jogo = JOGOS.find(j => j.id === id);
+  if (jogo) abrirJogo(jogo);
+}
+
+function atualizarGridProgresso() { renderGrid(); }
+
+document.querySelectorAll('.aba').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.aba').forEach(x => x.classList.remove('ativa'));
+    b.classList.add('ativa');
+    ABA_ATUAL = b.dataset.aba;
+    renderGrid();
+  });
+});
+
+renderGrid();
+</script>
+</body>
+</html>

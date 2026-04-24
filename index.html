@@ -283,6 +283,55 @@
     .mascote-holder svg.mascote { width: 110px; }
     .mini-mascote { width: 42px; height: 46px; }
   }
+
+  /* ===== Cadeado premium nos cards ===== */
+  .ano-card { position: relative; }
+  .ano-card .cadeado-premium {
+    position: absolute; top: 6px; right: 6px;
+    background: #ffd36b; color: #5a3a00;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  }
+  .ano-card.premium-free-tag::after {
+    content: 'GRÁTIS';
+    position: absolute; top: 6px; left: 6px;
+    background: #2ebd7c; color: #fff;
+    font-size: 9px; font-weight: 800;
+    padding: 2px 6px; border-radius: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .premium-banner {
+    margin: 14px 0 10px;
+    background: linear-gradient(135deg, #fff3d6, #ffe5a3);
+    border: 2px solid #ffcc4a;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .premium-banner:hover { transform: translateY(-2px); }
+  .premium-banner .pb-emoji { font-size: 26px; flex-shrink: 0; }
+  .premium-banner .pb-texto { flex: 1; font-size: 12px; color: #5a3a00; line-height: 1.35; }
+  .premium-banner .pb-texto b { color: #a04a00; font-size: 13px; }
+  .premium-banner .pb-preco {
+    background: #2ebd7c; color: #fff;
+    padding: 6px 10px; border-radius: 10px;
+    font-weight: 800; font-size: 13px;
+    white-space: nowrap;
+  }
+  .premium-ativo {
+    margin: 12px 0 8px;
+    background: linear-gradient(135deg, #d9c8f5, #b968e8);
+    color: #fff;
+    padding: 8px 14px; border-radius: 10px;
+    font-size: 12px; font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
 </style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
@@ -294,7 +343,8 @@
 <body>
 <div class="container">
   <h1 class="matemagica-titulo"><span class="estrela-tit">✦</span>MATEMÁGICA<span class="estrela-tit">✦</span></h1>
-  <div class="sub">Escolha o ano pra começar</div>
+  <div class="sub" style="font-weight:700;color:#6b54d3">A criança joga. A matemática fica.</div>
+  <div class="sub" style="margin-top:2px;font-size:12px;color:#888">Escolha o ano pra começar</div>
 
   <div class="mascote-wrap">
     <div class="mascote-holder" id="mascote-holder"></div>
@@ -305,6 +355,8 @@
 
   <div class="intro">Jogos alinhados à BNCC · Progresso salvo por ano</div>
 
+  <div id="premium-slot"></div>
+
   <div style="text-align:center;margin-bottom:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
     <button onclick="abrirLoja()" style="display:inline-flex;align-items:center;gap:4px;color:#a87800;background:linear-gradient(135deg,#fff3d6,#ffe5a3);border:1px solid #ffcc4a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit">🛒 Loja · 🪙 <span id="moedas-home">0</span></button>
     <a href="tabuada.html" style="display:inline-block;color:#a8410a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff3d6,#ffd36b);border:1px solid #ff9a44">🔢 Tabuada</a>
@@ -312,6 +364,15 @@
     <a href="provas.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px;background:#ede8fa;border:1px solid #d9cefa">📝 Provas</a>
     <a href="dashboard.html" style="display:inline-block;color:#666;text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px;background:#f7f5ff;border:1px solid #d9cefa">📊 Pais</a>
   </div>
+
+  <a href="explora/index.html" id="explora-card" style="display:flex;align-items:center;gap:14px;margin:0 0 14px;padding:14px 16px;background:linear-gradient(135deg,#fff4dc,#ffe0a0);border:2.5px solid #d4a574;border-radius:14px;text-decoration:none;color:#3a2818;transition:transform 0.2s,box-shadow 0.2s">
+    <div style="font-size:32px;flex-shrink:0">🌍</div>
+    <div style="flex:1;line-height:1.35">
+      <div style="font-size:15px;font-weight:800;color:#8b5a2b;letter-spacing:0.3px">EXPLORA — História e Geografia</div>
+      <div style="font-size:12px;color:#6b3a15;margin-top:2px">App-irmão com a mesma trupe · BNCC · 1º ao 5º ano</div>
+    </div>
+    <div id="explora-badge" style="background:#c0392b;color:#fff;font-size:10px;font-weight:800;padding:4px 10px;border-radius:10px;letter-spacing:0.5px;white-space:nowrap">BÔNUS</div>
+  </a>
 
   <div class="ano-grid" id="ano-grid">
     <a href="jogos_matematica_1ano.html" class="ano-card ano1" data-ano="1">
@@ -361,8 +422,8 @@
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="jogos_shared.js?v=5"></script>
-<script src="mascotes.js?v=5"></script>
+<script src="jogos_shared.js?v=11"></script>
+<script src="mascotes.js?v=11"></script>
 <script>
 // ============== MASCOTE DA TELA INICIAL ==============
 let _falaIdx = 0;
@@ -449,6 +510,44 @@ if (typeof STATE !== 'undefined' && typeof STATE.load === 'function') {
   STATE.load();
   const el = document.getElementById('moedas-home');
   if (el) el.textContent = STATE.moedas;
+
+  // Banner de upgrade ou de "premium ativo"
+  const slot = document.getElementById('premium-slot');
+  if (slot) {
+    if (STATE.isPremium()) {
+      slot.innerHTML = `<div class="premium-ativo">✨ Matemágica Completo ativado · tudo liberado</div>`;
+    } else {
+      slot.innerHTML = `
+        <div class="premium-banner" onclick="abrirPaywall('Libere 2º ao 5º ano, SOS Prova, PDFs premium e temas.')">
+          <div class="pb-emoji">🔓</div>
+          <div class="pb-texto"><b>Libere tudo</b><br>2º ao 5º ano · SOS Prova · PDFs premium · Temas · Vitalício</div>
+          <div class="pb-preco">R$ 17</div>
+        </div>
+      `;
+    }
+  }
+
+  // Marca cards de ano com cadeado (não-premium) ou tag grátis
+  document.querySelectorAll('.ano-card').forEach(card => {
+    const ano = parseInt(card.dataset.ano, 10);
+    const href = card.getAttribute('href') || '';
+    const premium = (typeof PAGINAS_PREMIUM !== 'undefined') && PAGINAS_PREMIUM.includes(href);
+    if (premium && !STATE.isPremium()) {
+      if (!card.querySelector('.cadeado-premium')) {
+        const tag = document.createElement('div');
+        tag.className = 'cadeado-premium';
+        tag.textContent = '🔒';
+        tag.title = 'Conteúdo premium';
+        card.appendChild(tag);
+      }
+      card.addEventListener('click', function(ev){
+        // Deixa o href abrir; o guarda da página dispara o paywall
+        // (Mantém UX de navegação previsível em vez de bloquear clique)
+      });
+    } else if (!premium) {
+      card.classList.add('premium-free-tag');
+    }
+  });
 }
 </script>
 

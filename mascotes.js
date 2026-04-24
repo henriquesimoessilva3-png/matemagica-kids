@@ -40,8 +40,8 @@ const MASCOTES = {
         'Poderosa essa!',
         'Feitiço certeiro!',
         'Olha o Matemago orgulhoso!',
-        'Tá craque!',
-        'Que mente brilhante!'
+        'Persistiu forte!',
+        'Não desistiu nessa!'
       ],
       erro: [
         'Calma, feitiço falhou. Tenta outro!',
@@ -129,11 +129,11 @@ const MASCOTES = {
         'Resposta sábia!',
         'Raciocínio afiado!',
         'Hoot! Perfeito!',
-        'Isso é sabedoria!',
+        'Isso é estudo rendendo!',
         'Você leu com atenção!',
-        'Memória boa!',
-        'Olha o cérebro ligado!',
-        'Lógica certinha!',
+        'Prestou atenção mesmo!',
+        'Foco total funcionou!',
+        'Pensou com calma!',
         'Coruja aprova 🦉'
       ],
       erro: [
@@ -230,13 +230,13 @@ const MASCOTES = {
         'Prepara a fornalha!'
       ],
       acerto: [
-        'RAWRR! Arrasou!',
+        'RAWRR! Lutou por essa!',
         'Pegou fogo!',
         'Cuspindo acertos!',
         'Dragão feliz!',
         'Tá soltando labareda!',
         'Fogo total!',
-        'Você é um dragão de verdade!',
+        'Enfrentou e venceu!',
         'BÁUM!',
         'Voando alto!'
       ],
@@ -334,9 +334,9 @@ const MASCOTES = {
         'Operação bem-sucedida!',
         'Sistema: estrela +1!',
         'Dados confirmados!',
-        'Precisão máxima!',
+        'Tentativa: validada!',
         'Robô feliz: 100%',
-        'Lógica impecável!',
+        'Esforço calculado = vitória!',
         'Sincronizado!'
       ],
       erro: [

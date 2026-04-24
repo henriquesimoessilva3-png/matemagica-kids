@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EXPLORA — História e Geografia</title>
+<link rel="stylesheet" href="historia_shared.css">
+<style>
+  h1.explora-titulo {
+    font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
+    font-size: 42px; font-weight: 900; letter-spacing: 3px;
+    background: linear-gradient(135deg, #8b5a2b 0%, #c0392b 50%, #ffd36b 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-align: center; margin: 6px 0 2px; line-height: 1;
+    text-shadow: 0 2px 6px rgba(139, 90, 43, 0.2);
+  }
+  .explora-titulo .deco {
+    display: inline-block;
+    -webkit-text-fill-color: #ffd36b; color: #ffd36b;
+    margin: 0 6px; font-size: 32px;
+  }
+  .sub-explora {
+    text-align: center; font-size: 13px; color: #8b5a2b;
+    letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700;
+  }
+  .sub-texto {
+    text-align: center; color: #6b3a15; font-size: 14px;
+    margin: 8px 0 16px; font-style: italic;
+  }
+  .ano-grid {
+    display: flex; gap: 10px; overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 4px 2px 14px; margin: 0 -4px;
+  }
+  .ano-grid::-webkit-scrollbar { height: 6px; }
+  .ano-grid::-webkit-scrollbar-thumb { background: #c9a86b; border-radius: 3px; }
+  .ano-card {
+    background: linear-gradient(135deg, #fff4dc, #ffe8ba);
+    border: 3px solid #d4a574;
+    border-radius: 18px;
+    padding: 16px 12px 14px;
+    cursor: pointer;
+    transition: all 0.22s;
+    text-align: center;
+    text-decoration: none;
+    flex: 0 0 155px;
+    scroll-snap-align: center;
+    display: flex; flex-direction: column;
+    justify-content: flex-start;
+    min-height: 180px;
+  }
+  .ano-card:hover {
+    transform: translateY(-5px);
+    border-color: #8b5a2b;
+    box-shadow: 0 8px 20px rgba(139, 90, 43, 0.35);
+  }
+  .ano-card.ano1 { background: linear-gradient(135deg, #ffe0d0, #ffc9a8); border-color: #d4794a; }
+  .ano-card.ano2 { background: linear-gradient(135deg, #fff4dc, #ffe0a0); border-color: #d4a574; }
+  .ano-card.ano3 { background: linear-gradient(135deg, #e8f5d0, #c8e8a0); border-color: #6fa84a; }
+  .ano-card.ano4 { background: linear-gradient(135deg, #d4e8f5, #a8c8e0); border-color: #4a7aa8; }
+  .ano-card.ano5 { background: linear-gradient(135deg, #f0d8f0, #d8a8d8); border-color: #8a4a8a; }
+  .ano-num {
+    font-size: 42px; font-weight: 800; color: #3a2818;
+    line-height: 1; margin-bottom: 2px;
+  }
+  .ano-label {
+    font-size: 12px; color: #3a2818; font-weight: 700;
+    opacity: 0.8; margin-bottom: 6px;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .ano-tema {
+    font-size: 11px; color: #5a3818; line-height: 1.3;
+    flex: 1; margin-bottom: 6px;
+  }
+  .ano-progresso {
+    font-size: 11px; color: #6b3a15; font-weight: 700; min-height: 14px;
+  }
+  @media (min-width: 780px) {
+    .ano-grid { overflow-x: visible; justify-content: center; }
+    .ano-card { flex: 1 1 0; min-width: 130px; max-width: 148px; }
+  }
+
+  .chips-materia {
+    display: flex; gap: 8px; justify-content: center; margin: 4px 0 14px;
+    flex-wrap: wrap;
+  }
+  .chip-materia {
+    background: #fff4dc; padding: 4px 14px;
+    border: 2px solid #c9a86b; border-radius: 14px;
+    font-size: 13px; color: #6b3a15; font-weight: 700;
+  }
+
+  @media (max-width: 520px) {
+    h1.explora-titulo { font-size: 32px; letter-spacing: 2px; }
+    .ano-card { flex: 0 0 140px; min-height: 170px; }
+  }
+
+  .ano-card { position: relative; }
+  .ano-card .cadeado-premium {
+    position: absolute; top: 6px; right: 6px;
+    background: #d4a574; color: #3a2818;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  }
+  .ano-card.premium-free-tag::after {
+    content: 'GRÁTIS';
+    position: absolute; top: 6px; left: 6px;
+    background: #2ebd7c; color: #fff;
+    font-size: 9px; font-weight: 800;
+    padding: 2px 6px; border-radius: 8px;
+    letter-spacing: 0.5px;
+  }
+  .explora-banner {
+    margin: 10px 0 12px;
+    background: linear-gradient(135deg, #fff4dc, #ffe0a0);
+    border: 2px solid #d4a574; color: #6b3a15;
+    padding: 10px 14px; border-radius: 12px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; line-height: 1.4;
+  }
+  .explora-banner .eb-emoji { font-size: 22px; }
+  .explora-banner b { color: #8b5a2b; }
+  .voltar-matemagica {
+    display: inline-block;
+    color: #4a3b8a; text-decoration: none;
+    font-size: 12px; font-weight: 700;
+    background: #ede8fa; border: 2px solid #c5bbe9;
+    padding: 6px 12px; border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .voltar-matemagica:hover { background: #dccbf5; }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#8b5a2b">
+</head>
+<body>
+<div class="container">
+  <a href="../index.html" class="voltar-matemagica">← Voltar ao Matemágica</a>
+  <h1 class="explora-titulo"><span class="deco">✦</span>EXPLORA<span class="deco">✦</span></h1>
+  <div class="sub-explora">História e Geografia · Bônus do Matemágica</div>
+  <div id="explora-banner-slot"></div>
+
+  <div class="mascote-wrap">
+    <div class="mascote-holder" id="mascote-holder"></div>
+    <div class="mascote-balao" id="mascote-balao" onclick="rotacionarFala()">Carregando…</div>
+    <div class="mascote-seletor" id="mascote-seletor"></div>
+    <div class="mascote-seletor-label">Escolha seu amigo</div>
+  </div>
+
+  <div class="sub-texto">Jogos alinhados à BNCC · Progresso salvo por ano</div>
+
+  <div class="chips-materia">
+    <span class="chip-materia">📜 História</span>
+    <span class="chip-materia">🗺️ Geografia</span>
+  </div>
+
+  <div class="ano-grid" id="ano-grid">
+    <a href="ano_1.html" class="ano-card ano1" data-ano="1">
+      <div class="ano-num">1º</div>
+      <div class="ano-label">1º Ano</div>
+      <div class="ano-tema">Eu, família, escola · Meu lugar de vivência</div>
+      <div class="ano-progresso" data-ano="1"></div>
+    </a>
+    <a href="ano_2.html" class="ano-card ano2" data-ano="2">
+      <div class="ano-num">2º</div>
+      <div class="ano-label">2º Ano</div>
+      <div class="ano-tema">Comunidade e tempo · Paisagens e trabalho</div>
+      <div class="ano-progresso" data-ano="2"></div>
+    </a>
+    <a href="ano_3.html" class="ano-card ano3" data-ano="3">
+      <div class="ano-num">3º</div>
+      <div class="ano-label">3º Ano</div>
+      <div class="ano-tema">Cidade e município · Campo e cidade</div>
+      <div class="ano-progresso" data-ano="3"></div>
+    </a>
+    <a href="ano_4.html" class="ano-card ano4" data-ano="4">
+      <div class="ano-num">4º</div>
+      <div class="ano-label">4º Ano</div>
+      <div class="ano-tema">Pré-História · Orientação e rotação da Terra</div>
+      <div class="ano-progresso" data-ano="4"></div>
+    </a>
+    <a href="ano_5.html" class="ano-card ano5" data-ano="5">
+      <div class="ano-num">5º</div>
+      <div class="ano-label">5º Ano</div>
+      <div class="ano-tema">Povos do Brasil · Regiões e mapas</div>
+      <div class="ano-progresso" data-ano="5"></div>
+    </a>
+  </div>
+
+  <div style="text-align:center;margin-top:18px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <a href="provas.html" style="display:inline-flex;align-items:center;gap:4px;color:#8b1a10;background:linear-gradient(135deg,#ffe0d0,#fac8a8);border:2px solid #d4794a;font-size:13px;font-weight:800;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit;text-decoration:none">🚨 SOS Prova · 📝 Provas</a>
+  </div>
+  <div style="text-align:center;margin-top:14px;font-size:12px;color:#8b5a2b">
+    📜 Feito para criançada curiosa · Salva seu progresso no navegador
+  </div>
+</div>
+
+<script src="mascotes.js"></script>
+<script src="explora_shared.js?v=5"></script>
+<script>
+  initExplora({ storageKey: 'explora_home_v1' });
+  atualizarProgressoAnos();
+  marcarPremiumNosCards();
+
+  function marcarPremiumNosCards() {
+    const premium = ehPremiumExplora();
+    const slot = document.getElementById('explora-banner-slot');
+    if (slot) {
+      if (premium) {
+        slot.innerHTML = `<div class="explora-banner"><div class="eb-emoji">✨</div><div><b>EXPLORA desbloqueado</b> — acesso vitalício via Matemágica Completo. Tudo liberado.</div></div>`;
+      } else {
+        slot.innerHTML = `<div class="explora-banner"><div class="eb-emoji">🎁</div><div><b>EXPLORA faz parte do pacote Matemágica + EXPLORA.</b> Todos os anos (1º ao 5º) liberam com a chave do Matemágica — pagamento único de R$ 17.</div></div>`;
+      }
+    }
+    document.querySelectorAll('.ano-card').forEach(card => {
+      const href = card.getAttribute('href') || '';
+      const isPremPage = ['ano_1.html','ano_2.html','ano_3.html','ano_4.html','ano_5.html'].includes(href);
+      if (isPremPage && !premium) {
+        if (!card.querySelector('.cadeado-premium')) {
+          const tag = document.createElement('div');
+          tag.className = 'cadeado-premium';
+          tag.textContent = '🔒';
+          tag.title = 'Bônus premium';
+          card.appendChild(tag);
+        }
+      }
+    });
+  }
+
+  function atualizarProgressoAnos() {
+    for (let ano = 1; ano <= 5; ano++) {
+      try {
+        const raw = localStorage.getItem('explora_ano' + ano + '_v1');
+        const el = document.querySelector('.ano-progresso[data-ano="' + ano + '"]');
+        if (!el) continue;
+        if (raw) {
+          const s = JSON.parse(raw);
+          const total = (s.estrelas || 0);
+          el.textContent = total > 0 ? '⭐ ' + total : 'Bora começar!';
+        } else {
+          el.textContent = 'Bora começar!';
+        }
+      } catch(e) {}
+    }
+  }
+</script>
+</body>
+</html>

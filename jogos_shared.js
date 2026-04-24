@@ -6,7 +6,21 @@
 
 let STORAGE_KEY = 'jogosMat_default';
 const USER_STORAGE_KEY = 'matemagica_user_v1';
+const LICENCA_STORAGE_KEY = 'matemagica_licenca_v1';
 const ANOS_STORAGE_KEYS = ['jogosMat1ano_v1','jogosMat2ano_v1','jogosMat3ano_v1','jogosMat4ano_v1','jogosMat5ano_v1'];
+
+// ============== MONETIZAÇÃO ==============
+// Preencher com a URL real do produto na Hotmart assim que for criado
+const CHECKOUT_URL = 'https://pay.hotmart.com/A105538417J';
+const PRECO_EXIBIDO = 'R$ 17';
+
+// Páginas totalmente premium (redirecionam ao paywall se não tiver licença)
+const PAGINAS_PREMIUM = [
+  'jogos_matematica_2ano.html',
+  'jogos_matematica_3ano.html',
+  'jogos_matematica_4ano.html',
+  'jogos_matematica_5ano.html'
+];
 
 // ============== BADGES ==============
 const BADGES = {
@@ -23,7 +37,8 @@ const BADGES = {
   dias_30: { emoji:'💎', nome:'1 mês', desc:'Persistente de verdade!' },
   capitulo_1: { emoji:'📘', nome:'Cap. 1 dominado', desc:'10 estrelas em cada jogo do cap. 1' },
   nivel_5: { emoji:'🎖️', nome:'Nível 5', desc:'Chegou ao nível 5' },
-  nivel_10: { emoji:'🎗️', nome:'Nível 10', desc:'Chegou ao nível 10' }
+  nivel_10: { emoji:'🎗️', nome:'Nível 10', desc:'Chegou ao nível 10' },
+  matemagico: { emoji:'✨', nome:'Matemágico', desc:'Apoiador Matemágica Completo' }
 };
 
 // ============== AVATAR OPÇÕES (gratuitas) ==============
@@ -104,10 +119,27 @@ const STATE = {
   comprados: { cabeca: [], chapeu: [], cor: [], temas: [], bichinhos: [], pdfs: [] },
   temaAtivo: 'padrao',
   bichinhoAtivo: null,
+  licenca: null,
 
   load() {
     this._loadGlobal();
     this._loadPerYear();
+    this._loadLicenca();
+  },
+
+  _loadLicenca() {
+    try {
+      this.licenca = JSON.parse(localStorage.getItem(LICENCA_STORAGE_KEY) || 'null');
+    } catch(e) { this.licenca = null; }
+  },
+
+  isPremium() {
+    return !!(this.licenca && this.licenca.key);
+  },
+
+  salvarLicenca(lic) {
+    this.licenca = lic;
+    try { localStorage.setItem(LICENCA_STORAGE_KEY, JSON.stringify(lic)); } catch(e) {}
   },
 
   // Campos globais: moedas, comprados, avatar, temaAtivo, bichinhoAtivo
@@ -493,8 +525,10 @@ function renderLojaConteudo() {
   if (LOJA_ABA === 'temas') itens = LOJA.temas.filter(t => t.id !== 'padrao');
   else itens = LOJA[LOJA_ABA] || [];
 
+  const ehPremiumUser = STATE.isPremium && STATE.isPremium();
   const itensHtml = itens.map(item => {
-    const comprado = (STATE.comprados[LOJA_ABA] || []).includes(item.id);
+    const premiumLibera = ehPremiumUser && LOJA_ABA === 'temas';
+    const comprado = premiumLibera || (STATE.comprados[LOJA_ABA] || []).includes(item.id);
     const temGrana = STATE.moedas >= item.preco;
     const ativo = (LOJA_ABA === 'temas' && STATE.temaAtivo === item.id)
                || (LOJA_ABA === 'bichinhos' && STATE.bichinhoAtivo === item.id);
@@ -603,6 +637,118 @@ function abrirModalBadges() {
 
 function fecharModal() {
   document.getElementById('modal-overlay').classList.add('hidden');
+}
+
+// ============== PAYWALL (licença R$17 vitalícia) ==============
+function abrirPaywall(motivo) {
+  const m = document.getElementById('modal-overlay');
+  if (!m) return;
+  const emoji = document.getElementById('m-emoji');
+  const titulo = document.getElementById('m-titulo');
+  const conteudo = document.getElementById('m-conteudo');
+  const btn = document.getElementById('modal-btn');
+  if (emoji) emoji.textContent = '🔒';
+  if (titulo) titulo.textContent = 'Libere tudo no Matemágica';
+  if (conteudo) {
+    conteudo.innerHTML = `
+      <div style="text-align:left;line-height:1.55;font-size:14px;color:#4a3b8a">
+        ${motivo ? `<p style="text-align:center;font-size:13px;color:#888;margin:0 0 12px">${motivo}</p>` : ''}
+        <div style="background:linear-gradient(135deg,#fff3d6,#ffe5a3);border-radius:12px;padding:14px;margin-bottom:14px">
+          <div style="font-size:26px;font-weight:900;color:#a87800;text-align:center;line-height:1">${PRECO_EXIBIDO}</div>
+          <div style="text-align:center;font-size:12px;color:#a87800;margin-bottom:10px">pagamento único · vitalício · sem mensalidade</div>
+          <ul style="margin:0;padding-left:20px;font-size:13px;color:#5a3a00">
+            <li>Todos os jogos do <b>2º ao 5º ano</b></li>
+            <li><b>SOS Prova</b> — detecta fraquezas e monta prova</li>
+            <li>🎁 <b>BÔNUS: app EXPLORA</b> — História e Geografia BNCC, 1º ao 5º ano</li>
+            <li>4 PDFs premium sem gastar moedas</li>
+            <li>Temas de fundo (escuro, pastel, oceano…)</li>
+            <li>+500 moedas de bônus inicial</li>
+            <li>Badge exclusiva <b>✨ Matemágico</b></li>
+            <li>Atualizações novas pra sempre</li>
+          </ul>
+        </div>
+        <a href="${CHECKOUT_URL}" target="_blank" rel="noopener" onclick="somAcerto&&somAcerto()" style="display:block;background:linear-gradient(135deg,#2ebd7c,#4ab3a5);color:#fff;text-align:center;padding:13px;border-radius:10px;text-decoration:none;font-weight:800;font-size:15px;margin-bottom:8px;box-shadow:0 4px 10px rgba(46,189,124,0.3)">🚀 Liberar tudo por ${PRECO_EXIBIDO}</a>
+        <p style="font-size:11px;color:#888;text-align:center;margin:8px 0 0">🔒 Pagamento seguro via Hotmart · PIX, cartão ou boleto</p>
+        <p style="font-size:11px;color:#888;text-align:center;margin:2px 0 0">Garantia de 7 dias — devolvemos 100% sem perguntar</p>
+        <p style="font-size:11px;color:#888;text-align:center;margin:10px 0 0">Já comprou? <a href="#" onclick="abrirReativar();return false;" style="color:#6b54d3;font-weight:700">Inserir chave de ativação</a></p>
+      </div>
+    `;
+  }
+  if (btn) {
+    btn.textContent = 'Depois';
+    btn.onclick = () => fecharModal();
+  }
+  m.classList.remove('hidden');
+}
+
+function abrirReativar() {
+  const chave = prompt('Cole a chave de ativação recebida por email (exemplo: MM-XXXX-XXXX-XXXX-XXXX):');
+  if (!chave) return;
+  ativarLicenca(chave.trim().toUpperCase());
+}
+
+async function ativarLicenca(key) {
+  if (!key) return { valid: false };
+  try {
+    const r = await fetch(`/api/ativar?key=${encodeURIComponent(key)}`);
+    const data = await r.json();
+    if (data.valid) {
+      STATE.salvarLicenca({
+        key,
+        email: data.email || null,
+        ativadaEm: new Date().toISOString()
+      });
+      // Bônus de 500 moedas na primeira ativação
+      if (!data.jaAtivada) {
+        STATE.moedas = (STATE.moedas || 0) + 500;
+        if (!STATE.badges.includes('matemagico')) STATE.badges.push('matemagico');
+        STATE.save();
+      }
+      fecharModal();
+      if (typeof soltarConfete === 'function') soltarConfete(120);
+      if (typeof somCelebracao === 'function') somCelebracao();
+      alert(`✨ Matemágica Completo liberado! Bem-vindo.`);
+      location.reload();
+      return { valid: true };
+    } else {
+      alert(`❌ Chave inválida: ${data.error || 'verifique e tente de novo'}`);
+      return { valid: false, error: data.error };
+    }
+  } catch(e) {
+    alert('Erro ao validar. Tenta de novo em instantes.');
+    return { valid: false, error: 'network' };
+  }
+}
+
+// Auto-check: quando chegar em qualquer URL com ?ativar=KEY, valida e salva
+(function autoChecarAtivacaoNaURL() {
+  try {
+    const params = new URLSearchParams(location.search);
+    const key = params.get('ativar');
+    if (!key) return;
+    // Limpa URL depois de processar pra não ficar compartilhável
+    ativarLicenca(key.trim().toUpperCase()).finally(() => {
+      try {
+        const url = new URL(location.href);
+        url.searchParams.delete('ativar');
+        history.replaceState({}, '', url.pathname + (url.search || '') + url.hash);
+      } catch(e) {}
+    });
+  } catch(e) {}
+})();
+
+// Bloqueia acesso à página inteira se ela é premium e o usuário não tem licença
+function guardaPaginaPremium() {
+  try {
+    const pathname = (location.pathname || '').split('/').pop() || '';
+    const ehPremium = PAGINAS_PREMIUM.includes(pathname);
+    if (!ehPremium) return;
+    if (STATE.isPremium()) return;
+    // Mostra paywall de bloqueio e esconde conteúdo
+    const container = document.querySelector('.container');
+    if (container) container.style.filter = 'blur(4px) opacity(0.4)';
+    setTimeout(() => abrirPaywall('Este ano faz parte do Matemágica Completo.'), 150);
+  } catch(e) {}
 }
 
 function mostrarNovaBadge(key) {
@@ -790,6 +936,7 @@ function abrirJogo(id, nome) {
   atualizarPlacarJogo();
   mostrarReforcoHistorico(id);
   adicionarBotaoRespirarManual();
+  mostrarMetacognicao(id);
   JOGOS[id].iniciar();
 }
 
@@ -869,12 +1016,13 @@ function atualizarBadgeNivel() {
 }
 
 // ============== FRASES MOTIVACIONAIS (variadas, sem repetir o mesmo "correto!") ==============
+// Baseadas em Mentalidades Matemáticas (Jo Boaler): elogiar ESFORÇO e PROCESSO, não inteligência
 const FRASES_ACERTO = [
   'Muito bem!', 'Boa!', 'Acertou em cheio!', 'Perfeito!',
-  'Você tá craque!', 'Mandou ver!', 'Matadora essa!', 'Isso aí!',
+  'Persistiu 👏', 'Mandou ver!', 'Essa foi difícil — você tirou!', 'Isso aí!',
   'Uhul!', 'Você pensou certo!', 'Vai com tudo!', 'Show!',
-  'Olha essa cabeça!', 'Tá dominando!', 'Orgulho da gente!', 'Acertou sozinho!',
-  'Arrasou!', 'Tá voando!'
+  'Pensou bem!', 'Que esforço grande!', 'Tentou e conseguiu!', 'Acertou sozinho!',
+  'Não desistiu!', 'Você achou!'
 ];
 const FRASES_PRIMEIRA_VEZ = [
   'Primeira estrela deste jogo!', 'Começou bem!', 'Primeira de muitas!',
@@ -922,19 +1070,31 @@ function feedbackAcerto(msg) {
   setTimeout(() => { if (jogoAtivo) JOGOS[jogoAtivo].iniciar(); }, 1400);
 }
 
+// Fallback progressivo acolhedor (Boaler) quando o jogo não definiu dicas específicas
+const DICAS_FALLBACK_SUAVES = [
+  'Respira e tenta de novo — tá quase.',
+  'Lê com calma, às vezes a 2ª olhada ajuda.',
+  'Sem pressa. Errar é como o cérebro treina.'
+];
+
 function feedbackErro(msg, dica) {
   STATE.errou(jogoAtivo);
   atualizarPlacarJogo();
   somErro();
 
-  // Dicas progressivas: se o jogo definiu jogoState.dicasAtuais, usa tier conforme erro na mesma pergunta
+  jogoState.errosNaPerguntaAtual = (jogoState.errosNaPerguntaAtual || 0) + 1;
+
+  // Dicas progressivas: se o jogo definiu dicasAtuais, usa tier conforme erro na mesma pergunta
   let dicaFinal = dica;
   let isResolucao = false;
   if (jogoState.dicasAtuais && jogoState.dicasAtuais.length) {
-    jogoState.errosNaPerguntaAtual = (jogoState.errosNaPerguntaAtual || 0) + 1;
     const idx = Math.min(jogoState.errosNaPerguntaAtual - 1, jogoState.dicasAtuais.length - 1);
     dicaFinal = jogoState.dicasAtuais[idx];
     isResolucao = (idx === jogoState.dicasAtuais.length - 1);
+  } else if (!dica) {
+    // Fallback genérico acolhedor — 1º erro leve, 2º reforça, 3º+ insiste que não tem pressa
+    const idx = Math.min(jogoState.errosNaPerguntaAtual - 1, DICAS_FALLBACK_SUAVES.length - 1);
+    dicaFinal = DICAS_FALLBACK_SUAVES[idx];
   }
 
   const fb = document.getElementById('feedback');
@@ -947,6 +1107,11 @@ function feedbackErro(msg, dica) {
   }
   reagirMascoteCoach('erro');
   jogoState.errosSeguidos = (jogoState.errosSeguidos || 0) + 1;
+
+  // Após 3 erros seguidos: pulsa botão de respirar (sinal sutil, nunca abre sozinho)
+  if (jogoState.errosSeguidos >= 3 && typeof sinalizarBotaoRespirar === 'function') {
+    sinalizarBotaoRespirar();
+  }
 }
 
 // Jogos que queiram dicas progressivas chamam antes de renderizar cada pergunta:
@@ -1268,6 +1433,90 @@ function reagirMascoteCoach(tipo) {
   }, 1100);
 }
 
+// ============== METACOGNIÇÃO (mascote pensa em voz alta, Quora/Boaler) ==============
+// Mostra como o mascote pensa na 1ª vez que a criança vê um tipo de jogo por sessão.
+// Detecta tipo por substring no id do jogo (não invasivo nos jogos existentes).
+const METACOG_POR_TIPO = {
+  multiplicacao: [
+    'Hmm, multiplicar é somar o mesmo número várias vezes. 3 × 4 = 4 + 4 + 4.',
+    'Multiplicar é fazer grupos iguais. 3 × 4 é "3 grupos de 4".',
+    'Pensa em 3 fileiras com 4 bolinhas em cada — dá pra contar ou já saber a tabuada.'
+  ],
+  divisao: [
+    'Dividir é repartir em grupos iguais. 12 ÷ 3 = "quantos cabem em cada, se eu fizer 3 grupos?".',
+    'Dividir é o contrário de multiplicar. 12 ÷ 4 = 3 porque 4 × 3 = 12.',
+    'Posso ir tirando de 4 em 4 e contar quantas vezes consegui.'
+  ],
+  fracao: [
+    'Fração é uma parte do todo. 1/4 = uma de 4 partes iguais.',
+    'O de baixo diz em quantos pedaços cortei. O de cima diz quantos peguei.',
+    'Pensa numa pizza: se corto em 8 e como 3 fatias, comi 3/8.'
+  ],
+  soma: [
+    'Somar é juntar. Posso contar nos dedos ou fazer o maior + o menor na cabeça.',
+    'Dica: somar é mais fácil começando pelo número maior.'
+  ],
+  subtracao: [
+    'Subtrair é tirar. 7 − 3 = "quanto sobra se tiro 3 de 7?".',
+    'Também dá pra pensar: "quanto falta pra chegar de 3 até 7?" — também é 4.'
+  ],
+  tabuada: [
+    'A tabuada é só somas disfarçadas. 4 × 3 = 3 + 3 + 3 + 3.',
+    'Se já sabe 3 × 4, sabe 4 × 3 — é a mesma coisa (propriedade comutativa).'
+  ],
+  contagem: [
+    'Contar é ir de 1 em 1, ou pular de 2 em 2, de 5 em 5, de 10 em 10.',
+    'Se eu sei contar até 10, sei contar até 100 — é o mesmo padrão com dezena.'
+  ],
+  dinheiro: [
+    'Dinheiro é só matemática em real. 2 notas de 5 = R$10. 10 moedas de 1 = R$10.',
+    'Juntar dinheiro é somar. Dar troco é subtrair.'
+  ],
+  medida: [
+    'Medir é comparar com uma unidade. 1 metro = 100 centímetros.',
+    'Se preciso converter, vejo se tô indo pra maior (divide) ou menor (multiplica).'
+  ],
+  horas: [
+    'O relógio de ponteiro: o grande gira 12 vezes mais rápido (minutos) que o pequeno (hora).',
+    'De 15 em 15: quarto, meia, três-quartos, hora cheia.'
+  ],
+  decimal: [
+    'Número decimal é um número com pedaço. 2,5 = 2 inteiros + meio.',
+    'Pensa em dinheiro: R$ 2,50 é 2 reais e 50 centavos — 50 centavos = meio real.'
+  ]
+};
+
+function detectarTipoJogo(id) {
+  if (!id) return null;
+  const s = id.toLowerCase();
+  if (s.includes('tabuada')) return 'tabuada';
+  if (/mult|vezes|produto/.test(s)) return 'multiplicacao';
+  if (/divis|divide|reparte/.test(s)) return 'divisao';
+  if (/frac/.test(s)) return 'fracao';
+  if (/decimal|virgula/.test(s)) return 'decimal';
+  if (/sub|menos|diferenca/.test(s)) return 'subtracao';
+  if (/soma|adicao|\bmais\b/.test(s)) return 'soma';
+  if (/dinheiro|real|moeda|troco/.test(s)) return 'dinheiro';
+  if (/medida|metro|centim|litro|grama/.test(s)) return 'medida';
+  if (/hora|relogio|minuto/.test(s)) return 'horas';
+  if (/contagem|conta|numero|sucessor|antecessor/.test(s)) return 'contagem';
+  return null;
+}
+
+const _metacogVistas = new Set();
+
+function mostrarMetacognicao(id) {
+  const tipo = detectarTipoJogo(id);
+  if (!tipo) return;
+  if (_metacogVistas.has(tipo)) return;
+  const arr = METACOG_POR_TIPO[tipo];
+  if (!arr || !arr.length) return;
+  _metacogVistas.add(tipo);
+  const fala = arr[Math.floor(Math.random() * arr.length)];
+  // Atraso pequeno pra aparecer depois do balão de "boas-vindas"
+  setTimeout(() => mostrarBalaoCoach(fala, 'metacog', 6000), 2800);
+}
+
 // Mostra balão só quando entra no jogo (não na seleção de capítulo)
 const _abrirJogo_original = abrirJogo;
 abrirJogo = function(id, nome) {
@@ -1407,7 +1656,32 @@ function initJogos() {
   atualizarPlacarGeral();
   renderHeaderPlayer();
   renderMascoteCoach();
+  guardaPaginaPremium();
   if (detectarModoProva()) {
     iniciarModoProva();
   }
+}
+
+// Pulsa o botão "🧘 Respirar" do placar como sugestão sutil após erros seguidos.
+// Nunca abre o modo calma sozinho — só chama atenção pro botão que já existe.
+function sinalizarBotaoRespirar() {
+  if (!document.getElementById('btn-respirar-pulse-style')) {
+    const st = document.createElement('style');
+    st.id = 'btn-respirar-pulse-style';
+    st.textContent = `
+      .btn-respirar-manual.pulsando {
+        animation: btnRespirarPulse 1.4s ease-in-out 3;
+      }
+      @keyframes btnRespirarPulse {
+        0%,100% { transform: scale(1); box-shadow: none; }
+        50%     { transform: scale(1.08); box-shadow: 0 0 0 6px rgba(122,197,216,0.35); }
+      }
+    `;
+    document.head.appendChild(st);
+  }
+  const btn = document.querySelector('.btn-respirar-manual');
+  if (!btn) return;
+  btn.classList.remove('pulsando');
+  void btn.offsetWidth;
+  btn.classList.add('pulsando');
 }

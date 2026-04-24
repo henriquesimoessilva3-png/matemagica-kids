@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EXPLORA · 1º Ano</title>
+<link rel="stylesheet" href="historia_shared.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#d4794a">
+<style>
+  .topo-ano { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
+  .topo-ano h1 { font-size: 22px; margin: 0; flex: 1; text-align: center; }
+  .abas { display: flex; gap: 6px; justify-content: center; margin: 8px 0 14px; flex-wrap: wrap; }
+  .aba {
+    background: #fff4dc; border: 2px solid #c9a86b;
+    color: #6b3a15; padding: 8px 14px; border-radius: 18px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    font-family: inherit;
+  }
+  .aba.ativa { background: linear-gradient(135deg, #8b5a2b, #b88247); color: #fff; border-color: #6b3a15; }
+  .aba:hover:not(.ativa) { border-color: #8b5a2b; }
+
+  /* ===== CAPÍTULOS (cards maiores) ===== */
+  .capitulos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .cap-card {
+    background: #fff4dc;
+    border: 3px solid #d4a574;
+    border-radius: 16px;
+    padding: 14px 14px 12px;
+    cursor: pointer;
+    transition: all 0.22s;
+    text-align: left;
+    font-family: inherit;
+    position: relative;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .cap-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(139, 90, 43, 0.3);
+    border-color: #8b5a2b;
+  }
+  .cap-card .cap-rotulo {
+    font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; font-weight: 800;
+    color: #8b5a2b; margin-bottom: 2px;
+  }
+  .cap-card .cap-nome {
+    font-size: 16px; font-weight: 800; color: #3a2818;
+    line-height: 1.25;
+  }
+  .cap-card .cap-desc {
+    font-size: 12px; color: #6b3a15; line-height: 1.35;
+    margin-top: 4px;
+  }
+  .cap-card .cap-stats {
+    font-size: 12px; color: #6b3a15; font-weight: 700;
+    margin-top: 8px; display: flex; gap: 10px; align-items: center;
+  }
+  .cap-card .cap-progresso-bar {
+    margin-top: 6px; height: 6px; border-radius: 4px;
+    background: #fef8ed; overflow: hidden;
+    border: 1px solid #c9a86b;
+  }
+  .cap-card .cap-progresso-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, #d4a574, #8b5a2b);
+    transition: width 0.5s;
+  }
+  .cap-card .cap-num {
+    position: absolute; top: -10px; right: -10px;
+    background: linear-gradient(135deg, #8b5a2b, #b88247);
+    color: #fff; width: 34px; height: 34px;
+    border-radius: 50%; border: 3px solid #fef8ed;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  }
+  .cap-card.h1 { background: linear-gradient(135deg, #fde8d0, #fad2a8); border-color: #d4794a; }
+  .cap-card.h2 { background: linear-gradient(135deg, #ffe8ba, #ffd58c); border-color: #d4a574; }
+  .cap-card.g1 { background: linear-gradient(135deg, #d8ecf5, #a8d0e8); border-color: #4a7aa8; }
+  .cap-card.g2 { background: linear-gradient(135deg, #d8e8d5, #a8c8a0); border-color: #5a8a4a; }
+
+  .cap-separador {
+    grid-column: 1 / -1;
+    font-size: 13px; font-weight: 800;
+    color: #6b3a15; letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 0 2px;
+    border-bottom: 2px dashed #c9a86b;
+    margin-top: 6px;
+  }
+  .cap-separador:first-child { margin-top: 0; }
+
+  .breadcrumb {
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .breadcrumb .crumb {
+    background: #fff4dc; padding: 5px 11px;
+    border-radius: 12px; border: 1.5px solid #c9a86b;
+    font-size: 12px; font-weight: 700; color: #6b3a15;
+    cursor: pointer; font-family: inherit;
+  }
+  .breadcrumb .crumb:hover { background: #ffe8ba; }
+  .breadcrumb .sep { color: #8b5a2b; font-weight: 700; }
+  .cap-titulo {
+    font-size: 19px; font-weight: 800; color: #3a2818;
+    margin: 4px 0 12px; line-height: 1.3;
+  }
+  .cap-titulo .cap-sub {
+    display: block; font-size: 13px; color: #8b5a2b;
+    font-weight: 500; margin-top: 2px; font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topo-ano">
+    <a href="index.html" class="btn-voltar">← Anos</a>
+    <h1>1º Ano · Eu e meu lugar</h1>
+    <span style="width:60px"></span>
+  </div>
+
+  <div id="explora-header" class="header-player"></div>
+
+  <div class="abas">
+    <button class="aba ativa" data-aba="todos">🎯 Todos</button>
+    <button class="aba" data-aba="historia">📜 História</button>
+    <button class="aba" data-aba="geografia">🗺️ Geografia</button>
+  </div>
+
+  <!-- TELA 1: grid de capítulos -->
+  <div id="tela-capitulos">
+    <div class="capitulos-grid" id="capitulos-container"></div>
+  </div>
+
+  <!-- TELA 2: jogos dentro de um capítulo -->
+  <div id="tela-jogos-cap" style="display:none">
+    <div class="breadcrumb">
+      <button class="crumb" onclick="voltarCapitulos()">← Capítulos</button>
+      <span class="sep">›</span>
+      <span class="crumb" id="breadcrumb-cap"></span>
+    </div>
+    <div class="cap-titulo" id="cap-titulo"></div>
+    <div class="jogos-grid" id="grid-container"></div>
+  </div>
+
+  <!-- TELA 3: jogo sendo jogado -->
+  <div id="tela-jogo" class="jogo-area" style="display:none"></div>
+</div>
+
+<script src="mascotes.js?v=3"></script>
+<script src="explora_shared.js?v=5"></script>
+<script>
+initExplora({ storageKey: 'explora_ano1_v1' });
+
+// =====================================================
+// CAPÍTULOS — BNCC 1º ano
+// =====================================================
+const CAPS = {
+  h1: { ord: 1, materia: 'historia', num: 1,
+        nome: 'Eu e minha família',
+        desc: 'Quem faz parte da família e como a gente se identifica.',
+        jogos: ['familia', 'memoria_parentesco', 'vf_familia'] },
+  h2: { ord: 2, materia: 'historia', num: 2,
+        nome: 'O tempo passa',
+        desc: 'Ontem, hoje e amanhã — rotina e gerações.',
+        jogos: ['rotina_dia', 'geracoes', 'cloze_tempo'] },
+
+  g1: { ord: 3, materia: 'geografia', num: 1,
+        nome: 'Lugares onde eu vivo',
+        desc: 'Casa, escola e a comunidade perto de você.',
+        jogos: ['lugares', 'casa_escola_classif', 'memoria_lugares'] },
+  g2: { ord: 4, materia: 'geografia', num: 2,
+        nome: 'Dia, noite e estações',
+        desc: 'O Sol, a Lua e o tempo que muda durante o ano.',
+        jogos: ['dia_noite', 'estacoes', 'vf_natureza'] }
+};
+
+// =====================================================
+// JOGOS — 1º ano
+// =====================================================
+const JOGOS = [
+
+// ============ HISTÓRIA · CAP 1 — EU E MINHA FAMÍLIA ============
+
+{ id: 'familia', emoji: '👨‍👩‍👧', titulo: 'Minha Família', cap: 'h1',
+  desc: 'Descubra quem é quem na família!', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Quem é o pai do seu pai?',
+      opcoes: ['Avô', 'Tio', 'Primo', 'Irmão'], correta: 0,
+      explica: 'O pai do seu pai (ou da sua mãe) é o seu avô.' },
+    { nivel: 'facil', pergunta: 'A irmã da sua mãe é sua:',
+      opcoes: ['Tia', 'Avó', 'Prima', 'Madrinha'], correta: 0,
+      explica: 'Irmã da mãe (ou do pai) é sua tia.' },
+    { nivel: 'facil', pergunta: 'O filho do seu tio é seu:',
+      opcoes: ['Primo', 'Irmão', 'Avô', 'Pai'], correta: 0,
+      explica: 'Os filhos dos seus tios são seus primos.' },
+    { nivel: 'facil', pergunta: 'A mãe da sua mãe é sua:',
+      opcoes: ['Avó', 'Tia', 'Prima', 'Madrinha'], correta: 0,
+      explica: 'A mãe da sua mãe é a sua avó. Ela é mãe dela, igual a sua mãe é mãe de você.' },
+    { nivel: 'facil', pergunta: 'O irmão do seu pai é seu:',
+      opcoes: ['Tio', 'Avô', 'Primo', 'Sobrinho'], correta: 0,
+      explica: 'Irmão do pai (ou da mãe) é seu tio.' },
+    { nivel: 'medio', pergunta: 'Família é um grupo de pessoas que:',
+      opcoes: [
+        'Cuidam e convivem umas com as outras',
+        'Só têm o mesmo rosto',
+        'Só têm o mesmo nome',
+        'Só têm a mesma idade'
+      ], correta: 0,
+      explica: 'Família é quem cuida e convive junto. Existem muitos formatos diferentes de família.' },
+    { nivel: 'medio', pergunta: 'Qual destes documentos tem seu nome e o dia que você nasceu?',
+      opcoes: ['Certidão de nascimento', 'Cardápio do almoço', 'Cartaz do shopping', 'Revista em quadrinhos'],
+      correta: 0,
+      explica: 'A certidão de nascimento é o documento que registra seu nome e o dia em que você nasceu.' },
+    { nivel: 'medio', pergunta: 'A pessoa mais velha numa família costuma ser:',
+      opcoes: ['O avô ou a avó', 'O irmão bebê', 'O primo criança', 'O filho'], correta: 0,
+      explica: 'Os avós geralmente são os mais velhos. Viveram mais tempo e têm muitas histórias pra contar.' },
+    { nivel: 'medio', pergunta: 'O nome da sua família — que você divide com pai, mãe ou ambos — chama-se:',
+      opcoes: ['Sobrenome', 'Apelido', 'Endereço', 'Recreio'], correta: 0,
+      explica: 'O sobrenome é o nome da família. Ele vem dos pais e ajuda a identificar a quem cada pessoa pertence.' },
+    { nivel: 'dificil', pergunta: 'Quem você chama de "madrinha" ou "padrinho"?',
+      opcoes: [
+        'Uma pessoa especial que a família escolheu para cuidar de você',
+        'Qualquer vizinho que passa na rua',
+        'Os colegas da sua turma',
+        'O motorista do ônibus escolar'
+      ], correta: 0,
+      explica: 'Madrinha e padrinho são escolhidos pela família para acompanhar e cuidar de você — não precisam ter o mesmo sangue.' },
+    { nivel: 'dificil', pergunta: 'Todas as famílias têm sempre pai, mãe e filhos?',
+      opcoes: [
+        'Não — existem muitas formas de família (só mãe, só pai, avós criando, etc.)',
+        'Sim, toda família precisa ter pai, mãe e filhos',
+        'Só as famílias que têm cachorro',
+        'Só as famílias que moram em apartamento'
+      ], correta: 0,
+      explica: 'As famílias têm formatos diferentes: mães sozinhas, avós que criam os netos, dois pais, dois avós... O importante é o cuidado e o convívio.' },
+    { nivel: 'dificil', pergunta: 'Quando uma família muda de casa, o que NÃO muda:',
+      opcoes: [
+        'O carinho entre as pessoas da família',
+        'O endereço da casa',
+        'A vista da janela',
+        'O caminho pra ir à escola'
+      ], correta: 0,
+      explica: 'Mudar de casa muda o lugar físico, mas o amor e o vínculo da família ficam iguais.' }
+  ]
+},
+
+{ id: 'memoria_parentesco', emoji: '🃏', titulo: 'Memória: Parentescos', cap: 'h1',
+  desc: 'Encontre os pares entre os jeitos de chamar a mesma pessoa!', tipo: 'memoria',
+  perguntas: [
+    { nivel: 'facil',
+      pergunta: 'Combine cada descrição com o nome certo de parente:',
+      pares: [
+        { a: 'Pai do pai', b: 'Avô' },
+        { a: 'Mãe da mãe', b: 'Avó' },
+        { a: 'Filho do tio', b: 'Primo' },
+        { a: 'Irmã da mãe', b: 'Tia' }
+      ],
+      explica: 'Cada parente tem um nome próprio que mostra a relação entre as pessoas.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada pessoa da família com o que ela costuma fazer:',
+      pares: [
+        { a: 'Bebê', b: 'Precisa de cuidado o tempo todo' },
+        { a: 'Criança', b: 'Vai pra escola e brinca' },
+        { a: 'Adulto', b: 'Trabalha e cuida' },
+        { a: 'Avô ou avó', b: 'Conta histórias de antigamente' }
+      ],
+      explica: 'Cada fase da vida tem atividades e responsabilidades diferentes.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada documento com o que ele mostra:',
+      pares: [
+        { a: 'Certidão de nascimento', b: 'Seu nome e dia que você nasceu' },
+        { a: 'Foto de família', b: 'Como vocês eram no passado' },
+        { a: 'Álbum de bebê', b: 'Lembranças dos seus primeiros dias' },
+        { a: 'Árvore genealógica', b: 'Todos os parentes da família' }
+      ],
+      explica: 'Documentos e lembranças guardam a história da sua família. Uma árvore genealógica é um desenho que mostra quem é parente de quem.' }
+  ]
+},
+
+{ id: 'vf_familia', emoji: '✓✗', titulo: 'Verdadeiro ou Falso: Família', cap: 'h1',
+  desc: 'Leia e diga: é verdade ou mentira?', tipo: 'vf',
+  perguntas: [
+    { nivel: 'facil', afirmacao: 'Família é o grupo de pessoas que cuida e convive junto.', vf: true,
+      explica: 'Família é formada por quem se cuida e vive junto — pode ter muitos formatos.' },
+
+    { nivel: 'facil', afirmacao: 'Toda família tem sempre pai, mãe e filhos.', vf: false,
+      explica: 'Nem toda família é assim. Existem famílias com só um pai ou só uma mãe, famílias de avós com netos, duas mães, dois pais...' },
+
+    { nivel: 'facil', afirmacao: 'Seu avô é o pai do seu pai ou da sua mãe.', vf: true,
+      explica: 'Isso mesmo! Avô é o pai dos seus pais.' },
+
+    { nivel: 'facil', afirmacao: 'Os filhos dos seus tios são seus irmãos.', vf: false,
+      explica: 'Filhos dos tios são seus primos, não irmãos. Irmãos têm os mesmos pais que você.' },
+
+    { nivel: 'medio', afirmacao: 'Cada pessoa tem um nome e um sobrenome.', vf: true,
+      explica: 'O nome é só seu; o sobrenome é da família e costuma vir dos pais.' },
+
+    { nivel: 'medio', afirmacao: 'A certidão de nascimento é um documento que tem seu nome e dia que você nasceu.', vf: true,
+      explica: 'Certidão de nascimento é um papel oficial que registra quem você é e quando nasceu.' },
+
+    { nivel: 'medio', afirmacao: 'Os avós costumam ser as pessoas mais novas da família.', vf: false,
+      explica: 'Os avós costumam ser os mais velhos — viveram mais tempo que pais e filhos.' },
+
+    { nivel: 'dificil', afirmacao: 'Madrinha e padrinho são parentes de sangue.', vf: false,
+      explica: 'Madrinha e padrinho são escolhidos pela família. Eles não precisam ter o mesmo sangue, mas têm um papel especial de cuidado.' }
+  ]
+},
+
+// ============ HISTÓRIA · CAP 2 — O TEMPO PASSA ============
+
+{ id: 'rotina_dia', emoji: '⏰', titulo: 'Minha Rotina', cap: 'h2',
+  desc: 'Coloque as coisas do dia na ordem certa!', tipo: 'ordenar',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Ordene o começo do dia de uma criança:',
+      itens: [
+        { id: 'a', label: 'Acordar de manhã', emoji: '😴' },
+        { id: 'b', label: 'Tomar café da manhã', emoji: '🥐' },
+        { id: 'c', label: 'Ir para a escola', emoji: '🎒' },
+        { id: 'd', label: 'Ter aula com a professora', emoji: '📚' }
+      ],
+      explica: 'Primeiro acordamos, depois nos alimentamos, depois vamos pra escola e lá temos aula.' },
+
+    { nivel: 'facil', pergunta: 'Ordene as fases da vida de uma pessoa, do mais novo ao mais velho:',
+      itens: [
+        { id: 'a', label: 'Bebê', emoji: '👶' },
+        { id: 'b', label: 'Criança', emoji: '🧒' },
+        { id: 'c', label: 'Adolescente', emoji: '🧑' },
+        { id: 'd', label: 'Adulto', emoji: '👨' }
+      ],
+      explica: 'Todas as pessoas passam por essas fases à medida que vão crescendo.' },
+
+    { nivel: 'medio', pergunta: 'Ordene uma noite de uma criança:',
+      itens: [
+        { id: 'a', label: 'Voltar da escola', emoji: '🏠' },
+        { id: 'b', label: 'Jantar em família', emoji: '🍽️' },
+        { id: 'c', label: 'Escovar os dentes', emoji: '🪥' },
+        { id: 'd', label: 'Dormir', emoji: '🌙' }
+      ],
+      explica: 'Essas são as atividades típicas do fim do dia, uma depois da outra.' },
+
+    { nivel: 'medio', pergunta: 'Ordene os dias em relação a hoje, do mais antigo ao mais novo:',
+      itens: [
+        { id: 'a', label: 'Anteontem', emoji: '📅' },
+        { id: 'b', label: 'Ontem', emoji: '⏪' },
+        { id: 'c', label: 'Hoje', emoji: '⏺️' },
+        { id: 'd', label: 'Amanhã', emoji: '⏩' }
+      ],
+      explica: 'Anteontem foi antes de ontem. Hoje é agora. Amanhã ainda vai chegar.' },
+
+    { nivel: 'dificil', pergunta: 'Ordene eventos de uma semana, do primeiro ao último:',
+      itens: [
+        { id: 'a', label: 'Segunda: voltar da escola', emoji: '🏫' },
+        { id: 'b', label: 'Quarta: aula de educação física', emoji: '⚽' },
+        { id: 'c', label: 'Sexta: festa na escola', emoji: '🎉' },
+        { id: 'd', label: 'Domingo: visitar os avós', emoji: '👵' }
+      ],
+      explica: 'A semana começa na segunda e termina no domingo. Os dias vão passando um depois do outro.' }
+  ]
+},
+
+{ id: 'geracoes', emoji: '👶', titulo: 'As Gerações', cap: 'h2',
+  desc: 'Quem veio antes de quem na família.', tipo: 'ordenar',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Ordene da pessoa MAIS NOVA para a MAIS VELHA na família:',
+      itens: [
+        { id: 'a', label: 'Você', emoji: '🧒' },
+        { id: 'b', label: 'Pai ou mãe', emoji: '🧑' },
+        { id: 'c', label: 'Avô ou avó', emoji: '👴' },
+        { id: 'd', label: 'Bisavô ou bisavó', emoji: '🧓' }
+      ],
+      explica: 'Cada pessoa mais velha é a geração que veio antes. Bisavós são os pais dos avós.' },
+
+    { nivel: 'medio', pergunta: 'Ordene objetos antigos e novos, do MAIS ANTIGO ao MAIS NOVO:',
+      itens: [
+        { id: 'a', label: 'Carroça puxada por cavalo', emoji: '🐴' },
+        { id: 'b', label: 'Carro antigo', emoji: '🚗' },
+        { id: 'c', label: 'Avião', emoji: '✈️' },
+        { id: 'd', label: 'Celular moderno', emoji: '📱' }
+      ],
+      explica: 'Ao longo do tempo foram inventados meios diferentes de se locomover e de se comunicar. Cada um veio depois do outro.' },
+
+    { nivel: 'medio', pergunta: 'Ordene o crescimento de uma pessoa ao longo da vida:',
+      itens: [
+        { id: 'a', label: 'Recém-nascido', emoji: '👶' },
+        { id: 'b', label: 'Criança na escola', emoji: '🧒' },
+        { id: 'c', label: 'Adulto que trabalha', emoji: '👩‍💼' },
+        { id: 'd', label: 'Pessoa idosa', emoji: '👴' }
+      ],
+      explica: 'A vida tem fases: bebê, criança, adulto e idoso. Cada fase traz mudanças no corpo e nas atividades.' }
+  ]
+},
+
+{ id: 'cloze_tempo', emoji: '___', titulo: 'Complete: Tempo e Memória', cap: 'h2',
+  desc: 'Escolha a palavra certa pra completar cada frase.', tipo: 'cloze',
+  perguntas: [
+    { nivel: 'facil', frase: 'O dia que já passou se chama ___.',
+      opcoes: ['ontem', 'hoje', 'amanhã', 'nunca'], correta: 0,
+      explica: 'Ontem é o dia que veio antes de hoje e já terminou.' },
+
+    { nivel: 'facil', frase: 'O dia em que estamos agora se chama ___.',
+      opcoes: ['hoje', 'ontem', 'amanhã', 'semana'], correta: 0,
+      explica: 'Hoje é o dia que a gente está vivendo neste momento.' },
+
+    { nivel: 'facil', frase: 'O dia que ainda vai chegar se chama ___.',
+      opcoes: ['amanhã', 'ontem', 'hoje', 'antes'], correta: 0,
+      explica: 'Amanhã é o próximo dia, que ainda não aconteceu.' },
+
+    { nivel: 'medio', frase: 'Uma semana tem ___ dias.',
+      opcoes: ['sete', 'cinco', 'dez', 'vinte'], correta: 0,
+      explica: 'A semana tem 7 dias: segunda, terça, quarta, quinta, sexta, sábado e domingo.' },
+
+    { nivel: 'medio', frase: 'Os pais dos seus avós são seus ___.',
+      opcoes: ['bisavós', 'primos', 'tios', 'irmãos'], correta: 0,
+      explica: 'Bisavós são os pais dos avós — a geração mais antiga que muita gente conhece.' },
+
+    { nivel: 'medio', frase: 'Quem guarda lembranças da nossa vida são as ___ e os álbuns.',
+      opcoes: ['fotos', 'comidas', 'mochilas', 'cadeiras'], correta: 0,
+      explica: 'Fotos e álbuns guardam momentos importantes pra gente lembrar depois.' },
+
+    { nivel: 'dificil', frase: 'Uma coisa que existe há muito tempo sem mudar chama-se ___.',
+      opcoes: ['antiga', 'nova', 'estreita', 'rápida'], correta: 0,
+      explica: 'Antigo é tudo que vem de muito tempo atrás — como objetos, costumes ou histórias.' },
+
+    { nivel: 'dificil', frase: 'Quando uma coisa começa a ser usada hoje, a gente diz que ela é ___.',
+      opcoes: ['nova', 'antiga', 'escura', 'baixa'], correta: 0,
+      explica: 'Algo novo é recém-criado ou começou há pouco tempo.' }
+  ]
+},
+
+// ============ GEOGRAFIA · CAP 1 — LUGARES ONDE EU VIVO ============
+
+{ id: 'lugares', emoji: '🏠', titulo: 'Pontos de Referência', cap: 'g1',
+  desc: 'Lugares importantes perto da sua casa!', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Onde você vai para aprender com a professora?',
+      opcoes: ['Escola', 'Padaria', 'Cinema', 'Fábrica'], correta: 0,
+      explica: 'Escola é o lugar de aprender com professores e amigos.' },
+
+    { nivel: 'facil', pergunta: 'Onde a família compra frutas, legumes e carnes?',
+      opcoes: ['Mercado ou feira', 'Parque de diversão', 'Museu', 'Estádio'], correta: 0,
+      explica: 'No mercado ou feira a gente compra a comida da semana.' },
+
+    { nivel: 'facil', pergunta: 'Lugar com brinquedos ao ar livre, com grama e árvores:',
+      opcoes: ['Praça ou parquinho', 'Rodoviária', 'Aeroporto', 'Posto de gasolina'], correta: 0,
+      explica: 'Praças e parquinhos são espaços públicos feitos pra brincar e descansar.' },
+
+    { nivel: 'facil', pergunta: 'Aonde a gente vai quando está doente e precisa de remédio forte?',
+      opcoes: ['Hospital ou posto de saúde', 'Sorveteria', 'Cinema', 'Shopping'], correta: 0,
+      explica: 'Hospitais e postos de saúde são lugares onde cuidam da saúde das pessoas.' },
+
+    { nivel: 'medio', pergunta: 'Onde moram várias famílias uma em cima da outra, cada uma em um andar?',
+      opcoes: ['Prédio ou apartamento', 'Casa térrea', 'Barraca', 'Tenda'], correta: 0,
+      explica: 'Prédios têm vários andares e cada família mora em um apartamento.' },
+
+    { nivel: 'medio', pergunta: 'Onde os adultos guardam dinheiro e fazem operações financeiras?',
+      opcoes: ['Banco', 'Padaria', 'Biblioteca', 'Parquinho'], correta: 0,
+      explica: 'O banco é o lugar onde as pessoas guardam dinheiro e fazem transações.' },
+
+    { nivel: 'medio', pergunta: 'Onde a gente pega livros emprestados pra ler?',
+      opcoes: ['Biblioteca', 'Ferragem', 'Banco', 'Correios'], correta: 0,
+      explica: 'Na biblioteca a gente pode pegar livros emprestados e devolver depois.' },
+
+    { nivel: 'medio', pergunta: 'Onde a gente envia e recebe cartas e encomendas?',
+      opcoes: ['Correios', 'Cinema', 'Hospital', 'Estádio'], correta: 0,
+      explica: 'O correio leva as cartas e encomendas de um lugar pra outro.' },
+
+    { nivel: 'dificil', pergunta: 'Ruas, praças e escolas públicas são de:',
+      opcoes: [
+        'Todo mundo — são espaços públicos',
+        'Só de quem mora perto',
+        'Só das pessoas ricas',
+        'Só das crianças'
+      ], correta: 0,
+      explica: 'Espaços públicos são de todas as pessoas. É por isso que a gente cuida bem deles.' },
+
+    { nivel: 'dificil', pergunta: 'O que é um "ponto de referência"?',
+      opcoes: [
+        'Um lugar fácil de ver que ajuda a encontrar outros lugares',
+        'Uma pontuação nos jogos de videogame',
+        'Um desenho no caderno',
+        'Uma folha solta'
+      ], correta: 0,
+      explica: 'Ponto de referência é um lugar bem conhecido (uma igreja, uma praça) que serve pra explicar onde outras coisas ficam.' }
+  ]
+},
+
+{ id: 'casa_escola_classif', emoji: '🏫', titulo: 'Casa ou Escola?', cap: 'g1',
+  desc: 'Cada coisa está no lugar certo.', tipo: 'classif',
+  perguntas: [
+    { pergunta: 'Coloque cada coisa no lugar onde ela costuma estar:',
+      bucketA: { label: 'Na casa', emoji: '🏠' },
+      bucketB: { label: 'Na escola', emoji: '🏫' },
+      itens: [
+        { id: 'i1', label: 'Cama' },
+        { id: 'i2', label: 'Quadro e giz' },
+        { id: 'i3', label: 'Geladeira' },
+        { id: 'i4', label: 'Mesa do professor' },
+        { id: 'i5', label: 'Pátio de recreio' },
+        { id: 'i6', label: 'Sofá da sala' }
+      ],
+      gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'b', i6: 'a' },
+      explica: 'Cada espaço tem objetos diferentes. Em casa a gente descansa e come; na escola a gente aprende e brinca com amigos.' },
+
+    { pergunta: 'Classifique as atividades:',
+      bucketA: { label: 'Faço em casa', emoji: '🏠' },
+      bucketB: { label: 'Faço na escola', emoji: '🏫' },
+      itens: [
+        { id: 'j1', label: 'Tomar banho' },
+        { id: 'j2', label: 'Ter aula de matemática' },
+        { id: 'j3', label: 'Dormir à noite' },
+        { id: 'j4', label: 'Brincar no recreio' },
+        { id: 'j5', label: 'Assistir TV com a família' },
+        { id: 'j6', label: 'Fazer prova' }
+      ],
+      gabarito: { j1: 'a', j2: 'b', j3: 'a', j4: 'b', j5: 'a', j6: 'b' },
+      explica: 'Cada ambiente tem regras e atividades próprias. Em casa a gente descansa; na escola a gente estuda.' },
+
+    { pergunta: 'Coloque cada pessoa no lugar em que ela trabalha:',
+      bucketA: { label: 'Trabalha na casa', emoji: '🏠' },
+      bucketB: { label: 'Trabalha na escola', emoji: '🏫' },
+      itens: [
+        { id: 'k1', label: 'Professora da turma' },
+        { id: 'k2', label: 'Diretora da escola' },
+        { id: 'k3', label: 'Quem cozinha em casa' },
+        { id: 'k4', label: 'Merendeira' },
+        { id: 'k5', label: 'Quem limpa a casa' },
+        { id: 'k6', label: 'Faxineiro(a) da escola' }
+      ],
+      gabarito: { k1: 'b', k2: 'b', k3: 'a', k4: 'b', k5: 'a', k6: 'b' },
+      explica: 'Cada ambiente precisa de pessoas que trabalham pra manter tudo funcionando. Em casa e na escola existem adultos que cuidam.' }
+  ]
+},
+
+{ id: 'memoria_lugares', emoji: '🃏', titulo: 'Memória: Lugares e Atividades', cap: 'g1',
+  desc: 'Encontre os pares de lugar e o que fazemos lá!', tipo: 'memoria',
+  perguntas: [
+    { nivel: 'facil',
+      pergunta: 'Combine cada lugar com o que a gente faz nele:',
+      pares: [
+        { a: 'Escola', b: 'Aprender' },
+        { a: 'Mercado', b: 'Comprar comida' },
+        { a: 'Hospital', b: 'Cuidar da saúde' },
+        { a: 'Parque', b: 'Brincar' }
+      ],
+      explica: 'Cada lugar foi feito pra uma coisa diferente. A gente escolhe pra onde ir conforme o que precisa.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada lugar com uma pessoa que trabalha lá:',
+      pares: [
+        { a: 'Padaria', b: 'Padeiro' },
+        { a: 'Escola', b: 'Professora' },
+        { a: 'Posto de saúde', b: 'Médico' },
+        { a: 'Loja', b: 'Vendedor' }
+      ],
+      explica: 'Cada profissional trabalha num lugar ligado ao que ele faz. Sabendo disso, fica fácil saber onde achar ajuda.' },
+
+    { nivel: 'medio',
+      pergunta: 'Combine cada tipo de moradia com uma característica:',
+      pares: [
+        { a: 'Casa térrea', b: 'Tem só um andar' },
+        { a: 'Apartamento', b: 'Fica dentro de um prédio' },
+        { a: 'Casa de palafita', b: 'Fica sobre a água' },
+        { a: 'Oca', b: 'Moradia indígena tradicional' }
+      ],
+      explica: 'Existem muitos tipos de moradia, cada um pensado pra um lugar e um jeito de viver diferente.' }
+  ]
+},
+
+// ============ GEOGRAFIA · CAP 2 — DIA, NOITE E ESTAÇÕES ============
+
+{ id: 'dia_noite', emoji: '☀️', titulo: 'Dia ou Noite?', cap: 'g2',
+  desc: 'O que a gente faz de dia e de noite.', tipo: 'classif',
+  perguntas: [
+    { pergunta: 'Coloque cada ação no horário certo:',
+      bucketA: { label: 'De dia', emoji: '☀️' },
+      bucketB: { label: 'De noite', emoji: '🌙' },
+      itens: [
+        { id: 'i1', label: 'Ir para a escola' },
+        { id: 'i2', label: 'Dormir no quarto' },
+        { id: 'i3', label: 'Almoçar' },
+        { id: 'i4', label: 'Jantar e escovar os dentes' },
+        { id: 'i5', label: 'Brincar no parquinho' },
+        { id: 'i6', label: 'Ver as estrelas no céu' }
+      ],
+      gabarito: { i1: 'a', i2: 'b', i3: 'a', i4: 'b', i5: 'a', i6: 'b' },
+      explica: 'De dia o Sol ilumina tudo. De noite vemos a Lua e as estrelas, e ficamos dentro de casa.' },
+
+    { pergunta: 'Classifique o que vemos no céu:',
+      bucketA: { label: 'Vemos de dia', emoji: '☀️' },
+      bucketB: { label: 'Vemos de noite', emoji: '🌙' },
+      itens: [
+        { id: 'j1', label: 'Sol' },
+        { id: 'j2', label: 'Estrelas brilhando' },
+        { id: 'j3', label: 'Nuvens brancas' },
+        { id: 'j4', label: 'Lua cheia' },
+        { id: 'j5', label: 'Arco-íris (depois da chuva)' },
+        { id: 'j6', label: 'Céu totalmente escuro' }
+      ],
+      gabarito: { j1: 'a', j2: 'b', j3: 'a', j4: 'b', j5: 'a', j6: 'b' },
+      explica: 'O Sol e o arco-íris só aparecem com a luz do dia. A Lua é mais fácil de ver à noite, com o céu escuro.' },
+
+    { pergunta: 'Classifique as roupas e acessórios pela hora do dia:',
+      bucketA: { label: 'Usar de dia', emoji: '☀️' },
+      bucketB: { label: 'Usar de noite', emoji: '🌙' },
+      itens: [
+        { id: 'k1', label: 'Boné pra proteger do Sol' },
+        { id: 'k2', label: 'Pijama' },
+        { id: 'k3', label: 'Uniforme de escola' },
+        { id: 'k4', label: 'Chinelo pra dormir' },
+        { id: 'k5', label: 'Óculos escuros' },
+        { id: 'k6', label: 'Lanterna' }
+      ],
+      gabarito: { k1: 'a', k2: 'b', k3: 'a', k4: 'b', k5: 'a', k6: 'b' },
+      explica: 'Roupas de dia costumam proteger do Sol. À noite usamos coisas mais confortáveis pra dormir ou pra enxergar no escuro.' }
+  ]
+},
+
+{ id: 'estacoes', emoji: '🍂', titulo: 'As Estações do Ano', cap: 'g2',
+  desc: 'Verão, outono, inverno e primavera!', tipo: 'quiz',
+  perguntas: [
+    { nivel: 'facil', pergunta: 'Quantas estações tem um ano?',
+      opcoes: ['4 estações', '2 estações', '5 estações', '10 estações'], correta: 0,
+      explica: 'Um ano tem 4 estações: verão, outono, inverno e primavera.' },
+
+    { nivel: 'facil', pergunta: 'Qual estação é a mais quente do ano?',
+      opcoes: ['Verão', 'Inverno', 'Outono', 'Primavera'], correta: 0,
+      explica: 'No verão o calor é maior e o Sol fica mais forte.' },
+
+    { nivel: 'facil', pergunta: 'Qual estação é a mais fria do ano?',
+      opcoes: ['Inverno', 'Verão', 'Primavera', 'Outono'], correta: 0,
+      explica: 'No inverno a temperatura cai e usamos mais roupas pra nos aquecer.' },
+
+    { nivel: 'facil', pergunta: 'Na estação em que as folhas caem das árvores, estamos no:',
+      opcoes: ['Outono', 'Verão', 'Inverno', 'Primavera'], correta: 0,
+      explica: 'No outono muitas árvores perdem as folhas — elas ficam amareladas e caem.' },
+
+    { nivel: 'medio', pergunta: 'Na estação em que muitas flores abrem e o tempo fica mais ameno, estamos na:',
+      opcoes: ['Primavera', 'Outono', 'Inverno', 'Verão'], correta: 0,
+      explica: 'A primavera é a estação das flores. O tempo fica mais quente depois do frio do inverno.' },
+
+    { nivel: 'medio', pergunta: 'Quando faz muito calor, qual roupa é mais confortável?',
+      opcoes: ['Bermuda e camiseta', 'Casaco grosso', 'Luvas', 'Cachecol'], correta: 0,
+      explica: 'Roupas leves e curtas ajudam a aguentar o calor do verão.' },
+
+    { nivel: 'medio', pergunta: 'Quando está muito frio, qual roupa aquece mais?',
+      opcoes: ['Casaco grosso', 'Regata', 'Chinelo', 'Maiô'], correta: 0,
+      explica: 'Casacos, luvas e gorros aquecem o corpo quando a temperatura cai.' },
+
+    { nivel: 'dificil', pergunta: 'No Brasil, o verão costuma ser na época do:',
+      opcoes: [
+        'Fim do ano (dezembro, janeiro e fevereiro)',
+        'Meio do ano (junho e julho)',
+        'Só em novembro',
+        'Só em agosto'
+      ], correta: 0,
+      explica: 'No Brasil, o verão vai do final de dezembro até o fim de março. É quando as férias grandes acontecem.' },
+
+    { nivel: 'dificil', pergunta: 'O que normalmente acontece durante o verão no Brasil?',
+      opcoes: [
+        'Calor e muitas chuvas fortes',
+        'Neve cobrindo as ruas',
+        'Árvores sem nenhuma folha',
+        'Lagos congelando'
+      ], correta: 0,
+      explica: 'No verão brasileiro costuma fazer calor e chover bastante, especialmente à tarde.' },
+
+    { nivel: 'dificil', pergunta: 'Por que usamos roupas diferentes em cada estação?',
+      opcoes: [
+        'Porque a temperatura muda — esquenta ou esfria',
+        'Porque as roupas ficam cansadas',
+        'Porque o calendário manda',
+        'Porque o Sol escolhe pra gente'
+      ], correta: 0,
+      explica: 'A temperatura muda durante o ano. No calor usamos roupas leves; no frio, roupas grossas.' }
+  ]
+},
+
+{ id: 'vf_natureza', emoji: '✓✗', titulo: 'Verdadeiro ou Falso: Natureza', cap: 'g2',
+  desc: 'Leia cada frase e diga: é verdade ou mentira?', tipo: 'vf',
+  perguntas: [
+    { nivel: 'facil', afirmacao: 'O Sol ilumina o dia e a Lua aparece mais fácil de noite.', vf: true,
+      explica: 'Isso mesmo! O Sol faz o dia claro. À noite, com o céu escuro, a Lua brilha melhor.' },
+
+    { nivel: 'facil', afirmacao: 'Podemos ver o Sol brilhando forte no meio da noite.', vf: false,
+      explica: 'De noite não vemos o Sol — ele fica do outro lado da Terra. Quem ilumina a noite é a Lua e as estrelas.' },
+
+    { nivel: 'facil', afirmacao: 'No verão costuma fazer muito calor.', vf: true,
+      explica: 'O verão é a estação mais quente do ano. O Sol fica mais forte e os dias mais longos.' },
+
+    { nivel: 'facil', afirmacao: 'No inverno costuma fazer muito calor.', vf: false,
+      explica: 'É o contrário! O inverno é a estação mais fria do ano. A gente usa mais roupas pra se aquecer.' },
+
+    { nivel: 'medio', afirmacao: 'Um ano tem quatro estações: verão, outono, inverno e primavera.', vf: true,
+      explica: 'O ano se divide em 4 estações, cada uma com uma temperatura e paisagens próprias.' },
+
+    { nivel: 'medio', afirmacao: 'Quando chove muito, é bom a gente brincar na rua descalço de tênis.', vf: false,
+      explica: 'Quando chove a rua fica escorregadia e pode ter água suja. É mais seguro esperar a chuva passar ou ficar em lugar coberto.' },
+
+    { nivel: 'medio', afirmacao: 'O Sol nasce cedo de manhã e se põe no fim da tarde.', vf: true,
+      explica: 'O Sol aparece de manhã, fica no céu o dia todo e vai se pondo quando a tarde acaba.' },
+
+    { nivel: 'dificil', afirmacao: 'A temperatura fica igual o ano inteiro.', vf: false,
+      explica: 'A temperatura muda durante o ano. Por isso existem as estações — épocas quentes e épocas frias.' }
+  ]
+},
+
+];
+
+// =====================================================
+// RENDER — capítulos
+// =====================================================
+let ABA_ATUAL = 'todos';
+let CAP_ATUAL = null;
+
+function listaCapsFiltrada() {
+  const arr = Object.entries(CAPS).map(([k, c]) => ({ k, ...c }));
+  arr.sort((a, b) => a.ord - b.ord);
+  if (ABA_ATUAL === 'todos') return arr;
+  return arr.filter(c => c.materia === ABA_ATUAL);
+}
+
+function renderCapitulos() {
+  document.getElementById('tela-capitulos').style.display = 'block';
+  document.getElementById('tela-jogos-cap').style.display = 'none';
+  document.getElementById('tela-jogo').style.display = 'none';
+  const cont = document.getElementById('capitulos-container');
+  const caps = listaCapsFiltrada();
+  const porMat = { historia: caps.filter(c => c.materia === 'historia'),
+                   geografia: caps.filter(c => c.materia === 'geografia') };
+  let html = '';
+  if (ABA_ATUAL !== 'geografia' && porMat.historia.length) {
+    html += '<div class="cap-separador">📜 História</div>';
+    html += porMat.historia.map(c => cardCap(c)).join('');
+  }
+  if (ABA_ATUAL !== 'historia' && porMat.geografia.length) {
+    html += '<div class="cap-separador">🗺️ Geografia</div>';
+    html += porMat.geografia.map(c => cardCap(c)).join('');
+  }
+  cont.innerHTML = html || '<div style="text-align:center;color:#8b5a2b;padding:24px">Nenhum capítulo nessa matéria.</div>';
+}
+
+function cardCap(c) {
+  const jogos = c.jogos.map(id => JOGOS.find(j => j.id === id)).filter(Boolean);
+  const totalPerg = jogos.reduce((s, j) => s + (j.perguntas?.length || 0), 0);
+  const acertos = jogos.reduce((s, j) => s + (STATE.jogos[j.id]?.acertos || 0), 0);
+  const pct = totalPerg ? Math.min(100, Math.round((acertos / totalPerg) * 100)) : 0;
+  return `
+    <div class="cap-card ${c.k}" onclick="abrirCapitulo('${c.k}')">
+      <div class="cap-num">${c.num}</div>
+      <div class="cap-rotulo">Capítulo ${c.num} · ${c.materia === 'historia' ? 'História' : 'Geografia'}</div>
+      <div class="cap-nome">${c.nome}</div>
+      <div class="cap-desc">${c.desc}</div>
+      <div class="cap-stats">
+        🎮 ${jogos.length} jogos
+        ${acertos > 0 ? `<span>⭐ ${acertos}/${totalPerg}</span>` : ''}
+      </div>
+      <div class="cap-progresso-bar"><div class="cap-progresso-fill" style="width:${pct}%"></div></div>
+    </div>
+  `;
+}
+
+function abrirCapitulo(k) {
+  CAP_ATUAL = k;
+  const c = CAPS[k];
+  document.getElementById('tela-capitulos').style.display = 'none';
+  document.getElementById('tela-jogos-cap').style.display = 'block';
+  document.getElementById('tela-jogo').style.display = 'none';
+  document.getElementById('breadcrumb-cap').textContent = `Cap ${c.num} · ${c.materia === 'historia' ? 'História' : 'Geografia'}`;
+  document.getElementById('cap-titulo').innerHTML = `${c.nome}<span class="cap-sub">${c.desc}</span>`;
+  const jogos = c.jogos.map(id => JOGOS.find(j => j.id === id)).filter(Boolean);
+  const cont = document.getElementById('grid-container');
+  cont.innerHTML = jogos.map(j => {
+    const p = STATE.jogos[j.id] || { acertos: 0, erros: 0 };
+    return `
+      <div class="jogo-card" onclick="iniciarJogo('${j.id}')">
+        <div class="emoji">${j.emoji}</div>
+        <div class="titulo">${j.titulo}</div>
+        <div class="desc">${j.desc}</div>
+        <div class="progresso">${p.acertos > 0 ? `<span class="estrelas">⭐ ${p.acertos}</span>` : '🎯 Bora!'}</div>
+      </div>`;
+  }).join('');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function voltarCapitulos() {
+  CAP_ATUAL = null;
+  renderCapitulos();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function iniciarJogo(id) {
+  const jogo = JOGOS.find(j => j.id === id);
+  if (jogo) abrirJogo(jogo);
+}
+
+function atualizarGridProgresso() {
+  if (CAP_ATUAL) abrirCapitulo(CAP_ATUAL);
+  else renderCapitulos();
+}
+
+// Sobrescreve voltarGrid do shared pra voltar pro grid do cap
+const _origVoltarGrid = voltarGrid;
+voltarGrid = function() {
+  document.getElementById('tela-jogo').style.display = 'none';
+  if (CAP_ATUAL) {
+    document.getElementById('tela-jogos-cap').style.display = 'block';
+    abrirCapitulo(CAP_ATUAL);
+  } else {
+    document.getElementById('tela-capitulos').style.display = 'block';
+    renderCapitulos();
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+document.querySelectorAll('.aba').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.aba').forEach(x => x.classList.remove('ativa'));
+    b.classList.add('ativa');
+    ABA_ATUAL = b.dataset.aba;
+    renderCapitulos();
+  });
+});
+
+renderCapitulos();
+</script>
+</body>
+</html>

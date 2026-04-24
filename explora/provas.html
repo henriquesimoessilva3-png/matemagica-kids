@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📝 Provas — EXPLORA</title>
+<link rel="stylesheet" href="historia_shared.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#8b5a2b">
+<style>
+  .voltar-topo {
+    background: #fff4dc; color: #6b3a15; border: 2px solid #c9a86b;
+    padding: 6px 12px; border-radius: 10px; font-size: 13px;
+    font-weight: 700; cursor: pointer; text-decoration: none;
+    display: inline-block; margin-bottom: 12px;
+  }
+  .aba-row {
+    display: flex; gap: 4px; margin-bottom: 16px;
+    border-bottom: 2px solid #d4a574; padding-bottom: 0;
+    flex-wrap: wrap;
+  }
+  .aba {
+    background: none; border: none; padding: 10px 14px;
+    cursor: pointer; font-weight: 700; font-size: 13px;
+    color: #8b5a2b; border-bottom: 3px solid transparent;
+    margin-bottom: -2px; font-family: inherit;
+  }
+  .aba.ativo { color: #6b3a15; border-color: #6b3a15; }
+
+  /* ===== SOS ===== */
+  .sos-hero {
+    background: linear-gradient(135deg, #c0392b, #d4794a);
+    color: #fff; border-radius: 16px;
+    padding: 18px 16px; margin-bottom: 14px; text-align: center;
+  }
+  .sos-hero h3 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+  .sos-hero p { font-size: 13px; opacity: 0.95; line-height: 1.45; margin-bottom: 10px; }
+  .sos-controles {
+    background: #fff; border-radius: 10px; padding: 12px;
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
+  .sos-controles label {
+    font-size: 11px; color: #6b3a15; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .sos-controles select {
+    padding: 8px 12px; border: 2px solid #c9a86b;
+    border-radius: 8px; font-size: 14px; font-weight: 600;
+    color: #6b3a15; background: #fff; flex: 1; min-width: 100px;
+    font-family: inherit;
+  }
+  .sos-btn-gerar {
+    background: linear-gradient(135deg, #8b5a2b, #b88247);
+    color: #fff; border: none; padding: 10px 16px;
+    border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer;
+    font-family: inherit;
+  }
+  .sos-jogo-item {
+    background: #fff; border: 2px solid #d4a574;
+    border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sos-jogo-item .icone {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .sos-jogo-item.criti .icone { background: #fde0e0; color: #a83232; }
+  .sos-jogo-item.medio .icone { background: #fff3d6; color: #a87000; }
+  .sos-jogo-item.baixo .icone { background: #d4f5dd; color: #1b7a3a; }
+  .sos-jogo-item .info { flex: 1; min-width: 0; }
+  .sos-jogo-item .nome { font-size: 14px; font-weight: 700; color: #6b3a15; }
+  .sos-jogo-item .stats { font-size: 11px; color: #8b5a2b; margin-top: 2px; }
+  .sos-jogo-item .pct { font-size: 18px; font-weight: 800; flex-shrink: 0; }
+  .sos-jogo-item.criti .pct { color: #a83232; }
+  .sos-jogo-item.medio .pct { color: #a87000; }
+  .sos-jogo-item.baixo .pct { color: #1b7a3a; }
+  .sos-resumo {
+    background: linear-gradient(135deg, #4a8f5a, #2a6a3a);
+    color: #fff; border-radius: 12px; padding: 14px; margin: 14px 0;
+  }
+  .sos-resumo-titulo {
+    font-size: 12px; opacity: 0.9;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 4px; font-weight: 700;
+  }
+  .sos-resumo-grande { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+  .sos-acao {
+    background: #fff; color: #1b4a2a; border: none;
+    padding: 10px 18px; border-radius: 10px;
+    font-weight: 800; font-size: 14px; cursor: pointer; width: 100%;
+    font-family: inherit;
+  }
+  .sos-vazio {
+    background: #fff4dc; border: 2px dashed #c9a86b;
+    border-radius: 12px; padding: 16px 14px;
+    color: #6b3a15; font-size: 13px; line-height: 1.5; text-align: center;
+  }
+  .titulo-sec {
+    font-size: 12px; color: #6b3a15; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin: 18px 0 8px;
+  }
+
+  /* ===== MINHAS PROVAS ===== */
+  .prova-card {
+    background: linear-gradient(135deg, #fff4dc, #ffe8ba);
+    border-radius: 14px; padding: 14px 16px; margin-bottom: 10px;
+    border: 2px solid #d4a574;
+  }
+  .prova-card h3 { color: #6b3a15; font-size: 16px; margin-bottom: 2px; }
+  .prova-card .meta { font-size: 12px; color: #8b5a2b; margin-bottom: 10px; }
+  .prova-card .acoes { display: flex; gap: 6px; flex-wrap: wrap; }
+  .btn-mini {
+    padding: 6px 12px; font-size: 12px; border-radius: 8px;
+    border: none; font-weight: 700; cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-jogar { background: linear-gradient(135deg, #4a8f5a, #2a6a3a); color: #fff; }
+  .btn-editar { background: #fff4dc; color: #6b3a15; border: 1px solid #c9a86b; }
+  .btn-deletar { background: #fde0e0; color: #a83232; }
+  .vazio-msg {
+    text-align: center; padding: 30px 20px; background: #fff4dc;
+    border: 2px dashed #c9a86b;
+    border-radius: 14px; color: #6b3a15; font-size: 14px; line-height: 1.5;
+  }
+  .vazio-msg .big-emoji { font-size: 40px; margin-bottom: 8px; }
+
+  /* ===== EDITOR ===== */
+  .campo { margin-bottom: 12px; }
+  .campo label {
+    display: block; font-size: 11px; color: #6b3a15; margin-bottom: 4px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .campo input, .campo select {
+    width: 100%; padding: 10px 12px; border: 2px solid #c9a86b;
+    border-radius: 10px; font-size: 14px; font-family: inherit;
+    background: #fff; color: #6b3a15;
+  }
+  .add-jogo-row {
+    display: grid; grid-template-columns: 2fr 1fr 80px auto;
+    gap: 6px; align-items: center; margin-bottom: 10px;
+  }
+  .add-jogo-row select, .add-jogo-row input {
+    padding: 8px; border: 2px solid #c9a86b; border-radius: 8px;
+    font-size: 13px; font-family: inherit; min-width: 0;
+  }
+  .add-jogo-row .btn-add {
+    background: #4a8f5a; color: #fff; border: none; padding: 8px 14px;
+    border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px;
+    font-family: inherit;
+  }
+  @media (max-width: 640px) {
+    .add-jogo-row { grid-template-columns: 1fr 1fr; }
+    .add-jogo-row > select:first-child { grid-column: 1 / -1; }
+    .add-jogo-row .btn-add { grid-column: 1 / -1; padding: 10px; }
+  }
+  .roteiro-item {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff4dc; padding: 10px 12px; border-radius: 10px;
+    margin-bottom: 6px; border: 1px solid #c9a86b;
+  }
+  .roteiro-item .num {
+    background: #8b5a2b; color: #fff; width: 24px; height: 24px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .roteiro-item .info-jogo { flex: 1; }
+  .roteiro-item .info-jogo .nome { font-weight: 700; color: #6b3a15; font-size: 14px; }
+  .roteiro-item .info-jogo .meta2 { font-size: 11px; color: #8b5a2b; }
+  .roteiro-item .repet {
+    background: #ffd36b; border-radius: 8px; padding: 3px 8px;
+    color: #6b3a15; font-weight: 700; font-size: 12px;
+  }
+  .roteiro-item .btn-rem {
+    background: #fde0e0; border: none; color: #a83232;
+    padding: 5px 8px; border-radius: 6px; cursor: pointer; font-size: 13px;
+    font-family: inherit;
+  }
+
+  /* ===== EXECUÇÃO DA PROVA ===== */
+  .prova-header {
+    background: linear-gradient(135deg, #8b5a2b, #b88247);
+    color: #fff; border-radius: 12px; padding: 12px 16px;
+    margin-bottom: 14px;
+  }
+  .prova-header h3 { font-size: 16px; margin-bottom: 4px; }
+  .prova-header .prog {
+    background: rgba(255,255,255,0.2); border-radius: 8px;
+    height: 10px; overflow: hidden; margin-top: 6px;
+  }
+  .prova-header .prog-fill {
+    background: #ffd36b; height: 100%;
+    transition: width 0.4s;
+  }
+  .prova-header .info-exec {
+    font-size: 12px; margin-top: 4px; display: flex; gap: 14px;
+  }
+
+  .hidden { display: none !important; }
+
+  .btn {
+    background: linear-gradient(135deg, #d4a574, #b88247);
+    color: #fff; border: none; padding: 10px 18px;
+    border-radius: 10px; font-weight: 800; cursor: pointer;
+    font-size: 14px; font-family: inherit;
+  }
+  .btn.secundario {
+    background: #fff; color: #6b3a15; border: 2px solid #c9a86b;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="voltar-topo">← Voltar ao início</a>
+  <h1>📝 Provas</h1>
+  <div class="sub">Treine simulando uma avaliação de verdade</div>
+
+  <div id="explora-header" class="header-player" style="margin-bottom:14px"></div>
+
+  <div class="aba-row">
+    <button class="aba ativo" id="aba-sos" onclick="mostrarAba('sos')" style="color:#c0392b">🚨 SOS Prova</button>
+    <button class="aba" id="aba-lista" onclick="mostrarAba('lista')">Minhas Provas</button>
+    <button class="aba" id="aba-criar" onclick="mostrarAba('criar')">+ Nova</button>
+  </div>
+
+  <!-- ========== SOS ========== -->
+  <div id="view-sos">
+    <div class="sos-hero">
+      <h3>🚨 Prova é amanhã?</h3>
+      <p>A gente vê onde você mais erra e monta uma prova curta focada nos pontos fracos. Sem enrolação.</p>
+    </div>
+    <div class="sos-controles">
+      <label>Ano:</label>
+      <select id="sos-ano">
+        <option value="1">1º Ano</option>
+        <option value="2">2º Ano</option>
+        <option value="3">3º Ano</option>
+        <option value="4" selected>4º Ano</option>
+        <option value="5">5º Ano</option>
+      </select>
+      <button class="sos-btn-gerar" onclick="gerarSos()">🔍 Analisar</button>
+    </div>
+    <div id="sos-resultado"></div>
+  </div>
+
+  <!-- ========== LISTA ========== -->
+  <div id="view-lista" class="hidden">
+    <div id="lista-provas"></div>
+  </div>
+
+  <!-- ========== EDITOR ========== -->
+  <div id="view-criar" class="hidden">
+    <div class="campo">
+      <label>Nome da prova</label>
+      <input type="text" id="ed-nome" placeholder="Ex: Revisão Unidade 1">
+    </div>
+    <div class="campo">
+      <label>Ano escolar (base do conteúdo)</label>
+      <select id="ed-ano" onchange="atualizarCapitulosEditor()">
+        <option value="4" selected>4º Ano</option>
+      </select>
+    </div>
+
+    <div class="titulo-sec">Adicionar jogos ao roteiro</div>
+    <div class="add-jogo-row">
+      <select id="ed-capitulo" onchange="atualizarJogosEditor()">
+        <option value="">-- capítulo --</option>
+      </select>
+      <select id="ed-jogo">
+        <option value="">-- jogo --</option>
+      </select>
+      <input type="number" id="ed-qtd" min="1" max="20" value="5" title="Qtd de perguntas">
+      <button class="btn-add" onclick="addAoRoteiro()">+ adicionar</button>
+    </div>
+
+    <div class="titulo-sec">Roteiro da prova</div>
+    <div id="roteiro-lista"></div>
+
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn" onclick="salvarProva()">💾 Salvar prova</button>
+      <button class="btn secundario" onclick="mostrarAba('lista')">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ========== EXECUÇÃO ========== -->
+  <div id="view-exec" class="hidden">
+    <div class="prova-header">
+      <h3 id="exec-titulo"></h3>
+      <div class="info-exec">
+        <span>Pergunta <span id="exec-idx">1</span>/<span id="exec-total">0</span></span>
+        <span>✓ <span id="exec-acertos">0</span></span>
+        <span>✗ <span id="exec-erros">0</span></span>
+      </div>
+      <div class="prog"><div class="prog-fill" id="exec-prog" style="width:0%"></div></div>
+    </div>
+    <div id="exec-jogo-area" class="jogo-area"></div>
+  </div>
+</div>
+
+<!-- Motor dos jogos: carregamos as CAPS/JOGOS de cada ano de forma lazy.
+     Para 4º ano, reusamos ano_4.html via iframe invisível? Não — vamos
+     declarar aqui mesmo uma versão LEVE que puxa do ano_4 por pattern. -->
+
+<script src="mascotes.js?v=4"></script>
+<script src="explora_shared.js?v=5"></script>
+<script>
+// =====================================================
+// PROVAS — storage
+// =====================================================
+const PROVAS_KEY = 'explora_provas_v1';
+STORAGE_KEY = 'explora_provas_headerview'; // apenas para header visual
+initExplora({ storageKey: 'explora_ano4_v1' }); // header reflete dados do 4º ano
+
+function _readProvas() {
+  try { const raw = localStorage.getItem(PROVAS_KEY); if (raw) return JSON.parse(raw); }
+  catch(e) {}
+  return [];
+}
+function _saveProvas(l) {
+  localStorage.setItem(PROVAS_KEY, JSON.stringify(l));
+}
+
+// =====================================================
+// REGISTRO DE JOGOS E CAPÍTULOS (espelho do ano_4.html)
+// Só para prova — metadados leves. As perguntas reais virão do ano_4
+// via fetch HTML e avaliação do script. Simplificado: vamos importar
+// DIRETO através de script dinâmico.
+// =====================================================
+let CAPS_POR_ANO = {};
+let JOGOS_POR_ANO = {};
+
+function carregarAno(ano, cb) {
+  if (JOGOS_POR_ANO[ano]) return cb();
+  // Estratégia: buscar ano_N.html e executar o bloco JS que define CAPS e JOGOS
+  fetch('ano_' + ano + '.html?v=' + Date.now()).then(r => r.text()).then(html => {
+    try {
+      // Extrai o bloco const CAPS = {...}; (fecha com };\n)
+      const capsMatch = html.match(/const CAPS = (\{[\s\S]*?\n\});/);
+      // Extrai o bloco const JOGOS = [...]; — array grande, procura o ];\n que fecha
+      const jogosMatch = html.match(/const JOGOS = (\[[\s\S]*?\n\]);[\s\n]*\/\/ =/);
+      if (!capsMatch || !jogosMatch) {
+        console.error('CAPS match:', !!capsMatch, 'JOGOS match:', !!jogosMatch);
+        cb('Não encontrou CAPS/JOGOS em ano_' + ano);
+        return;
+      }
+
+      const capsCode = 'return ' + capsMatch[1];
+      const jogosCode = 'return ' + jogosMatch[1];
+
+      const caps = new Function(capsCode)();
+      const jogos = new Function(jogosCode)();
+      CAPS_POR_ANO[ano] = caps;
+      JOGOS_POR_ANO[ano] = jogos;
+      cb();
+    } catch(e) {
+      console.error(e);
+      cb('Erro ao ler ano_' + ano + ': ' + e.message);
+    }
+  }).catch(e => cb('Erro de rede: ' + e.message));
+}
+
+function getJogo(ano, jid) {
+  if (!JOGOS_POR_ANO[ano]) return null;
+  return JOGOS_POR_ANO[ano].find(j => j.id === jid);
+}
+function getCap(ano, capKey) {
+  if (!CAPS_POR_ANO[ano]) return null;
+  return CAPS_POR_ANO[ano][capKey];
+}
+
+// =====================================================
+// ABAS
+// =====================================================
+function mostrarAba(nome) {
+  ['sos', 'lista', 'criar', 'exec'].forEach(v => {
+    const el = document.getElementById('view-' + v);
+    if (el) el.classList.add('hidden');
+    const btn = document.getElementById('aba-' + v);
+    if (btn) btn.classList.remove('ativo');
+  });
+  const view = document.getElementById('view-' + nome);
+  if (view) view.classList.remove('hidden');
+  const btn = document.getElementById('aba-' + nome);
+  if (btn) btn.classList.add('ativo');
+
+  if (nome === 'lista') renderLista();
+  if (nome === 'criar') iniciarEditor();
+}
+
+// =====================================================
+// SOS PROVA
+// =====================================================
+function gerarSos() {
+  const ano = document.getElementById('sos-ano').value;
+  const cont = document.getElementById('sos-resultado');
+  cont.innerHTML = '<div class="sos-vazio">Analisando…</div>';
+  carregarAno(ano, (err) => {
+    if (err) { cont.innerHTML = '<div class="sos-vazio">⚠️ ' + err + '</div>'; return; }
+    const storageAno = 'explora_ano' + ano + '_v1';
+    let stateAno = { jogos: {} };
+    try { const raw = localStorage.getItem(storageAno); if (raw) stateAno = JSON.parse(raw); } catch(e) {}
+    // Calcular percentual por jogo (precisa ter ≥3 tentativas)
+    const jogosAno = JOGOS_POR_ANO[ano] || [];
+    const analise = [];
+    jogosAno.forEach(j => {
+      const s = (stateAno.jogos || {})[j.id];
+      if (!s) return;
+      const total = (s.acertos || 0) + (s.erros || 0);
+      if (total < 3) return; // poucas tentativas, ignorar
+      const pct = Math.round(((s.acertos || 0) / total) * 100);
+      if (pct >= 80) return; // forte, não precisa de reforço
+      analise.push({ jogo: j, pct, acertos: s.acertos || 0, erros: s.erros || 0, total });
+    });
+    analise.sort((a, b) => a.pct - b.pct);
+    const top5 = analise.slice(0, 5);
+    if (top5.length === 0) {
+      cont.innerHTML = `
+        <div class="sos-vazio">
+          <div style="font-size:40px;margin-bottom:6px">🎯</div>
+          Você ainda não tem jogos com acerto abaixo de 80%.<br>
+          <b>Jogue alguns jogos primeiro</b> para o SOS descobrir onde você precisa treinar.<br>
+          <div style="margin-top:10px">
+            <a href="ano_${ano}.html" class="btn" style="text-decoration:none;display:inline-block">Ir jogar ${ano}º Ano</a>
+          </div>
+        </div>`;
+      return;
+    }
+    // Montar HTML
+    let html = '<div class="titulo-sec">🎯 Onde você mais erra</div>';
+    top5.forEach(a => {
+      const cls = a.pct < 50 ? 'criti' : (a.pct < 70 ? 'medio' : 'baixo');
+      const emoji = a.pct < 50 ? '🔴' : (a.pct < 70 ? '🟡' : '🟢');
+      html += `
+        <div class="sos-jogo-item ${cls}">
+          <div class="icone">${emoji}</div>
+          <div class="info">
+            <div class="nome">${a.jogo.emoji} ${a.jogo.titulo}</div>
+            <div class="stats">${a.acertos} acertos · ${a.erros} erros em ${a.total} tentativas</div>
+          </div>
+          <div class="pct">${a.pct}%</div>
+        </div>`;
+    });
+    // Resumo + ação
+    const jogosSos = top5.map(a => ({ id: a.jogo.id, qtd: 4 }));
+    const totalPerg = jogosSos.reduce((s, x) => s + x.qtd, 0);
+    html += `
+      <div class="sos-resumo">
+        <div class="sos-resumo-titulo">Plano SOS</div>
+        <div class="sos-resumo-grande">${top5.length} temas · ${totalPerg} perguntas · ~${Math.ceil(totalPerg * 0.5)} min</div>
+        <button class="sos-acao" onclick='iniciarProvaSos(${JSON.stringify({ano: Number(ano), jogos: jogosSos})})'>▶️ Começar agora</button>
+      </div>`;
+    cont.innerHTML = html;
+  });
+}
+
+function iniciarProvaSos(cfg) {
+  const prova = {
+    id: 'sos_' + Date.now(),
+    nome: '🚨 SOS Prova — ' + cfg.ano + 'º Ano',
+    ano: cfg.ano,
+    jogos: cfg.jogos,
+    eSos: true,
+    criadaEm: new Date().toISOString()
+  };
+  // salva e inicia
+  const lista = _readProvas();
+  lista.push(prova);
+  _saveProvas(lista);
+  iniciarProva(prova);
+}
+
+// =====================================================
+// LISTA DE PROVAS
+// =====================================================
+function renderLista() {
+  const cont = document.getElementById('lista-provas');
+  const lista = _readProvas();
+  if (lista.length === 0) {
+    cont.innerHTML = `
+      <div class="vazio-msg">
+        <div class="big-emoji">📋</div>
+        Você ainda não criou nenhuma prova.<br>
+        Clique em <b>+ Nova</b> para montar sua primeira!
+      </div>`;
+    return;
+  }
+  // Ordenar mais nova primeiro
+  lista.sort((a, b) => (b.criadaEm || '').localeCompare(a.criadaEm || ''));
+  cont.innerHTML = lista.map((p, idx) => {
+    const totalPerg = (p.jogos || []).reduce((s, x) => s + x.qtd, 0);
+    const dataStr = p.criadaEm ? new Date(p.criadaEm).toLocaleDateString('pt-BR') : '';
+    return `
+      <div class="prova-card">
+        <h3>${p.eSos ? '🚨 ' : '📝 '}${p.nome}</h3>
+        <div class="meta">${p.ano}º Ano · ${(p.jogos || []).length} jogos · ${totalPerg} perguntas${dataStr ? ' · ' + dataStr : ''}</div>
+        <div class="acoes">
+          <button class="btn-mini btn-jogar" onclick='jogarProvaPorId("${p.id}")'>▶️ Jogar</button>
+          ${p.eSos ? '' : `<button class="btn-mini btn-editar" onclick='editarProva("${p.id}")'>✏️ Editar</button>`}
+          <button class="btn-mini btn-deletar" onclick='deletarProva("${p.id}")'>🗑️ Deletar</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function jogarProvaPorId(id) {
+  const p = _readProvas().find(x => x.id === id);
+  if (p) iniciarProva(p);
+}
+function deletarProva(id) {
+  if (!confirm('Deletar esta prova?')) return;
+  const lista = _readProvas().filter(x => x.id !== id);
+  _saveProvas(lista);
+  renderLista();
+}
+function editarProva(id) {
+  const p = _readProvas().find(x => x.id === id);
+  if (!p) return;
+  _provaEditandoId = p.id;
+  document.getElementById('ed-nome').value = p.nome;
+  document.getElementById('ed-ano').value = p.ano;
+  _roteiro = [...p.jogos];
+  mostrarAba('criar');
+  atualizarCapitulosEditor();
+  pintarRoteiro();
+}
+
+// =====================================================
+// EDITOR
+// =====================================================
+let _provaEditandoId = null;
+let _roteiro = [];
+
+function iniciarEditor() {
+  if (_provaEditandoId === null) {
+    document.getElementById('ed-nome').value = '';
+    document.getElementById('ed-ano').value = '4';
+    _roteiro = [];
+  }
+  atualizarCapitulosEditor();
+  pintarRoteiro();
+}
+
+function atualizarCapitulosEditor() {
+  const ano = document.getElementById('ed-ano').value;
+  const selCap = document.getElementById('ed-capitulo');
+  const selJ = document.getElementById('ed-jogo');
+  selCap.innerHTML = '<option value="">Carregando…</option>';
+  selJ.innerHTML = '<option value="">-- jogo --</option>';
+  carregarAno(ano, (err) => {
+    if (err) { selCap.innerHTML = '<option value="">⚠️ ' + err + '</option>'; return; }
+    const caps = CAPS_POR_ANO[ano] || {};
+    const opts = Object.entries(caps)
+      .sort((a, b) => a[1].ord - b[1].ord)
+      .map(([k, c]) => {
+        const emoji = c.materia === 'historia' ? '📜' : '🗺️';
+        return `<option value="${k}">${emoji} Cap. ${c.num} · ${c.nome}</option>`;
+      }).join('');
+    selCap.innerHTML = '<option value="">-- capítulo --</option>' + opts;
+  });
+}
+
+function atualizarJogosEditor() {
+  const ano = document.getElementById('ed-ano').value;
+  const capKey = document.getElementById('ed-capitulo').value;
+  const selJ = document.getElementById('ed-jogo');
+  if (!capKey) { selJ.innerHTML = '<option value="">-- jogo --</option>'; return; }
+  const cap = getCap(ano, capKey);
+  if (!cap) return;
+  selJ.innerHTML = '<option value="">-- jogo --</option>' +
+    cap.jogos.map(jid => {
+      const j = getJogo(ano, jid);
+      if (!j) return '';
+      const totalP = (j.perguntas || []).length;
+      return `<option value="${jid}">${j.emoji} ${j.titulo} (${totalP})</option>`;
+    }).join('');
+}
+
+function addAoRoteiro() {
+  const ano = document.getElementById('ed-ano').value;
+  const jid = document.getElementById('ed-jogo').value;
+  const qtd = Math.max(1, Math.min(20, Number(document.getElementById('ed-qtd').value) || 5));
+  if (!jid) { alert('Escolha um jogo'); return; }
+  const j = getJogo(ano, jid);
+  if (!j) return;
+  const qtdReal = Math.min(qtd, (j.perguntas || []).length);
+  _roteiro.push({ id: jid, qtd: qtdReal });
+  pintarRoteiro();
+  document.getElementById('ed-jogo').value = '';
+}
+
+function pintarRoteiro() {
+  const cont = document.getElementById('roteiro-lista');
+  const ano = document.getElementById('ed-ano').value;
+  if (_roteiro.length === 0) {
+    cont.innerHTML = '<div class="vazio-msg" style="padding:16px"><div class="big-emoji">🎯</div>Nenhum jogo no roteiro ainda. Adicione acima.</div>';
+    return;
+  }
+  cont.innerHTML = _roteiro.map((r, i) => {
+    const j = getJogo(ano, r.id);
+    if (!j) return `<div class="roteiro-item"><span class="num">${i+1}</span><div class="info-jogo"><div class="nome">Jogo não encontrado</div></div></div>`;
+    return `
+      <div class="roteiro-item">
+        <span class="num">${i+1}</span>
+        <div class="info-jogo">
+          <div class="nome">${j.emoji} ${j.titulo}</div>
+          <div class="meta2">${j.desc || ''}</div>
+        </div>
+        <span class="repet">${r.qtd} ×</span>
+        <button class="btn-rem" onclick="removerDoRoteiro(${i})">🗑️</button>
+      </div>`;
+  }).join('');
+}
+
+function removerDoRoteiro(i) {
+  _roteiro.splice(i, 1);
+  pintarRoteiro();
+}
+
+function salvarProva() {
+  const nome = document.getElementById('ed-nome').value.trim();
+  const ano = Number(document.getElementById('ed-ano').value);
+  if (!nome) { alert('Dê um nome à prova'); return; }
+  if (_roteiro.length === 0) { alert('Adicione pelo menos um jogo ao roteiro'); return; }
+  const lista = _readProvas();
+  if (_provaEditandoId) {
+    const idx = lista.findIndex(x => x.id === _provaEditandoId);
+    if (idx >= 0) lista[idx] = { ...lista[idx], nome, ano, jogos: _roteiro };
+  } else {
+    lista.push({
+      id: 'p_' + Date.now(),
+      nome, ano, jogos: [..._roteiro],
+      criadaEm: new Date().toISOString()
+    });
+  }
+  _saveProvas(lista);
+  _provaEditandoId = null;
+  _roteiro = [];
+  mostrarAba('lista');
+}
+
+// =====================================================
+// EXECUÇÃO DA PROVA
+// =====================================================
+let _execState = null;
+
+function iniciarProva(prova) {
+  const ano = prova.ano;
+  carregarAno(ano, (err) => {
+    if (err) { alert('Erro ao carregar jogos: ' + err); return; }
+    // Montar a sequência de perguntas do roteiro
+    const seq = [];
+    prova.jogos.forEach(r => {
+      const j = getJogo(ano, r.id);
+      if (!j) return;
+      const perguntas = [...(j.perguntas || [])];
+      // Embaralhar e pegar `qtd` perguntas
+      for (let i = perguntas.length - 1; i > 0; i--) {
+        const k = Math.floor(Math.random() * (i + 1));
+        [perguntas[i], perguntas[k]] = [perguntas[k], perguntas[i]];
+      }
+      const escolhidas = perguntas.slice(0, Math.min(r.qtd, perguntas.length));
+      escolhidas.forEach(p => seq.push({ jogo: j, pergunta: p }));
+    });
+    if (seq.length === 0) { alert('Nenhuma pergunta disponível'); return; }
+    // Embaralha tudo
+    for (let i = seq.length - 1; i > 0; i--) {
+      const k = Math.floor(Math.random() * (i + 1));
+      [seq[i], seq[k]] = [seq[k], seq[i]];
+    }
+    _execState = {
+      prova, seq, idx: 0,
+      acertos: 0, erros: 0,
+      porJogo: {} // id → {acertos, erros}
+    };
+    mostrarAba('exec');
+    document.getElementById('exec-titulo').textContent = prova.nome;
+    document.getElementById('exec-total').textContent = seq.length;
+    renderProvaPergunta();
+  });
+}
+
+function renderProvaPergunta() {
+  const es = _execState;
+  if (!es) return;
+  if (es.idx >= es.seq.length) return fimProva();
+  const { jogo, pergunta } = es.seq[es.idx];
+  document.getElementById('exec-idx').textContent = es.idx + 1;
+  document.getElementById('exec-acertos').textContent = es.acertos;
+  document.getElementById('exec-erros').textContent = es.erros;
+  document.getElementById('exec-prog').style.width = Math.round((es.idx / es.seq.length) * 100) + '%';
+
+  const area = document.getElementById('exec-jogo-area');
+  if (jogo.tipo === 'ordenar')      renderOrdenarProva(jogo, pergunta, area);
+  else if (jogo.tipo === 'classif') renderClassifProva(jogo, pergunta, area);
+  else if (jogo.tipo === 'vf')      renderVFProva(jogo, pergunta, area);
+  else if (jogo.tipo === 'cloze')   renderClozeProva(jogo, pergunta, area);
+  else if (jogo.tipo === 'memoria') renderMemoriaProva(jogo, pergunta, area);
+  else                              renderQuizProva(jogo, pergunta, area);
+}
+
+function _badgeNivelProva(nivel) {
+  if (nivel === 'facil')   return '<span style="background:#e0f7dc;color:#4a8f5a;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;margin-left:8px">🟢 Fácil</span>';
+  if (nivel === 'medio')   return '<span style="background:#fff3d6;color:#a87000;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;margin-left:8px">🟡 Médio</span>';
+  if (nivel === 'dificil') return '<span style="background:#ffe0e0;color:#a53a4a;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;margin-left:8px">🔴 Difícil</span>';
+  return '';
+}
+
+function renderQuizProva(jogo, q, area) {
+  const opts = q.opcoes.map((o, i) => ({ o, correto: i === (q.correta ?? 0) }));
+  // Embaralhar
+  for (let i = opts.length - 1; i > 0; i--) {
+    const k = Math.floor(Math.random() * (i + 1));
+    [opts[i], opts[k]] = [opts[k], opts[i]];
+  }
+  const nivel = q.nivel || '';
+  const badgeNiv = nivel === 'facil' ? '<span style="background:#e0f7dc;color:#4a8f5a;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;margin-left:8px">🟢 Fácil</span>'
+    : nivel === 'medio' ? '<span style="background:#fff3d6;color:#a87000;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;margin-left:8px">🟡 Médio</span>'
+    : nivel === 'dificil' ? '<span style="background:#ffe0e0;color:#a53a4a;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;margin-left:8px">🔴 Difícil</span>'
+    : '';
+  area.innerHTML = `
+    <div style="background:#fff4dc;padding:10px 12px;border-radius:10px;border:1px solid #c9a86b;margin-bottom:12px;font-size:12px;color:#6b3a15">
+      <b>${jogo.emoji} ${jogo.titulo}</b>${badgeNiv}
+    </div>
+    <div class="pergunta">${q.pergunta}</div>
+    <div class="opcoes">
+      ${opts.map(x => `
+        <button class="opcao" data-correto="${x.correto}" onclick="responderProva(this)">
+          ${x.o}
+        </button>
+      `).join('')}
+    </div>
+    <div id="exec-fb"></div>
+  `;
+}
+
+function responderProva(btn) {
+  const es = _execState;
+  const { jogo, pergunta: q } = es.seq[es.idx];
+  const correto = btn.dataset.correto === 'true';
+  [...document.querySelectorAll('.opcoes .opcao')].forEach(b => {
+    b.disabled = true;
+    if (b === btn) b.classList.add(correto ? 'acerto' : 'erro');
+    else if (b.dataset.correto === 'true') b.classList.add('acerto');
+  });
+  if (correto) {
+    es.acertos++;
+    if (!es.porJogo[jogo.id]) es.porJogo[jogo.id] = { nome: jogo.titulo, emoji: jogo.emoji, acertos: 0, erros: 0 };
+    es.porJogo[jogo.id].acertos++;
+    tocarSom('acerto');
+  } else {
+    es.erros++;
+    if (!es.porJogo[jogo.id]) es.porJogo[jogo.id] = { nome: jogo.titulo, emoji: jogo.emoji, acertos: 0, erros: 0 };
+    es.porJogo[jogo.id].erros++;
+    tocarSom('erro');
+  }
+  const fb = document.getElementById('exec-fb');
+  fb.innerHTML = `<div class="feedback ${correto ? 'ok' : 'erro'}">
+    ${correto ? '✓ Correto!' : '✗ Incorreto'}
+    ${q.explica ? `<span class="explica">${q.explica}</span>` : ''}
+  </div>`;
+  setTimeout(() => { es.idx++; renderProvaPergunta(); }, correto ? 1200 : 2400);
+}
+
+// Classif e Ordenar em modo prova — simplificado: usa o mesmo motor
+// adaptado, mas mais curto (uma rodada só).
+let _provaClassif = { pool: [], a: [], b: [] };
+function renderClassifProva(jogo, q, area) {
+  _provaClassif = { pool: [...q.itens], a: [], b: [] };
+  // Embaralhar pool
+  for (let i = _provaClassif.pool.length - 1; i > 0; i--) {
+    const k = Math.floor(Math.random() * (i + 1));
+    [_provaClassif.pool[i], _provaClassif.pool[k]] = [_provaClassif.pool[k], _provaClassif.pool[i]];
+  }
+  area.innerHTML = `
+    <div style="background:#fff4dc;padding:10px 12px;border-radius:10px;border:1px solid #c9a86b;margin-bottom:12px;font-size:12px;color:#6b3a15">
+      <b>${jogo.emoji} ${jogo.titulo}</b>
+    </div>
+    <div class="pergunta">${q.pergunta}${q.hint ? `<span class="hint">${q.hint}</span>` : ''}</div>
+    <div class="classif-pool" id="pv-pool"></div>
+    <div class="classif-wrap">
+      <div class="classif-bucket" data-b="a">
+        <h3>${q.bucketA.emoji || ''} ${q.bucketA.label}</h3>
+        <div class="itens" id="pv-a"></div>
+      </div>
+      <div class="classif-bucket" data-b="b">
+        <h3>${q.bucketB.emoji || ''} ${q.bucketB.label}</h3>
+        <div class="itens" id="pv-b"></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:10px">
+      <button class="btn" onclick="verificarClassifProva()">Conferir</button>
+    </div>
+    <div id="exec-fb"></div>
+  `;
+  pintarClassifProva();
+}
+function pintarClassifProva() {
+  const c = _provaClassif;
+  const h = it => `<div class="classif-chip" data-id="${it.id}" onclick="cicloClassifProva('${it.id}')">${it.label}</div>`;
+  document.getElementById('pv-pool').innerHTML = c.pool.map(h).join('');
+  document.getElementById('pv-a').innerHTML = c.a.map(h).join('');
+  document.getElementById('pv-b').innerHTML = c.b.map(h).join('');
+}
+function cicloClassifProva(id) {
+  const c = _provaClassif;
+  let it, de;
+  if (c.pool.find(x => x.id === id)) { de = 'pool'; it = c.pool.find(x => x.id === id); }
+  else if (c.a.find(x => x.id === id)) { de = 'a'; it = c.a.find(x => x.id === id); }
+  else { de = 'b'; it = c.b.find(x => x.id === id); }
+  const para = de === 'pool' ? 'a' : de === 'a' ? 'b' : 'pool';
+  c[de] = c[de].filter(x => x.id !== id);
+  c[para].push(it);
+  pintarClassifProva();
+}
+function verificarClassifProva() {
+  const es = _execState;
+  const { jogo, pergunta: q } = es.seq[es.idx];
+  if (_provaClassif.pool.length > 0) {
+    document.getElementById('exec-fb').innerHTML = '<div class="feedback erro">Falta classificar todos os itens!</div>';
+    return;
+  }
+  let certos = 0, total = q.itens.length;
+  _provaClassif.a.forEach(i => { if (q.gabarito[i.id] === 'a') certos++; });
+  _provaClassif.b.forEach(i => { if (q.gabarito[i.id] === 'b') certos++; });
+  const ok = certos === total;
+  const fb = document.getElementById('exec-fb');
+  if (ok) {
+    es.acertos++;
+    if (!es.porJogo[jogo.id]) es.porJogo[jogo.id] = { nome: jogo.titulo, emoji: jogo.emoji, acertos: 0, erros: 0 };
+    es.porJogo[jogo.id].acertos++;
+    tocarSom('acerto');
+    fb.innerHTML = `<div class="feedback ok">✓ Tudo certo! ${q.explica ? `<span class="explica">${q.explica}</span>` : ''}</div>`;
+    setTimeout(() => { es.idx++; renderProvaPergunta(); }, 1600);
+  } else {
+    es.erros++;
+    if (!es.porJogo[jogo.id]) es.porJogo[jogo.id] = { nome: jogo.titulo, emoji: jogo.emoji, acertos: 0, erros: 0 };
+    es.porJogo[jogo.id].erros++;
+    tocarSom('erro');
+    fb.innerHTML = `<div class="feedback erro">✗ ${certos}/${total} acertos. ${q.explica ? `<span class="explica">${q.explica}</span>` : ''}</div>`;
+    setTimeout(() => { es.idx++; renderProvaPergunta(); }, 3200);
+  }
+}
+
+// Ordenar em modo prova
+let _provaOrdenacao = [];
+function renderOrdenarProva(jogo, q, area) {
+  _provaOrdenacao = [...q.itens];
+  for (let i = _provaOrdenacao.length - 1; i > 0; i--) {
+    const k = Math.floor(Math.random() * (i + 1));
+    [_provaOrdenacao[i], _provaOrdenacao[k]] = [_provaOrdenacao[k], _provaOrdenacao[i]];
+  }
+  area.innerHTML = `
+    <div style="background:#fff4dc;padding:10px 12px;border-radius:10px;border:1px solid #c9a86b;margin-bottom:12px;font-size:12px;color:#6b3a15">
+      <b>${jogo.emoji} ${jogo.titulo}</b>
+    </div>
+    <div class="pergunta">${q.pergunta}${q.hint ? `<span class="hint">${q.hint}</span>` : ''}</div>
+    <div class="setas-tempo">← mais antigo · · · mais recente →</div>
+    <div class="linha-tempo" id="pv-ord"></div>
+    <div style="text-align:center;margin-top:10px">
+      <button class="btn" onclick="verificarOrdenarProva()">Conferir</button>
+    </div>
+    <div id="exec-fb"></div>
+  `;
+  pintarOrdenacaoProva();
+}
+let _provaDragIdx = null;
+function pintarOrdenacaoProva() {
+  const cont = document.getElementById('pv-ord');
+  cont.innerHTML = _provaOrdenacao.map((it, idx) => `
+    <div class="item" data-idx="${idx}" onclick="tapOrdProva(${idx})">
+      ${it.emoji ? `<span class="emoji">${it.emoji}</span>` : ''}
+      <span>${it.label}</span>
+    </div>
+  `).join('');
+}
+function tapOrdProva(idx) {
+  if (_provaDragIdx === null) {
+    _provaDragIdx = idx;
+    document.querySelectorAll('#pv-ord .item').forEach((el, i) => {
+      if (i === idx) el.classList.add('alvo'); else el.classList.remove('alvo');
+    });
+  } else {
+    if (_provaDragIdx !== idx) {
+      const m = _provaOrdenacao.splice(_provaDragIdx, 1)[0];
+      _provaOrdenacao.splice(idx, 0, m);
+    }
+    _provaDragIdx = null;
+    pintarOrdenacaoProva();
+  }
+}
+function verificarOrdenarProva() {
+  const es = _execState;
+  const { jogo, pergunta: q } = es.seq[es.idx];
+  const certa = q.itens.map(x => x.id);
+  const atual = _provaOrdenacao.map(x => x.id);
+  const ok = certa.every((id, i) => id === atual[i]);
+  const fb = document.getElementById('exec-fb');
+  if (ok) {
+    es.acertos++;
+    if (!es.porJogo[jogo.id]) es.porJogo[jogo.id] = { nome: jogo.titulo, emoji: jogo.emoji, acertos: 0, erros: 0 };
+    es.porJogo[jogo.id].acertos++;
+    tocarSom('acerto');
+    fb.innerHTML = `<div class="feedback ok">✓ Ordem perfeita! ${q.explica ? `<span class="explica">${q.explica}</span>` : ''}</div>`;
+    setTimeout(() => { es.idx++; renderProvaPergunta(); }, 1600);
+  } else {
+    es.erros++;
+    if (!es.porJogo[jogo.id]) es.porJogo[jogo.id] = { nome: jogo.titulo, emoji: jogo.emoji, acertos: 0, erros: 0 };
+    es.porJogo[jogo.id].erros++;
+    tocarSom('erro');
+    const nomes = q.itens.map(x => x.label).join(' → ');
+    fb.innerHTML = `<div class="feedback erro">✗ A ordem correta é: <b>${nomes}</b>${q.explica ? `<span class="explica">${q.explica}</span>` : ''}</div>`;
+    setTimeout(() => { es.idx++; renderProvaPergunta(); }, 3600);
+  }
+}
+
+// =====================================================
+// VERDADEIRO/FALSO em modo prova
+// =====================================================
+function renderVFProva(jogo, q, area) {
+  area.innerHTML = `
+    <div style="background:#fff4dc;padding:10px 12px;border-radius:10px;border:1px solid #c9a86b;margin-bottom:12px;font-size:12px;color:#6b3a15">
+      <b>${jogo.emoji} ${jogo.titulo}</b>${_badgeNivelProva(q.nivel)}
+    </div>
+    <div class="pergunta">${q.afirmacao}${q.hint ? `<span class="hint">${q.hint}</span>` : ''}</div>
+    <div class="opcoes grid2">
+      <button class="opcao vf-btn vf-v" data-resp="true" onclick="responderVFProva(this, true)">
+        <span style="font-size:24px;display:block;margin-bottom:4px">✓</span>
+        <b>Verdadeiro</b>
+      </button>
+      <button class="opcao vf-btn vf-f" data-resp="false" onclick="responderVFProva(this, false)">
+        <span style="font-size:24px;display:block;margin-bottom:4px">✗</span>
+        <b>Falso</b>
+      </button>
+    </div>
+    <div id="exec-fb"></div>
+  `;
+}
+function responderVFProva(btn, escolha) {
+  const es = _execState;
+  const { jogo, pergunta: q } = es.seq[es.idx];
+  const correto = escolha === q.vf;
+  [...document.querySelectorAll('.opcoes .opcao')].forEach(b => {
+    b.disabled = true;
+    const bResp = b.dataset.resp === 'true';
+    if (bResp === q.vf) b.classList.add('acerto');
+    else if (b === btn) b.classList.add('erro');
+  });
+  const fb = document.getElementById('exec-fb');
+  if (correto) {
+    es.acertos++;
+    if (!es.porJogo[jogo.id]) es.porJogo[jogo.id] = { nome: jogo.titulo, emoji: jogo.emoji, acertos: 0, erros: 0 };
+    es.porJogo[jogo.id].acertos++;
+    tocarSom('acerto');
+    fb.innerHTML = `<div class="feedback ok">✓ Correto!${q.explica ? `<span class="explica">${q.explica}</span>` : ''}</div>`;
+  } else {
+    es.erros++;
+    if (!es.porJogo[jogo.id]) es.porJogo[jogo.id] = { nome: jogo.titulo, emoji: jogo.emoji, acertos: 0, erros: 0 };
+    es.porJogo[jogo.id].erros++;
+    tocarSom('erro');
+    const certaStr = q.vf ? 'Verdadeiro' : 'Falso';
+    fb.innerHTML = `<div class="feedback erro">✗ A resposta certa era <b>${certaStr}</b>.${q.explica ? `<span class="explica">${q.explica}</span>` : ''}</div>`;
+  }
+  setTimeout(() => { es.idx++; renderProvaPergunta(); }, correto ? 1400 : 2600);
+}
+
+// =====================================================
+// CLOZE (completar lacuna) em modo prova
+// =====================================================
+function renderClozeProva(jogo, q, area) {
+  const opts = q.opcoes.map((o, i) => ({ o, correto: i === (q.correta ?? 0) }));
+  for (let i = opts.length - 1; i > 0; i--) {
+    const k = Math.floor(Math.random() * (i + 1));
+    [opts[i], opts[k]] = [opts[k], opts[i]];
+  }
+  const fraseHTML = (q.frase || '').replace(/_+/g, '<span class="cloze-gap">______</span>');
+  area.innerHTML = `
+    <div style="background:#fff4dc;padding:10px 12px;border-radius:10px;border:1px solid #c9a86b;margin-bottom:12px;font-size:12px;color:#6b3a15">
+      <b>${jogo.emoji} ${jogo.titulo}</b>${_badgeNivelProva(q.nivel)}
+    </div>
+    <div class="pergunta">
+      <div style="font-size:15px;color:#6b3a15;margin-bottom:8px">Complete a frase:</div>
+      <div style="font-size:17px;line-height:1.5">${fraseHTML}</div>
+      ${q.hint ? `<span class="hint">${q.hint}</span>` : ''}
+    </div>
+    <div class="opcoes" id="pv-cloze-opts">
+      ${opts.map(x => `
+        <button class="opcao cloze-opt" data-correto="${x.correto}" onclick="responderClozeProva(this)">
+          ${x.o}
+        </button>
+      `).join('')}
+    </div>
+    <div id="exec-fb"></div>
+  `;
+}
+function responderClozeProva(btn) {
+  const es = _execState;
+  const { jogo, pergunta: q } = es.seq[es.idx];
+  const correto = btn.dataset.correto === 'true';
+  [...document.querySelectorAll('#pv-cloze-opts .opcao')].forEach(b => {
+    b.disabled = true;
+    if (b === btn) b.classList.add(correto ? 'acerto' : 'erro');
+    else if (b.dataset.correto === 'true') b.classList.add('acerto');
+  });
+  const fb = document.getElementById('exec-fb');
+  if (correto) {
+    es.acertos++;
+    if (!es.porJogo[jogo.id]) es.porJogo[jogo.id] = { nome: jogo.titulo, emoji: jogo.emoji, acertos: 0, erros: 0 };
+    es.porJogo[jogo.id].acertos++;
+    tocarSom('acerto');
+    fb.innerHTML = `<div class="feedback ok">✓ Correto!${q.explica ? `<span class="explica">${q.explica}</span>` : ''}</div>`;
+  } else {
+    es.erros++;
+    if (!es.porJogo[jogo.id]) es.porJogo[jogo.id] = { nome: jogo.titulo, emoji: jogo.emoji, acertos: 0, erros: 0 };
+    es.porJogo[jogo.id].erros++;
+    tocarSom('erro');
+    fb.innerHTML = `<div class="feedback erro">✗ Veja a resposta certa em verde.${q.explica ? `<span class="explica">${q.explica}</span>` : ''}</div>`;
+  }
+  setTimeout(() => { es.idx++; renderProvaPergunta(); }, correto ? 1400 : 2400);
+}
+
+// =====================================================
+// MEMÓRIA (pares) em modo prova
+// =====================================================
+let _provaMem = { cartas: [], viradas: [], paresEncontrados: 0, totalPares: 0, bloqueado: false, acertouAlgum: false };
+function renderMemoriaProva(jogo, q, area) {
+  const pares = q.pares || [];
+  const cartas = [];
+  pares.forEach((par, i) => {
+    cartas.push({ id: 'a' + i, texto: par.a, parId: 'p' + i });
+    cartas.push({ id: 'b' + i, texto: par.b, parId: 'p' + i });
+  });
+  for (let i = cartas.length - 1; i > 0; i--) {
+    const k = Math.floor(Math.random() * (i + 1));
+    [cartas[i], cartas[k]] = [cartas[k], cartas[i]];
+  }
+  _provaMem = { cartas, viradas: [], paresEncontrados: 0, totalPares: pares.length, bloqueado: false, tentativasErradas: 0 };
+  area.innerHTML = `
+    <div style="background:#fff4dc;padding:10px 12px;border-radius:10px;border:1px solid #c9a86b;margin-bottom:12px;font-size:12px;color:#6b3a15">
+      <b>${jogo.emoji} ${jogo.titulo}</b>${_badgeNivelProva(q.nivel)}
+    </div>
+    <div class="pergunta">${q.pergunta || 'Encontre os pares!'}${q.hint ? `<span class="hint">${q.hint}</span>` : ''}</div>
+    <div class="memoria-grid" id="pv-mem-grid"></div>
+    <div id="exec-fb"></div>
+  `;
+  pintarMemoriaProva();
+}
+function pintarMemoriaProva() {
+  const grid = document.getElementById('pv-mem-grid');
+  if (!grid) return;
+  grid.innerHTML = _provaMem.cartas.map((c, i) => {
+    const virada = _provaMem.viradas.includes(i);
+    const acertada = c.acertada;
+    let cls = 'mem-carta';
+    if (virada) cls += ' virada';
+    if (acertada) cls += ' acertada';
+    return `
+      <div class="${cls}" onclick="virarCartaProva(${i})">
+        <div class="mem-back">?</div>
+        <div class="mem-front">${c.texto}</div>
+      </div>
+    `;
+  }).join('');
+}
+function virarCartaProva(i) {
+  const m = _provaMem;
+  if (m.bloqueado) return;
+  const carta = m.cartas[i];
+  if (carta.acertada) return;
+  if (m.viradas.includes(i)) return;
+  m.viradas.push(i);
+  pintarMemoriaProva();
+  if (m.viradas.length === 2) {
+    m.bloqueado = true;
+    const [a, b] = m.viradas;
+    const cartaA = m.cartas[a];
+    const cartaB = m.cartas[b];
+    if (cartaA.parId === cartaB.parId) {
+      setTimeout(() => {
+        cartaA.acertada = true;
+        cartaB.acertada = true;
+        m.viradas = [];
+        m.paresEncontrados++;
+        m.bloqueado = false;
+        tocarSom('acerto');
+        pintarMemoriaProva();
+        if (m.paresEncontrados === m.totalPares) {
+          // Rodada da prova concluída
+          const es = _execState;
+          const { jogo, pergunta: q } = es.seq[es.idx];
+          // Conta como acerto se fechou com poucos erros; mas aqui registra como acerto completo
+          // (cada rodada de memória = 1 pergunta da prova)
+          es.acertos++;
+          if (!es.porJogo[jogo.id]) es.porJogo[jogo.id] = { nome: jogo.titulo, emoji: jogo.emoji, acertos: 0, erros: 0 };
+          if (m.tentativasErradas === 0) {
+            es.porJogo[jogo.id].acertos++;
+          } else {
+            // Teve erros, conta parcial mas ainda assim avança — para não bloquear a prova
+            es.porJogo[jogo.id].acertos++;
+          }
+          const fb = document.getElementById('exec-fb');
+          const tentMsg = m.tentativasErradas === 0 ? ' (sem erros!)' : ` (${m.tentativasErradas} tentativa${m.tentativasErradas > 1 ? 's' : ''} errada${m.tentativasErradas > 1 ? 's' : ''})`;
+          fb.innerHTML = `<div class="feedback ok">🏆 Todos os pares!${tentMsg}${q.explica ? `<span class="explica">${q.explica}</span>` : ''}</div>`;
+          setTimeout(() => { es.idx++; renderProvaPergunta(); }, 2200);
+        }
+      }, 500);
+    } else {
+      m.tentativasErradas++;
+      tocarSom('erro');
+      setTimeout(() => {
+        m.viradas = [];
+        m.bloqueado = false;
+        pintarMemoriaProva();
+      }, 1100);
+    }
+  }
+}
+
+// =====================================================
+// FIM DA PROVA
+// =====================================================
+function fimProva() {
+  const es = _execState;
+  const area = document.getElementById('exec-jogo-area');
+  const total = es.acertos + es.erros;
+  const pct = total === 0 ? 0 : Math.round((es.acertos / total) * 100);
+  let emoji, msg;
+  if (pct === 100) { emoji = '🏆'; msg = 'Perfeito! Pronto pra prova de verdade!'; }
+  else if (pct >= 80) { emoji = '🌟'; msg = 'Muito bem! Você sabe o conteúdo.'; }
+  else if (pct >= 60) { emoji = '👍'; msg = 'Bom! Alguns pontos a revisar.'; }
+  else { emoji = '💪'; msg = 'Vamos treinar mais! Rode de novo.'; }
+  tocarSom('fim');
+  document.getElementById('exec-prog').style.width = '100%';
+
+  // Breakdown por jogo
+  const rows = Object.values(es.porJogo).map(p => {
+    const t = p.acertos + p.erros;
+    const pctJ = t ? Math.round((p.acertos / t) * 100) : 0;
+    const cor = pctJ < 50 ? '#a83232' : (pctJ < 70 ? '#a87000' : '#1b7a3a');
+    return `<div style="display:flex;justify-content:space-between;padding:6px 10px;background:#fff4dc;border-radius:8px;margin-bottom:4px;font-size:13px">
+      <span>${p.emoji} ${p.nome}</span>
+      <span style="color:${cor};font-weight:800">${p.acertos}/${t} · ${pctJ}%</span>
+    </div>`;
+  }).join('');
+
+  area.innerHTML = `
+    <div class="fim">
+      <div class="emoji">${emoji}</div>
+      <h2>${msg}</h2>
+      <div class="stats">
+        <div class="stat"><div class="stat-n">${es.acertos}</div><div class="stat-l">Acertos</div></div>
+        <div class="stat"><div class="stat-n">${es.erros}</div><div class="stat-l">Erros</div></div>
+        <div class="stat"><div class="stat-n">${pct}%</div><div class="stat-l">Geral</div></div>
+      </div>
+      <div class="titulo-sec" style="text-align:left">Resultado por tema</div>
+      ${rows}
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+        <button class="btn" onclick="iniciarProva(_execState.prova)">🔄 Repetir</button>
+        <button class="btn secundario" onclick="mostrarAba('lista')">📋 Minhas provas</button>
+      </div>
+    </div>
+  `;
+}
+
+// =====================================================
+// INIT
+// =====================================================
+window.addEventListener('DOMContentLoaded', () => {
+  // Pré-carregar 4º ano, mais comum
+  carregarAno(4, () => {});
+  mostrarAba('sos');
+});
+</script>
+</body>
+</html>

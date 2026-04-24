@@ -279,7 +279,7 @@
   <!-- SOS PROVA -->
   <div id="view-sos">
     <div class="sos-hero">
-      <h3>🚨 Prova é amanhã?</h3>
+      <h3>🚨 Prova é amanhã? <span id="sos-premium-tag" style="display:none;font-size:11px;background:#ffd36b;color:#5a3a00;padding:2px 8px;border-radius:10px;margin-left:6px;vertical-align:middle;font-weight:800">✨ PREMIUM</span></h3>
       <p>A gente lê onde você mais erra e monta uma prova de 10 minutos focada nos pontos fracos.<br>Sem enrolação — direto no que importa.</p>
     </div>
     <div class="sos-controles">
@@ -340,6 +340,96 @@
 </div>
 
 <script>
+// ==================== PAYWALL (standalone) ====================
+const LICENCA_STORAGE_KEY = 'matemagica_licenca_v1';
+function ehPremium() {
+  try {
+    const l = JSON.parse(localStorage.getItem(LICENCA_STORAGE_KEY) || 'null');
+    return !!(l && l.key);
+  } catch(e) { return false; }
+}
+function abrirPaywall(motivo) {
+  let ov = document.getElementById('paywall-overlay');
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.id = 'paywall-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(20,12,50,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;backdrop-filter:blur(3px)';
+    ov.innerHTML = `
+      <div style="background:#fff;border-radius:18px;max-width:420px;width:100%;max-height:90vh;overflow-y:auto;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+        <div style="text-align:center;font-size:44px;margin-bottom:8px">🔒</div>
+        <h2 style="text-align:center;margin:0 0 6px;color:#4a3b8a;font-size:20px">Libere tudo no Matemágica</h2>
+        <p style="text-align:center;font-size:13px;color:#888;margin:0 0 14px" id="paywall-motivo"></p>
+        <div style="background:linear-gradient(135deg,#fff3d6,#ffe5a3);border-radius:12px;padding:14px;margin-bottom:14px">
+          <div style="font-size:26px;font-weight:900;color:#a87800;text-align:center;line-height:1">R$ 17</div>
+          <div style="text-align:center;font-size:12px;color:#a87800;margin-bottom:10px">pagamento único · vitalício</div>
+          <ul style="margin:0;padding-left:20px;font-size:13px;color:#5a3a00;line-height:1.55">
+            <li>Todos os jogos do <b>2º ao 5º ano</b></li>
+            <li><b>SOS Prova</b> — detecta fraquezas e monta prova</li>
+            <li>🎁 <b>BÔNUS: app EXPLORA</b> — História e Geografia BNCC</li>
+            <li>4 PDFs premium sem gastar moedas</li>
+            <li>Temas de fundo (escuro, pastel…)</li>
+            <li>+500 moedas de bônus inicial</li>
+            <li>Badge exclusiva <b>✨ Matemágico</b></li>
+          </ul>
+        </div>
+        <a href="https://pay.hotmart.com/A105538417J" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#2ebd7c,#4ab3a5);color:#fff;text-align:center;padding:13px;border-radius:10px;text-decoration:none;font-weight:800;font-size:15px;margin-bottom:8px;box-shadow:0 4px 10px rgba(46,189,124,0.3)">🚀 Liberar tudo por R$ 17</a>
+        <p style="font-size:11px;color:#888;text-align:center;margin:8px 0 0">🔒 Pagamento seguro via Hotmart · PIX, cartão ou boleto</p>
+        <p style="font-size:11px;color:#888;text-align:center;margin:2px 0 0">Garantia de 7 dias · devolvemos 100% sem perguntar</p>
+        <div style="display:flex;gap:8px;margin-top:14px">
+          <button onclick="abrirReativarProvas()" style="flex:1;background:#ede8fa;color:#6b54d3;border:none;padding:10px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">Já comprei</button>
+          <button onclick="document.getElementById('paywall-overlay').remove()" style="flex:1;background:#f7f5ff;color:#888;border:none;padding:10px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">Depois</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(ov);
+  }
+  document.getElementById('paywall-motivo').textContent = motivo || '';
+}
+function abrirReativarProvas() {
+  const k = prompt('Cole a chave de ativação recebida por email:');
+  if (!k) return;
+  fetch(`/api/ativar?key=${encodeURIComponent(k.trim().toUpperCase())}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.valid) {
+        localStorage.setItem(LICENCA_STORAGE_KEY, JSON.stringify({
+          key: k.trim().toUpperCase(),
+          email: data.email || null,
+          ativadaEm: new Date().toISOString()
+        }));
+        alert('✨ Matemágica Completo liberado!');
+        location.reload();
+      } else {
+        alert('❌ Chave inválida');
+      }
+    })
+    .catch(() => alert('Erro de rede. Tenta de novo.'));
+}
+
+// Auto-check URL ?ativar=KEY (redundante com shared.js mas a página pode ser aberta sem ele)
+(function(){
+  try {
+    const p = new URLSearchParams(location.search);
+    const k = p.get('ativar');
+    if (!k) return;
+    fetch(`/api/ativar?key=${encodeURIComponent(k.trim().toUpperCase())}`)
+      .then(r => r.json()).then(data => {
+        if (data.valid) {
+          localStorage.setItem(LICENCA_STORAGE_KEY, JSON.stringify({
+            key: k.trim().toUpperCase(),
+            email: data.email || null,
+            ativadaEm: new Date().toISOString()
+          }));
+          const url = new URL(location.href);
+          url.searchParams.delete('ativar');
+          history.replaceState({}, '', url.pathname);
+          alert('✨ Matemágica Completo liberado!');
+          location.reload();
+        }
+      }).catch(()=>{});
+  } catch(e) {}
+})();
+
 // ==================== DADOS DE JOGOS (catálogo) ====================
 const CATALOGO = {
   1: {
@@ -566,6 +656,10 @@ function analisarAno(ano) {
 }
 
 function gerarSos() {
+  if (!ehPremium()) {
+    abrirPaywall('SOS Prova é exclusivo do Matemágica Completo.');
+    return;
+  }
   const ano = parseInt(document.getElementById('sos-ano').value);
   const todos = analisarAno(ano);
 
@@ -844,6 +938,12 @@ function renderLista() {
 // Init
 renderLista();
 atualizarCapitulos();
+
+// Mostra tag PREMIUM no SOS se usuário ainda não é premium
+(function(){
+  const tag = document.getElementById('sos-premium-tag');
+  if (tag && !ehPremium()) tag.style.display = 'inline-block';
+})();
 
 </script>
 <script>

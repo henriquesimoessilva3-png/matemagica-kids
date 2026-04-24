@@ -178,6 +178,25 @@
   }
   .comut-insight strong { color: #8a5a10; }
 
+  .macete-card {
+    margin-top: 10px;
+    background: linear-gradient(135deg, #ede8fa, #d9c8f5);
+    border-left: 4px solid #6b54d3;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #4a3b8a;
+    line-height: 1.55;
+  }
+  .macete-card .macete-header {
+    font-weight: 800;
+    color: #4a3b8a;
+    margin-bottom: 4px;
+    font-size: 13px;
+    letter-spacing: 0.2px;
+  }
+  .macete-card .macete-corpo b { color: #6b54d3; }
+
   .estudo-controles {
     display: flex;
     gap: 8px;
@@ -334,6 +353,7 @@
       <div class="comut-insight">
         <strong>💡 Truque mágico:</strong> <span id="insight-texto">...</span>
       </div>
+      <div class="macete-card" id="macete-card"></div>
       <div class="estudo-controles">
         <button class="estudo-btn" onclick="mudarFator(-1)">← Anterior</button>
         <button class="estudo-btn principal" onclick="proximoTreino()">Treinar essa! ⚡</button>
@@ -389,8 +409,8 @@
   </div>
 </div>
 
-<script src="mascotes.js?v=5"></script>
-<script src="jogos_shared.js?v=5"></script>
+<script src="mascotes.js?v=11"></script>
+<script src="jogos_shared.js?v=11"></script>
 <script>
 STORAGE_KEY = 'jogosMatTabuada_v1';
 CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
@@ -446,6 +466,50 @@ function renderPokedex() {
   document.getElementById('resumo-txt').textContent = txt;
 }
 
+// ============== MACETES BRASILEIROS (um por fator) ==============
+const MACETES_TABUADA = {
+  1: {
+    titulo: '1 é o número preguiçoso',
+    corpo: 'Qualquer coisa vezes 1 é ela mesma. O 1 nunca muda ninguém. <b>7 × 1 = 7</b>, <b>832 × 1 = 832</b>.'
+  },
+  2: {
+    titulo: 'É só dobrar',
+    corpo: '<b>2 × N</b> é o mesmo que <b>N + N</b>. Dobra. <b>2 × 7 = 7 + 7 = 14</b>. Sua mãe e você têm o dobro de olhos dela sozinha.'
+  },
+  3: {
+    titulo: 'Dobra e soma mais um',
+    corpo: '<b>3 × N = (N + N) + N</b>. Ex: <b>3 × 6</b> → dobra (6+6=12) → soma mais 6 → <b>18</b>. Seu cérebro prefere somar a multiplicar.'
+  },
+  4: {
+    titulo: 'Dobra duas vezes',
+    corpo: '<b>4 × N</b> = dobra, e dobra de novo. Ex: <b>4 × 7</b> → 7+7 = <b>14</b> → 14+14 = <b>28</b>. Moleza.'
+  },
+  5: {
+    titulo: 'Sempre termina em 0 ou 5',
+    corpo: 'Se o outro número é <b>par</b>, termina em <b>0</b> (5×4=20, 5×8=40). Se é <b>ímpar</b>, termina em <b>5</b> (5×3=15, 5×7=35). É só decorar a primeira parte.'
+  },
+  6: {
+    titulo: 'Dobrada do 3',
+    corpo: '<b>6 × N = (3 × N) × 2</b>. Ex: <b>6 × 4</b> → sabe que 3×4 = 12 → dobra → <b>24</b>. E mais: par × par sempre dá par.'
+  },
+  7: {
+    titulo: 'A famosa 7×8',
+    corpo: '<b>7 × 8 = 56</b> — olha os números em sequência: 5-6-7-8! Pro resto, quebra: <b>7 × 6 = (5×6) + (2×6) = 30 + 12 = 42</b>.'
+  },
+  8: {
+    titulo: 'Dobra três vezes',
+    corpo: '<b>8 × N</b> = dobra 3x. Ex: <b>8 × 3</b> → 3+3=6 → 6+6=12 → 12+12=<b>24</b>. Ou: <b>(4×N) × 2</b>.'
+  },
+  9: {
+    titulo: 'O truque dos dedos 🖐️🖐️',
+    corpo: 'Mostra as 10 mãos abertas. Pro <b>9 × 3</b>, abaixa o <b>3º dedo</b> (contando da esquerda). Dedos <b>à esquerda</b> do abaixado = <b>dezena</b> (2). Dedos <b>à direita</b> = <b>unidade</b> (7). Resposta: <b>27</b>. Funciona até 9×10!'
+  },
+  10: {
+    titulo: 'Coloca zero no fim',
+    corpo: '<b>10 × N</b> = o número com um zero atrás. <b>10 × 7 = 70</b>. <b>10 × 123 = 1230</b>. Só isso.'
+  }
+};
+
 // ============== ESTUDO (visual comutativa) ==============
 let _fatorAtual = 2;
 let _outro = 3;
@@ -474,6 +538,21 @@ function renderEstudo() {
   `;
   document.getElementById('insight-texto').innerHTML =
     `<b>${a} × ${b}</b> é a mesma coisa que <b>${b} × ${a}</b>. Se já sabe um, já sabe o outro! Por isso só precisa decorar metade. ✨`;
+
+  // Macete específico da tabuada
+  const macEl = document.getElementById('macete-card');
+  if (macEl) {
+    const m = MACETES_TABUADA[_fatorAtual];
+    if (m) {
+      macEl.style.display = 'block';
+      macEl.innerHTML = `
+        <div class="macete-header">💡 Macete do mestre · ${m.titulo}</div>
+        <div class="macete-corpo">${m.corpo}</div>
+      `;
+    } else {
+      macEl.style.display = 'none';
+    }
+  }
 }
 
 function mudarFator(delta) {
