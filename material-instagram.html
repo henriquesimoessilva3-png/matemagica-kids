@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Material Instagram — Matemágica · pronto pra publicar</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: #1a1a1a;
+    color: #fff;
+    padding: 40px 20px;
+  }
+
+  .topbar {
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    text-align: center;
+  }
+  .topbar h1 {
+    font-size: 28px;
+    margin: 0 0 10px;
+    background: linear-gradient(135deg, #6b54d3, #b968e8 50%, #ffd36b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .topbar p {
+    color: #aaa;
+    font-size: 14px;
+    margin: 0 0 8px;
+    line-height: 1.6;
+  }
+  .topbar .howto {
+    background: #2a2a2a;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 16px;
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .topbar .howto strong { color: #ffd36b; }
+
+  .section-label {
+    max-width: 1100px;
+    margin: 50px auto 20px;
+    color: #ffd36b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-top: 1px solid #333;
+    padding-top: 20px;
+  }
+
+  .gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .art-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .art-label {
+    color: #aaa;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* === ARTES === */
+  /* Tamanhos:
+     - Post/carrossel: 1080×1350 (retrato 4:5)
+     - Story/Reel capa: 1080×1920 (9:16)
+     Para tela, escalo pra 360×450 e 360×640 — exporta no tamanho real abrindo numa tab nova/print
+  */
+
+  .art {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    transform-origin: top left;
+    background: #fff;
+  }
+  /* Carrossel 1080×1350 escalado a 360×450 */
+  .art.carrossel {
+    width: 360px;
+    height: 450px;
+  }
+  /* Story/Reel 1080×1920 escalado a 360×640 */
+  .art.story {
+    width: 360px;
+    height: 640px;
+  }
+
+  /* Camada interna NÃO escalada — tamanho real Instagram */
+  .art .inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: top left;
+  }
+  .art.carrossel .inner {
+    width: 1080px;
+    height: 1350px;
+    transform: scale(0.3333);
+  }
+  .art.story .inner {
+    width: 1080px;
+    height: 1920px;
+    transform: scale(0.3333);
+  }
+
+  /* === ESTILOS INTERNOS DAS ARTES === */
+  .inner {
+    font-family: 'Segoe UI', -apple-system, sans-serif;
+  }
+
+  /* Backgrounds reusáveis */
+  .bg-roxo {
+    background: linear-gradient(135deg, #6b54d3 0%, #b968e8 50%, #d590e8 100%);
+  }
+  .bg-claro {
+    background: linear-gradient(135deg, #f7f5ff 0%, #fff5e8 100%);
+  }
+  .bg-amarelo {
+    background: linear-gradient(135deg, #ffd36b 0%, #ffae5c 100%);
+  }
+  .bg-escuro {
+    background: linear-gradient(135deg, #2a2245 0%, #6b54d3 100%);
+  }
+  .bg-verde {
+    background: linear-gradient(135deg, #2ebd7c 0%, #4ab3a5 100%);
+  }
+
+  /* Logo Matemágica reusável */
+  .ig-logo {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, #6b54d3, #b968e8 50%, #ffd36b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .ig-logo .estrela { -webkit-text-fill-color: #ffd36b; color: #ffd36b; }
+
+  .ig-logo-white {
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+    background: none;
+  }
+  .ig-logo-white .estrela {
+    -webkit-text-fill-color: #ffd36b;
+    color: #ffd36b;
+  }
+
+  /* === CARROSSEL 1: 5 sinais === */
+  .c1-slide {
+    width: 100%;
+    height: 100%;
+    padding: 70px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .c1-capa h1 {
+    font-size: 96px;
+    line-height: 1;
+    font-weight: 900;
+    color: #2a2245;
+    margin: 0 0 30px;
+    letter-spacing: -2px;
+  }
+  .c1-capa h1 .num { color: #ff6b6b; font-size: 180px; display: block; }
+  .c1-capa .sub {
+    font-size: 36px;
+    color: #6b54d3;
+    font-weight: 700;
+    margin-bottom: 30px;
+  }
+  .c1-capa .arrow {
+    font-size: 48px;
+    color: #6b54d3;
+    margin-top: 20px;
+  }
+
+  .c1-sinal {
+    background: #fff;
+    color: #2a2245;
+  }
+  .c1-sinal .num-sinal {
+    font-size: 220px;
+    font-weight: 900;
+    line-height: 0.9;
+    color: #ffd36b;
+    letter-spacing: -10px;
+  }
+  .c1-sinal h2 {
+    font-size: 64px;
+    font-weight: 900;
+    margin: 0 0 24px;
+    line-height: 1.05;
+    color: #2a2245;
+  }
+  .c1-sinal p {
+    font-size: 32px;
+    color: #6a5f88;
+    line-height: 1.4;
+    font-weight: 500;
+    margin: 0;
+  }
+  .c1-sinal .footer {
+    margin-top: auto;
+    color: #b0a3c8;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .c1-solucao {
+    background: linear-gradient(135deg, #2ebd7c 0%, #4ab3a5 100%);
+    color: #fff;
+    text-align: center;
+  }
+  .c1-solucao h2 {
+    font-size: 80px;
+    font-weight: 900;
+    margin: 0 0 30px;
+    line-height: 1.05;
+    letter-spacing: -1px;
+  }
+  .c1-solucao p {
+    font-size: 36px;
+    line-height: 1.5;
+    margin: 0 0 30px;
+  }
+  .c1-solucao .badge-fix {
+    display: inline-block;
+    background: #fff;
+    color: #2ebd7c;
+    padding: 16px 32px;
+    border-radius: 60px;
+    font-size: 28px;
+    font-weight: 800;
+    margin: 8px 0;
+  }
+
+  .c1-cta {
+    background: linear-gradient(135deg, #6b54d3 0%, #b968e8 100%);
+    color: #fff;
+    text-align: center;
+  }
+  .c1-cta h2 {
+    font-size: 90px;
+    font-weight: 900;
+    margin: 0 0 30px;
+    line-height: 1.05;
+  }
+  .c1-cta .arrow-big {
+    font-size: 110px;
+    color: #ffd36b;
+    line-height: 1;
+    margin: 30px 0;
+  }
+  .c1-cta .info-row {
+    font-size: 30px;
+    line-height: 1.7;
+    color: #fff;
+  }
+
+  /* === CARROSSEL 2: comparação preço === */
+  .c2-slide {
+    width: 100%;
+    height: 100%;
+    padding: 70px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .c2-capa {
+    background: linear-gradient(135deg, #fff5e8 0%, #faf6ff 100%);
+    color: #2a2245;
+  }
+  .c2-capa h1 {
+    font-size: 84px;
+    font-weight: 900;
+    line-height: 1.05;
+    margin: 0 0 30px;
+    color: #2a2245;
+  }
+  .c2-capa h1 .red { color: #ff6b6b; }
+  .c2-capa .sub {
+    font-size: 36px;
+    color: #6b54d3;
+    font-weight: 700;
+    margin-top: 20px;
+  }
+
+  .c2-app {
+    background: #fff;
+    color: #2a2245;
+  }
+  .c2-app .name {
+    font-size: 80px;
+    font-weight: 900;
+    margin: 0 0 24px;
+    color: #2a2245;
+    letter-spacing: -1px;
+  }
+  .c2-app .price {
+    font-size: 100px;
+    font-weight: 900;
+    color: #ff6b6b;
+    line-height: 1;
+    margin: 0 0 18px;
+  }
+  .c2-app .detail {
+    font-size: 36px;
+    color: #6a5f88;
+    line-height: 1.5;
+  }
+  .c2-app .footer-pos {
+    margin-top: auto;
+    color: #b0a3c8;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .c2-mate {
+    background: linear-gradient(135deg, #2ebd7c 0%, #4ab3a5 100%);
+    color: #fff;
+    position: relative;
+  }
+  .c2-mate::before {
+    content: 'A SOLUÇÃO';
+    position: absolute;
+    top: 60px;
+    right: 60px;
+    background: #ffd36b;
+    color: #2a2245;
+    font-size: 22px;
+    font-weight: 900;
+    padding: 8px 20px;
+    border-radius: 30px;
+    letter-spacing: 2px;
+  }
+  .c2-mate .name {
+    font-size: 84px;
+    font-weight: 900;
+    margin: 0 0 24px;
+    letter-spacing: -1px;
+  }
+  .c2-mate .price {
+    font-size: 130px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    margin: 0 0 18px;
+  }
+  .c2-mate .price small {
+    font-size: 60px;
+  }
+  .c2-mate .detail {
+    font-size: 38px;
+    line-height: 1.45;
+    font-weight: 500;
+  }
+
+  /* === CARROSSEL 3: revelação === */
+  .c3-slide {
+    width: 100%;
+    height: 100%;
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .c3-capa {
+    background: linear-gradient(135deg, #2a2245 0%, #6b54d3 100%);
+    color: #fff;
+  }
+  .c3-capa h1 {
+    font-size: 84px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -1px;
+  }
+  .c3-capa h1 .destaque {
+    color: #ffd36b;
+    display: inline-block;
+  }
+  .c3-capa .swipe {
+    margin-top: 60px;
+    font-size: 32px;
+    color: #ffd36b;
+    font-weight: 700;
+  }
+
+  .c3-fato {
+    background: #fff;
+    color: #2a2245;
+  }
+  .c3-fato .num {
+    font-size: 32px;
+    color: #6b54d3;
+    font-weight: 900;
+    letter-spacing: 4px;
+    margin-bottom: 30px;
+  }
+  .c3-fato h2 {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1.05;
+    color: #2a2245;
+    margin: 0 0 30px;
+    letter-spacing: -1px;
+  }
+  .c3-fato h2 .destaque { color: #6b54d3; }
+  .c3-fato p {
+    font-size: 32px;
+    line-height: 1.5;
+    color: #6a5f88;
+    font-weight: 500;
+    margin: 0;
+  }
+  .c3-fato .footer-pos {
+    margin-top: auto;
+    color: #b0a3c8;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .c3-cta {
+    background: linear-gradient(135deg, #ffd36b 0%, #ffae5c 100%);
+    color: #2a2245;
+    text-align: center;
+  }
+  .c3-cta h2 {
+    font-size: 80px;
+    font-weight: 900;
+    line-height: 1.05;
+    margin: 0 0 40px;
+    letter-spacing: -1px;
+  }
+  .c3-cta .arrow-big {
+    font-size: 90px;
+    margin-top: 40px;
+    color: #6b54d3;
+  }
+  .c3-cta .arrow-big .text {
+    display: block;
+    font-size: 36px;
+    color: #2a2245;
+    font-weight: 800;
+    margin-top: 16px;
+  }
+
+  /* === STORIES === */
+  .story-base {
+    width: 100%;
+    height: 100%;
+    padding: 120px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .s1 { background: linear-gradient(135deg, #6b54d3 0%, #b968e8 100%); color: #fff; }
+  .s1 .question {
+    font-size: 80px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 0 0 80px;
+  }
+  .s1 .options {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .s1 .opt {
+    background: rgba(255,255,255,0.95);
+    color: #2a2245;
+    padding: 32px;
+    border-radius: 24px;
+    font-size: 38px;
+    font-weight: 800;
+  }
+  .s1 .footer {
+    margin-top: 80px;
+    font-size: 24px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .s2 {
+    background: linear-gradient(135deg, #2a2245 0%, #6b54d3 100%);
+    color: #fff;
+  }
+  .s2 .stat {
+    font-size: 240px;
+    font-weight: 900;
+    line-height: 0.95;
+    color: #ffd36b;
+    margin-bottom: 30px;
+    letter-spacing: -10px;
+  }
+  .s2 .stat-text {
+    font-size: 50px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 60px;
+  }
+  .s2 .conclusion {
+    font-size: 38px;
+    color: #ffd36b;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .s3 {
+    background: linear-gradient(135deg, #fff5e8 0%, #f7f5ff 100%);
+    color: #2a2245;
+  }
+  .s3 h2 {
+    font-size: 70px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 0 0 40px;
+    letter-spacing: -1px;
+  }
+  .s3 .visual {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: #2a2245;
+    background-image: linear-gradient(135deg, #6b54d3 0%, #b968e8 100%);
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 38px;
+    font-weight: 800;
+    text-align: center;
+    padding: 40px;
+    line-height: 1.3;
+    margin-bottom: 40px;
+  }
+  .s3 .visual .play {
+    font-size: 130px;
+    margin-bottom: 24px;
+  }
+  .s3 .cta-text {
+    font-size: 42px;
+    font-weight: 800;
+    color: #6b54d3;
+    margin-bottom: 24px;
+  }
+  .s3 .link-sticker {
+    background: #6b54d3;
+    color: #fff;
+    padding: 22px 50px;
+    border-radius: 60px;
+    font-size: 32px;
+    font-weight: 800;
+    display: inline-block;
+  }
+
+  .s4 {
+    background: linear-gradient(135deg, #fff 0%, #fff5e8 100%);
+    color: #2a2245;
+  }
+  .s4 h2 {
+    font-size: 50px;
+    font-weight: 800;
+    margin: 0 0 50px;
+    color: #6b54d3;
+  }
+  .s4 .quote {
+    background: #fff;
+    border-left: 8px solid #ffd36b;
+    border-radius: 16px;
+    padding: 50px 40px;
+    font-size: 40px;
+    line-height: 1.4;
+    color: #2a2245;
+    font-weight: 600;
+    text-align: left;
+    box-shadow: 0 8px 24px rgba(107,84,211,0.1);
+    margin-bottom: 40px;
+    font-style: italic;
+  }
+  .s4 .author {
+    font-size: 32px;
+    color: #6a5f88;
+    text-align: right;
+    font-weight: 700;
+    font-style: normal;
+  }
+  .s4 .placeholder-note {
+    background: #ff6b6b;
+    color: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    font-size: 26px;
+    font-weight: 800;
+    margin-top: 60px;
+  }
+
+  .s5 {
+    background: linear-gradient(135deg, #6b54d3 0%, #b968e8 100%);
+    color: #fff;
+  }
+  .s5 h2 {
+    font-size: 84px;
+    font-weight: 900;
+    line-height: 1.05;
+    margin: 0 0 50px;
+    letter-spacing: -1px;
+  }
+  .s5 p {
+    font-size: 44px;
+    line-height: 1.4;
+    margin: 0 0 80px;
+    font-weight: 600;
+  }
+  .s5 .down-arrow {
+    font-size: 100px;
+    color: #ffd36b;
+    margin-top: 30px;
+  }
+
+  /* === REELS CAPAS === */
+  .reel-base {
+    width: 100%;
+    height: 100%;
+    padding: 100px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .r1 {
+    background: linear-gradient(135deg, #fff5e8 0%, #faf6ff 100%);
+    color: #2a2245;
+  }
+  .r1 h1 {
+    font-size: 110px;
+    font-weight: 900;
+    line-height: 1;
+    margin: 0;
+    letter-spacing: -3px;
+  }
+  .r1 h1 .destaque {
+    color: #6b54d3;
+    display: inline-block;
+  }
+  .r1 .arrow {
+    margin-top: 80px;
+    font-size: 70px;
+    color: #ffd36b;
+  }
+
+  .r2 {
+    background: linear-gradient(135deg, #2a2245 0%, #1a1530 100%);
+    color: #fff;
+  }
+  .r2 h1 {
+    font-size: 130px;
+    font-weight: 900;
+    line-height: 0.95;
+    margin: 0 0 50px;
+    letter-spacing: -3px;
+  }
+  .r2 h1 .destaque {
+    color: #ff6b6b;
+  }
+  .r2 .badge-confis {
+    margin-top: 60px;
+    font-size: 28px;
+    color: #ffd36b;
+    font-weight: 800;
+    letter-spacing: 4px;
+  }
+
+  .r3 {
+    background: linear-gradient(135deg, #6b54d3 0%, #b968e8 100%);
+    color: #fff;
+  }
+  .r3 .stat-num {
+    font-size: 280px;
+    font-weight: 900;
+    line-height: 0.9;
+    color: #ffd36b;
+    margin-bottom: 30px;
+    letter-spacing: -15px;
+  }
+  .r3 .stat-text {
+    font-size: 70px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 0 0 40px;
+  }
+  .r3 .reframe {
+    font-size: 40px;
+    margin-top: 40px;
+    color: #ffd36b;
+    font-weight: 800;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>✨ Material Instagram pronto pra publicar</h1>
+  <p>Cada arte tá renderizada no tamanho exato do Instagram (1080×1350 pra carrosséis · 1080×1920 pra stories e capas de Reel).</p>
+  <div class="howto">
+    <strong>Como exportar cada arte:</strong><br>
+    1. Tira um screenshot da arte (Cmd+Shift+4 no Mac, depois espaço pra capturar a janela exata)<br>
+    2. Ou abre o DevTools (F12), inspeciona a `.inner` da arte, dá click direito → <strong>Capture node screenshot</strong><br>
+    3. Mais fácil ainda: instala extensão "GoFullPage" no Chrome ou usa "Print Screen" individualmente<br>
+    <br>
+    <strong>Dica:</strong> abre essa página em fullscreen (F11) pra qualidade máxima dos prints.
+  </div>
+</div>
+
+<!-- ============ CARROSSEL 1: 5 SINAIS ============ -->
+<div class="section-label">CARROSSEL 1 — 5 SINAIS QUE SEU FILHO TÁ TRAVANDO (8 slides)</div>
+<div class="gallery">
+
+  <!-- C1 Slide 1 capa -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner bg-amarelo">
+      <div class="c1-slide c1-capa">
+        <div class="ig-logo">MATE<span class="estrela">✨</span>MÁGICA</div>
+        <h1><span class="num">5</span>sinais de que seu filho tá travando em matemática.</h1>
+        <div class="sub">Mãe, presta atenção 👇</div>
+      </div>
+    </div></div>
+    <div class="art-label">C1 · Slide 1 (capa)</div>
+  </div>
+
+  <!-- C1 Slide 2 -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c1-slide c1-sinal">
+        <div class="num-sinal">1</div>
+        <h2>Toda lição vira briga.</h2>
+        <p>Não é teimosia. É o método errado.</p>
+        <div class="footer">SINAL 1 DE 5</div>
+      </div>
+    </div></div>
+    <div class="art-label">C1 · Slide 2</div>
+  </div>
+
+  <!-- C1 Slide 3 -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c1-slide c1-sinal">
+        <div class="num-sinal">2</div>
+        <h2>Ele finge que entendeu.</h2>
+        <p>Pior sinal. A defasagem cresce escondida.</p>
+        <div class="footer">SINAL 2 DE 5</div>
+      </div>
+    </div></div>
+    <div class="art-label">C1 · Slide 3</div>
+  </div>
+
+  <!-- C1 Slide 4 -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c1-slide c1-sinal">
+        <div class="num-sinal">3</div>
+        <h2>Trava na tabuada.</h2>
+        <p>Não decora porque cobrança gera bloqueio.</p>
+        <div class="footer">SINAL 3 DE 5</div>
+      </div>
+    </div></div>
+    <div class="art-label">C1 · Slide 4</div>
+  </div>
+
+  <!-- C1 Slide 5 -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c1-slide c1-sinal">
+        <div class="num-sinal">4</div>
+        <h2>Chora antes da prova.</h2>
+        <p>Ansiedade matemática é real. Stanford já provou.</p>
+        <div class="footer">SINAL 4 DE 5</div>
+      </div>
+    </div></div>
+    <div class="art-label">C1 · Slide 5</div>
+  </div>
+
+  <!-- C1 Slide 6 -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c1-slide c1-sinal">
+        <div class="num-sinal">5</div>
+        <h2>Diz "não sou bom de matemática".</h2>
+        <p>Identidade já formada. URGENTE intervir.</p>
+        <div class="footer">SINAL 5 DE 5</div>
+      </div>
+    </div></div>
+    <div class="art-label">C1 · Slide 6</div>
+  </div>
+
+  <!-- C1 Slide 7 solução -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c1-slide c1-solucao">
+        <h2>Tem solução. Brincando, sem briga.</h2>
+        <p>Matemágica é um app brasileiro alinhado à BNCC do 1º ao 5º ano.</p>
+        <div class="badge-fix">✓ BNCC</div>
+        <div class="badge-fix">✓ 1º ao 5º ano</div>
+        <div class="badge-fix">✓ Sem mensalidade</div>
+      </div>
+    </div></div>
+    <div class="art-label">C1 · Slide 7</div>
+  </div>
+
+  <!-- C1 Slide 8 CTA -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c1-slide c1-cta">
+        <h2>Faça o teste no link da bio.</h2>
+        <div class="arrow-big">⬆</div>
+        <div class="info-row">
+          1 minuto<br>
+          plano personalizado<br>
+          <strong style="color:#ffd36b">R$17 vitalício</strong>
+        </div>
+      </div>
+    </div></div>
+    <div class="art-label">C1 · Slide 8 (CTA)</div>
+  </div>
+
+</div>
+
+<!-- ============ CARROSSEL 2: COMPARAÇÃO PREÇO ============ -->
+<div class="section-label">CARROSSEL 2 — POR QUE APP DE MATEMÁTICA NO BRASIL É CARO (7 slides)</div>
+<div class="gallery">
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c2-slide c2-capa">
+        <div class="ig-logo">MATE<span class="estrela">✨</span>MÁGICA</div>
+        <h1>Por que app de matemática no Brasil é <span class="red">assinatura cara?</span></h1>
+        <div class="sub">A pesquisa vai te assustar 👇</div>
+      </div>
+    </div></div>
+    <div class="art-label">C2 · Slide 1 (capa)</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c2-slide c2-app">
+        <div class="name">Matific</div>
+        <div class="price">R$ 49,90</div>
+        <div class="detail"><strong>POR MÊS</strong><br>R$ 600 por ano<br><br>Tem cobranças indevidas no Reclame Aqui</div>
+        <div class="footer-pos">CONCORRENTE 1</div>
+      </div>
+    </div></div>
+    <div class="art-label">C2 · Slide 2</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c2-slide c2-app">
+        <div class="name">ANTON</div>
+        <div class="price">R$ 28-182</div>
+        <div class="detail"><strong>POR ANO</strong><br>Depende do plano<br><br>Confuso, várias categorias</div>
+        <div class="footer-pos">CONCORRENTE 2</div>
+      </div>
+    </div></div>
+    <div class="art-label">C2 · Slide 3</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c2-slide c2-app">
+        <div class="name">Numberblocks World</div>
+        <div class="price">R$ 49,90</div>
+        <div class="detail"><strong>POR ANO</strong><br>Renova SOZINHO no cartão<br><br>Boa pra 2-5 anos só</div>
+        <div class="footer-pos">CONCORRENTE 3</div>
+      </div>
+    </div></div>
+    <div class="art-label">C2 · Slide 4</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c2-slide c2-app">
+        <div class="name">Khan Kids</div>
+        <div class="price" style="font-size:90px">Gratuito 🎉</div>
+        <div class="detail"><strong>MAS:</strong> só vai até 6 anos<br><br>Não cobre 1º ao 5º ano completos</div>
+        <div class="footer-pos">CONCORRENTE 4</div>
+      </div>
+    </div></div>
+    <div class="art-label">C2 · Slide 5</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c2-slide c2-mate">
+        <div class="name">Matemágica</div>
+        <div class="price">R$17 <small>uma vez</small></div>
+        <div class="detail"><strong>PRA SEMPRE</strong><br>BNCC · 1º ao 5º ano<br>Sem mensalidade<br>Sem renovação</div>
+      </div>
+    </div></div>
+    <div class="art-label">C2 · Slide 6</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c2-slide c2-capa" style="background: linear-gradient(135deg, #ffd36b 0%, #ffae5c 100%);">
+        <h1 style="text-align:center;font-size:96px">Faça o teste no link da bio.</h1>
+        <div style="text-align:center;font-size:90px;margin-top:30px">⬆</div>
+        <div class="sub" style="text-align:center;margin-top:30px;color:#2a2245">Antes do preço subir.</div>
+      </div>
+    </div></div>
+    <div class="art-label">C2 · Slide 7 (CTA)</div>
+  </div>
+
+</div>
+
+<!-- ============ CARROSSEL 3: REVELAÇÃO ============ -->
+<div class="section-label">CARROSSEL 3 — O QUE A ESCOLA NÃO ENSINA PROS PAIS (6 slides)</div>
+<div class="gallery">
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c3-slide c3-capa">
+        <div class="ig-logo ig-logo-white">MATE<span class="estrela">✨</span>MÁGICA</div>
+        <h1>O que a escola <span class="destaque">não conta</span> pra você sobre matemática.</h1>
+        <div class="swipe">Arrasta 👉</div>
+      </div>
+    </div></div>
+    <div class="art-label">C3 · Slide 1 (capa)</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c3-slide c3-fato">
+        <div class="num">VERDADE 1 DE 4</div>
+        <h2>A janela é pequena. <span class="destaque">1º ao 5º ano</span>. Depois vira identidade.</h2>
+        <p>Stanford provou: criança que diz "não sou bom de matemática" antes do 6º ano carrega isso a vida toda.</p>
+        <div class="footer-pos">→ CONTINUA</div>
+      </div>
+    </div></div>
+    <div class="art-label">C3 · Slide 2</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c3-slide c3-fato">
+        <div class="num">VERDADE 2 DE 4</div>
+        <h2>Ensinar em casa <span class="destaque">NÃO é seu papel</span>. Você não foi treinada pra isso.</h2>
+        <p>Explicar matemática pra criança é uma profissão. A escola é que tem que fazer.</p>
+        <div class="footer-pos">→ CONTINUA</div>
+      </div>
+    </div></div>
+    <div class="art-label">C3 · Slide 3</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c3-slide c3-fato">
+        <div class="num">VERDADE 3 DE 4</div>
+        <h2>Briga = matemática vira <span class="destaque">punição</span>. Piora tudo.</h2>
+        <p>Toda vez que vira briga, você reforça o trauma. A criança aprende que matemática = sofrimento.</p>
+        <div class="footer-pos">→ CONTINUA</div>
+      </div>
+    </div></div>
+    <div class="art-label">C3 · Slide 4</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c3-slide c3-fato">
+        <div class="num">VERDADE 4 DE 4</div>
+        <h2>Cérebro de 5-10 anos <span class="destaque">aprende brincando</span>.</h2>
+        <p>Neurociência básica. Quando a criança ri, decora. Quando ganha pontos, insiste. A escola brasileira ignora isso.</p>
+        <div class="footer-pos">→ A SOLUÇÃO</div>
+      </div>
+    </div></div>
+    <div class="art-label">C3 · Slide 5</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c3-slide c3-cta">
+        <h2>Tem uma janela pra seu filho amar matemática.</h2>
+        <p style="font-size:42px;line-height:1.4;font-weight:600;margin:0 0 30px">Não perde. Faça o teste no link da bio.</p>
+        <div class="arrow-big">
+          ⬆<span class="text">Link na bio</span>
+        </div>
+      </div>
+    </div></div>
+    <div class="art-label">C3 · Slide 6 (CTA)</div>
+  </div>
+
+</div>
+
+<!-- ============ STORIES ============ -->
+<div class="section-label">5 STORIES DE APOIO (1080×1920)</div>
+<div class="gallery">
+
+  <div class="art-wrap">
+    <div class="art story"><div class="inner">
+      <div class="story-base s1">
+        <div class="ig-logo ig-logo-white" style="margin-bottom:80px">MATE<span class="estrela">✨</span>MÁGICA</div>
+        <div class="question">Seu filho briga com a lição de matemática?</div>
+        <div class="options">
+          <div class="opt">😩 Sim, todo dia</div>
+          <div class="opt">😐 Às vezes</div>
+          <div class="opt">😊 Não, ele curte</div>
+        </div>
+        <div class="footer">[ adicione sticker de enquete ]</div>
+      </div>
+    </div></div>
+    <div class="art-label">Story 1 (enquete)</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art story"><div class="inner">
+      <div class="story-base s2">
+        <div class="stat">4/5</div>
+        <div class="stat-text">mães BR brigam com o filho na lição de matemática.</div>
+        <div class="conclusion">Você não tá sozinha. ✨<br><br>Tem solução no link da bio.</div>
+      </div>
+    </div></div>
+    <div class="art-label">Story 2 (estatística)</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art story"><div class="inner">
+      <div class="story-base s3">
+        <div class="ig-logo" style="margin-bottom:40px">MATE<span class="estrela">✨</span>MÁGICA</div>
+        <h2>Aqui ele aprende brincando. Sem briga.</h2>
+        <div class="visual">
+          <div class="play">▶</div>
+          [ vídeo curto do app rodando ]
+        </div>
+        <div class="cta-text">Faz o teste 👇</div>
+        <div class="link-sticker">matemagica.app.br/quiz</div>
+      </div>
+    </div></div>
+    <div class="art-label">Story 3 (demo)</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art story"><div class="inner">
+      <div class="story-base s4">
+        <div class="ig-logo" style="margin-bottom:40px">MATE<span class="estrela">✨</span>MÁGICA</div>
+        <h2>O que as mães estão dizendo</h2>
+        <div class="quote">
+          "Meu filho PEDIU pra fazer matemática hoje. Pedido. Eu chorei."
+          <div class="author">— Carla, mãe do Léo (8 anos)</div>
+        </div>
+        <div class="placeholder-note">⚠ SUBSTITUIR pelo primeiro depoimento real que receber</div>
+      </div>
+    </div></div>
+    <div class="art-label">Story 4 (depoimento)</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art story"><div class="inner">
+      <div class="story-base s5">
+        <div class="ig-logo ig-logo-white" style="margin-bottom:60px">MATE<span class="estrela">✨</span>MÁGICA</div>
+        <h2>Tem uma janela pra seu filho amar matemática.</h2>
+        <p>Faz o teste e descubra se o seu tá nela.</p>
+        <div class="down-arrow">⬇</div>
+        <div style="margin-top:40px;font-size:28px;color:rgba(255,255,255,0.85);font-weight:700">[ adicione sticker LINK pro quiz ]</div>
+      </div>
+    </div></div>
+    <div class="art-label">Story 5 (CTA)</div>
+  </div>
+
+</div>
+
+<!-- ============ REELS CAPAS ============ -->
+<div class="section-label">3 CAPAS DE REELS (1080×1920) — usar como thumbnail/1º frame do vídeo</div>
+<div class="gallery">
+
+  <div class="art-wrap">
+    <div class="art story"><div class="inner">
+      <div class="reel-base r1">
+        <div class="ig-logo" style="margin-bottom:60px">MATE<span class="estrela">✨</span>MÁGICA</div>
+        <h1>Tem uma janela pra seu filho <span class="destaque">amar matemática.</span></h1>
+        <div class="arrow">▶</div>
+      </div>
+    </div></div>
+    <div class="art-label">Reel 1 (A Janela)</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art story"><div class="inner">
+      <div class="reel-base r2">
+        <h1>Tentei ensinar.<br><span class="destaque">Virou briga.</span></h1>
+        <div class="badge-confis">CONFISSÃO ⬇</div>
+      </div>
+    </div></div>
+    <div class="art-label">Reel 2 (Confissão)</div>
+  </div>
+
+  <div class="art-wrap">
+    <div class="art story"><div class="inner">
+      <div class="reel-base r3">
+        <div class="stat-num">4h</div>
+        <div class="stat-text">por dia<br>no celular.</div>
+        <div class="reframe">E se 30 minutos disso<br>virasse matemática?</div>
+      </div>
+    </div></div>
+    <div class="art-label">Reel 3 (Reframe Celular)</div>
+  </div>
+
+</div>
+
+<!-- ============ FOOTER ============ -->
+<div class="section-label" style="margin-top: 80px">FIM</div>
+<div class="topbar">
+  <p>
+    Total: <strong>21 carrossel slides</strong> + <strong>5 stories</strong> + <strong>3 capas de Reel</strong> = 29 artes prontas.<br>
+    Use o briefing <code>MATERIAL_INSTAGRAM_LANCAMENTO_24abr.md</code> pras captions, hashtags e cronograma.
+  </p>
+</div>
+
+</body>
+</html>

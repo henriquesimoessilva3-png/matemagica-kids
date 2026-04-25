@@ -681,19 +681,19 @@ const INSTRUCOES_INSTALAR = {
   },
   'ios-safari': {
     titulo: '📱 iPhone (Safari)',
-    corpo: `<ol><li>Toca no <b>Compartilhar</b> ⎘</li><li><b>Adicionar à Tela de Início</b></li><li><b>Adicionar</b></li></ol>`
+    corpo: `<ol><li>Toca no botão <b>Compartilhar</b> ⎘ (em baixo da tela)</li><li>Rola e toca em <b>Adicionar à Tela de Início</b></li><li>Toca em <b>Adicionar</b> no canto superior direito</li></ol><p style="font-size:11px;color:#888;margin-top:6px">Não funciona no Chrome do iPhone — precisa ser no Safari.</p>`
   },
   'ios-outro': {
-    titulo: '📱 iPhone',
-    corpo: `<p>Abra no <b>Safari</b> → ⎘ → <b>Adicionar à Tela de Início</b>.</p>`
+    titulo: '📱 iPhone (precisa do Safari)',
+    corpo: `<ol><li>Copia o link da página</li><li>Abre o <b>Safari</b> e cola</li><li>Toca em ⎘ <b>Compartilhar</b> → <b>Adicionar à Tela de Início</b></li></ol><p style="font-size:11px;color:#888;margin-top:6px">Só o Safari instala app no iPhone. Chrome iPhone não consegue.</p>`
   },
   'android-chrome': {
     titulo: '📱 Android (Chrome)',
-    corpo: `<ol><li><b>⋮</b> no canto superior</li><li><b>Instalar app</b></li><li>Confirma</li></ol>`
+    corpo: `<ol><li>Toca em <b>⋮</b> (3 pontinhos) no canto superior direito</li><li>Procura uma destas opções (o nome muda por celular):<br>• <b>Instalar app</b><br>• <b>Adicionar à tela inicial</b><br>• <b>Adicionar atalho à tela de início</b></li><li>Toca em <b>Instalar</b> ou <b>Adicionar</b></li></ol>`
   },
   'android-outro': {
     titulo: '📱 Android',
-    corpo: `<p>Abra no <b>Chrome</b> → ⋮ → <b>Instalar app</b>.</p>`
+    corpo: `<ol><li>Abra essa página no <b>Chrome</b> do Android</li><li>Toca em <b>⋮</b> no canto superior direito</li><li><b>Instalar app</b> ou <b>Adicionar à tela inicial</b></li></ol>`
   },
   'desktop-chrome': {
     titulo: '💻 Chrome (PC/Mac)',
