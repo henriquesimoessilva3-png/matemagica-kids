@@ -1257,9 +1257,9 @@ svg { display: block; margin: 0 auto; }
   #conteudo { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px 14px !important; align-items: start !important; }
   #conteudo > * { min-width: 0 !important; }
   #conteudo .sessao-titulo:first-of-type, #conteudo > .resumo-grid, #conteudo > .todos-anos-header { grid-column: 1 / -1 !important; }
-  /* Dica Boaler — bem compacta (1-2 linhas no desktop) */
+  /* Dica Boaler — compacta mas com a dica inteira visível (subiu de 56px que cortava 50%) */
   #dica-boaler-slot { margin-bottom: 6px !important; }
-  #dica-boaler-slot > div { padding: 6px 10px !important; font-size: 11px !important; line-height: 1.3 !important; margin-bottom: 4px !important; max-height: 56px !important; overflow: hidden !important; }
+  #dica-boaler-slot > div { padding: 8px 12px !important; font-size: 11px !important; line-height: 1.35 !important; margin-bottom: 4px !important; }
   #dica-boaler-slot h3, #dica-boaler-slot strong { font-size: 11px !important; display: inline !important; }
   #dica-boaler-slot p, #dica-boaler-slot div { font-size: 11px !important; margin: 0 !important; }
 
@@ -1287,7 +1287,8 @@ svg { display: block; margin: 0 auto; }
   .em-breve br { display: none !important; }
 
   /* ============== SOMA — view-estudo + bolinhas menores ============== */
-  #view-estudo { max-height: 320px !important; overflow-y: auto !important; }
+  /* Escopo via :has(.soma-visual) pra não vazar pra outros jogos que usam #view-estudo (frações, etc) */
+  #view-estudo:has(.soma-visual) { max-height: 320px !important; overflow-y: auto !important; }
   .soma-visual { padding: 6px !important; }
   .soma-bolinhas { gap: 8px !important; margin: 2px 0 !important; }
   .grupo-bolinhas { padding: 3px !important; grid-template-columns: repeat(5, 10px) !important; gap: 2px !important; }

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Soma e Subtração até 20 — MATEMÁGICA</title>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=23">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=24">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -233,12 +233,12 @@
       <div class="estudo-titulo" id="estudo-titulo-principal">Resultado <span id="estudo-alvo">5</span></div>
       <div class="soma-visual" id="soma-visual"></div>
       <div class="macete-soma" id="macete-soma"></div>
-      <div class="estudo-controles">
-        <button class="estudo-btn" onclick="mudarAlvo(-1)">← Anterior</button>
-        <button class="estudo-btn principal" onclick="iniciarTreino(_alvoAtual)">🎯 Treinar esse</button>
-        <button class="estudo-btn" onclick="mudarAlvo(1)">Próximo →</button>
-      </div>
     </div>
+  </div>
+  <div class="estudo-controles" id="view-estudo-controles">
+    <button class="estudo-btn" onclick="mudarAlvo(-1)">← Anterior</button>
+    <button class="estudo-btn principal" onclick="iniciarTreino(_alvoAtual)">🎯 Treinar esse</button>
+    <button class="estudo-btn" onclick="mudarAlvo(1)">Próximo →</button>
   </div>
 
   <div id="view-treino" class="hidden">
@@ -440,6 +440,7 @@ function mudarModo(m) {
   document.getElementById('tab-estudo').classList.toggle('ativo', m === 'estudo');
   document.getElementById('tab-treino').classList.toggle('ativo', m === 'treino');
   document.getElementById('view-estudo').classList.toggle('hidden', m !== 'estudo');
+  document.getElementById('view-estudo-controles').classList.toggle('hidden', m !== 'estudo');
   document.getElementById('view-treino').classList.toggle('hidden', m !== 'treino');
   if (m === 'estudo') renderEstudo();
 }
