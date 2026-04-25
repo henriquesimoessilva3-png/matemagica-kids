@@ -132,9 +132,9 @@ function abrirPaywallExplora(motivo) {
         <div style="font-size:26px;font-weight:900;color:#8b5a2b;text-align:center;line-height:1">${PRECO_EXPLORA}</div>
         <div style="text-align:center;font-size:12px;color:#8b5a2b;margin-bottom:10px">pagamento único · vitalício · 2 apps em 1</div>
         <ul style="margin:0;padding-left:20px;font-size:13px;color:#5a3a00;line-height:1.55">
-          <li><b>Matemágica Completo</b> — 2º ao 5º ano, SOS Prova, PDFs premium</li>
+          <li><b>Matemágica Completo</b> — 2º ao 5º ano, SOS Prova, PDFs extras</li>
           <li><b>EXPLORA Completo</b> — História + Geografia 2º ao 5º ano</li>
-          <li>4 PDFs premium no Matemágica</li>
+          <li>4 PDFs extras no Matemágica</li>
           <li>Temas de fundo + bônus de 500 moedas</li>
           <li>Badge ✨ Matemágico</li>
         </ul>

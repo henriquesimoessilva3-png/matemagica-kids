@@ -211,13 +211,13 @@
   <div class="pdfs-grid" id="tier-moedas"></div>
 
   <div class="tier-header">
-    <span>💎 Pacotes premium</span>
+    <span>📦 Pacotes especiais</span>
     <span class="tier-badge pago">EM BREVE</span>
   </div>
   <div class="em-breve">
     <div class="big">📦</div>
     <b>Kits completos</b> chegando em breve:<br>
-    Pokédex Tabuada Premium · SOS Prova por ano · Kit Frações Visual · Desafios por temas
+    Pokédex Tabuada · SOS Prova por ano · Kit Frações Visual · Desafios por temas
   </div>
 
   <a href="index.html" class="voltar">← Voltar</a>
@@ -310,7 +310,7 @@ function cardHtml(p) {
   if (p.tier === 'gratis') {
     cta = `<button class="pdf-cta gratis" onclick="abrirPDF('${p.id}')">📄 Abrir e imprimir</button>`;
   } else if (ehPremium) {
-    cta = `<button class="pdf-cta desbloqueado" onclick="abrirPDF('${p.id}')">✨ Abrir (premium)</button>`;
+    cta = `<button class="pdf-cta desbloqueado" onclick="abrirPDF('${p.id}')">✨ Abrir</button>`;
   } else if (jaDesbloqueado) {
     cta = `<button class="pdf-cta desbloqueado" onclick="abrirPDF('${p.id}')">✓ Abrir</button>`;
   } else if (temGrana) {
