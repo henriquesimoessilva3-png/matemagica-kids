@@ -191,6 +191,84 @@ src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/><
     color: #2ebd7c; font-weight: 900;
   }
 
+  /* === PRODUCT TOUR (prints do app) === */
+  .product-tour {
+    margin: 28px 0 24px;
+    padding: 4px 0 8px;
+  }
+  .product-tour-title {
+    text-align: center;
+    font-size: 22px;
+    color: #2a2245;
+    margin: 0 0 6px;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+  .product-tour-sub {
+    text-align: center;
+    font-size: 14px;
+    color: #6a5f88;
+    margin: 0 0 22px;
+    line-height: 1.45;
+    padding: 0 8px;
+  }
+  .tour-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+  .tour-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 16px 16px 18px;
+    box-shadow: 0 4px 18px rgba(107, 84, 211, 0.12);
+    border: 1px solid rgba(107, 84, 211, 0.08);
+  }
+  .tour-card picture {
+    display: block;
+    margin-bottom: 12px;
+  }
+  .tour-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    background: #f7f5ff;
+  }
+  .tour-card h4 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    color: #2a2245;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .tour-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #4a3b8a;
+    line-height: 1.5;
+  }
+  .cta-tour {
+    margin-top: 4px;
+  }
+  .cta-tour-note {
+    text-align: center;
+    font-size: 13px;
+    color: #6a5f88;
+    margin: 8px 0 0;
+  }
+  @media (min-width: 600px) {
+    .product-tour-title { font-size: 26px; }
+    .product-tour-sub { font-size: 15px; }
+    .tour-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .tour-card h4 { font-size: 17px; }
+  }
+
   /* === PREÇO === */
   .price-box {
     background: linear-gradient(135deg, #fff5e8 0%, #faf6ff 100%);
@@ -389,8 +467,55 @@ src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/><
         <div class="amount">R$ 17</div>
         <div class="detail">pagamento único · sem mensalidade · pra sempre</div>
       </div>
-      <button class="cta-hero" onclick="goCheckout()">Quero o plano do meu filho →</button>
+      <button class="cta-hero" onclick="goCheckout()">Quero o Matemágica completo →</button>
     </div>
+
+    <!-- SEÇÃO: VEJA POR DENTRO DO PRODUTO -->
+    <section class="product-tour">
+      <h3 class="product-tour-title">📱 Veja por dentro do Matemágica</h3>
+      <p class="product-tour-sub">Não é PDF. Não é vídeo. É um app gamificado que seu filho VAI querer usar todo dia.</p>
+
+      <div class="tour-grid">
+        <article class="tour-card">
+          <picture>
+            <source srcset="prints/print-sosprova.webp" type="image/webp">
+            <img src="prints/print-sosprova.png" alt="Tela SOS Prova do Matemágica" loading="lazy">
+          </picture>
+          <h4>🚨 SOS Prova: prova é amanhã?</h4>
+          <p>A gente lê onde seu filho mais erra e monta uma prova de 10 minutos focada no que ele precisa revisar. Sem enrolação.</p>
+        </article>
+
+        <article class="tour-card">
+          <picture>
+            <source srcset="prints/print-fracoes.webp" type="image/webp">
+            <img src="prints/print-fracoes.png" alt="Tela Frações com Pizza do Matemágica" loading="lazy">
+          </picture>
+          <h4>🍕 Frações com pizza, não com fórmula</h4>
+          <p>Conceito antes de conta. Pizza antes de papel. Seu filho ENTENDE antes de decorar.</p>
+        </article>
+
+        <article class="tour-card">
+          <picture>
+            <source srcset="prints/print-tabuada.webp" type="image/webp">
+            <img src="prints/print-tabuada.png" alt="Tela Tabuada Mágica do Matemágica" loading="lazy">
+          </picture>
+          <h4>⚡ Tabuada Mágica com macetes</h4>
+          <p>XP, sequência de dias, recompensas. Aprende brincando — e fixa de verdade.</p>
+        </article>
+
+        <article class="tour-card">
+          <picture>
+            <source srcset="prints/print-dashboard.webp" type="image/webp">
+            <img src="prints/print-dashboard.png" alt="Tela inicial do Matemágica com 14 módulos" loading="lazy">
+          </picture>
+          <h4>🎮 14 módulos do 1º ao 5º ano</h4>
+          <p>Tabuada, frações, geometria, problemas, provas, relatórios pra você acompanhar. Tudo BNCC.</p>
+        </article>
+      </div>
+
+      <button class="cta-hero cta-tour" onclick="goCheckout()">Quero o Matemágica completo →</button>
+      <p class="cta-tour-note">💎 Pagamento único · acesso vitalício</p>
+    </section>
 
     <!-- ABAIXO DA DOBRA — detalhamento e argumentos -->
     <p class="below-fold-divider">↓ Entenda por que funciona</p>
