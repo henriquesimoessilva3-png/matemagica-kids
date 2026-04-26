@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="Veja por dentro do Matemágica: app gamificado de matemática do 1º ao 5º ano. BNCC, acesso vitalício, R$17.">
+<title>Matemágica — Veja por dentro do app</title>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'SEU_PIXEL_ID_AQUI');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/></noscript>
+
+<!-- Microsoft Clarity (gravação de sessão + heatmap) -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "whfer3z4jm");
+</script>
+
+<style>
+  *,*::before,*::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f7f5ff 0%, #fff5e8 100%);
+    min-height: 100vh;
+    color: #2a2245;
+    overflow-x: hidden;
+  }
+  .shell {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 20px 18px 60px;
+  }
+
+  .logo { text-align: center; margin-bottom: 18px; }
+  .logo h1 {
+    font-size: 22px; font-weight: 900; letter-spacing: 1.5px;
+    background: linear-gradient(135deg, #6b54d3 0%, #b968e8 50%, #ffd36b 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    margin: 0;
+  }
+  .logo .estrela { -webkit-text-fill-color: #ffd36b; color: #ffd36b; }
+
+  /* === HERO VITRINE === */
+  .vitrine-hero {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .vitrine-hero .hero-tag {
+    background: rgba(107, 84, 211, 0.1); color: #6b54d3;
+    font-size: 11px; font-weight: 800; padding: 5px 11px;
+    border-radius: 12px; display: inline-block; margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
+  .vitrine-hero h2 {
+    font-size: 26px; font-weight: 900; line-height: 1.2;
+    margin: 0 0 10px; color: #2a2245;
+  }
+  .vitrine-hero .subtitle {
+    font-size: 15px; color: #6a5f88; line-height: 1.5;
+    margin: 0 0 8px;
+  }
+
+  /* === PRODUCT TOUR (prints do app) === */
+  .product-tour {
+    margin: 8px 0 24px;
+  }
+  .tour-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .tour-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 16px 16px 18px;
+    box-shadow: 0 4px 18px rgba(107, 84, 211, 0.12);
+    border: 1px solid rgba(107, 84, 211, 0.08);
+  }
+  .tour-card picture { display: block; margin-bottom: 12px; }
+  .tour-card img {
+    display: block; width: 100%; height: auto;
+    border-radius: 12px; background: #f7f5ff;
+  }
+  .tour-card h4 {
+    margin: 0 0 6px;
+    font-size: 16px; color: #2a2245;
+    font-weight: 700; line-height: 1.3;
+  }
+  .tour-card p {
+    margin: 0;
+    font-size: 14px; color: #4a3b8a; line-height: 1.5;
+  }
+
+  /* === RESULT HERO (preço + CTA) === */
+  .result-hero {
+    background: #fff;
+    border-radius: 18px;
+    padding: 16px 16px 18px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 18px rgba(107, 84, 211, 0.12);
+  }
+  .product-line {
+    font-size: 13px; color: #6a5f88; margin: 0 0 10px;
+    font-weight: 600; text-align: center;
+  }
+  .seals-row {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;
+    justify-content: center;
+  }
+  .seal {
+    background: rgba(107,84,211,0.09); color: #6b54d3;
+    font-size: 11px; font-weight: 800; padding: 5px 10px;
+    border-radius: 20px;
+  }
+  .price-hero {
+    background: linear-gradient(135deg, #fff5e8 0%, #faf6ff 100%);
+    border: 2px solid #ffd36b; border-radius: 12px;
+    padding: 10px 14px; text-align: center; margin-bottom: 12px;
+  }
+  .price-hero .from {
+    font-size: 12px; color: #999; text-decoration: line-through;
+    display: block; margin-bottom: 2px;
+  }
+  .price-hero .amount {
+    font-size: 42px; font-weight: 900; color: #2ebd7c; line-height: 1;
+  }
+  .price-hero .detail {
+    font-size: 11px; color: #6a5f88; margin-top: 3px;
+  }
+  .cta-hero {
+    background: linear-gradient(135deg, #2ebd7c, #4ab3a5);
+    color: #fff; border: none; padding: 17px 20px; border-radius: 14px;
+    font-size: 17px; font-weight: 800; cursor: pointer; width: 100%;
+    box-shadow: 0 6px 18px rgba(46,189,124,0.4);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    font-family: inherit; display: block; text-align: center;
+    letter-spacing: 0.2px;
+  }
+  .cta-hero:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(46,189,124,0.45); }
+  .cta-hero:active { transform: translateY(0); }
+
+  .below-fold-divider {
+    text-align: center; color: #b0a3c8; font-size: 12px;
+    font-weight: 700; margin: 0 0 16px; letter-spacing: 1px;
+  }
+
+  /* === ARGUMENTOS === */
+  .argument {
+    background: #fff; border-radius: 18px;
+    padding: 22px 20px; margin-bottom: 16px;
+    box-shadow: 0 4px 18px rgba(107, 84, 211, 0.1);
+    border-left: 4px solid #6b54d3;
+  }
+  .argument h4 {
+    font-size: 16px; font-weight: 800;
+    margin: 0 0 8px; color: #6b54d3;
+  }
+  .argument p {
+    font-size: 14px; color: #4a3b8a; line-height: 1.6;
+    margin: 0 0 10px;
+  }
+  .argument p:last-child { margin-bottom: 0; }
+  .argument strong { color: #2a2245; }
+  .argument .feature-list {
+    list-style: none; padding: 0; margin: 8px 0 0;
+  }
+  .argument .feature-list li {
+    font-size: 13px; color: #4a3b8a;
+    padding: 6px 0 6px 22px; position: relative;
+    line-height: 1.45;
+  }
+  .argument .feature-list li::before {
+    content: '✓'; position: absolute; left: 4px;
+    color: #2ebd7c; font-weight: 900;
+  }
+
+  .urgency {
+    background: rgba(255, 107, 107, 0.08);
+    border-radius: 10px; padding: 10px 14px;
+    text-align: center; font-size: 12px; color: #c94545;
+    margin: 14px 0; font-weight: 700;
+  }
+
+  .guarantee {
+    text-align: center; font-size: 12px; color: #6a5f88;
+    margin: 14px 0 0; line-height: 1.6;
+  }
+  .guarantee strong { color: #2a2245; }
+
+  .cta-tour-note {
+    text-align: center; font-size: 13px;
+    color: #6a5f88; margin: 8px 0 0;
+  }
+
+  @media (min-width: 600px) {
+    .shell { padding: 30px 24px 80px; }
+    .vitrine-hero h2 { font-size: 32px; }
+    .price-hero .amount { font-size: 48px; }
+    .tour-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .tour-card h4 { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="logo">
+    <h1>MATE<span class="estrela">✨</span>MÁGICA</h1>
+  </div>
+
+  <!-- HERO VITRINE -->
+  <section class="vitrine-hero">
+    <span class="hero-tag">📱 VEJA POR DENTRO</span>
+    <h2>Veja por dentro do Matemágica</h2>
+    <p class="subtitle">Não é PDF. Não é vídeo. É um app gamificado que seu filho VAI querer usar todo dia.</p>
+  </section>
+
+  <!-- 4 PRINTS — ordem: tabuada, frações, SOS prova, dashboard -->
+  <section class="product-tour">
+    <div class="tour-grid">
+
+      <article class="tour-card">
+        <picture>
+          <source srcset="prints/print-tabuada.webp" type="image/webp">
+          <img src="prints/print-tabuada.png" alt="Tela Tabuada Mágica do Matemágica" loading="lazy">
+        </picture>
+        <h4>⚡ Tabuada Mágica com macetes</h4>
+        <p>XP, sequência de dias, recompensas. Aprende brincando — e fixa de verdade.</p>
+      </article>
+
+      <article class="tour-card">
+        <picture>
+          <source srcset="prints/print-fracoes.webp" type="image/webp">
+          <img src="prints/print-fracoes.png" alt="Tela Frações com Pizza do Matemágica" loading="lazy">
+        </picture>
+        <h4>🍕 Frações com pizza, não com fórmula</h4>
+        <p>Conceito antes de conta. Pizza antes de papel. Seu filho ENTENDE antes de decorar.</p>
+      </article>
+
+      <article class="tour-card">
+        <picture>
+          <source srcset="prints/print-sosprova.webp" type="image/webp">
+          <img src="prints/print-sosprova.png" alt="Tela SOS Prova do Matemágica" loading="lazy">
+        </picture>
+        <h4>🚨 SOS Prova: prova é amanhã?</h4>
+        <p>A gente lê onde seu filho mais erra e monta uma prova de 10 minutos focada no que ele precisa revisar. Sem enrolação.</p>
+      </article>
+
+      <article class="tour-card">
+        <picture>
+          <source srcset="prints/print-dashboard.webp" type="image/webp">
+          <img src="prints/print-dashboard.png" alt="Tela inicial do Matemágica com 14 módulos" loading="lazy">
+        </picture>
+        <h4>🎮 14 módulos do 1º ao 5º ano</h4>
+        <p>Tabuada, frações, geometria, problemas, provas, relatórios pra você acompanhar. Tudo BNCC.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- PREÇO + CTA -->
+  <div class="result-hero">
+    <p class="product-line">Matemágica · BNCC completo do 1º ao 5º ano</p>
+    <div class="seals-row">
+      <span class="seal">✅ 100% BNCC</span>
+      <span class="seal">♾ Acesso vitalício</span>
+      <span class="seal">🛡 Garantia 7 dias</span>
+    </div>
+    <div class="price-hero">
+      <span class="from">Apps similares: R$ 30–50 por mês</span>
+      <div class="amount">R$ 17</div>
+      <div class="detail">pagamento único · sem mensalidade · pra sempre</div>
+    </div>
+    <button class="cta-hero" onclick="goCheckout()">Quero o Matemágica completo →</button>
+    <p class="cta-tour-note">💎 Pagamento único · acesso vitalício</p>
+  </div>
+
+  <!-- ARGUMENTOS abaixo da dobra -->
+  <p class="below-fold-divider">↓ Entenda por que funciona</p>
+
+  <div class="argument">
+    <h4>📌 Por que a briga acontece</h4>
+    <p>Não é seu filho. Não é você. É o <strong>método</strong>. A escola tradicional trata matemática como obrigação — a criança aprende a odiar antes do 6º ano, quando vira trauma pra vida toda. Pesquisadora de Stanford já provou.</p>
+  </div>
+
+  <div class="argument">
+    <h4>🎮 Por que jogar resolve</h4>
+    <p>O cérebro de criança de 5 a 10 anos foi feito pra <strong>aprender brincando</strong>. Quando ela ri, decora. Quando ganha pontos, insiste. Quando acerta no jogo, quer mais. Neurociência chama de "reforço positivo" — e a escola brasileira ignora.</p>
+  </div>
+
+  <div class="argument">
+    <h4>✨ O que o Matemágica faz</h4>
+    <p>App brasileiro alinhado à BNCC. Do 1º ao 5º ano completos. Sem arena, sem ranking, sem você precisar ensinar. Ele <strong>pede pra abrir</strong> — porque é divertido pra ele.</p>
+    <ul class="feature-list">
+      <li>Tabuada vira coleção (decora sem cobrança)</li>
+      <li>SOS Prova: monta simulado em 30 segundos</li>
+      <li>Dashboard pros pais acompanharem</li>
+      <li>+100 minigames, conquistas, mascote</li>
+      <li>Bônus: EXPLORA (História/Geografia 4º ano) grátis</li>
+    </ul>
+  </div>
+
+  <div class="urgency">
+    ⚡ Esse preço é só dessa página — fechou, foi.
+  </div>
+
+  <button class="cta-hero" onclick="goCheckout()">Quero o Matemágica completo →</button>
+
+  <p class="guarantee">
+    🛡 <strong>Garantia de 7 dias</strong> — se seu filho não abrir o app sozinho 3 vezes na 1ª semana, devolvo 100% do dinheiro. Sem perguntas.
+  </p>
+
+</div>
+
+<script>
+  const HOTMART_CHECKOUT = 'https://pay.hotmart.com/A105538417J';
+
+  function goCheckout() {
+    if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { value: 17.00, currency: 'BRL' });
+    const params = new URLSearchParams({
+      sck: 'vitrine',
+      utm_source: 'vitrine',
+      utm_medium: 'paid',
+      utm_campaign: 'vitrine_prints'
+    });
+    window.location.href = HOTMART_CHECKOUT + '?' + params.toString();
+  }
+</script>
+</body>
+</html>
