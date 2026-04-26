@@ -302,14 +302,12 @@ src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/><
     <div class="step" data-step="1"></div>
     <div class="step" data-step="2"></div>
     <div class="step" data-step="3"></div>
-    <div class="step" data-step="4"></div>
-    <div class="step" data-step="5"></div>
   </div>
 
   <!-- TELA 0: HERO -->
   <div class="screen hero active" id="screen-hero">
     <h2>Tem uma janela pra seu filho amar matemática.</h2>
-    <p class="subtitle">Responde 5 perguntas rápidas e descubra se ele ainda tá nela — e o que fazer agora.</p>
+    <p class="subtitle">Responde 3 perguntas rápidas e descubra se ele ainda tá nela — e o que fazer agora.</p>
     <div class="badge-row">
       <span class="badge">⏱ 1 min</span>
       <span class="badge">🇧🇷 100% BNCC</span>
@@ -342,34 +340,10 @@ src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/><
     </div>
   </div>
 
-  <!-- TELA 3: SEGURANÇA AO ENSINAR -->
+  <!-- TELA 3: DESEJO -->
   <div class="screen" id="screen-3">
-    <h2>Você se sente segura pra ensinar a matemática que ensinam hoje?</h2>
-    <p class="subtitle">Quase ninguém sente. A escola mudou muito.</p>
-    <div class="answers">
-      <button class="answer-btn" onclick="answer('ensinar','nao')"><span class="emoji">🤷</span>Não, é diferente da que aprendi</button>
-      <button class="answer-btn" onclick="answer('ensinar','contexpl')"><span class="emoji">🤔</span>Sei o conteúdo, mas não sei explicar</button>
-      <button class="answer-btn" onclick="answer('ensinar','meio')"><span class="emoji">😅</span>Mais ou menos</button>
-      <button class="answer-btn" onclick="answer('ensinar','sim')"><span class="emoji">💪</span>Sei sim, só queria reforçar</button>
-    </div>
-  </div>
-
-  <!-- TELA 4: CELULAR -->
-  <div class="screen" id="screen-4">
-    <h2>Ele passa muito tempo em jogos no celular?</h2>
-    <p class="subtitle">Sem julgamento. Quase toda criança hoje passa.</p>
-    <div class="answers">
-      <button class="answer-btn" onclick="answer('celular','muito')"><span class="emoji">📱</span>Sim, mais do que eu queria</button>
-      <button class="answer-btn" onclick="answer('celular','semcontrole')"><span class="emoji">😬</span>Sim, e não consigo controlar</button>
-      <button class="answer-btn" onclick="answer('celular','pouco')"><span class="emoji">⏱</span>Um pouco, alterna com outras coisas</button>
-      <button class="answer-btn" onclick="answer('celular','nada')"><span class="emoji">🚫</span>Não tem celular ainda</button>
-    </div>
-  </div>
-
-  <!-- TELA 5: REFRAME (NECESSIDADE) -->
-  <div class="screen" id="screen-5">
-    <h2>Se ele aprendesse matemática nesses jogos que já curte, isso ajudaria?</h2>
-    <p class="subtitle">Pense no que mudaria na sua rotina.</p>
+    <h2>O quanto isso mudaria a vida de vocês?</h2>
+    <p class="subtitle">Pense no que muda quando ele aprende sem briga.</p>
     <div class="answers">
       <button class="answer-btn" onclick="answer('ajudaria','muito')"><span class="emoji">🚀</span>Mudaria minha vida</button>
       <button class="answer-btn" onclick="answer('ajudaria','sim')"><span class="emoji">✨</span>Ajudaria muito</button>
@@ -470,7 +444,7 @@ src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/><
 
   function updateProgress(step) {
     const wrap = document.getElementById('progress');
-    if (step >= 1 && step <= 5) {
+    if (step >= 1 && step <= 3) {
       wrap.style.display = 'flex';
       wrap.querySelectorAll('.step').forEach(el => {
         const s = parseInt(el.dataset.step);
@@ -492,7 +466,7 @@ src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/><
   function answer(key, value) {
     state.answers[key] = value;
     state.currentStep++;
-    if (state.currentStep <= 5) {
+    if (state.currentStep <= 3) {
       updateProgress(state.currentStep);
       showScreen('screen-' + state.currentStep);
     } else {
