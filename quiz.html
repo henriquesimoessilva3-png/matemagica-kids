@@ -91,6 +91,12 @@ src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/><
     background: rgba(107, 84, 211, 0.08); color: #6b54d3;
     font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 20px;
   }
+  .hero-tag {
+    background: rgba(107, 84, 211, 0.1); color: #6b54d3;
+    font-size: 11px; font-weight: 800; padding: 5px 11px;
+    border-radius: 12px; display: inline-block; margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
 
   .answers { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
   .answer-btn {
@@ -306,14 +312,15 @@ src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/><
 
   <!-- TELA 0: HERO -->
   <div class="screen hero active" id="screen-hero">
-    <h2>Tem uma janela pra seu filho amar matemática.</h2>
-    <p class="subtitle">Responde 3 perguntas rápidas e descubra se ele ainda tá nela — e o que fazer agora.</p>
+    <span class="hero-tag">👀 TESTE GRATUITO · 30 SEGUNDOS</span>
+    <h2>Seu filho ainda tem janela pra amar matemática — ou já passou?</h2>
+    <p class="subtitle">3 perguntas rápidas que toda mãe deveria fazer antes do filho chegar no 6º ano. Sem cadastro, sem enrolação.</p>
     <div class="badge-row">
-      <span class="badge">⏱ 1 min</span>
-      <span class="badge">🇧🇷 100% BNCC</span>
-      <span class="badge">📱 Sem cadastro</span>
+      <span class="badge">⏱ 30 segundos</span>
+      <span class="badge">🎯 100% BNCC</span>
+      <span class="badge">🔓 Sem cadastro</span>
     </div>
-    <button class="cta cta-purple" onclick="startQuiz()">Começar agora →</button>
+    <button class="cta cta-purple" onclick="startQuiz()">Quero descobrir agora →</button>
   </div>
 
   <!-- TELA 1: IDADE -->
