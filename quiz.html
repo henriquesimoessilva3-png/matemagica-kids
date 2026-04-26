@@ -658,6 +658,7 @@ src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/><
 
   function goCheckout() {
     if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { value: 17.00, currency: 'BRL' });
+    if (typeof clarity === 'function') clarity('set', 'cta_clicked', 'true');
     const params = new URLSearchParams({
       sck: 'quiz',
       utm_source: 'quiz',
