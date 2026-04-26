@@ -227,8 +227,8 @@
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="mascotes.js?v=23"></script>
-<script src="jogos_shared.js?v=23"></script>
+<script src="mascotes.js?v=24"></script>
+<script src="jogos_shared.js?v=24"></script>
 <script>
 STORAGE_KEY = 'jogosMat_default';
 CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
@@ -241,7 +241,7 @@ let _totalRodadas = 10;
 let _respostaCerta = 0;
 let _jogoFlashAtivo = false;
 
-const NIVEIS = {
+const NIVEIS_FLASH = {
   facil:   { max: 5,  velo: 1500, nome: 'Fácil' },
   medio:   { max: 8,  velo: 1200, nome: 'Médio' },
   dificil: { max: 10, velo: 900,  nome: 'Difícil' }
@@ -253,7 +253,7 @@ function setNivel(n) {
   document.querySelectorAll('.nivel-tab').forEach(t => {
     t.classList.toggle('ativo', t.dataset.nivel === n);
   });
-  document.getElementById('hud-velo').textContent = (NIVEIS[n].velo/1000).toFixed(1) + 's';
+  document.getElementById('hud-velo').textContent = (NIVEIS_FLASH[n].velo/1000).toFixed(1) + 's';
 }
 
 function iniciarFlash() {
@@ -268,7 +268,7 @@ function proximaRodada() {
   _rodadaAtual++;
   if (_rodadaAtual > _totalRodadas) return mostrarResultado();
   atualizarHUD();
-  const nivel = NIVEIS[_nivelFlash];
+  const nivel = NIVEIS_FLASH[_nivelFlash];
   _respostaCerta = Math.floor(Math.random() * nivel.max) + 1;
   const palco = document.getElementById('flash-palco');
   palco.innerHTML = `<div class="pontos-grid" id="pontos-grid"></div>`;
@@ -295,7 +295,7 @@ function renderPontos(n) {
 }
 
 function mostrarOpcoes() {
-  const max = NIVEIS[_nivelFlash].max;
+  const max = NIVEIS_FLASH[_nivelFlash].max;
   // Gera 4 opções: certa + 3 distratoras próximas
   const set = new Set([_respostaCerta]);
   while (set.size < 4) {
@@ -338,7 +338,7 @@ function responderFlash(v, btn) {
 function atualizarHUD() {
   document.getElementById('hud-acertos').textContent = _acertosFlash;
   document.getElementById('hud-rodada').textContent = Math.min(_rodadaAtual, _totalRodadas);
-  document.getElementById('hud-velo').textContent = (NIVEIS[_nivelFlash].velo/1000).toFixed(1) + 's';
+  document.getElementById('hud-velo').textContent = (NIVEIS_FLASH[_nivelFlash].velo/1000).toFixed(1) + 's';
 }
 
 function mostrarResultado() {
@@ -367,7 +367,7 @@ function mostrarResultado() {
 }
 
 // Init
-initJogos();
+try { initJogos(); } catch(e) { console.error('initJogos falhou:', e); }
 setNivel('facil');
 </script>
 <script>
