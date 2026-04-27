@@ -233,7 +233,7 @@
 
   <div class="modo-tabs">
     <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
-    <button class="modo-tab" id="tab-treino" onclick="mudarModo('treino')">⚡ Treinar</button>
+    <button class="modo-tab" id="tab-treino" onclick="iniciarTreino(_alvoAtual)">⚡ Treinar</button>
   </div>
 
   <div id="view-estudo">
@@ -472,6 +472,19 @@ function iniciarTreino(alvo) {
   _treinoPerguntas = gerarPerguntasTreino(alvo);
   _treinoIdx = 0;
   _treinoAcertos = 0;
+  // Reconstrói a área (caso tenha sido substituída pela tela de resultado)
+  document.getElementById('view-treino').innerHTML = `
+    <div class="treino-header" id="treino-header">
+      <div><div class="treino-label" id="treino-label-header">Somas que dão</div>
+           <div class="treino-placar" id="treino-placar">0/10</div></div>
+      <button class="estudo-btn" style="background:rgba(255,255,255,0.25);border-color:rgba(255,255,255,0.5);color:#fff" onclick="mudarModo('estudo')">Sair</button>
+    </div>
+    <div class="treino-pergunta" id="treino-pergunta">
+      <div class="treino-expr" id="treino-expr">?</div>
+      <div class="treino-hint" id="treino-hint"></div>
+    </div>
+    <div class="treino-opcoes" id="treino-opcoes"></div>
+  `;
   // Header + cores
   const tHeader = document.getElementById('treino-header');
   const tLabel = document.getElementById('treino-label-header');
