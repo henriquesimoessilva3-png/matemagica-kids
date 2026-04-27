@@ -296,12 +296,17 @@ function renderPontos(n) {
 
 function mostrarOpcoes() {
   const max = NIVEIS_FLASH[_nivelFlash].max;
-  // Gera 4 opções: certa + 3 distratoras próximas
+  // Gera 4 opções: certa + 3 distratoras próximas. Faixa [1, max+2] garante
+  // sempre >= 4 candidatos válidos mesmo se a resposta for 1 (antes travava).
   const set = new Set([_respostaCerta]);
-  while (set.size < 4) {
+  for (let tentativa = 0; tentativa < 200 && set.size < 4; tentativa++) {
     const delta = Math.floor(Math.random() * 5) - 2;
     const v = _respostaCerta + delta;
     if (v >= 1 && v <= max + 2 && v !== _respostaCerta) set.add(v);
+  }
+  // Fallback determinístico pra garantir 4 opções em qualquer cenário
+  for (let v = 1; v <= max + 2 && set.size < 4; v++) {
+    if (v !== _respostaCerta) set.add(v);
   }
   const arr = Array.from(set).sort((a, b) => a - b);
   document.getElementById('flash-controles').innerHTML =
