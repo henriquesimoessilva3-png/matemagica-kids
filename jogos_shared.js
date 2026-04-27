@@ -136,8 +136,7 @@ const STATE = {
   },
 
   isPremium() {
-    // MODELO ATUAL: app 100% liberado. Retorna true pra todos.
-    return true;
+    return !!(this.licenca && this.licenca.key);
   },
 
   salvarLicenca(lic) {
@@ -994,8 +993,14 @@ async function ativarLicenca(key) {
   } catch(e) {}
 })();
 
-// MODELO ATUAL: app 100% liberado. Guarda desativada.
-function guardaPaginaPremium() { /* no-op — tudo liberado */ }
+function guardaPaginaPremium() {
+  try {
+    const file = (location.pathname.split('/').pop() || '').toLowerCase();
+    if (PAGINAS_PREMIUM.includes(file) && !STATE.isPremium()) {
+      location.replace('vitrine.html?premium_required=1');
+    }
+  } catch(e) {}
+}
 
 function mostrarNovaBadge(key) {
   const b = BADGES[key]; if (!b) return;
