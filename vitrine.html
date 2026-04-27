@@ -209,9 +209,74 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
     color: #6a5f88; margin: 8px 0 0;
   }
 
+  /* === HERO MESSAGE (destaque "Não é PDF...") === */
+  .hero-message {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 14px 0 22px;
+    color: #2a2245;
+    background: linear-gradient(135deg, #fff5e8 0%, #faf6ff 100%);
+    padding: 16px 18px;
+    border-radius: 14px;
+    border-left: 4px solid #6b54d3;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(107, 84, 211, 0.08);
+  }
+  .hero-message strong { color: #6b54d3; font-weight: 800; font-size: 18px; }
+  .hero-message .highlight { color: #2ebd7c; font-weight: 800; }
+
+  /* === CTA TOPO (acima dos prints) === */
+  .cta-top {
+    background: linear-gradient(135deg, #fff 0%, #fff5e8 100%);
+    border: 2px solid #2ebd7c;
+    border-radius: 18px;
+    padding: 18px 16px;
+    margin: 0 0 24px;
+    box-shadow: 0 6px 22px rgba(46, 189, 124, 0.18);
+    text-align: center;
+  }
+  .cta-top-price { margin-bottom: 14px; }
+  .cta-top-from {
+    font-size: 12px; color: #999;
+    text-decoration: line-through;
+    display: block; margin-bottom: 4px;
+  }
+  .cta-top-amount {
+    font-size: 38px; font-weight: 900; color: #2ebd7c;
+    line-height: 1;
+  }
+  .cta-top-amount span {
+    font-size: 14px; font-weight: 600; color: #6a5f88;
+    margin-left: 4px;
+  }
+  .cta-top-note {
+    font-size: 12px; color: #6a5f88;
+    margin: 10px 0 0; font-weight: 600;
+  }
+  .cta-top-button {
+    margin-top: 4px;
+  }
+
+  /* === AVISO PRINTS REAIS === */
+  .prints-notice {
+    background: rgba(107, 84, 211, 0.08);
+    border-radius: 12px;
+    padding: 11px 14px;
+    text-align: center;
+    font-size: 13px;
+    color: #4a3b8a;
+    margin: 0 0 14px;
+    line-height: 1.5;
+  }
+  .prints-notice strong { color: #6b54d3; font-weight: 800; }
+
   @media (min-width: 600px) {
     .shell { padding: 30px 24px 80px; }
     .vitrine-hero h2 { font-size: 32px; }
+    .hero-message { font-size: 19px; }
+    .hero-message strong { font-size: 20px; }
+    .cta-top-amount { font-size: 44px; }
     .price-hero .amount { font-size: 48px; }
     .tour-grid {
       display: grid;
@@ -233,8 +298,26 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
   <section class="vitrine-hero">
     <span class="hero-tag">📱 VEJA POR DENTRO</span>
     <h2>Veja por dentro do Matemágica</h2>
-    <p class="subtitle">Não é PDF. Não é vídeo. É um app gamificado que seu filho VAI querer usar todo dia.</p>
+    <p class="hero-message">
+      <strong>Não é PDF. Não é vídeo.</strong><br>
+      É um app gamificado que seu filho <span class="highlight">VAI querer usar</span> todo dia.
+    </p>
   </section>
+
+  <!-- CTA TOPO (visível acima da dobra) -->
+  <div class="cta-top">
+    <div class="cta-top-price">
+      <span class="cta-top-from">Apps similares: R$ 30–50 por mês</span>
+      <div class="cta-top-amount">R$ 17 <span>uma vez</span></div>
+    </div>
+    <button class="cta-hero cta-top-button" onclick="goCheckout()">🚀 Quero começar agora</button>
+    <p class="cta-top-note">🛡 Garantia 7 dias · ♾ Acesso vitalício · Sem mensalidade</p>
+  </div>
+
+  <!-- AVISO: prints reais -->
+  <div class="prints-notice">
+    📸 <strong>As imagens abaixo são prints reais do app.</strong> É exatamente o que seu filho vai ver na tela.
+  </div>
 
   <!-- 4 PRINTS — ordem: tabuada, frações, SOS prova, dashboard -->
   <section class="product-tour">
