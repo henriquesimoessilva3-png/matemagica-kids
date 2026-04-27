@@ -7,6 +7,22 @@
 <meta name="description" content="Veja por dentro do Matemágica: app gamificado de matemática do 1º ao 5º ano. BNCC, acesso vitalício, R$17.">
 <title>Matemágica — Veja por dentro do app</title>
 
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1840468943289707');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></noscript>
+
 <!-- Microsoft Clarity (gravação de sessão + heatmap) -->
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -335,8 +351,17 @@ body.lightbox-locked { overflow: hidden; }
 })();
 
 function goCheckout(origem){
-  var url = 'https://pay.hotmart.com/A105538417J?sck=vitrine&utm_source=vitrine&utm_medium=' + encodeURIComponent(origem || 'cta');
-  window.location.href = url;
+  if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { value: 17.00, currency: 'BRL' });
+  if (typeof clarity === 'function') clarity('set', 'cta_clicked', 'true');
+  var pos = origem || 'cta';
+  var params = new URLSearchParams({
+    sck: 'vitrine',
+    utm_source: 'vitrine',
+    utm_medium: 'paid',
+    utm_campaign: 'vitrine_prints',
+    utm_content: pos
+  });
+  window.location.href = 'https://pay.hotmart.com/A105538417J?' + params.toString();
 }
 </script>
 </body>
