@@ -78,7 +78,7 @@ export default async (req) => {
       email,
       nome,
       transactionId: transaction,
-      value: parseFloat(purchase.price?.value || 17),
+      value: parseFloat(purchase.price?.value || 27),
       currency: purchase.price?.currency_value || "BRL",
       ip: req.headers.get("x-forwarded-for")?.split(",")[0]?.trim(),
       userAgent: req.headers.get("user-agent") || ""
