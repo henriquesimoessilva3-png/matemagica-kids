@@ -424,19 +424,20 @@ footer .legais{
 </div>
 -->
 
-<!-- DEMO TABUADA EMBARCADA -->
+<!-- DEMO TABUADA — abre em nova aba (iframe bloqueado por X-Frame-Options) -->
 <section class="demo-bloco">
   <div class="container">
-    <h2>Joga aqui mesmo. Sem baixar nada.</h2>
-    <p class="sub">A Tabuada Mágica está liberada nesta página pra você testar com seu filho agora.</p>
-    <iframe
-      class="demo-frame"
-      src="https://matemagica-kids.netlify.app/jogos_matematica_3ano.html?embed=1"
-      title="Tabuada Mágica — Demo"
-      loading="lazy"
-      allow="accelerometer; autoplay">
-    </iframe>
-    <p class="demo-aviso">↑ Se seu filho rir, você já tem a resposta.</p>
+    <h2>Quer ver funcionando antes? Testa agora.</h2>
+    <p class="sub">A Tabuada Mágica está liberada pra você experimentar com seu filho. Sem cadastro, sem cartão.</p>
+    <a class="cta-grande"
+       href="https://matemagica-kids.netlify.app/jogos_matematica_3ano.html"
+       target="_blank"
+       rel="noopener"
+       style="text-decoration:none;text-align:center;display:block"
+       onclick="if(typeof clarity==='function')clarity('set','demo_clicado','true');if(typeof fbq==='function')fbq('trackCustom','DemoClicked');">
+      🎮 Jogar Tabuada Mágica grátis →
+    </a>
+    <p class="demo-aviso" style="margin-top:12px">Abre em uma nova aba. Volta aqui pra continuar.</p>
   </div>
 </section>
 
