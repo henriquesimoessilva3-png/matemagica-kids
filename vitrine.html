@@ -43,6 +43,50 @@ body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; background: l
 .vitrine-hero { text-align: center; margin-bottom: 24px; }
 .vitrine-hero .hero-tag { background: rgba(107, 84, 211, 0.1); color: #6b54d3; font-size: 11px; font-weight: 800; padding: 5px 11px; border-radius: 12px; display: inline-block; margin-bottom: 14px; letter-spacing: 0.5px; }
 .vitrine-hero h2 { font-size: 26px; font-weight: 900; line-height: 1.2; margin: 0 0 10px; color: #2a2245; }
+/* === HERO SPOTLIGHT (tela JOGUE GRÁTIS + CTA lado a lado) === */
+.hero-spotlight {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin: 12px 0 24px;
+  align-items: center;
+}
+.hero-spotlight .spotlight-image {
+  display: block; text-decoration: none; color: inherit;
+  position: relative;
+}
+.hero-spotlight .spotlight-image picture { display: block; position: relative; }
+.hero-spotlight .spotlight-image img {
+  width: 100%; height: auto; display: block;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(107,84,211,0.18);
+  cursor: pointer;
+}
+.hero-spotlight .tap-hint { margin: 8px 0 0; }
+.spotlight-cta {
+  background: linear-gradient(180deg, #fff 0%, #faf7ff 100%);
+  border: 1px solid rgba(107,84,211,0.18);
+  border-radius: 18px;
+  padding: 18px;
+  text-align: center;
+  box-shadow: 0 4px 18px rgba(107, 84, 211, 0.10);
+}
+.spotlight-from {
+  color: #8a8aa0; font-size: 13px; display: block;
+  text-decoration: line-through;
+}
+.spotlight-amount {
+  font-size: 36px; font-weight: 900; color: #2ebd7c;
+  margin: 4px 0 14px; line-height: 1;
+}
+.spotlight-amount span {
+  font-size: 14px; color: #6b6b85; font-weight: 600;
+}
+.spotlight-note {
+  font-size: 12px; color: #6b6b85; margin-top: 10px;
+  line-height: 1.4;
+}
+
 .product-tour { margin: 8px 0 24px; }
 .tour-grid { display: flex; flex-direction: column; gap: 18px; }
 .tour-card { background: #fff; border-radius: 18px; padding: 16px 16px 18px; box-shadow: 0 4px 18px rgba(107, 84, 211, 0.12); border: 1px solid rgba(107, 84, 211, 0.08); }
@@ -151,11 +195,9 @@ body.lightbox-locked { overflow: hidden; }
 @media (min-width: 600px) {
   .shell { padding: 30px 24px 80px; }
   .vitrine-hero h2 { font-size: 32px; }
-  .hero-message { font-size: 19px; }
-  .hero-message strong { font-size: 20px; }
-  .cta-top-amount { font-size: 44px; }
   .price-hero .amount { font-size: 48px; }
-  .tour-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .hero-spotlight { grid-template-columns: 1fr 1fr; gap: 22px; }
+  .spotlight-amount { font-size: 42px; }
   .tour-card h4 { font-size: 17px; }
 }
 </style>
@@ -170,45 +212,35 @@ body.lightbox-locked { overflow: hidden; }
   <!-- HERO VITRINE -->
   <section class="vitrine-hero">
     <span class="hero-tag">📱 VEJA POR DENTRO</span>
-    <h2>Veja por dentro do Matemágica</h2>
-    <p class="hero-message">
-      <strong>Não é PDF. Não é vídeo.</strong><br>
-      É um app gamificado que seu filho <span class="highlight">VAI querer usar</span> todo dia.
-    </p>
+    <h2>Aqui seu filho vai aprender a tabuada.<br>E você não vai precisar ensinar.</h2>
   </section>
 
-  <!-- CTA TOPO (visível acima da dobra) -->
-  <div class="cta-top">
-    <div class="cta-top-price">
-      <span class="cta-top-from">Apps similares: R$ 30–50 por mês</span>
-      <div class="cta-top-amount">R$ 17 <span>uma vez</span></div>
+  <!-- TELA JOGUE GRÁTIS + CTA LADO A LADO -->
+  <section class="hero-spotlight">
+    <a class="spotlight-image tour-link" href="tabuada.html?utm_source=vitrine&utm_medium=tap_print&utm_campaign=try_free_tabuada&utm_content=spotlight" aria-label="Jogar Tabuada Mágica grátis agora">
+      <picture>
+        <span class="preview-badge is-play">🎮 JOGUE GRÁTIS</span>
+        <source srcset="prints/print-tabuada.webp" type="image/webp">
+        <img src="prints/print-tabuada.png" alt="Tela Tabuada Mágica do Matemágica" loading="eager">
+      </picture>
+      <p class="tap-hint is-play">✋ Toque pra jogar grátis agora</p>
+    </a>
+    <div class="spotlight-cta">
+      <span class="spotlight-from">Apps similares: R$ 30–50 por mês</span>
+      <div class="spotlight-amount">R$ 17 <span>uma vez</span></div>
+      <button class="cta-hero" onclick="goCheckout('cta_spotlight')">🚀 Quero começar agora</button>
+      <p class="spotlight-note">🛡 Garantia 7 dias · ♾ Acesso vitalício · Sem mensalidade</p>
     </div>
-    <button class="cta-hero cta-top-button" onclick="goCheckout('cta_top')">🚀 Quero começar agora</button>
-    <p class="cta-top-note">🛡 Garantia 7 dias · ♾ Acesso vitalício · Sem mensalidade</p>
-  </div>
+  </section>
 
   <!-- AVISO: prints reais -->
   <div class="prints-notice">
-    📸 <strong>Prévia das telas do app.</strong> A primeira (Tabuada) é jogável grátis. As outras toque pra ampliar.
+    📸 <strong>Mais telas do app.</strong> Toque em qualquer uma pra ampliar.
   </div>
 
-  <!-- 4 PRINTS — ordem: tabuada, frações, SOS prova, dashboard -->
+  <!-- 3 PRINTS (Tabuada está no .hero-spotlight) — ordem: frações, SOS prova, dashboard -->
   <section class="product-tour">
     <div class="tour-grid">
-
-      <!-- TABUADA — link pro jogo grátis real -->
-      <article class="tour-card">
-        <a class="tour-link" href="tabuada.html?utm_source=vitrine&utm_medium=tap_print&utm_campaign=try_free_tabuada" aria-label="Jogar Tabuada Mágica grátis agora">
-          <picture>
-            <span class="preview-badge is-play">🎮 JOGUE GRÁTIS</span>
-            <source srcset="prints/print-tabuada.webp" type="image/webp">
-            <img src="prints/print-tabuada.png" alt="Tela Tabuada Mágica do Matemágica" loading="lazy">
-          </picture>
-        </a>
-        <p class="tap-hint is-play">✋ Toque pra jogar grátis agora</p>
-        <h4>⚡ Tabuada Mágica com macetes</h4>
-        <p>XP, sequência de dias, recompensas. Aprende brincando — e fixa de verdade.</p>
-      </article>
 
       <!-- FRAÇÕES — lightbox -->
       <article class="tour-card">
