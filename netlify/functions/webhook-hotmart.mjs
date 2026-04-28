@@ -138,8 +138,9 @@ async function disparaCAPI({ email, nome, transactionId, value, currency, ip, us
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ data: [event] })
   });
+  const txt = await r.text();
+  console.log(`CAPI response status=${r.status} body=${txt.slice(0, 800)}`);
   if (!r.ok) {
-    const txt = await r.text();
     throw new Error(`CAPI ${r.status}: ${txt}`);
   }
 }
