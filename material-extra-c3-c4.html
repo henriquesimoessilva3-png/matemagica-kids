@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Stories C3 + Carrossel 4 — Matemágica</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: #1a1a1a;
+    color: #fff;
+    padding: 40px 20px;
+  }
+
+  .topbar {
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    text-align: center;
+  }
+  .topbar h1 {
+    font-size: 28px;
+    margin: 0 0 10px;
+    background: linear-gradient(135deg, #6b54d3, #b968e8 50%, #ffd36b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .topbar p { color: #aaa; font-size: 14px; margin: 0 0 8px; line-height: 1.6; }
+  .topbar .howto {
+    background: #2a2a2a; border-radius: 12px; padding: 16px 20px;
+    margin-top: 16px; text-align: left; font-size: 13px; line-height: 1.7;
+  }
+  .topbar .howto strong { color: #ffd36b; }
+
+  .section-label {
+    max-width: 1100px; margin: 50px auto 20px;
+    color: #ffd36b; font-size: 12px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase;
+    border-top: 1px solid #333; padding-top: 20px;
+  }
+
+  .gallery {
+    display: flex; flex-wrap: wrap; gap: 30px;
+    justify-content: center; max-width: 1100px; margin: 0 auto;
+  }
+  .art-wrap {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+  }
+  .art-label {
+    color: #aaa; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+
+  .art {
+    position: relative; overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    transform-origin: top left; background: #fff;
+  }
+  .art.carrossel { width: 360px; height: 450px; }
+  .art.story { width: 360px; height: 640px; }
+  .art .inner { position: absolute; top: 0; left: 0; transform-origin: top left; }
+  .art.carrossel .inner { width: 1080px; height: 1350px; transform: scale(0.3333); }
+  .art.story .inner { width: 1080px; height: 1920px; transform: scale(0.3333); }
+
+  .inner { font-family: 'Segoe UI', -apple-system, sans-serif; }
+
+  /* Logo */
+  .ig-logo {
+    font-size: 32px; font-weight: 900; letter-spacing: 3px;
+    background: linear-gradient(135deg, #6b54d3, #b968e8 50%, #ffd36b);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-align: center; margin-bottom: 12px;
+  }
+  .ig-logo .estrela { -webkit-text-fill-color: #ffd36b; color: #ffd36b; }
+  .ig-logo-white {
+    color: #fff; -webkit-text-fill-color: #fff; background: none;
+  }
+  .ig-logo-white .estrela { -webkit-text-fill-color: #ffd36b; color: #ffd36b; }
+
+  /* === STORIES BASE === */
+  .story-base {
+    width: 100%; height: 100%;
+    padding: 120px 80px;
+    display: flex; flex-direction: column;
+    justify-content: center; text-align: center;
+  }
+
+  /* Story Stanford — fundo escuro autoridade */
+  .sa {
+    background: linear-gradient(135deg, #2a2245 0%, #4a3a78 100%);
+    color: #fff;
+  }
+  .sa .badge {
+    display: inline-block;
+    background: #ffd36b; color: #2a2245;
+    padding: 16px 40px; border-radius: 50px;
+    font-size: 28px; font-weight: 900;
+    letter-spacing: 3px; margin: 0 auto 60px;
+    align-self: center;
+  }
+  .sa h2 {
+    font-size: 80px; font-weight: 900;
+    line-height: 1.05; margin: 0 0 50px;
+    letter-spacing: -1px;
+  }
+  .sa h2 .destaque { color: #ffd36b; }
+  .sa p {
+    font-size: 44px; line-height: 1.45;
+    color: rgba(255,255,255,0.9);
+    font-weight: 600; margin: 0 0 60px;
+  }
+  .sa .punchline {
+    font-size: 38px; font-weight: 800;
+    color: #ffd36b; margin-top: 40px;
+    line-height: 1.3;
+  }
+  .sa .footer-sticker {
+    margin-top: 60px;
+    font-size: 22px; color: rgba(255,255,255,0.5);
+    font-weight: 700;
+  }
+
+  /* Story "Não é seu papel" — alívio da culpa */
+  .sb {
+    background: linear-gradient(135deg, #fff5e8 0%, #f7f5ff 100%);
+    color: #2a2245;
+  }
+  .sb .pre {
+    font-size: 38px; font-weight: 700;
+    color: #6b54d3; margin: 0 0 30px;
+    letter-spacing: 1px;
+  }
+  .sb h2 {
+    font-size: 110px; font-weight: 900;
+    line-height: 0.95; margin: 0 0 50px;
+    color: #2a2245; letter-spacing: -2px;
+  }
+  .sb h2 .destaque { color: #6b54d3; }
+  .sb p {
+    font-size: 40px; line-height: 1.45;
+    color: #6a5f88; font-weight: 500;
+    margin: 0 0 50px;
+  }
+  .sb .alivio {
+    background: #6b54d3; color: #fff;
+    padding: 32px 40px; border-radius: 24px;
+    font-size: 44px; font-weight: 800;
+    margin-top: 40px;
+  }
+  .sb .footer-sticker {
+    margin-top: 50px;
+    font-size: 22px; color: #b0a3c8;
+    font-weight: 700;
+  }
+
+  /* Story "Briga = punição" — alerta */
+  .sc {
+    background: linear-gradient(135deg, #6b54d3 0%, #b968e8 100%);
+    color: #fff;
+  }
+  .sc .equacao {
+    font-size: 90px; font-weight: 900;
+    line-height: 1.1; margin: 0 0 60px;
+    letter-spacing: -2px;
+  }
+  .sc .equacao .red { color: #ffb6b6; }
+  .sc .equacao .yellow { color: #ffd36b; }
+  .sc p {
+    font-size: 42px; line-height: 1.45;
+    color: rgba(255,255,255,0.95);
+    font-weight: 600; margin: 0 0 60px;
+  }
+  .sc .punchline {
+    background: rgba(0,0,0,0.25);
+    padding: 32px 40px; border-radius: 24px;
+    font-size: 40px; font-weight: 800;
+    line-height: 1.3; color: #ffd36b;
+  }
+  .sc .footer-sticker {
+    margin-top: 50px;
+    font-size: 22px; color: rgba(255,255,255,0.6);
+    font-weight: 700;
+  }
+
+  /* === CARROSSEL 4: storytelling do criador === */
+  .c4-slide {
+    width: 100%; height: 100%;
+    padding: 80px 60px;
+    display: flex; flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Capa */
+  .c4-capa {
+    background: linear-gradient(135deg, #2a2245 0%, #6b54d3 100%);
+    color: #fff;
+  }
+  .c4-capa .pre {
+    font-size: 32px; font-weight: 800;
+    color: #ffd36b; letter-spacing: 4px;
+    margin-bottom: 30px;
+  }
+  .c4-capa h1 {
+    font-size: 88px; font-weight: 900;
+    line-height: 1.05; margin: 0 0 40px;
+    letter-spacing: -1px;
+  }
+  .c4-capa h1 .destaque { color: #ffd36b; }
+  .c4-capa .swipe {
+    margin-top: 60px;
+    font-size: 32px; color: #ffd36b;
+    font-weight: 700;
+  }
+
+  /* Slides 2-4: storytelling */
+  .c4-story {
+    background: #fff;
+    color: #2a2245;
+    text-align: left;
+  }
+  .c4-story .num {
+    font-size: 28px; font-weight: 900;
+    color: #6b54d3; letter-spacing: 4px;
+    margin-bottom: 30px;
+  }
+  .c4-story h2 {
+    font-size: 84px; font-weight: 900;
+    line-height: 1.05; margin: 0 0 40px;
+    color: #2a2245; letter-spacing: -1px;
+  }
+  .c4-story h2 .destaque { color: #6b54d3; }
+  .c4-story p {
+    font-size: 38px; line-height: 1.5;
+    color: #6a5f88; font-weight: 500;
+    margin: 0 0 30px;
+  }
+  .c4-story .footer-pos {
+    margin-top: auto;
+    color: #b0a3c8; font-size: 22px; font-weight: 700;
+  }
+
+  /* Slide solução — verde */
+  .c4-solucao {
+    background: linear-gradient(135deg, #2ebd7c 0%, #4ab3a5 100%);
+    color: #fff;
+    text-align: center;
+  }
+  .c4-solucao .num {
+    font-size: 28px; font-weight: 900;
+    color: #ffd36b; letter-spacing: 4px;
+    margin-bottom: 30px;
+  }
+  .c4-solucao h2 {
+    font-size: 72px; font-weight: 900;
+    line-height: 1.05; margin: 0 0 40px;
+    letter-spacing: -1px;
+  }
+  .c4-solucao .lista {
+    text-align: left;
+    background: rgba(255,255,255,0.15);
+    border-radius: 24px;
+    padding: 36px 40px;
+    margin: 0 auto;
+  }
+  .c4-solucao .item {
+    font-size: 32px; line-height: 1.4;
+    margin-bottom: 18px; font-weight: 600;
+    display: flex; align-items: flex-start;
+    gap: 16px;
+  }
+  .c4-solucao .item:last-child { margin-bottom: 0; }
+  .c4-solucao .item .check {
+    color: #ffd36b; font-size: 36px;
+    flex-shrink: 0;
+  }
+
+  /* Slide promessa */
+  .c4-promessa {
+    background: linear-gradient(135deg, #ffd36b 0%, #ffae5c 100%);
+    color: #2a2245;
+    text-align: center;
+  }
+  .c4-promessa h2 {
+    font-size: 76px; font-weight: 900;
+    line-height: 1.1; margin: 0 0 40px;
+    letter-spacing: -1px;
+    color: #2a2245;
+  }
+  .c4-promessa h2 .quebra {
+    display: block;
+    color: #6b54d3;
+    margin-top: 12px;
+  }
+
+  /* CTA final */
+  .c4-cta {
+    background: linear-gradient(135deg, #6b54d3 0%, #b968e8 100%);
+    color: #fff;
+    text-align: center;
+  }
+  .c4-cta h2 {
+    font-size: 80px; font-weight: 900;
+    line-height: 1.05; margin: 0 0 30px;
+    letter-spacing: -1px;
+  }
+  .c4-cta .arrow-big {
+    font-size: 110px; color: #ffd36b;
+    line-height: 1; margin: 30px 0;
+  }
+  .c4-cta .info-row {
+    font-size: 32px; line-height: 1.6;
+    color: #fff; font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>✨ Stories Carrossel 3 + Carrossel 4</h1>
+  <p>3 stories pra apoiar o Carrossel 3 (postado) + Carrossel 4 completo (storytelling do criador)</p>
+  <div class="howto">
+    <strong>Como exportar cada arte como PNG:</strong><br>
+    1. Abra este arquivo no Chrome ou Safari<br>
+    2. Click direito sobre a arte → <strong>"Inspecionar"</strong> ou abra DevTools (F12)<br>
+    3. No console, ache o `&lt;div class="inner"&gt;` da arte que quer exportar<br>
+    4. <strong>Mais simples:</strong> dá zoom no navegador (Cmd/Ctrl + +) até a arte ficar grande, screenshot da área (Cmd+Shift+4 no Mac) e exporte<br>
+    5. Ou abra em nova aba sozinha e printe a tela inteira
+  </div>
+</div>
+
+<!-- ============ STORIES PRO CARROSSEL 3 ============ -->
+<div class="section-label">3 STORIES DE APOIO PRO CARROSSEL 3 (1080×1920)</div>
+<div class="gallery">
+
+  <!-- Story A — Stanford -->
+  <div class="art-wrap">
+    <div class="art story"><div class="inner">
+      <div class="story-base sa">
+        <div class="badge">VERDADE 1</div>
+        <h2>Stanford acompanhou crianças por <span class="destaque">20 anos</span>.</h2>
+        <p>Quem disse "não sou bom de matemática" antes do 6º ano carregou isso a vida toda.</p>
+        <div class="punchline">Não vira nota. Vira identidade.</div>
+        <div class="footer-sticker">[ adicione enquete: Você sabia disso? Sim/Não ]</div>
+      </div>
+    </div></div>
+    <div class="art-label">Story A — Stanford (enquete)</div>
+  </div>
+
+  <!-- Story B — Não é seu papel -->
+  <div class="art-wrap">
+    <div class="art story"><div class="inner">
+      <div class="story-base sb">
+        <div class="pre">VERDADE 2</div>
+        <h2>Não é <span class="destaque">seu</span> papel.</h2>
+        <p>Explicar matemática pra criança é uma profissão. Você não foi treinada pra isso.</p>
+        <div class="alivio">Pode respirar. ✨</div>
+        <div class="footer-sticker">[ sticker LINK pro quiz na bio ]</div>
+      </div>
+    </div></div>
+    <div class="art-label">Story B — Alívio (link)</div>
+  </div>
+
+  <!-- Story C — Briga = punição -->
+  <div class="art-wrap">
+    <div class="art story"><div class="inner">
+      <div class="story-base sc">
+        <div class="equacao">Briga = <span class="yellow">punição</span></div>
+        <p>Toda vez que vira briga em casa, você reforça o trauma sem querer.</p>
+        <div class="punchline">A criança aprende: matemática = sofrimento. Aí trava.</div>
+        <div class="footer-sticker">[ sticker LINK pro quiz na bio ]</div>
+      </div>
+    </div></div>
+    <div class="art-label">Story C — Briga (link)</div>
+  </div>
+
+</div>
+
+<!-- ============ CARROSSEL 4 ============ -->
+<div class="section-label">CARROSSEL 4 — STORYTELLING DO CRIADOR (1080×1350) — 7 SLIDES</div>
+<div class="gallery">
+
+  <!-- Slide 1: Capa -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c4-slide c4-capa">
+        <div class="ig-logo ig-logo-white">MATE<span class="estrela">✨</span>MÁGICA</div>
+        <div class="pre">CARTA ABERTA</div>
+        <h1>Por que cobrei só <span class="destaque">R$ 27</span> (uma vez) pelo Matemágica.</h1>
+        <div class="swipe">→ ARRASTA</div>
+      </div>
+    </div></div>
+    <div class="art-label">Slide 1 — Capa</div>
+  </div>
+
+  <!-- Slide 2: Não é estratégia -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c4-slide c4-story">
+        <div class="num">1 DE 5</div>
+        <h2>Não é estratégia de <span class="destaque">marketing</span>.</h2>
+        <p>Podia cobrar R$ 47/mês como concorrente. Daria mais lucro.</p>
+        <p>Mas tem uma razão pra eu não cobrar assim.</p>
+        <div class="footer-pos">→ CONTINUA</div>
+      </div>
+    </div></div>
+    <div class="art-label">Slide 2 — Não é estratégia</div>
+  </div>
+
+  <!-- Slide 3: Eu também sou pai -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c4-slide c4-story">
+        <div class="num">2 DE 5</div>
+        <h2>É que eu também sou <span class="destaque">pai</span>.</h2>
+        <p>E vi minha filha travar em matemática.</p>
+        <p>Vi o tanto que mãe gasta em app educativo achando que vai resolver.</p>
+        <div class="footer-pos">→ CONTINUA</div>
+      </div>
+    </div></div>
+    <div class="art-label">Slide 3 — Eu sou pai</div>
+  </div>
+
+  <!-- Slide 4: Não quero -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c4-slide c4-story">
+        <div class="num">3 DE 5</div>
+        <h2>Não quero outra mãe pagando <span class="destaque">R$ 50/mês</span> sem usar.</h2>
+        <p>Assinatura que renova sozinha.</p>
+        <p>Cobrança que mãe esquece.</p>
+        <p>Filho que abandonou o app no 2º mês.</p>
+        <div class="footer-pos">→ CONTINUA</div>
+      </div>
+    </div></div>
+    <div class="art-label">Slide 4 — A dor</div>
+  </div>
+
+  <!-- Slide 5: A solução -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c4-slide c4-solucao">
+        <div class="num">4 DE 5</div>
+        <h2>R$ 27 vitalício resolve:</h2>
+        <div class="lista">
+          <div class="item"><span class="check">✓</span><span>Mãe paga uma vez, esquece</span></div>
+          <div class="item"><span class="check">✓</span><span>Filho usa do 1º ao 5º ano</span></div>
+          <div class="item"><span class="check">✓</span><span>Sem cobrança recorrente</span></div>
+          <div class="item"><span class="check">✓</span><span>BNCC completo, sem propaganda</span></div>
+          <div class="item"><span class="check">✓</span><span>7 dias de garantia</span></div>
+        </div>
+      </div>
+    </div></div>
+    <div class="art-label">Slide 5 — A solução</div>
+  </div>
+
+  <!-- Slide 6: Promessa -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c4-slide c4-promessa">
+        <div class="num">5 DE 5</div>
+        <h2>A criança joga.<br>A matemática fica.<span class="quebra">Você fica em paz.</span></h2>
+      </div>
+    </div></div>
+    <div class="art-label">Slide 6 — Promessa</div>
+  </div>
+
+  <!-- Slide 7: CTA -->
+  <div class="art-wrap">
+    <div class="art carrossel"><div class="inner">
+      <div class="c4-slide c4-cta">
+        <div class="ig-logo ig-logo-white" style="margin-bottom:40px">MATE<span class="estrela">✨</span>MÁGICA</div>
+        <h2>Faz o quiz de 1 minuto.</h2>
+        <div class="arrow-big">↑</div>
+        <div class="info-row">Link na bio<br>matemagica.app.br</div>
+      </div>
+    </div></div>
+    <div class="art-label">Slide 7 — CTA</div>
+  </div>
+
+</div>
+
+</body>
+</html>

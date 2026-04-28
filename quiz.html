@@ -461,7 +461,7 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
       </div>
       <div class="price-hero">
         <span class="from">Apps similares: R$ 30–50 por mês</span>
-        <div class="amount">R$ 17</div>
+        <div class="amount">R$ 27</div>
         <div class="detail">pagamento único · sem mensalidade · pra sempre</div>
       </div>
       <button class="cta-hero" onclick="goCheckout()">Quero o Matemágica completo →</button>
@@ -548,7 +548,7 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
       ⚡ Esse preço é só dessa página — fechou, foi.
     </div>
 
-    <button class="cta" onclick="goCheckout()">Quero garantir por R$17 →</button>
+    <button class="cta" onclick="goCheckout()">Quero garantir por R$27 →</button>
 
     <p class="guarantee">
       🛡 <strong>Garantia de 7 dias</strong> — se seu filho não abrir o app sozinho 3 vezes na 1ª semana, devolvo 100% do dinheiro. Sem perguntas.
@@ -657,7 +657,7 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
   }
 
   function goCheckout() {
-    if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { value: 17.00, currency: 'BRL' });
+    if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { value: 27.00, currency: 'BRL' });
     if (typeof clarity === 'function') clarity('set', 'cta_clicked', 'true');
     const params = new URLSearchParams({
       sck: 'quiz',

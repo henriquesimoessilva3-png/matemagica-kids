@@ -408,7 +408,7 @@
   <div class="sub-tabuada">Desbloqueie cada tabuada. Ordem não muda o total!</div>
 
   <a href="javascript:void(0)" class="upsell-banner" onclick="goCheckout('banner_topo')">
-    <span class="ub-text"><strong>✨ Liberar 1º ao 5º ano completo</strong> · R$17 · pra sempre</span>
+    <span class="ub-text"><strong>✨ Liberar 1º ao 5º ano completo</strong> · R$27 · pra sempre</span>
     <span class="ub-arrow">→</span>
   </a>
 
@@ -466,7 +466,7 @@
       </div>
       <div class="upsell-result">
         <p class="upsell-result-msg">Quer continuar com soma, fração, problemas e mais?</p>
-        <button class="upsell-result-btn" onclick="goCheckout('cta_resultado')">Liberar 1º ao 5º ano · R$17 →</button>
+        <button class="upsell-result-btn" onclick="goCheckout('cta_resultado')">Liberar 1º ao 5º ano · R$27 →</button>
       </div>
     </div>
   </div>
@@ -781,9 +781,9 @@ initJogos();
 renderPokedex();
 renderEstudo();
 
-// Checkout pro plano completo (R$17) — origem identifica de qual CTA veio
+// Checkout pro plano completo (R$27) — origem identifica de qual CTA veio
 function goCheckout(origem) {
-  if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { value: 17.00, currency: 'BRL' });
+  if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { value: 27.00, currency: 'BRL' });
   if (typeof clarity === 'function') clarity('set', 'cta_clicked', 'true');
   var pos = origem || 'cta';
   var params = new URLSearchParams({

@@ -12,7 +12,7 @@ const ANOS_STORAGE_KEYS = ['jogosMat1ano_v1','jogosMat2ano_v1','jogosMat3ano_v1'
 // ============== MONETIZAÇÃO ==============
 // Preencher com a URL real do produto na Hotmart assim que for criado
 const CHECKOUT_URL = 'https://pay.hotmart.com/A105538417J';
-const PRECO_EXIBIDO = 'R$ 17';
+const PRECO_EXIBIDO = 'R$ 27';
 
 // Páginas totalmente premium (redirecionam ao paywall se não tiver licença)
 const PAGINAS_PREMIUM = [
@@ -891,7 +891,7 @@ function fecharOnboarding() {
   if (m) m.classList.add('hidden');
 }
 
-// ============== PAYWALL (licença R$17 vitalícia) ==============
+// ============== PAYWALL (licença R$27 vitalícia) ==============
 function abrirPaywall(motivo) {
   const m = document.getElementById('modal-overlay');
   if (!m) return;
@@ -958,7 +958,7 @@ async function ativarLicenca(key) {
         // Meta Pixel — evento Purchase só na primeira ativação (compra real)
         try {
           if (typeof fbq === 'function') {
-            fbq('track', 'Purchase', { value: 17.00, currency: 'BRL' });
+            fbq('track', 'Purchase', { value: 27.00, currency: 'BRL' });
           }
         } catch(e) {}
       }
