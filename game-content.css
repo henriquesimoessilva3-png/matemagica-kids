@@ -1,0 +1,746 @@
+/* ============================================================================
+ * MATEMÁGICA — JOGOS / CONTEÚDO INTERNO (v9)
+ *
+ * Restila o CONTEÚDO de cada jogo (botões, abas, cartões, opções, feedback,
+ * HUDs, inputs) pra harmonizar com a home v9. Carrega DEPOIS de internas.css
+ * em cada página de jogo, então ganha cascata. Usa --realm-light/--realm-dark
+ * /--realm-text já mapeados por internas.css em cada [data-game="X"].
+ *
+ * Estrutura:
+ *   1. Botões de ação (primário e secundário)
+ *   2. Abas / chips de seleção
+ *   3. Inputs e textareas
+ *   4. Cartões de conteúdo (claros, com tinta do reino)
+ *   5. Grades de opções (múltipla escolha)
+ *   6. Estados acerto/erro
+ *   7. HUDs (barras de info)
+ *   8. Displays numéricos grandes
+ *   9. Quadros de insight / macete
+ *  10. Upsell banners (tabuada/treino)
+ *  11. Ajustes específicos por jogo
+ *
+ * Todas as regras usam !important pra derrotar inline styles antigos.
+ * ============================================================================ */
+
+/* ========================================================================
+ * 1. BOTÕES DE AÇÃO PRIMÁRIOS — pill com gradient violet stamped shadow
+ * ====================================================================== */
+html[data-game] .container :is(
+  .acao,
+  .prob-btn,
+  .sn-btn:not(.sec),
+  .cu-btn:not(.sec):not(.zap),
+  .inv-btn:not(.sec),
+  .flash-btn:not(.sec),
+  .fr-btn.principal,
+  .estudo-btn.principal
+) {
+  background: linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-violet-deep) 100%) !important;
+  color: var(--text-inverse) !important;
+  border: 2px solid var(--accent-violet-deep) !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 11px 22px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.2px !important;
+  box-shadow: 0 3px 0 rgba(45, 27, 94, 0.25), 0 6px 14px rgba(124, 58, 237, 0.18) !important;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast) !important;
+  cursor: pointer;
+}
+html[data-game] .container :is(
+  .acao, .prob-btn, .sn-btn, .cu-btn, .inv-btn, .flash-btn,
+  .fr-btn.principal, .estudo-btn.principal
+):hover:not(:disabled) {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 0 rgba(45, 27, 94, 0.25), 0 8px 18px rgba(124, 58, 237, 0.25) !important;
+}
+html[data-game] .container :is(
+  .acao, .prob-btn, .sn-btn, .cu-btn, .inv-btn, .flash-btn,
+  .fr-btn.principal, .estudo-btn.principal
+):active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 rgba(45, 27, 94, 0.25), 0 2px 6px rgba(124, 58, 237, 0.18) !important;
+}
+
+/* ========================================================================
+ * 2. BOTÕES SECUNDÁRIOS — pill branco com borda violet
+ * ====================================================================== */
+html[data-game] .container :is(
+  .sn-btn.sec,
+  .cu-btn.sec,
+  .inv-btn.sec,
+  .flash-btn.sec,
+  .fr-btn:not(.principal),
+  .estudo-btn:not(.principal),
+  .btn-me-explica-inline
+) {
+  background: var(--bg-card) !important;
+  color: var(--accent-violet) !important;
+  border: 2px solid var(--accent-violet) !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 9px 18px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  box-shadow: 0 2px 0 rgba(45, 27, 94, 0.10) !important;
+  transition: transform var(--transition-fast), background var(--transition-fast) !important;
+  cursor: pointer;
+}
+html[data-game] .container :is(
+  .sn-btn.sec, .cu-btn.sec, .inv-btn.sec, .flash-btn.sec,
+  .fr-btn, .estudo-btn, .btn-me-explica-inline
+):hover:not(:disabled) {
+  background: #fffbeb !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Botão "zap" do cuisenaire — variante coral pra "limpar tudo" */
+html[data-game="cuisenaire"] .container .cu-btn.zap {
+  background: linear-gradient(135deg, #fb7185 0%, #be123c 100%) !important;
+  color: var(--text-inverse) !important;
+  border: 2px solid #be123c !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 9px 18px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  box-shadow: 0 3px 0 rgba(120, 30, 60, 0.25), 0 6px 14px rgba(251, 113, 133, 0.18) !important;
+}
+
+/* ========================================================================
+ * 3. ABAS / CHIPS DE SELEÇÃO — pill, branco quando inativo, realm quando ativo
+ * ====================================================================== */
+html[data-game] .container :is(
+  .modo-tab,
+  .op-tab,
+  .chip-alvo:not(.aleat),
+  .chip-dif,
+  .cu-modo-tab,
+  .nivel-tab,
+  .tempo-tab
+) {
+  background: var(--bg-card) !important;
+  color: var(--text-secondary) !important;
+  border: 2px solid var(--text-muted) !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 7px 16px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  cursor: pointer;
+  transition: all var(--transition-fast) !important;
+  box-shadow: 0 1px 0 rgba(45, 27, 94, 0.06) !important;
+}
+html[data-game] .container :is(.modo-tab, .op-tab, .chip-alvo, .chip-dif, .cu-modo-tab, .nivel-tab, .tempo-tab):hover {
+  background: #fffbeb !important;
+  border-color: var(--realm-dark) !important;
+  color: var(--realm-text) !important;
+}
+html[data-game] .container :is(
+  .modo-tab.ativo,
+  .op-tab.ativo,
+  .chip-alvo.ativo,
+  .chip-dif.ativo,
+  .cu-modo-tab.ativo,
+  .nivel-tab.ativo,
+  .tempo-tab.ativo
+) {
+  background: linear-gradient(135deg, var(--realm-light) 0%, var(--realm-dark) 100%) !important;
+  color: var(--realm-text) !important;
+  border-color: var(--realm-dark) !important;
+  box-shadow: 0 2px 0 rgba(45, 27, 94, 0.15), 0 4px 10px rgba(45, 27, 94, 0.08) !important;
+}
+/* Chip "sortear" do inventa — fica dourado mesmo sem .ativo */
+html[data-game="inventa"] .container .chip-alvo.aleat {
+  background: linear-gradient(135deg, var(--accent-gold-light) 0%, var(--accent-gold) 100%) !important;
+  color: #5a3a00 !important;
+  border: 2px solid var(--accent-gold) !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 7px 16px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  box-shadow: 0 2px 0 var(--accent-gold-deep), 0 4px 10px rgba(245, 158, 11, 0.20) !important;
+  cursor: pointer;
+}
+
+/* ========================================================================
+ * 4. INPUTS E TEXTAREAS — branco, borda violet, raio v9
+ * ====================================================================== */
+html[data-game] .container :is(.inv-input, input[type="text"], input[type="number"], textarea):not([type="radio"]):not([type="checkbox"]) {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 2px solid var(--accent-violet) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 12px 14px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 600 !important;
+  box-sizing: border-box !important;
+  box-shadow: inset 0 2px 4px rgba(45, 27, 94, 0.04) !important;
+}
+html[data-game] .container :is(.inv-input, input, textarea):focus {
+  outline: none !important;
+  border-color: var(--accent-violet-deep) !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15) !important;
+}
+
+/* Teclado virtual do inventa */
+html[data-game="inventa"] .container .tecla {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 2px solid var(--accent-violet) !important;
+  border-radius: var(--radius-md) !important;
+  font-family: var(--font-body) !important;
+  font-weight: 800 !important;
+  cursor: pointer;
+  transition: transform var(--transition-fast) !important;
+  box-shadow: 0 2px 0 rgba(45, 27, 94, 0.10) !important;
+}
+html[data-game="inventa"] .container .tecla:hover { background: #fffbeb !important; transform: scale(1.04) !important; }
+html[data-game="inventa"] .container .tecla.op {
+  background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold)) !important;
+  color: #5a3a00 !important;
+  border-color: var(--accent-gold) !important;
+}
+html[data-game="inventa"] .container .tecla.del {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+  border-color: #f87171 !important;
+}
+html[data-game="inventa"] .container .tecla.enviar {
+  background: linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-violet-deep) 100%) !important;
+  color: var(--text-inverse) !important;
+  border-color: var(--accent-violet-deep) !important;
+}
+
+/* ========================================================================
+ * 5. CARTÕES DE CONTEÚDO — branco-creme com tinta do reino + borda branca + sombra v9
+ * ====================================================================== */
+html[data-game] .container :is(
+  .inv-card,
+  .sn-conta,
+  .sn-jeito,
+  .sn-intro,
+  .cu-desafio,
+  .cu-seletor,
+  .cu-intro,
+  .historia-card,
+  .cz-controles,
+  .cz-ingredientes,
+  .cz-desafio,
+  .receita-card,
+  .flash-area,
+  .flash-palco,
+  .estudo-area,
+  .soma-visual,
+  .treino-pergunta,
+  .fr-card,
+  .bz-card,
+  .bz-intro,
+  .inv-input-area,
+  .inv-historico
+) {
+  background: linear-gradient(180deg, #ffffff 0%, var(--realm-light) 100%) !important;
+  border: 3px solid white !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-card) !important;
+  position: relative;
+}
+
+/* Visualizações dentro do beleza (área pra SVG) */
+html[data-game="beleza"] .container .bz-viz,
+html[data-game="beleza"] .container .bz-modal-viz {
+  background: linear-gradient(135deg, #fffbeb 0%, var(--realm-light) 100%) !important;
+  border-radius: var(--radius-md) !important;
+  border: 2px solid white !important;
+  box-shadow: inset 0 2px 6px rgba(45, 27, 94, 0.05) !important;
+}
+
+/* Palco do cuisenaire (área de montar) — dashed pra indicar drop zone */
+html[data-game="cuisenaire"] .container .cu-palco {
+  background: linear-gradient(180deg, #fffbeb 0%, var(--realm-light) 100%) !important;
+  border: 2.5px dashed var(--realm-dark) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+html[data-game="cuisenaire"] .container .cu-fileira {
+  background: var(--bg-card) !important;
+  border: 2px solid var(--realm-dark) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: inset 0 2px 4px rgba(45, 27, 94, 0.05) !important;
+}
+
+/* Jeito aberto (senso) — destacar com gold */
+html[data-game="senso"] .container .sn-jeito.aberto {
+  background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%) !important;
+  border-color: var(--accent-gold) !important;
+}
+html[data-game="senso"] .container .sn-jeito-passos {
+  background: var(--bg-card) !important;
+  border-radius: var(--radius-md) !important;
+  border-left: 4px solid var(--accent-violet) !important;
+  font-family: var(--font-body) !important;
+  color: var(--text-primary) !important;
+}
+html[data-game="senso"] .container .sn-jeito-passos b { color: #047857 !important; }
+
+/* Receita ativa do cozinha */
+html[data-game="cozinha"] .container .receita-card.ativa {
+  background: linear-gradient(180deg, #fffbeb 0%, var(--realm-dark) 100%) !important;
+  border: 3px solid var(--realm-dark) !important;
+  color: var(--realm-text) !important;
+}
+
+/* ========================================================================
+ * 6. GRADES DE OPÇÕES (múltipla escolha) — soft card com hover realm
+ * ====================================================================== */
+html[data-game] .container :is(
+  .treino-opcoes button,
+  .prob-opcoes button,
+  .flash-opcoes button,
+  .cz-opcoes button
+) {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 3px solid var(--realm-light) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 16px 8px !important;
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.5px !important;
+  cursor: pointer;
+  transition: all var(--transition-fast) !important;
+  box-shadow: 0 3px 0 rgba(45, 27, 94, 0.10), 0 6px 14px rgba(45, 27, 94, 0.05) !important;
+}
+html[data-game] .container :is(
+  .treino-opcoes button,
+  .prob-opcoes button,
+  .flash-opcoes button,
+  .cz-opcoes button
+):hover:not(:disabled):not(.acerto):not(.erro) {
+  background: #fffbeb !important;
+  border-color: var(--realm-dark) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 5px 0 rgba(45, 27, 94, 0.10), 0 9px 18px rgba(45, 27, 94, 0.08) !important;
+}
+
+/* ========================================================================
+ * 7. ESTADOS ACERTO / ERRO — semântico verde/vermelho com sombra v9
+ * ====================================================================== */
+html[data-game] .container :is(
+  .treino-opcoes button.acerto,
+  .prob-opcoes button.acerto,
+  .flash-opcoes button.acerto,
+  .cz-opcoes button.acerto
+) {
+  background: linear-gradient(180deg, #d1f5e2 0%, #6ee7b7 100%) !important;
+  border: 3px solid #047857 !important;
+  color: #064e3b !important;
+  box-shadow: 0 3px 0 rgba(4, 78, 59, 0.25), 0 6px 14px rgba(110, 231, 183, 0.30) !important;
+}
+html[data-game] .container :is(
+  .treino-opcoes button.erro,
+  .prob-opcoes button.erro,
+  .flash-opcoes button.erro,
+  .cz-opcoes button.erro
+) {
+  background: linear-gradient(180deg, #fee2e2 0%, #fca5a5 100%) !important;
+  border: 3px solid #b91c1c !important;
+  color: #7f1d1d !important;
+  box-shadow: 0 3px 0 rgba(127, 29, 29, 0.25), 0 6px 14px rgba(252, 165, 165, 0.30) !important;
+}
+
+/* Caixas de feedback (mensagens) */
+html[data-game] .container :is(.inv-feedback, .sn-feedback, .cu-feedback, .prob-feedback, .cz-feedback, .treino-fb) {
+  border-radius: var(--radius-md) !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  padding: 12px 14px !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+html[data-game] .container :is(.inv-feedback.acerto, .sn-feedback.acerto, .cu-feedback.acerto, .prob-feedback.acerto, .cz-feedback.acerto, .treino-fb.acerto) {
+  background: linear-gradient(180deg, #d1f5e2 0%, #a7f3d0 100%) !important;
+  color: #064e3b !important;
+  border: 2px solid #34d399 !important;
+}
+html[data-game] .container :is(.inv-feedback.erro, .prob-feedback.erro, .cz-feedback.erro, .treino-fb.erro) {
+  background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%) !important;
+  color: #78350f !important;
+  border: 2px solid var(--accent-gold) !important;
+}
+html[data-game] .container :is(.inv-feedback.repetido, .cu-feedback.dica) {
+  background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%) !important;
+  color: #78350f !important;
+  border: 2px solid var(--accent-gold) !important;
+}
+
+/* ========================================================================
+ * 8. HUDs — barra de info no topo do jogo
+ * ====================================================================== */
+html[data-game] .container :is(.inv-hud, .prob-hud, .flash-hud, .treino-hud) {
+  background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%) !important;
+  border: 2px solid var(--accent-violet) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-soft) !important;
+  font-family: var(--font-body) !important;
+  color: var(--text-primary) !important;
+  padding: 12px 16px !important;
+}
+html[data-game] .container :is(.inv-hud, .prob-hud, .flash-hud, .treino-hud) b {
+  color: var(--accent-violet) !important;
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+}
+
+/* Treino-header (tabuada/soma) — destaque maior, gradient realm */
+html[data-game] .container .treino-header {
+  background: linear-gradient(135deg, var(--realm-light) 0%, var(--realm-dark) 100%) !important;
+  color: var(--realm-text) !important;
+  border: 3px solid white !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-card) !important;
+  padding: 14px 16px !important;
+}
+html[data-game] .container .treino-header .treino-placar {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  font-size: 28px !important;
+}
+html[data-game] .container .treino-header .treino-label {
+  font-family: var(--font-tagline) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  opacity: 0.95 !important;
+}
+
+/* Cozinha: controles de pessoas */
+html[data-game="cozinha"] .container .cz-pessoas-btn {
+  background: linear-gradient(135deg, var(--realm-light) 0%, var(--realm-dark) 100%) !important;
+  color: var(--realm-text) !important;
+  border: 2px solid white !important;
+  box-shadow: 0 3px 0 rgba(20, 78, 70, 0.20), 0 6px 14px rgba(20, 184, 166, 0.18) !important;
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+}
+
+/* ========================================================================
+ * 9. DISPLAYS NUMÉRICOS GRANDES — Bagel Fat One
+ * ====================================================================== */
+html[data-game] .container :is(
+  .inv-alvo,
+  .sn-conta-expr,
+  .cu-desafio-expr,
+  .cu-total,
+  .treino-expr,
+  .soma-expr,
+  .soma-resultado,
+  .cz-pessoas-num,
+  .fracao-label,
+  .comut-expr,
+  .comut-result,
+  .contagem-pista,
+  .flash-resultado .score
+) {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.5px !important;
+  color: var(--text-primary) !important;
+}
+html[data-game] .container :is(.inv-alvo, .sn-conta-expr, .cu-desafio-expr, .treino-expr) {
+  background: linear-gradient(135deg, var(--realm-dark) 0%, var(--accent-violet) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* ========================================================================
+ * 10. QUADROS DE INSIGHT / MACETE — cream com borda gold + texto realm
+ * ====================================================================== */
+html[data-game] .container :is(
+  .comut-insight,
+  .macete-card,
+  .macete-soma,
+  .instr,
+  .cz-explicacao,
+  .fr-insight,
+  .upsell-banner
+) {
+  background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%) !important;
+  border: 2px solid var(--accent-gold) !important;
+  border-left: 5px solid var(--accent-gold-deep) !important;
+  border-radius: var(--radius-md) !important;
+  color: #78350f !important;
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  padding: 12px 14px !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+html[data-game] .container :is(.comut-insight, .macete-card, .macete-soma, .instr, .cz-explicacao, .fr-insight) :is(b, strong) {
+  color: #78350f !important;
+}
+
+/* "Uau" do beleza modal */
+html[data-game="beleza"] .container .uau {
+  background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%) !important;
+  border: 2px solid var(--accent-gold) !important;
+  border-left: 5px solid var(--accent-gold-deep) !important;
+  border-radius: var(--radius-md) !important;
+  color: #78350f !important;
+  padding: 12px 14px !important;
+  margin-top: 10px !important;
+}
+
+/* ========================================================================
+ * 11. UPSELL BANNERS — destaque suave no topo da tabuada
+ * ====================================================================== */
+html[data-game="tabuada"] .container .upsell-banner {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-decoration: none !important;
+  color: #78350f !important;
+  font-size: 13px !important;
+  margin: 0 0 14px !important;
+}
+html[data-game="tabuada"] .container .upsell-banner .ub-text strong {
+  color: var(--accent-violet-deep) !important;
+}
+html[data-game="tabuada"] .container .upsell-banner .ub-arrow {
+  color: var(--accent-gold-deep) !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+}
+
+/* Resultado treino (tabuada) — gradient verde celebrativo + botões nele */
+html[data-game="tabuada"] .container .resultado-treino,
+html[data-game="soma"] .container .resultado-treino {
+  background: linear-gradient(135deg, #d1f5e2 0%, #34d399 100%) !important;
+  color: #064e3b !important;
+  border: 3px solid white !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: var(--shadow-bigcard) !important;
+}
+html[data-game="tabuada"] .container .resultado-treino .resultado-texto,
+html[data-game="tabuada"] .container .resultado-treino .resultado-emoji {
+  color: #064e3b !important;
+}
+html[data-game="tabuada"] .container .upsell-result-btn {
+  background: var(--bg-card) !important;
+  color: #047857 !important;
+  border: 2px solid #047857 !important;
+  border-radius: var(--radius-pill) !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  padding: 12px 18px !important;
+  box-shadow: 0 3px 0 rgba(4, 78, 59, 0.20), 0 6px 14px rgba(4, 78, 59, 0.12) !important;
+}
+
+/* ========================================================================
+ * 12. AJUSTES ESPECÍFICOS POR JOGO
+ * ====================================================================== */
+
+/* TABUADA — pokédex cards (n1/n2/n3 visualmente distintos mas v9-style) */
+html[data-game="tabuada"] .container .poke-card,
+html[data-game="soma"] .container .poke-card {
+  border-radius: var(--radius-md) !important;
+  border: 2.5px solid white !important;
+  box-shadow: var(--shadow-card) !important;
+  font-family: var(--font-body) !important;
+  transition: transform var(--transition-base), box-shadow var(--transition-base) !important;
+}
+html[data-game="tabuada"] .container .poke-card:hover,
+html[data-game="soma"] .container .poke-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--shadow-card-hover) !important;
+}
+html[data-game="tabuada"] .container .poke-card.bloq,
+html[data-game="soma"] .container .poke-card.bloq {
+  background: linear-gradient(180deg, #f5f3ff 0%, #ddd6fe 100%) !important;
+  color: #6b54a3 !important;
+  filter: none !important;
+}
+html[data-game="tabuada"] .container .poke-card.trivial {
+  background: linear-gradient(180deg, #d1f5e2 0%, #6ee7b7 100%) !important;
+  color: #064e3b !important;
+  border-color: white !important;
+}
+html[data-game="tabuada"] .container .poke-card.n1,
+html[data-game="soma"] .container .poke-card.n1 {
+  background: linear-gradient(180deg, #ffd6d0 0%, #fb923c 100%) !important;
+  color: #7c2d12 !important;
+}
+html[data-game="tabuada"] .container .poke-card.n2,
+html[data-game="soma"] .container .poke-card.n2 {
+  background: linear-gradient(180deg, #fef0c2 0%, #f59e0b 100%) !important;
+  color: #78350f !important;
+}
+html[data-game="tabuada"] .container .poke-card.n3,
+html[data-game="soma"] .container .poke-card.n3 {
+  background: linear-gradient(180deg, #d1f5e2 0%, #34d399 100%) !important;
+  color: #064e3b !important;
+}
+html[data-game="tabuada"] .container .poke-num,
+html[data-game="soma"] .container .poke-num {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.5px !important;
+}
+html[data-game="tabuada"] .container .pokedex-titulo,
+html[data-game="soma"] .container .pokedex-titulo {
+  font-family: var(--font-tagline) !important;
+  font-size: 16px !important;
+  color: var(--realm-text) !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-weight: 600 !important;
+}
+
+/* TABUADA — comut-box (par comutativo) */
+html[data-game="tabuada"] .container .comut-box {
+  background: var(--bg-card) !important;
+  border: 2px solid var(--realm-dark) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+/* TABUADA — barra de progresso branca dentro do treino-header */
+html[data-game="tabuada"] .container .treino-progresso {
+  background: rgba(255, 255, 255, 0.45) !important;
+  border-radius: var(--radius-pill) !important;
+  height: 10px !important;
+  overflow: hidden !important;
+}
+html[data-game="tabuada"] .container .treino-progresso-fill {
+  background: white !important;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6) !important;
+}
+
+/* SOMA — bolinhas e grupos (visual de contagem) */
+html[data-game="soma"] .container .grupo-bolinhas {
+  border-radius: var(--radius-md) !important;
+  padding: 10px !important;
+  box-shadow: inset 0 2px 4px rgba(45, 27, 94, 0.05) !important;
+}
+html[data-game="soma"] .container .grupo-bolinhas.g1 { background: #d1f5e2 !important; }
+html[data-game="soma"] .container .grupo-bolinhas.g2 { background: #fef3c7 !important; }
+html[data-game="soma"] .container .grupo-bolinhas.g3 { background: #fee2e2 !important; }
+html[data-game="soma"] .container .bolinha {
+  background: radial-gradient(circle at 30% 30%, var(--realm-light), var(--realm-dark)) !important;
+  box-shadow: 0 2px 4px rgba(45, 27, 94, 0.18) !important;
+}
+html[data-game="soma"] .container .soma-expr b { color: #047857 !important; }
+html[data-game="soma"] .container .soma-expr b.menos { color: #b91c1c !important; }
+
+/* FLASH — bolinhas (pontos no flash) */
+html[data-game="flash"] .container .ponto {
+  background: radial-gradient(circle at 30% 30%, var(--realm-light), var(--realm-dark)) !important;
+  box-shadow: 0 3px 8px rgba(236, 72, 153, 0.30) !important;
+}
+
+/* FLASH — contagem-pista (números aparecendo) */
+html[data-game="flash"] .container .contagem-pista {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  color: var(--realm-dark) !important;
+  text-shadow: 0 4px 10px rgba(236, 72, 153, 0.20) !important;
+}
+
+/* FRAÇÕES — pizza container e fração display */
+html[data-game="fracoes"] .container .fracao-label {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  color: var(--realm-text) !important;
+}
+html[data-game="fracoes"] .container .fracao-label .linha {
+  background: var(--realm-text) !important;
+}
+
+/* CUISENAIRE — barras coloridas (mantidas, só ajustar sombra) */
+html[data-game="cuisenaire"] .container .cu-barra {
+  border-radius: var(--radius-xs) !important;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.15), 0 2px 6px rgba(45, 27, 94, 0.18) !important;
+  font-family: var(--font-body) !important;
+}
+
+/* INVENTA — itens do histórico */
+html[data-game="inventa"] .container .inv-item {
+  background: var(--bg-card) !important;
+  border: 2px solid var(--realm-dark) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-pill) !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 0 rgba(45, 27, 94, 0.08) !important;
+}
+
+/* COZINHA — itens da lista de ingredientes */
+html[data-game="cozinha"] .container .cz-ing-item {
+  background: linear-gradient(135deg, #fffbeb 0%, var(--realm-light) 100%) !important;
+  border-radius: var(--radius-md) !important;
+  border: 2px solid white !important;
+  color: var(--text-primary) !important;
+  box-shadow: var(--shadow-sm) !important;
+  font-family: var(--font-body) !important;
+}
+html[data-game="cozinha"] .container .cz-ing-item b {
+  color: var(--realm-text) !important;
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+}
+html[data-game="cozinha"] .container .cz-pessoa-badge {
+  background: linear-gradient(135deg, var(--realm-light), var(--realm-dark)) !important;
+  color: var(--realm-text) !important;
+  border-radius: var(--radius-pill) !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+}
+
+/* PROBLEMAS — historia-card já recebe v9. Pergunta integrada precisa fonte display */
+html[data-game="problemas"] .container .historia-pergunta {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  color: var(--text-primary) !important;
+  letter-spacing: 0.3px !important;
+  border-top: 2px dashed var(--realm-dark) !important;
+}
+html[data-game="problemas"] .container .historia-texto {
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  color: var(--text-primary) !important;
+}
+html[data-game="problemas"] .container .historia-texto b {
+  color: var(--realm-text) !important;
+  font-weight: 700 !important;
+}
+
+/* SENSO — title do jeito (.sn-jeito-titulo) */
+html[data-game="senso"] .container .sn-jeito-titulo {
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+}
+
+/* ========================================================================
+ * 13. RESPONSIVO
+ * ====================================================================== */
+@media (max-width: 640px) {
+  html[data-game] .container :is(.acao, .prob-btn, .sn-btn, .cu-btn, .inv-btn, .flash-btn, .fr-btn.principal, .estudo-btn.principal) {
+    padding: 10px 18px !important;
+    font-size: 13px !important;
+  }
+  html[data-game] .container :is(.modo-tab, .op-tab, .chip-alvo, .chip-dif, .cu-modo-tab, .nivel-tab, .tempo-tab) {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+  html[data-game] .container :is(.treino-opcoes button, .prob-opcoes button, .flash-opcoes button, .cz-opcoes button) {
+    padding: 14px 6px !important;
+  }
+}
+
+/* === REDUCED MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  html[data-game] .container :is(button, .acao, .modo-tab, .op-tab) { transition: none !important; }
+}

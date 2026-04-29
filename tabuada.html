@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="jogos_matematica_shared.css?v=38">
 <link rel="stylesheet" href="tokens.css?v=39">
 <link rel="stylesheet" href="internas.css?v=39">
+<link rel="stylesheet" href="game-content.css?v=40">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -410,6 +411,7 @@
 </head>
 <body>
 <div class="container">
+  <a href="/" class="voltar" onclick="if(window.history.length>1){event.preventDefault();window.history.back();}">← Voltar ao início</a>
   <h1 class="titulo-tabuada">🧮 Tabuada Mágica</h1>
   <div class="sub-tabuada">Desbloqueie cada tabuada. Ordem não muda o total!</div>
 
@@ -476,8 +478,6 @@
       </div>
     </div>
   </div>
-
-  <a href="/" class="voltar" onclick="if(window.history.length>1){event.preventDefault();window.history.back();}">← Voltar</a>
 </div>
 
 <div class="confete-layer" id="confete-layer"></div>

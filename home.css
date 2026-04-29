@@ -776,40 +776,61 @@ body {
 .card-fracoes { --card-light: var(--card-fracoes-light); --card-dark: var(--card-fracoes-dark); }
 
 /* ============================================================================
- * BANNER EXPLORA — link pro app-irmão (História/Geografia 4° ano)
- * Pós-cards porque a demo aprovada não tem o chip no header.
+ * BANNER EXPLORA — barra roxa escura no topo do main, link pro app-irmão
+ * (História/Geografia). Movido pro topo a pedido do Henrique 29/04.
  * ========================================================================== */
 #explora-card {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin: var(--space-lg) 0 0;
-  padding: 14px 16px;
-  background: linear-gradient(135deg, #fff4dc 0%, #ffe0a0 100%);
-  border: 2.5px solid #d4a574;
+  margin: 0 0 var(--space-lg) 0;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #4c1d95 0%, #3b0d75 100%);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-md);
   text-decoration: none;
-  color: #3a2818;
+  color: var(--text-inverse);
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 4px 14px rgba(45, 27, 94, 0.30);
 }
 #explora-card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 18px rgba(45, 27, 94, 0.40);
+  border-color: rgba(255, 255, 255, 0.25);
 }
-#explora-card .ec-emoji { font-size: 32px; flex-shrink: 0; }
+#explora-card .ec-emoji { font-size: 30px; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25)); }
 #explora-card .ec-info { flex: 1; line-height: 1.35; }
-#explora-card .ec-title { font-size: 15px; font-weight: 800; color: #8b5a2b; letter-spacing: 0.3px; }
-#explora-card .ec-sub { font-size: 12px; color: #6b3a15; margin-top: 2px; }
-#explora-card .ec-cta {
-  background: #8b5a2b;
-  color: #fff;
-  font-size: 10px;
+#explora-card .ec-title {
+  font-family: var(--font-body);
+  font-size: 15px;
   font-weight: 800;
-  padding: 4px 10px;
-  border-radius: 10px;
+  color: var(--text-inverse);
+  letter-spacing: 0.3px;
+}
+#explora-card .ec-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.78);
+  margin-top: 2px;
+  font-weight: 500;
+}
+#explora-card .ec-cta {
+  background: var(--accent-gold);
+  color: #5a3a00;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
   letter-spacing: 0.5px;
   white-space: nowrap;
+  box-shadow: 0 2px 0 var(--accent-gold-deep);
+}
+
+@media (max-width: 640px) {
+  #explora-card { padding: 10px 14px; gap: 10px; }
+  #explora-card .ec-emoji { font-size: 26px; }
+  #explora-card .ec-title { font-size: 13px; }
+  #explora-card .ec-sub { font-size: 11px; }
+  #explora-card .ec-cta { font-size: 10px; padding: 5px 10px; }
 }
 
 /* ============================================================================
