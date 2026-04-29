@@ -21,8 +21,21 @@
 [data-realm="3"] { --realm-light: #fde68a; --realm-dark: #fbbf24; --realm-text: #78350f; }
 [data-realm="4"] { --realm-light: #bfdbfe; --realm-dark: #60a5fa; --realm-text: #1e3a8a; }
 [data-realm="5"] { --realm-light: #ddd6fe; --realm-dark: #a78bfa; --realm-text: #4c1d95; }
-[data-internas]:not([data-realm]) {
-  /* fallback neutro pra páginas sem reino (jogos individuais c/ data-game, adultas) */
+
+/* === PALETA POR JOGO (data-game) — usa tokens dos cards da home v9 === */
+[data-game="inventa"]    { --realm-light: var(--card-inventa-light);    --realm-dark: var(--card-inventa-dark);    --realm-text: #78350f; }
+[data-game="senso"]      { --realm-light: var(--card-senso-light);      --realm-dark: var(--card-senso-dark);      --realm-text: #78350f; }
+[data-game="cuisenaire"] { --realm-light: var(--card-barras-light);     --realm-dark: var(--card-barras-dark);     --realm-text: #7c2d12; }
+[data-game="beleza"]     { --realm-light: var(--card-beleza-light);     --realm-dark: var(--card-beleza-dark);     --realm-text: #7c2d12; }
+[data-game="problemas"]  { --realm-light: var(--card-problemas-light);  --realm-dark: var(--card-problemas-dark);  --realm-text: #064e3b; }
+[data-game="cozinha"]    { --realm-light: var(--card-cozinha-light);    --realm-dark: var(--card-cozinha-dark);    --realm-text: #134e4a; }
+[data-game="tabuada"]    { --realm-light: var(--card-tabuada-light);    --realm-dark: var(--card-tabuada-dark);    --realm-text: #7f1d1d; }
+[data-game="soma"]       { --realm-light: var(--card-soma-light);       --realm-dark: var(--card-soma-dark);       --realm-text: #831843; }
+[data-game="flash"]      { --realm-light: var(--card-flash-light);      --realm-dark: var(--card-flash-dark);      --realm-text: #831843; }
+[data-game="fracoes"]    { --realm-light: var(--card-fracoes-light);    --realm-dark: var(--card-fracoes-dark);    --realm-text: #831843; }
+
+[data-internas]:not([data-realm]):not([data-game]) {
+  /* fallback neutro pra adultas (sem reino, sem jogo) */
   --realm-light: var(--bg-page-deeper);
   --realm-dark: var(--accent-violet);
   --realm-text: var(--text-secondary);
@@ -39,6 +52,21 @@ html[data-internas] body {
   padding: 18px !important;
   position: relative;
   overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Proteção contra overflow horizontal em qualquer descendente */
+html[data-internas] .container,
+html[data-internas] .container * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+html[data-internas] img,
+html[data-internas] svg,
+html[data-internas] video,
+html[data-internas] canvas {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Constelações (estrelas pontilhadas no topo) */
