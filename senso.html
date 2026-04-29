@@ -12,7 +12,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=26">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=27">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -156,9 +156,40 @@
 
   <div class="sn-jeitos" id="sn-jeitos"></div>
 
+  <!-- Boaler 2.3.1: criança autoriza-se a inventar a própria estratégia -->
+  <button class="sn-jeito" style="background:#fff3d6;border-color:#ffd36b;text-align:center;cursor:pointer" onclick="abrirInventei()">
+    <div class="sn-jeito-titulo" style="justify-content:center"><span class="emoji">💭</span><span>Eu inventei outro jeito</span></div>
+    <div class="sn-jeito-sub" style="text-align:center">Conta como você fez!</div>
+  </button>
+
   <div class="sn-feedback" id="sn-feedback"></div>
 
-  <button class="sn-btn" onclick="novaConta()">🎲 Outra conta</button>
+  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px">
+    <button class="sn-btn" onclick="novaConta()" style="margin:0">🎲 Outra conta</button>
+    <button class="sn-btn sec" onclick="abrirKit()" style="margin:0">🧰 Meu kit</button>
+  </div>
+</div>
+
+<!-- Modal "inventei" -->
+<div id="modal-inventei" style="display:none;position:fixed;inset:0;background:rgba(20,12,50,0.6);z-index:999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:14px;padding:18px;max-width:380px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,0.25)">
+    <div style="font-weight:800;color:#4a3b8a;margin-bottom:6px;font-size:16px">💭 Conta pra gente como você fez!</div>
+    <div style="font-size:12px;color:#888;margin-bottom:10px">Pode escrever do seu jeito — não tem certo nem errado.</div>
+    <textarea id="inventei-input" rows="4" style="width:100%;padding:10px;border:2px solid #c5bbe9;border-radius:10px;font-family:inherit;font-size:14px;color:#4a3b8a;box-sizing:border-box;resize:vertical" placeholder="Ex: Eu peguei 1 do 56 e dei pro 29, virou 30 + 55 = 85..."></textarea>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button onclick="salvarInventei()" style="flex:1;background:linear-gradient(135deg,#6b54d3,#b968e8);color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit">Salvar minha estratégia</button>
+      <button onclick="fecharInventei()" style="background:#f7f5ff;color:#888;border:2px solid #c5bbe9;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal "kit de estratégias" -->
+<div id="modal-kit" style="display:none;position:fixed;inset:0;background:rgba(20,12,50,0.6);z-index:999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:14px;padding:18px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 10px 30px rgba(0,0,0,0.25)">
+    <div style="font-weight:800;color:#4a3b8a;margin-bottom:12px;font-size:16px">🧰 Meu kit de estratégias</div>
+    <div id="kit-conteudo" style="font-size:13px;color:#4a3b8a;line-height:1.6"></div>
+    <button onclick="fecharKit()" style="margin-top:14px;background:#f7f5ff;color:#888;border:2px solid #c5bbe9;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;width:100%;font-family:inherit">Fechar</button>
+  </div>
 </div>
 
 <div class="modal-overlay hidden" id="modal-overlay">
@@ -174,8 +205,8 @@
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="mascotes.js?v=26"></script>
-<script src="jogos_shared.js?v=26"></script>
+<script src="mascotes.js?v=27"></script>
+<script src="jogos_shared.js?v=27"></script>
 <script>
 STORAGE_KEY = 'jogosMat_default';
 CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
@@ -329,6 +360,71 @@ function novaConta() {
   document.getElementById('sn-feedback').className = 'sn-feedback';
   renderJeitos();
 }
+
+// Boaler 2.3.1 + 2.3.2: kit de estratégias (compartilhado com Problemas)
+const ESTRATEGIAS_KEY = 'matemagica_estrategias_v1';
+function carregarEstrategias() {
+  try { return JSON.parse(localStorage.getItem(ESTRATEGIAS_KEY) || '{"usadas":{},"inventadas":[]}'); }
+  catch(e) { return { usadas: {}, inventadas: [] }; }
+}
+function salvarEstrategias(d) {
+  try { localStorage.setItem(ESTRATEGIAS_KEY, JSON.stringify(d)); } catch(e) {}
+}
+
+function abrirInventei() {
+  document.getElementById('modal-inventei').style.display = 'flex';
+  setTimeout(() => document.getElementById('inventei-input').focus(), 100);
+}
+function fecharInventei() {
+  document.getElementById('modal-inventei').style.display = 'none';
+  document.getElementById('inventei-input').value = '';
+}
+function salvarInventei() {
+  const txt = document.getElementById('inventei-input').value.trim();
+  if (!txt) { fecharInventei(); return; }
+  const d = carregarEstrategias();
+  d.inventadas.push({
+    texto: txt.slice(0, 240),
+    conta: _contaAtual ? `${_contaAtual.a} + ${_contaAtual.b}` : '',
+    data: new Date().toISOString()
+  });
+  salvarEstrategias(d);
+  fecharInventei();
+  const fb = document.getElementById('sn-feedback');
+  fb.className = 'sn-feedback acerto';
+  fb.innerHTML = `🧰 Estratégia salva no seu kit! Você inventou ${d.inventadas.length} jeito${d.inventadas.length>1?'s':''}.`;
+  try {
+    jogoAtivo = 'senso_inventei';
+    STATE.acertou(jogoAtivo);
+    renderHeaderPlayer();
+    soltarConfete(40);
+    somMoeda();
+  } catch(e) {}
+}
+
+function abrirKit() {
+  const d = carregarEstrategias();
+  const NOMES_USADAS = {
+    somar_tudo: '➕ Somar tudo de uma vez',
+    separar_partes: '🧩 Separar em partes',
+    desenhei: '✏️ Desenhar',
+    cabeca: '🧠 Fazer de cabeça',
+    outro: '💭 Outro jeito',
+    arredondar: '⚖️ Ajustar dos dois lados',
+    decompor: '🧩 Quebrar em dezena/unidade',
+    completar10: '🔟 Completar o 10'
+  };
+  const usadasHtml = Object.entries(d.usadas).length ? Object.entries(d.usadas).map(([k, n]) => `<li><b>${NOMES_USADAS[k] || k}</b> <span style="color:#888;font-size:12px">(${n}x)</span></li>`).join('') : '<li style="color:#888;font-style:italic;list-style:none;padding-left:0">Ainda nenhuma — clica em "Como você pensou?" no Problemas pra começar</li>';
+  const inventadasHtml = d.inventadas.length ? d.inventadas.slice().reverse().slice(0, 20).map(i => `<li style="margin-bottom:8px"><div style="background:#fff3d6;border-left:4px solid #ffd36b;padding:8px 10px;border-radius:8px"><div style="font-style:italic;color:#5a3a00">"${i.texto}"</div>${i.conta ? `<div style="font-size:11px;color:#888;margin-top:4px">${i.conta} · ${new Date(i.data).toLocaleDateString('pt-BR')}</div>` : ''}</div></li>`).join('') : '<li style="color:#888;font-style:italic;list-style:none;padding-left:0">Ainda nenhuma — clica em "💭 Eu inventei outro jeito" pra começar</li>';
+  document.getElementById('kit-conteudo').innerHTML = `
+    <div style="font-weight:700;color:#1b7a3a;margin-bottom:6px">Estratégias que você usou</div>
+    <ul style="padding-left:22px;margin:0 0 14px">${usadasHtml}</ul>
+    <div style="font-weight:700;color:#8a5a10;margin-bottom:6px">Estratégias que você inventou</div>
+    <ul style="padding:0;margin:0;list-style:none">${inventadasHtml}</ul>
+  `;
+  document.getElementById('modal-kit').style.display = 'flex';
+}
+function fecharKit() { document.getElementById('modal-kit').style.display = 'none'; }
 
 initJogos();
 novaConta();

@@ -12,7 +12,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=26">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=27">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -144,18 +144,31 @@
 
   <div class="header-player" id="header-player"></div>
 
-  <div class="op-tabs" id="op-tabs">
-    <button class="op-tab ativo" data-op="soma" onclick="setOp('soma')">➕ Somar</button>
-    <button class="op-tab" data-op="subtracao" onclick="setOp('subtracao')">➖ Subtrair</button>
-    <button class="op-tab" data-op="multiplicacao" onclick="setOp('multiplicacao')">✖️ Multiplicar</button>
-    <button class="op-tab" data-op="divisao" onclick="setOp('divisao')">➗ Dividir</button>
-    <button class="op-tab" data-op="mix" onclick="setOp('mix')">🎲 Misturado</button>
+  <!-- Boaler 2.2.2: filtros escondidos atrás de "Modo de prática". Padrão: misturado -->
+  <div style="text-align:center;margin-bottom:12px">
+    <button onclick="abrirModoPratica()" style="background:#fff;color:#6b54d3;border:2px solid #c5bbe9;padding:8px 14px;border-radius:14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">⚙️ Modo de prática: <span id="op-label-atual">🎲 Variados</span></button>
+  </div>
+  <div id="modo-pratica-modal" style="display:none;position:fixed;inset:0;background:rgba(20,12,50,0.6);z-index:999;align-items:center;justify-content:center;padding:20px">
+    <div style="background:#fff;border-radius:14px;padding:18px;max-width:340px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,0.25)">
+      <div style="font-weight:800;color:#4a3b8a;margin-bottom:12px;font-size:15px">Como você quer praticar?</div>
+      <div style="display:grid;gap:6px">
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:2px solid #c5bbe9;border-radius:10px;cursor:pointer;font-size:14px;color:#4a3b8a"><input type="radio" name="op-rad" value="mix" checked> 🎲 Problemas variados <span style="color:#888;font-size:11px">(recomendado)</span></label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:2px solid #c5bbe9;border-radius:10px;cursor:pointer;font-size:14px;color:#4a3b8a"><input type="radio" name="op-rad" value="soma"> ➕ Só somar</label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:2px solid #c5bbe9;border-radius:10px;cursor:pointer;font-size:14px;color:#4a3b8a"><input type="radio" name="op-rad" value="subtracao"> ➖ Só subtrair</label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:2px solid #c5bbe9;border-radius:10px;cursor:pointer;font-size:14px;color:#4a3b8a"><input type="radio" name="op-rad" value="multiplicacao"> ✖️ Só multiplicar</label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:2px solid #c5bbe9;border-radius:10px;cursor:pointer;font-size:14px;color:#4a3b8a"><input type="radio" name="op-rad" value="divisao"> ➗ Só dividir</label>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button onclick="aplicarModoPratica()" style="flex:1;background:linear-gradient(135deg,#6b54d3,#b968e8);color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit">Aplicar</button>
+        <button onclick="fecharModoPratica()" style="background:#f7f5ff;color:#888;border:2px solid #c5bbe9;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit">Cancelar</button>
+      </div>
+    </div>
   </div>
 
   <div class="prob-hud">
     <span>Acertos: <b id="hud-acertos">0</b></span>
     <span>Rodada: <b id="hud-rodada">0</b></span>
-    <span>Operação: <b id="hud-op">Somar</b></span>
+    <span>Operação: <b id="hud-op">🎲 Variados</b></span>
   </div>
 
   <div class="historia-card" id="historia-card">
@@ -185,8 +198,8 @@
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="mascotes.js?v=26"></script>
-<script src="jogos_shared.js?v=26"></script>
+<script src="mascotes.js?v=27"></script>
+<script src="jogos_shared.js?v=27"></script>
 <script>
 STORAGE_KEY = 'jogosMat_default';
 CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
@@ -263,18 +276,32 @@ const GERADORES = {
   mix: null // tratado em gerarProblema
 };
 
-let _opAtual = 'soma';
+let _opAtual = 'mix'; // Boaler 2.2.1: default misturado (criança triagra a operação)
 let _probAtual = null;
 let _acertos = 0;
 let _rodada = 0;
 
 function setOp(op) {
   _opAtual = op;
-  document.querySelectorAll('.op-tab').forEach(t => {
-    t.classList.toggle('ativo', t.dataset.op === op);
-  });
-  const nomes = { soma: 'Somar', subtracao: 'Subtrair', multiplicacao: 'Multiplicar', divisao: 'Dividir', mix: 'Misturado' };
+  const nomes = { soma: '➕ Só somar', subtracao: '➖ Só subtrair', multiplicacao: '✖️ Só multiplicar', divisao: '➗ Só dividir', mix: '🎲 Variados' };
   document.getElementById('hud-op').textContent = nomes[op];
+  const lbl = document.getElementById('op-label-atual');
+  if (lbl) lbl.textContent = nomes[op];
+}
+
+function abrirModoPratica() {
+  const m = document.getElementById('modo-pratica-modal');
+  m.style.display = 'flex';
+  // marca o atual
+  const r = m.querySelector(`input[name="op-rad"][value="${_opAtual}"]`);
+  if (r) r.checked = true;
+}
+function fecharModoPratica() { document.getElementById('modo-pratica-modal').style.display = 'none'; }
+function aplicarModoPratica() {
+  const sel = document.querySelector('input[name="op-rad"]:checked');
+  if (sel) setOp(sel.value);
+  fecharModoPratica();
+  gerarProblema();
 }
 
 function gerarProblema() {
@@ -324,6 +351,8 @@ function responder(v, btn) {
     fb.className = 'prob-feedback acerto';
     fb.innerHTML = `✨ Isso! ${_probAtual.resposta} ${getObjeto(_probAtual.texto)}. ${fraseSorteada(FRASES_ACERTO)}`;
     try { soltarConfete(20); reagirMascoteCoach('acerto'); } catch(e) {}
+    // Boaler 2.2.3: oferece reflexão sobre a estratégia (opcional, não bloqueia)
+    setTimeout(() => mostrarComoPensou(), 600);
   } else {
     btn.classList.add('erro');
     botoes.forEach(b => { if (parseInt(b.textContent) === _probAtual.resposta) b.classList.add('acerto'); });
@@ -359,9 +388,53 @@ function atualizarHUD() {
   document.getElementById('hud-rodada').textContent = _rodada;
 }
 
+// Boaler 2.2.3: "Como você pensou?" — pergunta opcional sobre estratégia depois de cada acerto.
+// Estratégias relatadas alimentam o contador "Estratégias" da home (Boaler 1.2.2).
+const ESTRATEGIAS_KEY = 'matemagica_estrategias_v1';
+function carregarEstrategiasUsadas() {
+  try { return JSON.parse(localStorage.getItem(ESTRATEGIAS_KEY) || '{"usadas":{},"inventadas":[]}'); }
+  catch(e) { return { usadas: {}, inventadas: [] }; }
+}
+function salvarEstrategiasUsadas(d) {
+  try { localStorage.setItem(ESTRATEGIAS_KEY, JSON.stringify(d)); } catch(e) {}
+}
+
+function mostrarComoPensou() {
+  const cont = document.getElementById('prob-feedback');
+  if (!cont) return;
+  const ja = document.getElementById('como-pensou-card');
+  if (ja) ja.remove();
+  const card = document.createElement('div');
+  card.id = 'como-pensou-card';
+  card.style.cssText = 'background:#f7f5ff;border:2px dashed #c5bbe9;border-radius:12px;padding:12px;margin-top:10px;text-align:left';
+  card.innerHTML = `
+    <div style="font-size:13px;font-weight:700;color:#4a3b8a;margin-bottom:8px">✏️ Como você pensou? <span style="font-weight:400;color:#888;font-size:11px">(opcional)</span></div>
+    <div style="display:grid;gap:5px">
+      ${[
+        ['somar_tudo', '➕ Eu somei tudo de uma vez'],
+        ['separar_partes', '🧩 Eu separei em partes'],
+        ['desenhei', '✏️ Eu desenhei'],
+        ['cabeca', '🧠 Eu fiz de cabeça'],
+        ['outro', '💭 Outro jeito']
+      ].map(([k, l]) => `<button onclick="registrarEstrategia('${k}')" style="text-align:left;background:#fff;border:2px solid #c5bbe9;color:#4a3b8a;padding:7px 10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">${l}</button>`).join('')}
+    </div>
+  `;
+  cont.parentNode.insertBefore(card, cont.nextSibling);
+}
+
+function registrarEstrategia(chave) {
+  const d = carregarEstrategiasUsadas();
+  d.usadas[chave] = (d.usadas[chave] || 0) + 1;
+  salvarEstrategiasUsadas(d);
+  const card = document.getElementById('como-pensou-card');
+  if (card) card.innerHTML = `<div style="text-align:center;font-size:13px;color:#1b7a3a;font-weight:700;padding:6px">✨ Anotado! Você já usou ${Object.keys(d.usadas).length} jeito${Object.keys(d.usadas).length>1?'s':''} diferente${Object.keys(d.usadas).length>1?'s':''}.</div>`;
+}
+
 // Init
 initJogos();
 atualizarHUD();
+setOp('mix');
+gerarProblema();
 </script>
 <script>
 if ('serviceWorker' in navigator) {
