@@ -23,7 +23,7 @@ export default async (req) => {
       { status: 400, headers: { "Content-Type": "application/json" } });
   }
 
-  const store = getStore("tracking");
+  const store = getStore({ name: "tracking", consistency: "strong" });
   await store.setJSON(external_id, {
     fbp: typeof fbp === "string" ? fbp.slice(0, 200) : "",
     fbc: typeof fbc === "string" ? fbc.slice(0, 200) : "",

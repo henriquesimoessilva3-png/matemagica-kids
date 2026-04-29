@@ -20,7 +20,7 @@ export default async (req) => {
       { status: 400, headers: CORS });
   }
 
-  const store = getStore("licencas");
+  const store = getStore({ name: "licencas", consistency: "strong" });
   let lic = null;
   try {
     lic = await store.get(key, { type: "json" });

@@ -50,7 +50,7 @@ export default async (req) => {
       { status: 400, headers: { "Content-Type": "application/json" } });
   }
 
-  const store = getStore("licencas");
+  const store = getStore({ name: "licencas", consistency: "strong" });
 
   // Dedup por transaction_id: Hotmart pode reentregar webhook em caso de retry,
   // e replays maliciosos com a mesma transaction não devem gerar nova licença.
@@ -105,7 +105,7 @@ export default async (req) => {
   let tracking = null;
   if (externalId) {
     try {
-      const trackStore = getStore("tracking");
+      const trackStore = getStore({ name: "tracking", consistency: "strong" });
       tracking = await trackStore.get(externalId, { type: "json" });
     } catch (e) {
       console.warn("Erro lendo tracking blob:", e.message);
