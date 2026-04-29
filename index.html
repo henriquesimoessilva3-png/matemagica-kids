@@ -345,13 +345,25 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
     #btn-atalho-topo { padding: 8px 10px; }
   }
 
-  /* Layout 2 colunas em desktop (Caroline v2 + ajuste Henrique 29/04) */
+  /* Layout 2 colunas em desktop (Caroline v3 — 2.5.4: 38%/62%) */
   .home-cols { display: block; }
-  @media (min-width: 760px) {
+  .acerto-cred {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #a87800;
+    background: linear-gradient(135deg, #fff3d6, #ffe5a3);
+    border: 1px solid #ffcc4a;
+    padding: 6px 14px;
+    border-radius: 14px;
+    margin: 8px auto 0;
+    display: inline-block;
+  }
+  @media (min-width: 1024px) {
     .home-cols {
       display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 24px;
+      grid-template-columns: 38fr 62fr;
+      gap: 32px;
       align-items: start;
       margin-bottom: 14px;
     }
@@ -364,7 +376,11 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
     }
     .home-col-esq .mascote-seletor { justify-content: center !important; }
     .home-col-esq .mascote-seletor-label { text-align: center !important; }
-    .home-col-esq .mascote-holder svg.mascote { width: 180px !important; }
+    .home-col-esq .mascote-holder svg.mascote { width: 220px !important; }
+  }
+  @media (min-width: 760px) and (max-width: 1023px) {
+    /* Tablet: coluna única (escolhi 'b' do spec — mais simples e legível) */
+    .home-cols { display: block; }
   }
 
   /* ===== DESKTOP: COMPACTO, CABE EM 1 TELA ===== */
@@ -547,27 +563,29 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
   <div class="sub" style="font-weight:700;color:#6b54d3">A criança joga. A matemática fica.</div>
   <div class="sub" style="margin-top:2px;font-size:12px;color:#888">Escolha o ano pra começar</div>
 
-  <!-- Layout 2 colunas em desktop: esquerda mascote/seletor/loja · direita continuar+3 grupos -->
+  <!-- Layout 2 colunas em desktop: esquerda mascote/seletor · direita loja+continuar+3 grupos -->
   <div class="home-cols">
     <div class="home-col-esq">
       <div class="mascote-wrap">
         <div class="mascote-holder" id="mascote-holder"></div>
         <div class="mascote-balao" id="mascote-balao">Carregando…</div>
-        <div class="mascote-seletor" id="mascote-seletor"></div>
+        <!-- Caroline v3 2.5.4: "Cada acerto +1" persistente na coluna esquerda -->
+        <div class="acerto-cred">🪙 Cada acerto: +1 crédito</div>
+        <div class="mascote-seletor" id="mascote-seletor" style="margin-top:14px"></div>
         <div class="mascote-seletor-label">Escolha seu mascote</div>
       </div>
 
       <div class="intro" style="margin-bottom:10px">Jogos alinhados à BNCC · Progresso salvo por ano</div>
 
       <div id="premium-slot"></div>
-
-      <!-- Loja vira ícone discreto (Caroline 2.5.1) -->
-      <div style="text-align:center;margin-bottom:6px">
-        <button onclick="abrirLoja()" style="display:inline-flex;align-items:center;gap:4px;color:#a87800;background:linear-gradient(135deg,#fff3d6,#ffe5a3);border:1px solid #ffcc4a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit">🛒 Loja · 🪙 <span id="moedas-home">0</span></button>
-      </div>
     </div>
 
     <div class="home-col-dir">
+      <!-- Loja entra como primeiro item da coluna direita (Caroline v3 2.5.4) -->
+      <div style="text-align:right;margin-bottom:14px">
+        <button onclick="abrirLoja()" style="display:inline-flex;align-items:center;gap:4px;color:#a87800;background:linear-gradient(135deg,#fff3d6,#ffe5a3);border:1px solid #ffcc4a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit">🛒 Loja · 🪙 <span id="moedas-home">0</span></button>
+      </div>
+
       <!-- Camada 1: Continuar de onde parou (Caroline 2.5.1) -->
       <div id="continuar-bloco" style="display:none;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:2.5px solid #4ab3a5;border-radius:16px;padding:14px 16px;margin-bottom:14px;text-align:center">
         <div style="font-size:11px;color:#1b7a3a;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:4px">Continuar de onde parou</div>
