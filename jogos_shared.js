@@ -2338,6 +2338,19 @@ function initJogos() {
   }
 }
 
+// Henrique 29/04 noite: Voltar inteligente — decide o destino conforme o estado
+function voltarSmart() {
+  const areaJogo = document.getElementById('area-jogo');
+  const menuCap = document.getElementById('menu-capitulo');
+  if (areaJogo && !areaJogo.classList.contains('hidden')) {
+    if (typeof voltarCapitulo === 'function') return voltarCapitulo();
+  }
+  if (menuCap && !menuCap.classList.contains('hidden')) {
+    if (typeof voltarMenu === 'function') return voltarMenu();
+  }
+  location.href = 'index.html';
+}
+
 // Caroline 2.5.1: registra último jogo aberto pra "Continuar de onde parou" na home
 function registrarUltimoJogo() {
   try {

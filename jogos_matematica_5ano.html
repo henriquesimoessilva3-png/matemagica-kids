@@ -20,7 +20,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=35">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=36">
 <style>
   .fracao-visual {
     display: inline-block; vertical-align: middle; text-align: center;
@@ -48,13 +48,13 @@
 </head>
 <body>
 <div class="container">
+  <button class="voltar" onclick="voltarSmart()">← Voltar</button>
   <h1>Jogos de Matemática</h1>
   <div class="sub">5º Ano — Preparação para o Fundamental II</div>
 
   <div class="header-player" id="header-player"></div>
 
   <div id="menu-principal">
-    <a href="index.html" class="voltar">← Voltar</a>
     <div class="capitulos">
       <button class="cap-card cap1" onclick="abrirCapitulo(1)">
         <span class="num">1</span><h3>Centenas de milhar</h3>
@@ -87,13 +87,11 @@
   </div>
 
   <div id="menu-capitulo" class="hidden">
-    <button class="voltar" onclick="voltarMenu()">← Voltar</button>
     <h2 id="titulo-cap" style="color:#4a3b8a; margin-bottom:16px;"></h2>
     <div class="jogos-lista" id="lista-jogos"></div>
   </div>
 
   <div id="area-jogo" class="hidden">
-    <button class="voltar" onclick="voltarCapitulo()">← Voltar aos jogos</button>
     <h2 id="titulo-jogo" style="color:#4a3b8a; margin-bottom:14px; font-size:20px;"></h2>
     <div class="placar-jogo">
       <div>Descobertas<strong id="j-acertos">0</strong></div>
@@ -119,8 +117,8 @@
   </div>
 </div>
 
-<script src="mascotes.js?v=35"></script>
-<script src="jogos_shared.js?v=35"></script>
+<script src="mascotes.js?v=36"></script>
+<script src="jogos_shared.js?v=36"></script>
 <script>
 STORAGE_KEY = 'jogosMat5ano_v1';
 
