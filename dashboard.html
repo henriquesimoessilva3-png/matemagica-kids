@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard dos Pais — Jogos de Matemática</title>
 <!-- Caroline 2.4: barreira leve pros adultos. Persiste por sessão. -->
-<script src="parent-gate.js?v=29"></script>
+<script src="parent-gate.js?v=30"></script>
 <!-- Microsoft Clarity (gravação de sessão + heatmap) -->
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -14,7 +14,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=29">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=30">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -377,9 +377,9 @@ const JOGOS_NOMES = {
 };
 
 const BADGES = {
-  primeira:{emoji:'🌟',nome:'1ª estrela'}, dez_estrelas:{emoji:'⭐',nome:'10 estrelas'},
-  cinquenta_estrelas:{emoji:'🏅',nome:'50 estrelas'}, cem_estrelas:{emoji:'🏆',nome:'100 estrelas'},
-  duzentas_estrelas:{emoji:'👑',nome:'200 estrelas'},
+  primeira:{emoji:'🌟',nome:'1ª descoberta'}, dez_estrelas:{emoji:'✨',nome:'10 descobertas'},
+  cinquenta_estrelas:{emoji:'🏅',nome:'50 descobertas'}, cem_estrelas:{emoji:'🏆',nome:'100 descobertas'},
+  duzentas_estrelas:{emoji:'👑',nome:'200 descobertas'},
   streak_5:{emoji:'🔥',nome:'Combo x5'}, streak_10:{emoji:'💥',nome:'Combo x10'}, streak_20:{emoji:'⚡',nome:'Combo x20'},
   dias_3:{emoji:'📅',nome:'3 dias'}, dias_7:{emoji:'🗓️',nome:'1 semana'}, dias_30:{emoji:'💎',nome:'1 mês'},
   nivel_5:{emoji:'🎖️',nome:'Nível 5'}, nivel_10:{emoji:'🎗️',nome:'Nível 10'}
@@ -603,14 +603,40 @@ function renderAno(ano) {
     heatmap.push({ str, jogado: diasJogados.includes(str), dia: d.getDate() });
   }
 
+  // Boaler P4 (Princípio 4): perguntas pra o jantar — rotativa por semana do ano
+  const PERGUNTAS_JANTAR = [
+    'Pergunta o que ela <b>descobriu hoje</b> que achou interessante. Não foque em "acertou X" — foca no "o que aprendeu".',
+    'Pergunta qual <b>jeito de resolver</b> ela inventou esta semana. Pede pra ela explicar.',
+    'Conta de uma vez que <b>você errou</b> em matemática quando criança e como descobriu o jeito certo. Errar é normal.',
+    'Pergunta <b>qual jogo do app é o favorito dela</b> e por quê. A resposta diz mais do que qualquer estatística.',
+    'Faz junto: peça pra ela <b>ensinar você</b> uma estratégia. Quem ensina aprende em dobro (Boaler).',
+    'Conta de um <b>uso de matemática</b> que você fez hoje (cozinha, troco, distância) — mostra que matemática é viva.',
+    'Pergunta o que ela acha <b>mais difícil</b> em matemática agora. Sem julgamento — só ouvir. "Em construção" é caminho.',
+    'Pede pra ela <b>desenhar uma fração</b> de algo (pizza, bolo, dia). Concretizar abstrato vira insight.',
+    'Pergunta <b>quantos jeitos diferentes</b> ela conhece pra fazer 10 (4+6, 5+5, 8+2, 100÷10...). Listar é divertido.',
+    'Joga junto: faça uma rodada do <b>Inventa!</b> com ela. Compete consigo mesma — quantas formas em 1 minuto?',
+    'Conta sobre <b>um erro famoso</b> da matemática (Newton vs Leibniz, divisão por zero...). Erros mudaram a história.',
+    'Pergunta: <b>"Onde você viu matemática hoje?"</b> Pode ser placa, troco, hora, número de páginas. Resposta surpreende.'
+  ];
+  function _semanaDoAno(d) {
+    const inicio = new Date(d.getFullYear(), 0, 1);
+    return Math.floor(((d - inicio) / 86400000 + inicio.getDay() + 1) / 7);
+  }
+  const perguntaIdx = _semanaDoAno(new Date()) % PERGUNTAS_JANTAR.length;
+
   let html = `
+    <div style="background:linear-gradient(135deg,#fff4dc,#ffe5a3);border:2px solid #d4a574;border-radius:14px;padding:14px 16px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:800;color:#8b5a2b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">💬 Pergunta pra o jantar (rotaciona toda semana)</div>
+      <div style="font-size:14px;line-height:1.5;color:#3a2818">${PERGUNTAS_JANTAR[perguntaIdx]}</div>
+    </div>
+
     <div class="resumo-grid">
-      <div class="card-stat gold"><div class="valor">⭐ ${estrelas}</div><div class="label">Estrelas totais</div></div>
+      <div class="card-stat gold"><div class="valor">✨ ${estrelas}</div><div class="label">Descobertas totais</div></div>
       <div class="card-stat"><div class="valor">Nv ${nivel}</div><div class="label">${xp} XP</div></div>
       <div class="card-stat gold"><div class="valor">🪙 ${moedas}</div><div class="label">Moedas</div></div>
-      <div class="card-stat"><div class="valor">🔥 ${streak}</div><div class="label">Dias seguidos</div></div>
+      <div class="card-stat"><div class="valor">📅 ${diasJogados.length}</div><div class="label">Dias jogando este mês</div></div>
       <div class="card-stat"><div class="valor">🏆 ${recorde}</div><div class="label">Maior combo</div></div>
-      <div class="card-stat"><div class="valor">📅 ${diasJogados.length}</div><div class="label">Dias jogados</div></div>
+      <div class="card-stat"><div class="valor">🏅 ${badges.length}</div><div class="label">Conquistas</div></div>
     </div>
 
     <div class="sessao-titulo">📈 Desempenho em revisões (últimos 14 dias)</div>
@@ -619,7 +645,7 @@ function renderAno(ano) {
     <div class="sessao-titulo">📚 Por capítulo / tipo de exercício</div>
     ${renderPorCapitulo(ano)}
 
-    <div class="sessao-titulo">⚠️ Onde mais erra (precisa treinar)</div>`;
+    <div class="sessao-titulo">🌱 Tópicos em construção</div>`;
 
   if (piores.length === 0) {
     html += '<div class="vazio">Precisa jogar pelo menos 3 vezes cada jogo pra análise sair.</div>';
@@ -686,8 +712,8 @@ function renderTodos() {
   let html = `
     <div class="todos-anos-header">
       <div style="text-align:center">
-        <div class="total">⭐ ${totais.estrelas}</div>
-        <div class="label">estrelas totais · ${taxaGeral}% de acerto geral</div>
+        <div class="total">✨ ${totais.estrelas}</div>
+        <div class="label">descobertas totais · ${taxaGeral}% de acerto geral</div>
       </div>
     </div>
 
@@ -723,7 +749,7 @@ function renderTodos() {
       </div>`;
   }
 
-  html += `<div class="sessao-titulo">⚠️ Top 5 onde mais erra (todos os anos)</div>`;
+  html += `<div class="sessao-titulo">🌱 Tópicos em construção (todos os anos)</div>`;
   if (piores.length === 0) {
     html += '<div class="vazio">Ainda não tem dados suficientes.</div>';
   } else {
