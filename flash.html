@@ -406,8 +406,11 @@ function renderPontosAgrupados(n) {
   grid.style.gridTemplateColumns = '';
   grid.style.alignItems = 'center';
   grid.style.gap = '24px';
-  const grupo1 = `<div style="display:grid;grid-template-columns:repeat(5,30px);gap:6px;padding:6px;border:2px dashed #6b54d3;border-radius:14px">${'<div class="ponto ' + cores[corIdx] + '"></div>'.repeat(5)}</div>`;
-  const grupo2 = `<div style="display:grid;grid-template-columns:repeat(${resto},30px);gap:6px;padding:6px;border:2px dashed #b968e8;border-radius:14px">${'<div class="ponto ' + cores[corIdx] + '"></div>'.repeat(resto)}</div>`;
+  // Bug fix: parênteses garantem que .repeat() opere na string completa, não só
+  // no '"></div>' final (que era o comportamento sem parênteses devido à precedência).
+  const ponto = `<div class="ponto ${cores[corIdx]}"></div>`;
+  const grupo1 = `<div style="display:grid;grid-template-columns:repeat(5,30px);gap:6px;padding:6px;border:2px dashed #6b54d3;border-radius:14px">${ponto.repeat(5)}</div>`;
+  const grupo2 = `<div style="display:grid;grid-template-columns:repeat(${resto},30px);gap:6px;padding:6px;border:2px dashed #b968e8;border-radius:14px">${ponto.repeat(resto)}</div>`;
   grid.innerHTML = grupo1 + grupo2;
 }
 
