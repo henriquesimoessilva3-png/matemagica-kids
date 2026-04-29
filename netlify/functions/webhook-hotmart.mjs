@@ -55,11 +55,16 @@ export default async (req) => {
   // Dedup por transaction_id: Hotmart pode reentregar webhook em caso de retry,
   // e replays maliciosos com a mesma transaction não devem gerar nova licença.
   if (transaction) {
-    const existing = await store.get(`tx:${transaction}`, { type: "json" });
-    if (existing && existing.key) {
-      console.log(`Dedup hit: transaction=${transaction} key=${existing.key}`);
-      return new Response(JSON.stringify({ ok: true, key: existing.key, dedup: true }),
-        { status: 200, headers: { "Content-Type": "application/json" } });
+    try {
+      const existing = await store.get(`tx_${transaction}`, { type: "json" });
+      console.log(`[dedup-check] tx_${transaction} existing=${JSON.stringify(existing)}`);
+      if (existing && existing.key) {
+        console.log(`[dedup-hit] transaction=${transaction} key=${existing.key}`);
+        return new Response(JSON.stringify({ ok: true, key: existing.key, dedup: true }),
+          { status: 200, headers: { "Content-Type": "application/json" } });
+      }
+    } catch (e) {
+      console.error(`[dedup-check-error] ${e.message}`);
     }
   }
 
@@ -78,7 +83,12 @@ export default async (req) => {
 
   // Indexa por transaction pra dedup em re-entregas/replays
   if (transaction) {
-    await store.setJSON(`tx:${transaction}`, { key, processedAt: new Date().toISOString() });
+    try {
+      await store.setJSON(`tx_${transaction}`, { key, processedAt: new Date().toISOString() });
+      console.log(`[dedup-write] tx_${transaction} -> ${key}`);
+    } catch (e) {
+      console.error(`[dedup-write-error] ${e.message}`);
+    }
   }
 
   // Envia email com link de ativação (se Resend configurado)
