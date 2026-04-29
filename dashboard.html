@@ -439,8 +439,8 @@ function renderGraficoLinha(ano) {
   const temDados = serie.some(p => p.pct !== null);
   if (!temDados) {
     return `<div class="vazio">
-      Sem histórico de provas ainda.<br>
-      <small>Faça uma prova em <a href="provas.html" style="color:#6b54d3">Provas</a> pra começar o histórico.</small>
+      Sem histórico de revisões ainda.<br>
+      <small>Faça uma revisão em <a href="provas.html" style="color:#6b54d3">Revisão</a> pra começar o histórico.</small>
     </div>`;
   }
 
@@ -483,7 +483,7 @@ function renderGraficoLinha(ano) {
         ${labels}
       </svg>
       <div class="grafico-legenda">
-        <div class="item"><span class="pt" style="background:#6b54d3"></span>Taxa de acerto em provas</div>
+        <div class="item"><span class="pt" style="background:#6b54d3"></span>Taxa de acerto em revisões</div>
       </div>
     </div>`;
 }
@@ -551,7 +551,7 @@ function renderHistoricoProvas(ano /* ou null */) {
   execs.sort((a, b) => b.data.localeCompare(a.data));
   const recentes = execs.slice(0, 10);
 
-  if (recentes.length === 0) return '<div class="vazio">Nenhuma prova feita ainda.</div>';
+  if (recentes.length === 0) return '<div class="vazio">Nenhuma revisão feita ainda.</div>';
 
   return recentes.map(e => {
     const dia = new Date(e.data);
@@ -611,7 +611,7 @@ function renderAno(ano) {
       <div class="card-stat"><div class="valor">📅 ${diasJogados.length}</div><div class="label">Dias jogados</div></div>
     </div>
 
-    <div class="sessao-titulo">📈 Desempenho em provas (últimos 14 dias)</div>
+    <div class="sessao-titulo">📈 Desempenho em revisões (últimos 14 dias)</div>
     ${renderGraficoLinha(ano)}
 
     <div class="sessao-titulo">📚 Por capítulo / tipo de exercício</div>
@@ -633,7 +633,7 @@ function renderAno(ano) {
     }).join('');
   }
 
-  html += `<div class="sessao-titulo">📝 Histórico de provas</div>${renderHistoricoProvas(ano)}`;
+  html += `<div class="sessao-titulo">📚 Histórico de revisões</div>${renderHistoricoProvas(ano)}`;
 
   html += `<div class="sessao-titulo">📅 Últimos 28 dias</div>
     <div class="heat-days">
@@ -696,7 +696,7 @@ function renderTodos() {
       <div class="card-stat"><div class="valor">🏅 ${totais.badges}</div><div class="label">Conquistas</div></div>
     </div>
 
-    <div class="sessao-titulo">📈 Desempenho em provas (últimos 14 dias)</div>
+    <div class="sessao-titulo">📈 Desempenho em revisões (últimos 14 dias)</div>
     ${renderGraficoLinha(null)}
 
     <div class="sessao-titulo">📊 Progresso por ano</div>`;
@@ -737,7 +737,7 @@ function renderTodos() {
     }).join('');
   }
 
-  html += `<div class="sessao-titulo">📝 Histórico de provas (todas)</div>${renderHistoricoProvas(null)}`;
+  html += `<div class="sessao-titulo">📚 Histórico de revisões (todas)</div>${renderHistoricoProvas(null)}`;
 
   return html;
 }

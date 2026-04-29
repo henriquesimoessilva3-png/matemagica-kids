@@ -332,7 +332,7 @@ const MASCOTES = {
         'BIP BOP! Correto!',
         'Cálculo: perfeito!',
         'Operação bem-sucedida!',
-        'Sistema: estrela +1!',
+        'Sistema: descoberta +1!',
         'Dados confirmados!',
         'Tentativa: validada!',
         'Robô feliz: 100%',
@@ -347,7 +347,7 @@ const MASCOTES = {
         'Bug no sistema? Não, faz parte!'
       ],
       combo: [
-        'Streak processado!',
+        'Combo turbo!',
         'Turbo modo!',
         'Máquina perfeita!'
       ]

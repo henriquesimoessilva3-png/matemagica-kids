@@ -24,18 +24,18 @@ const PAGINAS_PREMIUM = [
 
 // ============== BADGES ==============
 const BADGES = {
-  primeira: { emoji:'🌟', nome:'Primeira estrela', desc:'Você ganhou sua primeira estrela!' },
-  dez_estrelas: { emoji:'⭐', nome:'10 estrelas', desc:'Acumulou 10 estrelas' },
-  cinquenta_estrelas: { emoji:'🏅', nome:'50 estrelas', desc:'Meio cem!' },
-  cem_estrelas: { emoji:'🏆', nome:'100 estrelas', desc:'Lenda!' },
-  duzentas_estrelas: { emoji:'👑', nome:'200 estrelas', desc:'Mestre das estrelas!' },
+  primeira: { emoji:'🌟', nome:'Primeira descoberta', desc:'Você fez sua primeira descoberta!' },
+  dez_estrelas: { emoji:'✨', nome:'10 descobertas', desc:'Acumulou 10 descobertas' },
+  cinquenta_estrelas: { emoji:'🏅', nome:'50 descobertas', desc:'Meio cem de descobertas!' },
+  cem_estrelas: { emoji:'🏆', nome:'100 descobertas', desc:'Lenda das descobertas!' },
+  duzentas_estrelas: { emoji:'👑', nome:'200 descobertas', desc:'Mestre das descobertas!' },
   streak_5: { emoji:'🔥', nome:'Combo x5', desc:'5 acertos seguidos' },
   streak_10: { emoji:'💥', nome:'Combo x10', desc:'10 acertos seguidos' },
   streak_20: { emoji:'⚡', nome:'Combo x20', desc:'20 acertos seguidos!' },
-  dias_3: { emoji:'📅', nome:'3 dias seguidos', desc:'Hábito nascendo' },
+  dias_3: { emoji:'📅', nome:'3 dias jogando', desc:'Hábito nascendo' },
   dias_7: { emoji:'🗓️', nome:'1 semana', desc:'Uma semana jogando!' },
   dias_30: { emoji:'💎', nome:'1 mês', desc:'Persistente de verdade!' },
-  capitulo_1: { emoji:'📘', nome:'Cap. 1 dominado', desc:'10 estrelas em cada jogo do cap. 1' },
+  capitulo_1: { emoji:'📘', nome:'Cap. 1 dominado', desc:'10 descobertas em cada jogo do cap. 1' },
   nivel_5: { emoji:'🎖️', nome:'Nível 5', desc:'Chegou ao nível 5' },
   nivel_10: { emoji:'🎗️', nome:'Nível 10', desc:'Chegou ao nível 10' },
   matemagico: { emoji:'✨', nome:'Matemágico', desc:'Apoiador Matemágica Completo' },
@@ -421,8 +421,8 @@ function renderHeaderPlayer() {
         <div class="hp-xp-fill" style="width:${prog}%"></div>
       </div>
       <div class="hp-rodape">
-        <span>⭐ ${STATE.estrelas}</span>
-        <span>🔥 ${STATE.streakDiario}d</span>
+        <span title="Descobertas">✨ ${STATE.estrelas}</span>
+        <span title="Dias jogados (não penaliza pausas)">📅 ${(STATE.diasJogados||[]).length}d</span>
         <span onclick="abrirModalBadges()" style="cursor:pointer">🏆 ${STATE.badges.length}</span>
         <span onclick="abrirLoja()" style="cursor:pointer;color:#a87800;font-weight:700">🛒 Loja</span>
       </div>
@@ -442,7 +442,7 @@ function atualizarPlacarGeral() {
 }
 
 function zerarProgresso() {
-  if (!confirm('Zerar estrelas, XP, badges e recordes deste ano? (suas moedas e compras da loja ficam intactas — elas são de todos os anos)')) return;
+  if (!confirm('Zerar descobertas, XP, conquistas e recordes deste ano? (suas moedas e compras da loja ficam intactas — elas são de todos os anos)')) return;
   STATE.zerar();
   atualizarPlacarGeral();
   alert('Progresso deste ano zerado! Começa de novo.');
@@ -1159,7 +1159,7 @@ function abrirCapitulo(n) {
     btn.className = 'jogo-card';
     btn.innerHTML = `
       <div class="info">${j.nome}<span class="desc">${j.desc}</span></div>
-      <div class="estrelinhas">⭐ ${estrelas}</div>`;
+      <div class="estrelinhas">✨ ${estrelas}</div>`;
     btn.onclick = () => abrirJogo(j.id, j.nome);
     lista.appendChild(btn);
   });
@@ -1328,7 +1328,7 @@ function feedbackAcerto(msg) {
   const fb = document.getElementById('feedback');
   if (fb) {
     const texto = msg || (eraPrimeira ? fraseSorteada(FRASES_PRIMEIRA_VEZ) : fraseSorteada(FRASES_ACERTO));
-    fb.innerHTML = '⭐ ' + texto + ' <span style="opacity:0.7;font-size:12px">(+10 XP · +1 🪙)</span>';
+    fb.innerHTML = '✨ ' + texto + ' <span style="opacity:0.7;font-size:12px">(+10 XP · +1 🪙)</span>';
     fb.className = 'feedback acerto';
   }
   const j = STATE.porJogo[jogoAtivo];
@@ -1537,13 +1537,13 @@ function iniciarModoProva() {
   header.style.cssText = 'background:linear-gradient(135deg,#4ab3a5,#1b7a3a);color:#fff;padding:14px 16px;border-radius:14px;margin-bottom:14px;box-shadow:0 4px 12px rgba(26,122,58,0.25)';
   header.innerHTML = `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;justify-content:space-between">
-      <span style="background:#fff;color:#1b7a3a;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:1px">📝 MODO PROVA</span>
+      <span style="background:#fff;color:#1b7a3a;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:1px">📚 REVISÃO</span>
       <button onclick="sairDaProva()" style="background:rgba(255,255,255,0.9);color:#1b7a3a;border:none;padding:4px 12px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">✕ Sair</button>
     </div>
     <div style="font-weight:800;font-size:20px;line-height:1.2;margin-bottom:8px" id="prova-nome">${MODO_PROVA.nome}</div>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px;opacity:0.95">
-      <div id="prova-progresso">Jogo 1 de ${MODO_PROVA.roteiro.length}</div>
-      <div id="prova-rodada" style="font-weight:700;font-size:14px">Rodada 1/${MODO_PROVA.roteiro[0].vezes}</div>
+      <div id="prova-progresso">Tópico 1 de ${MODO_PROVA.roteiro.length}</div>
+      <div id="prova-rodada" style="font-weight:700;font-size:14px">Exercício 1/${MODO_PROVA.roteiro[0].vezes}</div>
     </div>`;
   const area = document.getElementById('area-jogo');
   area.insertBefore(header, area.firstChild);
@@ -1578,8 +1578,8 @@ function atualizarHeaderProva() {
   const r = MODO_PROVA.roteiro[MODO_PROVA.indice];
   const prog = document.getElementById('prova-progresso');
   const rod = document.getElementById('prova-rodada');
-  if (prog) prog.textContent = `Jogo ${MODO_PROVA.indice + 1} de ${MODO_PROVA.roteiro.length}`;
-  if (rod) rod.textContent = `Rodada ${MODO_PROVA.atualVez + 1}/${r.vezes}`;
+  if (prog) prog.textContent = `Tópico ${MODO_PROVA.indice + 1} de ${MODO_PROVA.roteiro.length}`;
+  if (rod) rod.textContent = `Exercício ${MODO_PROVA.atualVez + 1}/${r.vezes}`;
   // placar do jogo atual
   const acs = document.getElementById('j-acertos');
   const tents = document.getElementById('j-tentativas');
@@ -1600,7 +1600,7 @@ function feedbackAcertoProva(msg) {
   somAcerto();
   jogoState.errosSeguidos = 0;
   const fb = document.getElementById('feedback');
-  if (fb) { fb.innerHTML = '⭐ ' + (msg || 'Muito bem!'); fb.className = 'feedback acerto'; }
+  if (fb) { fb.innerHTML = '✨ ' + (msg || 'Muito bem!'); fb.className = 'feedback acerto'; }
   if (MODO_PROVA.atualVez >= r.vezes) {
     setTimeout(avancarProva, 1400);
   } else {
@@ -1617,15 +1617,18 @@ function feedbackErroProva(msg, dica) {
   somErro();
   const fb = document.getElementById('feedback');
   if (fb) {
-    fb.innerHTML = msg + (dica ? `<span class="dica">💡 ${dica}</span>` : '');
+    const acolhedor = '<div style="font-weight:700;margin-bottom:4px">Hmm, vamos olhar de novo com calma.</div>';
+    const corpoMsg = msg ? `<div style="font-size:13px;opacity:0.9">${msg}</div>` : '';
+    const dicaHtml = dica ? `<span class="dica">💡 ${dica}</span>` : '';
+    fb.innerHTML = acolhedor + corpoMsg + dicaHtml;
     fb.className = 'feedback erro';
   }
   jogoState.errosSeguidos = (jogoState.errosSeguidos || 0) + 1;
   if (MODO_PROVA.atualVez >= r.vezes) {
-    setTimeout(avancarProva, 2200);
+    setTimeout(avancarProva, 2400);
   } else {
     atualizarHeaderProva();
-    setTimeout(() => JOGOS[jogoAtivo].iniciar(), 1800);
+    setTimeout(() => JOGOS[jogoAtivo].iniciar(), 2000);
   }
 }
 
@@ -1640,13 +1643,11 @@ function avancarProva() {
 }
 
 function mostrarResultadoProva() {
+  // Persistência interna (acertos/tempo) é mantida pro dashboard de pais — não é exibida pra criança.
   const totAcertos = MODO_PROVA.resultados.reduce((s, r) => s + r.acertos, 0);
   const totTotal = MODO_PROVA.resultados.reduce((s, r) => s + r.total, 0);
   const pct = totTotal > 0 ? Math.round(totAcertos / totTotal * 100) : 0;
   const tempo = Math.round((Date.now() - tempoInicioProva) / 1000);
-  const tempoTxt = tempo >= 60 ? `${Math.floor(tempo/60)}min ${tempo%60}s` : `${tempo}s`;
-
-  // salva no histórico da prova
   try {
     const provas = JSON.parse(localStorage.getItem('jogosMat_provas_v1') || '[]');
     const p = provas.find(x => x.id === MODO_PROVA.id);
@@ -1662,52 +1663,45 @@ function mostrarResultadoProva() {
     }
   } catch(e) {}
 
-  let emoji = '🏆', msg = 'Excelente!';
-  if (pct < 60) { emoji = '💪'; msg = 'Dá pra melhorar! Bora refazer?'; }
-  else if (pct < 80) { emoji = '👍'; msg = 'Bom trabalho!'; }
-  else if (pct < 100) { emoji = '🌟'; msg = 'Muito bem!'; }
-
-  const detalheHtml = MODO_PROVA.resultados.map(r => {
-    const p = r.total > 0 ? Math.round(r.acertos / r.total * 100) : 0;
-    const corBarra = p >= 80 ? '#4ab3a5' : p >= 60 ? '#ffd36b' : '#ff7b6b';
-    return `
-      <div style="background:#f7f5ff;border-radius:10px;padding:10px 12px;margin-bottom:6px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-          <span style="font-weight:600;color:#4a3b8a;font-size:13px">${r.jogoNome}</span>
-          <span style="font-weight:700;color:#4a3b8a;font-size:13px">${r.acertos}/${r.total}</span>
-        </div>
-        <div style="background:#e0dbf5;height:6px;border-radius:3px;overflow:hidden">
-          <div style="background:${corBarra};height:100%;width:${p}%"></div>
-        </div>
-      </div>`;
-  }).join('');
+  // Tela exibida pra criança: lista de tópicos revisados, sem nota/tempo/percentual.
+  const topicosHtml = MODO_PROVA.resultados.map(r => `
+    <div style="background:#f7f5ff;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:18px">📚</span>
+      <div style="flex:1">
+        <div style="font-weight:700;color:#4a3b8a;font-size:13px">${r.jogoNome}</div>
+        <div style="font-size:11px;color:#888">${r.total} exercício${r.total !== 1 ? 's' : ''} praticado${r.total !== 1 ? 's' : ''}</div>
+      </div>
+    </div>`).join('');
 
   document.getElementById('area-jogo').innerHTML = `
     <div style="text-align:center;padding:20px">
-      <div style="font-size:64px;margin-bottom:8px">${emoji}</div>
-      <h2 style="color:#4a3b8a;margin-bottom:4px;font-size:24px">${msg}</h2>
-      <div style="color:#888;font-size:14px;margin-bottom:16px">${MODO_PROVA.nome}</div>
-
-      <div style="background:linear-gradient(135deg,#4ab3a5,#1b7a3a);color:#fff;border-radius:14px;padding:18px;margin-bottom:14px">
-        <div style="font-size:44px;font-weight:800;line-height:1">${totAcertos}/${totTotal}</div>
-        <div style="font-size:14px;opacity:0.9">${pct}% de acerto · ${tempoTxt}</div>
-      </div>
+      <div style="font-size:48px;margin-bottom:6px">✨</div>
+      <h2 style="color:#4a3b8a;margin-bottom:4px;font-size:22px">Revisão concluída!</h2>
+      <div style="color:#888;font-size:13px;margin-bottom:18px">${MODO_PROVA.nome}</div>
 
       <div style="text-align:left;margin:14px 0">
-        <div style="font-weight:700;color:#4a3b8a;margin-bottom:8px;font-size:13px;text-transform:uppercase;letter-spacing:0.5px">Por exercício</div>
-        ${detalheHtml}
+        <div style="font-weight:700;color:#4a3b8a;margin-bottom:8px;font-size:13px;text-transform:uppercase;letter-spacing:0.5px">Hoje você revisou</div>
+        ${topicosHtml}
+      </div>
+
+      <div style="background:linear-gradient(135deg,#fff3d6,#ffe5a3);border-radius:12px;padding:14px;margin:14px 0;color:#5a3a00;font-size:13px;line-height:1.5">
+        Quer revisar algum tópico de novo com mais calma?
       </div>
 
       <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center">
-        <button class="acao" onclick="reiniciarProva()">🔄 Refazer</button>
-        <button class="acao sec" onclick="location.href='provas.html'">← Voltar às provas</button>
+        <button class="acao" onclick="reiniciarProva()">🔄 Revisar de novo</button>
+        <button class="acao sec" onclick="location.href='provas.html'">📚 Outra revisão</button>
+        <!-- nota: arquivo provas.html mantido por compat; rename + redirect 301 fica pra sprint posterior -->
+        <button class="acao sec" onclick="location.href='index.html'">✓ Já estou pronta(o)</button>
       </div>
+
+      <div style="margin-top:18px;color:#6b54d3;font-size:14px;font-weight:700">Boa prova amanhã 💛</div>
     </div>`;
   // remove header de prova no topo do area-jogo
   const header = document.getElementById('prova-header');
   if (header) header.remove();
-  soltarConfete(pct >= 80 ? 100 : 40);
-  if (pct >= 80) somCelebracao();
+  soltarConfete(80);
+  somCelebracao();
 }
 
 function reiniciarProva() {
@@ -1718,7 +1712,7 @@ function reiniciarProva() {
 }
 
 function sairDaProva() {
-  if (!confirm('Sair da prova agora? O progresso desta execução não será salvo no histórico.')) return;
+  if (!confirm('Sair da revisão agora? O progresso desta execução não será salvo no histórico.')) return;
   try { sessionStorage.removeItem('modoProva'); } catch(e) {}
   location.href = 'provas.html';
 }
@@ -2295,7 +2289,7 @@ function mostrarReforcoHistorico(id) {
   else if (j.acertos >= 20) frase = `Você manda nesse jogo — ${j.acertos} acertos no currículo 💪`;
   else if (j.acertos >= 10) frase = `Você já é fera aqui — acertou ${j.acertos} vezes!`;
   else                       frase = `Você já acertou esse jogo ${j.acertos} vezes. Manda bem!`;
-  banner.innerHTML = `<span class="estrela-grande">⭐</span>${frase}`;
+  banner.innerHTML = `<span class="estrela-grande">✨</span>${frase}`;
   cont.parentNode.insertBefore(banner, cont);
   setTimeout(() => { banner.style.opacity = '0'; }, 5500);
   setTimeout(() => banner.remove(), 6200);

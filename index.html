@@ -549,7 +549,7 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
     <a href="cuisenaire.html" style="display:inline-block;color:#4a3b8a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#f7f5ff,#ede8fa);border:1px solid #c5bbe9">🎨 Barras</a>
     <a href="beleza.html" style="display:inline-block;color:#6b1c9e;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#ede8fa,#d9c8f5);border:1px solid #b968e8">✨ Beleza</a>
     <a href="imprimir.html" style="display:inline-block;color:#1b4a2a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:1px solid #4ab3a5">📄 Imprimir</a>
-    <a href="provas.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px;background:#ede8fa;border:1px solid #d9cefa">📝 Provas</a>
+    <a href="provas.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px;background:#ede8fa;border:1px solid #d9cefa">📚 Revisão</a>
     <a href="dashboard.html" style="display:inline-block;color:#666;text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px;background:#f7f5ff;border:1px solid #d9cefa">📊 Pais</a>
   </div>
 
@@ -686,8 +686,8 @@ document.querySelectorAll('.ano-progresso').forEach(el => {
   const ano = el.dataset.ano;
   try {
     const data = JSON.parse(localStorage.getItem(chaves[ano]) || '{}');
-    const estrelas = data.estrelas || 0;
-    if (estrelas > 0) el.textContent = `⭐ ${estrelas}`;
+    const descobertas = data.estrelas || 0;
+    if (descobertas > 0) el.textContent = `✨ ${descobertas}`;
   } catch(e) {}
 });
 </script>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Provas — Jogos de Matemática</title>
+<title>Revisão — Matemágica</title>
 <!-- Microsoft Clarity (gravação de sessão + heatmap) -->
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -134,9 +134,9 @@
     display: inline-block; margin-bottom: 12px;
   }
 
-  /* ===== SOS PROVA ===== */
+  /* ===== REVISÃO ANTES DA PROVA ===== */
   .sos-hero {
-    background: linear-gradient(135deg, #ff7b6b, #ff9a44);
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
     color: #fff;
     border-radius: 16px;
     padding: 18px 16px;
@@ -325,20 +325,20 @@
 <body>
 <div class="container">
   <a href="index.html" class="voltar-topo">← Voltar aos jogos</a>
-  <h1>📝 Provas</h1>
-  <div class="sub">Monte uma sequência de exercícios personalizada</div>
+  <h1>📚 Revisão</h1>
+  <div class="sub">Monte um percurso de revisão calmo, no seu ritmo</div>
 
   <div class="aba-row">
-    <button class="aba ativo" id="aba-sos" onclick="mostrarAba('sos')" style="color:#c44a2a">🚨 SOS Prova</button>
-    <button class="aba" id="aba-lista" onclick="mostrarAba('lista')">Minhas Provas</button>
+    <button class="aba ativo" id="aba-sos" onclick="mostrarAba('sos')">📚 Revisar antes da prova</button>
+    <button class="aba" id="aba-lista" onclick="mostrarAba('lista')">Minhas Revisões</button>
     <button class="aba" id="aba-criar" onclick="mostrarAba('criar')">+ Nova</button>
   </div>
 
-  <!-- SOS PROVA -->
+  <!-- REVISÃO ANTES DA PROVA -->
   <div id="view-sos">
     <div class="sos-hero">
-      <h3>🚨 Prova é amanhã?</h3>
-      <p>A gente lê onde você mais erra e monta uma prova de 10 minutos focada nos pontos fracos.<br>Sem enrolação — direto no que importa.</p>
+      <h3>Quer revisar antes da prova?</h3>
+      <p>A gente olha junto com você os tópicos que sua escola vai cobrar e prepara um percurso de revisão calmo.<br>Sem cronômetro, sem placar — você revisa no seu ritmo, e a gente explica o que você quiser revisar de novo.</p>
     </div>
     <div class="sos-controles">
       <label>Ano:</label>
@@ -349,7 +349,7 @@
         <option value="4" selected>4º Ano</option>
         <option value="5">5º Ano</option>
       </select>
-      <button class="sos-btn-gerar" onclick="gerarSos()">🔍 Analisar</button>
+      <button class="sos-btn-gerar" onclick="gerarSos()">📚 Preparar revisão</button>
     </div>
     <div id="sos-resultado"></div>
   </div>
@@ -362,7 +362,7 @@
   <!-- EDITOR -->
   <div id="view-criar" class="hidden">
     <div class="editor-campo">
-      <label>Nome da prova</label>
+      <label>Nome da revisão</label>
       <input type="text" id="ed-nome" placeholder="Ex: Revisão de Frações - quinta">
     </div>
 
@@ -387,11 +387,11 @@
     </div>
     <div style="font-size:11px;color:#888;margin-bottom:16px">Número ao lado = quantas vezes esse exercício vai repetir. Padrão: 5.</div>
 
-    <label style="display:block;font-size:12px;color:#666;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Roteiro da prova</label>
+    <label style="display:block;font-size:12px;color:#666;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Roteiro da revisão</label>
     <div id="ed-roteiro"></div>
 
     <div style="display:flex;gap:8px;margin-top:16px">
-      <button class="acao" onclick="salvarProva()" style="flex:1">💾 Salvar prova</button>
+      <button class="acao" onclick="salvarProva()" style="flex:1">💾 Salvar revisão</button>
       <button class="acao sec" onclick="cancelarEdicao()">Cancelar</button>
     </div>
   </div>
@@ -733,8 +733,8 @@ function gerarSos() {
   if (selecao.length === 0 && testados.length === 0) {
     el.innerHTML = `
       <div class="sos-analise-vazio">
-        <div style="font-size:32px;margin-bottom:6px">🤔</div>
-        Ainda não tem dados suficientes desse ano. Joga um pouco primeiro (pelo menos 3 tentativas por jogo) e eu consigo identificar onde você precisa reforçar.
+        <div style="font-size:32px;margin-bottom:6px">🌱</div>
+        Ainda não tem dados suficientes desse ano. Joga um pouco primeiro (pelo menos 3 tentativas por jogo) e a gente consegue identificar os tópicos que estão em construção.
       </div>
       ${renderBonusHtml(sugerirBonus([], ano), 'sos')}`;
     return;
@@ -743,8 +743,8 @@ function gerarSos() {
   if (selecao.length === 0) {
     el.innerHTML = `
       <div class="sos-analise-vazio" style="background:#d4f5dd;border-color:#4ab3a5;color:#1b4a2a">
-        <div style="font-size:32px;margin-bottom:6px">🎉</div>
-        Tá tudo bem! Você acerta pelo menos 80% em todos os jogos que jogou. Se quiser, monta uma prova manual na aba <b>+ Nova</b>.
+        <div style="font-size:32px;margin-bottom:6px">🌳</div>
+        Tudo dominado por aqui! Você acerta pelo menos 80% em todos os jogos que jogou. Se quiser, monta uma revisão manual na aba <b>+ Nova</b>.
       </div>
       ${renderBonusHtml(sugerirBonus(testados, ano), 'sos')}`;
     return;
@@ -756,27 +756,26 @@ function gerarSos() {
   const totalExercicios = roteiro.reduce((s, r) => s + r.vezes, 0);
   const tempoEstimado = Math.ceil(totalExercicios * 15 / 60); // ~15s/pergunta
 
-  let html = `<div class="sos-analise-titulo">🎯 Pontos fracos detectados</div>`;
+  let html = `<div class="sos-analise-titulo">📚 Tópicos em construção</div>`;
   for (const j of selecao) {
     const pct = Math.round(j.pct * 100);
     const classe = pct < 50 ? 'criti' : (pct < 70 ? 'medio' : 'baixo');
-    const icone = pct < 50 ? '🔴' : (pct < 70 ? '🟡' : '🟢');
+    const icone = pct < 50 ? '🌱' : (pct < 70 ? '🌿' : '🌳');
     html += `
       <div class="sos-jogo-item ${classe}">
         <div class="sos-icone">${icone}</div>
         <div class="sos-info">
           <div class="sos-nome">${j.nome}</div>
-          <div class="sos-stats">Cap. ${j.cap} · ${j.capNome} · ${j.acertos}/${j.tentativas} tentativas</div>
+          <div class="sos-stats">Cap. ${j.cap} · ${j.capNome}</div>
         </div>
-        <div class="sos-pct">${pct}%</div>
       </div>`;
   }
 
   html += `
     <div class="sos-resumo">
-      <div class="sos-resumo-titulo">Prova montada</div>
-      <div class="sos-resumo-grande">${roteiro.length} jogos · ${totalExercicios} exercícios · ~${tempoEstimado} min</div>
-      <button class="sos-acao-comecar" onclick="iniciarSos()">▶ Começar agora</button>
+      <div class="sos-resumo-titulo">Revisão pronta</div>
+      <div class="sos-resumo-grande">${roteiro.length} jogos · ${totalExercicios} exercícios</div>
+      <button class="sos-acao-comecar" onclick="iniciarSos()">▶ Começar a revisão</button>
     </div>`;
 
   if (naoTestados.length > 0) {
@@ -791,7 +790,7 @@ function gerarSos() {
   // Armazena pra iniciar no próximo clique
   _sosProva = {
     id: 'sos-' + ano + '-' + Date.now(),
-    nome: `🚨 SOS — ${CATALOGO[ano].nome}`,
+    nome: `📚 Revisão — ${CATALOGO[ano].nome}`,
     ano,
     roteiro
   };
@@ -870,7 +869,7 @@ function renderBonusHtml(sugestoes, contexto) {
     ? '🌟 Pratique também nos módulos bônus'
     : '🌟 Quer praticar em outro formato?';
   const sub = contexto === 'sos'
-    ? 'Baseado nos pontos que detectamos, esses módulos complementam a prova.'
+    ? 'Baseado nos tópicos que detectamos, esses módulos complementam a revisão.'
     : 'Escolhe um tema que curtir — a matemática aparece diferente em cada.';
   return `
     <div class="bonus-wrap">
@@ -1015,7 +1014,7 @@ function removerRoteiro(idx) {
 
 function salvarProva() {
   const nome = document.getElementById('ed-nome').value.trim();
-  if (!nome) { alert('Dê um nome pra prova!'); return; }
+  if (!nome) { alert('Dê um nome pra revisão!'); return; }
   if (roteiroAtual.length === 0) { alert('Adicione pelo menos 1 jogo ao roteiro!'); return; }
   const ano = parseInt(document.getElementById('ed-ano').value);
 
@@ -1030,7 +1029,7 @@ function salvarProva() {
   if (idx >= 0) provas[idx] = prova; else provas.push(prova);
   salvarProvas(provas);
   edicaoAtual = null; roteiroAtual = [];
-  alert('Prova salva! 🎉');
+  alert('Revisão salva! 🎉');
   mostrarAba('lista');
 }
 
@@ -1042,7 +1041,7 @@ function cancelarEdicao() {
 }
 
 function deletarProva(id) {
-  if (!confirm('Apagar essa prova?')) return;
+  if (!confirm('Apagar essa revisão?')) return;
   const provas = carregarProvas().filter(p => p.id !== id);
   salvarProvas(provas);
   renderLista();
@@ -1062,9 +1061,9 @@ function renderLista() {
   const el = document.getElementById('lista-provas');
   if (provas.length === 0) {
     el.innerHTML = `<div class="vazio-msg">
-      <div class="big-emoji">📝</div>
-      Você ainda não tem nenhuma prova.<br>
-      Clica em <b>+ Nova Prova</b> pra criar uma.
+      <div class="big-emoji">📚</div>
+      Você ainda não tem nenhuma revisão salva.<br>
+      Clica em <b>+ Nova</b> pra criar uma.
     </div>
     ${renderBonusHtml(sugerirBonus([], 4), 'lista')}`;
     return;
@@ -1072,12 +1071,13 @@ function renderLista() {
   const cardsProvas = provas.map(p => {
     const totalEx = p.roteiro.reduce((s, r) => s + r.vezes, 0);
     const ultimaExec = p.historico?.length ? p.historico[p.historico.length - 1] : null;
+    const ultimaData = ultimaExec ? new Date(ultimaExec.quando || ultimaExec.data || Date.now()).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }) : null;
     return `
       <div class="prova-card">
         <h3>${p.nome}</h3>
         <div class="meta">
           ${CATALOGO[p.ano].nome} · ${p.roteiro.length} jogo${p.roteiro.length>1?'s':''} · ${totalEx} exercício${totalEx>1?'s':''}
-          ${ultimaExec ? ` · última: ${ultimaExec.acertos}/${ultimaExec.total} (${Math.round(ultimaExec.acertos/ultimaExec.total*100)}%)` : ''}
+          ${ultimaData ? ` · última revisão: ${ultimaData}` : ''}
         </div>
         <div class="acoes">
           <button class="btn-mini btn-jogar" onclick="iniciarProva('${p.id}')">▶ Começar</button>
