@@ -31,7 +31,7 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
 
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=36">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=37">
 <!-- Caroline v4 2.5.6.1: Fredoka pra logo/títulos + Fraunces pra tagline -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -638,13 +638,6 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
         <button onclick="abrirLoja()" style="display:inline-flex;align-items:center;gap:4px;color:#a87800;background:linear-gradient(135deg,#fff3d6,#ffe5a3);border:1px solid #ffcc4a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit">🛒 Loja · 🪙 <span id="moedas-home">0</span></button>
       </div>
 
-      <!-- Camada 1: Continuar de onde parou (Caroline 2.5.1) -->
-      <div id="continuar-bloco" style="display:none;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:2.5px solid #4ab3a5;border-radius:16px;padding:14px 16px;margin-bottom:14px;text-align:center">
-        <div style="font-size:11px;color:#1b7a3a;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:4px">Continuar de onde parou</div>
-        <div id="continuar-jogo-nome" style="font-size:18px;font-weight:800;color:#1b4a2a;margin-bottom:8px">Inventa!</div>
-        <a id="continuar-link" href="inventa.html" style="display:inline-block;background:linear-gradient(135deg,#2ebd7c,#1b9a5e);color:#fff;text-decoration:none;padding:10px 22px;border-radius:12px;font-weight:800;font-size:14px;box-shadow:0 4px 10px rgba(46,189,124,0.3)">▶ Continuar</a>
-      </div>
-
       <!-- Camada 3 (Caroline v2 2.5.2): 3 grupos taxonômicos -->
       <div style="margin-bottom:8px">
     <div style="font-size:13px;font-weight:800;color:#6b54d3;letter-spacing:0.3px;margin:14px 0 6px;display:flex;align-items:center;gap:6px"><span style="font-size:18px">🌟</span> Descobrir <span style="font-size:11px;color:#888;font-weight:400;font-style:italic">— onde todas as formas são válidas</span></div>
@@ -742,8 +735,8 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="jogos_shared.js?v=36"></script>
-<script src="mascotes.js?v=36"></script>
+<script src="jogos_shared.js?v=37"></script>
+<script src="mascotes.js?v=37"></script>
 <script>
 // ============== MASCOTE DA TELA INICIAL ==============
 let _falaIdx = 0;
@@ -823,33 +816,9 @@ document.querySelectorAll('.ano-progresso').forEach(el => {
   } catch(e) {}
 });
 
-// Caroline 2.5.1: "Continuar de onde parou" — lê último jogo aberto
-(function(){
-  const PAGES = {
-    'tabuada.html': '🧮 Tabuada Mágica',
-    'flash.html': '⚡ Flash Mágico',
-    'problemas.html': '📖 Problemas do Dia',
-    'inventa.html': '💡 Inventa!',
-    'soma.html': '➕ Soma',
-    'cozinha.html': '🍰 Cozinha',
-    'fracoes.html': '🍕 Frações',
-    'senso.html': '🧠 Senso Numérico',
-    'cuisenaire.html': '🎨 Barras Mágicas',
-    'beleza.html': '✨ Beleza da Matemática',
-    'jogos_matematica_1ano.html': 'Jogos do 1º Ano',
-    'jogos_matematica_2ano.html': 'Jogos do 2º Ano',
-    'jogos_matematica_3ano.html': 'Jogos do 3º Ano',
-    'jogos_matematica_4ano.html': 'Jogos do 4º Ano',
-    'jogos_matematica_5ano.html': 'Jogos do 5º Ano'
-  };
-  let ult = null;
-  try { ult = JSON.parse(localStorage.getItem('matemagica_ultimo_jogo_v1') || 'null'); } catch(e) {}
-  if (ult && ult.url && PAGES[ult.url]) {
-    document.getElementById('continuar-jogo-nome').textContent = PAGES[ult.url];
-    document.getElementById('continuar-link').href = ult.url;
-    document.getElementById('continuar-bloco').style.display = 'block';
-  }
-})();
+// Bloco "Continuar de onde parou" removido (29/04 noite) — empurrava conteúdo
+// pra baixo e estourava a viewport. Tracking em localStorage continua acontecendo
+// (jogos_shared.js → registrarUltimoJogo) caso queira voltar a exibir mais tarde.
 </script>
 
 <script>
