@@ -73,15 +73,15 @@ export default async (req) => {
   }
 
   // Dispara Conversions API pra Meta (atribuição confiável, blinda iOS/AdBlock)
+  // Nota: NÃO usamos req IP/User-Agent — vem do servidor Hotmart, não do comprador
   try {
     await disparaCAPI({
       email,
       nome,
+      phone: buyer.checkout_phone || buyer.phone || "",
       transactionId: transaction,
       value: parseFloat(purchase.price?.value || 27),
-      currency: purchase.price?.currency_value || "BRL",
-      ip: req.headers.get("x-forwarded-for")?.split(",")[0]?.trim(),
-      userAgent: req.headers.get("user-agent") || ""
+      currency: purchase.price?.currency_value || "BRL"
     });
   } catch (e) {
     console.error("Erro CAPI:", e.message);
@@ -99,7 +99,17 @@ async function sha256Hex(str) {
     .map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-async function disparaCAPI({ email, nome, transactionId, value, currency, ip, userAgent }) {
+// Normaliza pra E.164 sem '+' (Meta exige). BR national de 10-11 dígitos ganha código 55.
+function normalizaTelefone(phone) {
+  if (!phone) return "";
+  const digits = String(phone).replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) return digits;
+  if (digits.length === 10 || digits.length === 11) return "55" + digits;
+  return digits;
+}
+
+async function disparaCAPI({ email, nome, phone, transactionId, value, currency }) {
   const PIXEL_ID = Netlify.env.get("META_PIXEL_ID");
   const ACCESS_TOKEN = Netlify.env.get("META_CAPI_TOKEN");
   if (!PIXEL_ID || !ACCESS_TOKEN) {
@@ -109,12 +119,12 @@ async function disparaCAPI({ email, nome, transactionId, value, currency, ip, us
 
   const [first, ...rest] = (nome || "").trim().split(" ");
   const last = rest.join(" ");
+  const phoneNorm = normalizaTelefone(phone);
   const userData = {
     em: [await sha256Hex(email)],
     ...(first ? { fn: [await sha256Hex(first)] } : {}),
     ...(last ? { ln: [await sha256Hex(last)] } : {}),
-    ...(ip ? { client_ip_address: ip } : {}),
-    ...(userAgent ? { client_user_agent: userAgent } : {})
+    ...(phoneNorm ? { ph: [await sha256Hex(phoneNorm)] } : {})
   };
 
   const event = {
