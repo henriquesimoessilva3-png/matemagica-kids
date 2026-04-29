@@ -12,7 +12,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=28">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=29">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -198,6 +198,8 @@
     <button class="chip-alvo" onclick="escolherAlvo(25)">25</button>
     <button class="chip-alvo" onclick="escolherAlvo(50)">50</button>
     <button class="chip-alvo" onclick="escolherAlvo(100)">100</button>
+    <button class="chip-alvo" onclick="escolherAlvo(144)">144</button>
+    <button class="chip-alvo" onclick="escolherAlvo(1000)">1000</button>
   </div>
 
   <div class="inv-card" id="inv-card">
@@ -207,6 +209,9 @@
       Ex: <b>4 + 1</b>, <b>7 − 2</b>, <b>10 ÷ 2</b>, <b>1 × 5</b>, <b>3 + 1 + 1</b>. Use <b>+ − × ÷</b> e parênteses. <b>Cada forma diferente vale 1 moeda 🪙</b>.
     </div>
   </div>
+
+  <!-- Boaler 3.2.2: aparece após 30s sem descoberta. Não dá resposta, só sugere direção. -->
+  <button id="btn-provoca" onclick="provocaNovaFamilia()" style="display:none;background:linear-gradient(135deg,#ffd36b,#ff9a44);color:#5a3a00;border:2px solid #d4a020;padding:10px 18px;border-radius:14px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;margin:0 auto 10px;display:none">📣 Me provoca!</button>
 
   <div class="inv-input-area">
     <div class="inv-input-label">Sua expressão:</div>
@@ -259,8 +264,8 @@
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="mascotes.js?v=28"></script>
-<script src="jogos_shared.js?v=28"></script>
+<script src="mascotes.js?v=29"></script>
+<script src="jogos_shared.js?v=29"></script>
 <script>
 STORAGE_KEY = 'jogosMat_default';
 CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
@@ -269,6 +274,8 @@ CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
 let _alvo = 5;
 let _formas = new Set();   // canonicalizadas (sem espaços, normalizadas)
 let _formasOrig = [];      // lista de strings originais pra exibir
+let _descobriuComutativa = false;  // Boaler 3.2.1: troféu de comutatividade
+let _provocaTimer = null;  // Boaler 3.2.2: provoca após 30s sem descoberta
 
 function escolherAlvo(n) {
   _alvo = n;
@@ -364,8 +371,24 @@ function enviar() {
   }
   const canon = canonicalizar(expr);
   if (_formas.has(canon)) {
-    fb.textContent = `Dá ${_alvo}! Mas essa forma você já descobriu. Tenta outra — usa + − × ÷ em combinações diferentes.`;
-    fb.className = 'inv-feedback repetido';
+    // Boaler 3.2.1: detecta comutatividade — se canon é diferente da expr original,
+    // criança descobriu que a+b ≡ b+a (ou a×b ≡ b×a).
+    const limpaOrig = expr.replace(/\s/g, '').replace(/×/g, '*').replace(/÷/g, '/');
+    const ehComutativa = limpaOrig !== canon && /^\d+[+*]\d+$/.test(limpaOrig);
+    if (ehComutativa) {
+      const op = limpaOrig.includes('*') ? 'multiplicação' : 'soma';
+      fb.innerHTML = `🎯 <b>Boa!</b> ${expr.replace(/\*/g, '×')} e a forma que você já tinha são a mesma — isso é a <b>propriedade comutativa</b> da ${op}! A ordem dos fatores não muda o resultado.`;
+      fb.className = 'inv-feedback acerto';
+      try { somMoeda(); } catch(e) {}
+      // Marca que descobriu a comutatividade (uma vez por sessão)
+      if (!_descobriuComutativa) {
+        _descobriuComutativa = true;
+        setTimeout(() => { try { soltarConfete(40); } catch(e) {} }, 200);
+      }
+    } else {
+      fb.textContent = `Dá ${_alvo}! Mas essa forma você já descobriu. Tenta outra — usa + − × ÷ em combinações diferentes.`;
+      fb.className = 'inv-feedback repetido';
+    }
     return;
   }
   _formas.add(canon);
@@ -385,6 +408,7 @@ function enviar() {
   i.value = '';
   renderHistorico();
   atualizarHUD();
+  reiniciarProvocaTimer();
   try { reagirMascoteCoach('acerto'); } catch(e) {}
   if (_formas.size === 3) {
     try { soltarConfete(40); } catch(e) {}
@@ -423,10 +447,54 @@ document.getElementById('inv-input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') enviar();
 });
 
+// Boaler 3.2.2: botão "📣 Provoca!" sugere família de operação inexplorada
+function reiniciarProvocaTimer() {
+  if (_provocaTimer) clearTimeout(_provocaTimer);
+  const btn = document.getElementById('btn-provoca');
+  if (btn) btn.style.display = 'none';
+  _provocaTimer = setTimeout(() => {
+    const btn = document.getElementById('btn-provoca');
+    if (btn) {
+      btn.style.display = 'block';
+      btn.style.margin = '0 auto 10px';
+      btn.style.animation = 'gentlePulse 1.5s ease-in-out infinite';
+    }
+  }, 30000); // 30s
+}
+
+function provocaNovaFamilia() {
+  // Detecta operações já usadas
+  const usadas = { soma: false, sub: false, mult: false, div: false };
+  for (const f of _formas) {
+    if (f.includes('+')) usadas.soma = true;
+    if (f.includes('-')) usadas.sub = true;
+    if (f.includes('*')) usadas.mult = true;
+    if (f.includes('/')) usadas.div = true;
+  }
+  const sugestoes = [
+    !usadas.div ? 'E se você usasse divisão? 🤔' : null,
+    !usadas.mult ? 'E se você usasse multiplicação? 🤔' : null,
+    !usadas.sub ? 'E se você usasse subtração? 🤔' : null,
+    !usadas.soma ? 'E se você usasse soma? 🤔' : null,
+    'Tenta usar parênteses: (3+2)×2 conta como uma forma! 🤔',
+    'Que tal um número grande menos outro grande? Tipo 100−' + (100 - _alvo) + ' 🤔'
+  ].filter(Boolean);
+  const fb = document.getElementById('inv-feedback');
+  fb.innerHTML = '<b>📣 ' + sugestoes[0] + '</b>';
+  fb.className = 'inv-feedback';
+  fb.style.background = '#fff3d6';
+  fb.style.color = '#5a3a00';
+  fb.style.borderLeft = '4px solid #ffd36b';
+  fb.style.padding = '10px';
+  fb.style.borderRadius = '8px';
+  reiniciarProvocaTimer();
+}
+
 // Init
 initJogos();
 escolherAlvo(5);
 atualizarHUD();
+reiniciarProvocaTimer();
 </script>
 <script>
 if ('serviceWorker' in navigator) {

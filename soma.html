@@ -12,7 +12,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=28">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=29">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -276,8 +276,8 @@
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="mascotes.js?v=28"></script>
-<script src="jogos_shared.js?v=28"></script>
+<script src="mascotes.js?v=29"></script>
+<script src="jogos_shared.js?v=29"></script>
 <script>
 STORAGE_KEY = 'jogosMat_default';
 CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
@@ -396,6 +396,20 @@ function renderEstudo() {
           </div>
         </div>`;
     });
+    // Boaler 3.5.2: família de fatos — soma + subtração lado a lado
+    const familiaPares = pares.filter(([a, b]) => a > 0 && b > 0).slice(0, 4);
+    if (familiaPares.length > 0) {
+      html += `<div style="margin-top:14px;padding-top:12px;border-top:1px dashed #c5bbe9">
+        <div style="font-size:11px;color:#666;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">📚 Família de fatos</div>
+        <div style="font-size:11px;color:#888;font-style:italic;margin-bottom:8px">Somar e subtrair são a mesma estrutura — vista de outro ângulo. Sabe a soma, sabe a subtração.</div>
+        ${familiaPares.map(([a, b]) => `
+          <div style="display:flex;justify-content:space-between;background:#fff;border:1px solid #c5bbe9;border-radius:8px;padding:6px 10px;margin-bottom:4px;font-size:14px;font-weight:700">
+            <span style="color:#1b7a3a">${a} + ${b} = ${_alvoAtual}</span>
+            <span style="color:#888;font-size:12px">↔</span>
+            <span style="color:#c44a2a">${_alvoAtual} − ${b} = ${a}</span>
+          </div>`).join('')}
+      </div>`;
+    }
     el.innerHTML = html;
     document.getElementById('macete-soma').innerHTML =
       `<b>💡 Macete:</b> ${macetePorAlvoSoma(_alvoAtual)}`;

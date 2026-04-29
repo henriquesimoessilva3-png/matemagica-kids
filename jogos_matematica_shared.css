@@ -300,7 +300,7 @@ button.acao.sec:hover { background: #d0c9ed; }
   font-size: 15px; font-weight: 600; text-align: center;
 }
 .feedback.acerto { background: #d4f5dd; color: #1b7a3a; animation: pulsar 0.35s ease-out; }
-.feedback.erro { background: #fde0e0; color: #a83232; }
+.feedback.erro { background: #fff4d6; color: #3d2a6b; border-left: 4px solid #ffd36b; }
 .feedback .dica {
   display: block; font-weight: 400; font-size: 13px; color: #333;
   margin-top: 8px; padding-top: 8px; border-top: 1px dashed #00000033;
@@ -640,8 +640,8 @@ svg { display: block; margin: 0 auto; }
 }
 .mascote-coach .coach-balao.acerto { border-color: #1b7a3a; color: #1b7a3a; }
 .mascote-coach .coach-balao.acerto::before { border-top-color: #1b7a3a; }
-.mascote-coach .coach-balao.erro { border-color: #a83232; color: #a83232; }
-.mascote-coach .coach-balao.erro::before { border-top-color: #a83232; }
+.mascote-coach .coach-balao.erro { border-color: #d4a020; color: #5a3a00; }
+.mascote-coach .coach-balao.erro::before { border-top-color: #d4a020; }
 
 @media (max-width: 600px) {
   .mascote-coach { width: 110px; bottom: 6px; right: 6px; opacity: 0.92; }
@@ -1306,6 +1306,30 @@ svg { display: block; margin: 0 auto; }
   .modal { max-width: 460px !important; padding: 18px !important; }
   .emoji-grande { font-size: 30px !important; }
   .container > p, .container > div > p { font-size: 13px !important; line-height: 1.4 !important; }
+}
+
+/* ==========================================================
+   CAROLINE 3.6.2 + 3.6.3 — JUICE: pulso no "?" + feedback tátil
+   ========================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes gentlePulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.06); }
+  }
+  .gentle-pulse, .historia-pergunta b, .treino-expr {
+    animation: gentlePulse 1.6s ease-in-out infinite;
+    display: inline-block;
+    transform-origin: center;
+  }
+}
+/* Caroline 3.6.3: feedback tátil instantâneo no toque */
+.prob-opcoes button:active:not(:disabled),
+.treino-opcoes button:active:not(:disabled),
+.flash-opcoes button:active:not(:disabled),
+.sn-jeito:active,
+.cz-opcoes button:active:not(:disabled) {
+  transform: scale(0.97);
+  transition: transform 80ms ease-out;
 }
 
 /* ==========================================================
