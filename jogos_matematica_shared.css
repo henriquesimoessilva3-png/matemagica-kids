@@ -216,32 +216,28 @@ h1 { color: #4a3b8a; margin-bottom: 4px; font-size: 26px; text-align: center; }
 .cap5 .num { background: #b968e8; }
 .cap6 .num { background: #6b54d3; }
 
-/* Botão Voltar — preto, fixo no canto superior esquerdo, sempre visível */
+/* Botão Voltar — Henrique 29/04 noite: dentro do quadrado branco, canto sup. esquerdo */
 .voltar, .voltar-topo, .voltar-matemagica, .nav-voltar, .btn-voltar {
-  position: fixed !important;
-  top: 12px !important;
-  left: 12px !important;
-  z-index: 9999 !important;
-  background: #1a1a1a !important;
-  color: #fff !important;
-  border: 2px solid #1a1a1a !important;
-  padding: 8px 14px !important;
-  border-radius: 10px !important;
-  font-size: 13px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.3px !important;
-  cursor: pointer !important;
-  text-decoration: none !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.35) !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  transition: transform 0.15s, background 0.15s !important;
-  margin: 0 !important;
+  position: relative;
+  background: #ede8fa;
+  color: #4a3b8a;
+  border: 2px solid #d9cefa;
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.15s, background 0.15s;
+  margin: 0 0 12px 0;
 }
 .voltar:hover, .voltar-topo:hover, .voltar-matemagica:hover, .nav-voltar:hover, .btn-voltar:hover {
-  background: #000 !important;
-  transform: translateY(-1px) !important;
+  background: #d9cefa;
+  transform: translateY(-1px);
 }
 
 .jogos-lista { display: grid; grid-template-columns: 1fr; gap: 12px; }
@@ -322,11 +318,12 @@ button.acao.sec:hover { background: #d0c9ed; }
 @keyframes pulsar { 0% { transform: scale(1); } 40% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
 .placar-jogo {
-  display: flex; justify-content: space-around; background: #f3f1fb;
+  display: flex; justify-content: space-around; gap: 12px; background: #f3f1fb;
   border-radius: 10px; padding: 10px; margin-bottom: 16px;
   font-size: 13px; color: #555;
 }
-.placar-jogo strong { display: block; font-size: 18px; color: #4a3b8a; }
+.placar-jogo > div { flex: 1; text-align: center; }
+.placar-jogo strong { display: block; font-size: 18px; color: #4a3b8a; margin-top: 2px; }
 
 .hidden { display: none !important; }
 
