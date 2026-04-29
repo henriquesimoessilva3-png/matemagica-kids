@@ -1,11 +1,13 @@
 // Service Worker — cache offline do Matemágica (network-first pra código, cache pra offline)
-const CACHE = 'matemagica-v23';
+const CACHE = 'matemagica-v24';
 const ARQUIVOS = [
   '/',
   '/index.html',
   '/tokens.css',
   '/home.css',
   '/home.js',
+  '/internas.css',
+  '/game-content.css',
   '/jogos_matematica_1ano.html',
   '/jogos_matematica_2ano.html',
   '/jogos_matematica_3ano.html',
