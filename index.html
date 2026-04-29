@@ -345,6 +345,28 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
     #btn-atalho-topo { padding: 8px 10px; }
   }
 
+  /* Layout 2 colunas em desktop (Caroline v2 + ajuste Henrique 29/04) */
+  .home-cols { display: block; }
+  @media (min-width: 760px) {
+    .home-cols {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 14px;
+    }
+    .home-col-esq { position: sticky; top: 8px; }
+    .home-col-esq .mascote-wrap {
+      display: block !important;
+      grid-template-columns: none !important;
+      text-align: center !important;
+      gap: 0 !important;
+    }
+    .home-col-esq .mascote-seletor { justify-content: center !important; }
+    .home-col-esq .mascote-seletor-label { text-align: center !important; }
+    .home-col-esq .mascote-holder svg.mascote { width: 180px !important; }
+  }
+
   /* ===== DESKTOP: COMPACTO, CABE EM 1 TELA ===== */
   @media (min-width: 760px) {
     .container { max-width: 980px; padding-top: 10px; padding-bottom: 10px; }
@@ -525,31 +547,36 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
   <div class="sub" style="font-weight:700;color:#6b54d3">A criança joga. A matemática fica.</div>
   <div class="sub" style="margin-top:2px;font-size:12px;color:#888">Escolha o ano pra começar</div>
 
-  <div class="mascote-wrap">
-    <div class="mascote-holder" id="mascote-holder"></div>
-    <div class="mascote-balao" id="mascote-balao">Carregando…</div>
-    <div class="mascote-seletor" id="mascote-seletor"></div>
-    <div class="mascote-seletor-label">Escolha seu mascote</div>
-  </div>
+  <!-- Layout 2 colunas em desktop: esquerda mascote/seletor/loja · direita continuar+3 grupos -->
+  <div class="home-cols">
+    <div class="home-col-esq">
+      <div class="mascote-wrap">
+        <div class="mascote-holder" id="mascote-holder"></div>
+        <div class="mascote-balao" id="mascote-balao">Carregando…</div>
+        <div class="mascote-seletor" id="mascote-seletor"></div>
+        <div class="mascote-seletor-label">Escolha seu mascote</div>
+      </div>
 
-  <div class="intro">Jogos alinhados à BNCC · Progresso salvo por ano</div>
+      <div class="intro" style="margin-bottom:10px">Jogos alinhados à BNCC · Progresso salvo por ano</div>
 
-  <div id="premium-slot"></div>
+      <div id="premium-slot"></div>
 
-  <!-- Loja vira ícone discreto à direita (Caroline 2.5.1) -->
-  <div style="text-align:center;margin-bottom:14px">
-    <button onclick="abrirLoja()" style="display:inline-flex;align-items:center;gap:4px;color:#a87800;background:linear-gradient(135deg,#fff3d6,#ffe5a3);border:1px solid #ffcc4a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit">🛒 Loja · 🪙 <span id="moedas-home">0</span></button>
-  </div>
+      <!-- Loja vira ícone discreto (Caroline 2.5.1) -->
+      <div style="text-align:center;margin-bottom:6px">
+        <button onclick="abrirLoja()" style="display:inline-flex;align-items:center;gap:4px;color:#a87800;background:linear-gradient(135deg,#fff3d6,#ffe5a3);border:1px solid #ffcc4a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit">🛒 Loja · 🪙 <span id="moedas-home">0</span></button>
+      </div>
+    </div>
 
-  <!-- Camada 1: Continuar de onde parou (Caroline 2.5.1) -->
-  <div id="continuar-bloco" style="display:none;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:2.5px solid #4ab3a5;border-radius:16px;padding:14px 16px;margin-bottom:14px;text-align:center">
-    <div style="font-size:11px;color:#1b7a3a;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:4px">Continuar de onde parou</div>
-    <div id="continuar-jogo-nome" style="font-size:18px;font-weight:800;color:#1b4a2a;margin-bottom:8px">Inventa!</div>
-    <a id="continuar-link" href="inventa.html" style="display:inline-block;background:linear-gradient(135deg,#2ebd7c,#1b9a5e);color:#fff;text-decoration:none;padding:10px 22px;border-radius:12px;font-weight:800;font-size:14px;box-shadow:0 4px 10px rgba(46,189,124,0.3)">▶ Continuar</a>
-  </div>
+    <div class="home-col-dir">
+      <!-- Camada 1: Continuar de onde parou (Caroline 2.5.1) -->
+      <div id="continuar-bloco" style="display:none;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:2.5px solid #4ab3a5;border-radius:16px;padding:14px 16px;margin-bottom:14px;text-align:center">
+        <div style="font-size:11px;color:#1b7a3a;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:4px">Continuar de onde parou</div>
+        <div id="continuar-jogo-nome" style="font-size:18px;font-weight:800;color:#1b4a2a;margin-bottom:8px">Inventa!</div>
+        <a id="continuar-link" href="inventa.html" style="display:inline-block;background:linear-gradient(135deg,#2ebd7c,#1b9a5e);color:#fff;text-decoration:none;padding:10px 22px;border-radius:12px;font-weight:800;font-size:14px;box-shadow:0 4px 10px rgba(46,189,124,0.3)">▶ Continuar</a>
+      </div>
 
-  <!-- Camada 3 (Caroline v2 2.5.2): 3 grupos taxonômicos -->
-  <div style="margin-bottom:8px">
+      <!-- Camada 3 (Caroline v2 2.5.2): 3 grupos taxonômicos -->
+      <div style="margin-bottom:8px">
     <div style="font-size:13px;font-weight:800;color:#6b54d3;letter-spacing:0.3px;margin:14px 0 6px;display:flex;align-items:center;gap:6px"><span style="font-size:18px">🌟</span> Descobrir <span style="font-size:11px;color:#888;font-weight:400;font-style:italic">— onde todas as formas são válidas</span></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <a href="inventa.html" style="display:inline-block;color:#a8410a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff3d6,#ffd36b);border:1px solid #ff9a44">💡 Inventa!</a>
@@ -571,9 +598,11 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
       <a href="flash.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#ede8fa,#d9c8f5);border:1px solid #b968e8">⚡ Flash</a>
       <a href="fracoes.html" style="display:inline-block;color:#8b1a10;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff4dc,#ffe0a0);border:1px solid #d4a574">🍕 Frações</a>
     </div>
+      </div>
+    </div>
   </div>
 
-  <a href="explora/index.html" id="explora-card" style="display:flex;align-items:center;gap:14px;margin:0 0 14px;padding:14px 16px;background:linear-gradient(135deg,#fff4dc,#ffe0a0);border:2.5px solid #d4a574;border-radius:14px;text-decoration:none;color:#3a2818;transition:transform 0.2s,box-shadow 0.2s">
+  <a href="explora/index.html" id="explora-card" style="display:flex;align-items:center;gap:14px;margin:14px 0;padding:14px 16px;background:linear-gradient(135deg,#fff4dc,#ffe0a0);border:2.5px solid #d4a574;border-radius:14px;text-decoration:none;color:#3a2818;transition:transform 0.2s,box-shadow 0.2s">
     <div style="font-size:32px;flex-shrink:0">🌍</div>
     <div style="flex:1;line-height:1.35">
       <div style="font-size:15px;font-weight:800;color:#8b5a2b;letter-spacing:0.3px">EXPLORA — História e Geografia</div>
