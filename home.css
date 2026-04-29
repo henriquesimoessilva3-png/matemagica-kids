@@ -89,7 +89,7 @@ body {
   top: 0;
   z-index: var(--z-header);
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: var(--space-lg);
   padding: 10px 22px;
@@ -776,61 +776,73 @@ body {
 .card-fracoes { --card-light: var(--card-fracoes-light); --card-dark: var(--card-fracoes-dark); }
 
 /* ============================================================================
- * BANNER EXPLORA — barra roxa escura no topo do main, link pro app-irmão
- * (História/Geografia). Movido pro topo a pedido do Henrique 29/04.
+ * BOTÃO EXPLORA — quadrado laranja dentro da topbar, contrastando com o roxo.
+ * Sobe ao lado da pílula do Mati (BIP BOP). Henrique 29/04 noite.
  * ========================================================================== */
 #explora-card {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 14px;
-  margin: 0 0 var(--space-lg) 0;
-  padding: 12px 18px;
-  background: linear-gradient(135deg, #4c1d95 0%, #3b0d75 100%);
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-md);
+  gap: 9px;
+  padding: 6px 12px 6px 8px;
+  background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+  border: 2px solid #c2410c;
+  border-radius: 12px;
   text-decoration: none;
-  color: var(--text-inverse);
+  color: #4a1d05;
+  flex-shrink: 0;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-  box-shadow: 0 4px 14px rgba(45, 27, 94, 0.30);
+  box-shadow: 0 3px 0 #9a3412, 0 5px 12px rgba(234, 88, 12, 0.35);
 }
 #explora-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(45, 27, 94, 0.40);
-  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #9a3412, 0 7px 16px rgba(234, 88, 12, 0.45);
 }
-#explora-card .ec-emoji { font-size: 30px; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25)); }
-#explora-card .ec-info { flex: 1; line-height: 1.35; }
+#explora-card:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #9a3412, 0 2px 6px rgba(234, 88, 12, 0.30);
+}
+#explora-card .ec-emoji {
+  font-size: 22px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.20));
+}
+#explora-card .ec-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  min-width: 0;
+}
 #explora-card .ec-title {
-  font-family: var(--font-body);
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--text-inverse);
-  letter-spacing: 0.3px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.6px;
+  color: #4a1d05;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.30);
 }
 #explora-card .ec-sub {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.78);
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: #7c2d12;
+  text-transform: uppercase;
   margin-top: 2px;
-  font-weight: 500;
+  white-space: nowrap;
 }
 #explora-card .ec-cta {
-  background: var(--accent-gold);
-  color: #5a3a00;
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 800;
-  padding: 6px 12px;
-  border-radius: var(--radius-pill);
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-  box-shadow: 0 2px 0 var(--accent-gold-deep);
-}
-
-@media (max-width: 640px) {
-  #explora-card { padding: 10px 14px; gap: 10px; }
-  #explora-card .ec-emoji { font-size: 26px; }
-  #explora-card .ec-title { font-size: 13px; }
-  #explora-card .ec-sub { font-size: 11px; }
-  #explora-card .ec-cta { font-size: 10px; padding: 5px 10px; }
+  color: var(--text-inverse);
+  background: rgba(0, 0, 0, 0.18);
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  margin-left: 2px;
+  flex-shrink: 0;
 }
 
 /* ============================================================================
@@ -853,14 +865,41 @@ body {
 @media (max-width: 640px) {
   .topbar {
     grid-template-columns: 1fr auto;
-    gap: var(--space-sm);
+    grid-template-areas:
+      "logo  right"
+      "strip explora";
+    gap: 8px;
     padding: 10px 14px;
   }
+  .logo { grid-area: logo; }
+  .logo-text { font-size: 18px; }
+  .topbar-right { grid-area: right; gap: 6px; }
+  .topbar-right .icon-btn { display: none; }
+  .adults-trigger { padding: 5px 9px; font-size: 12px; }
+  .adults-trigger > span:nth-child(2) { display: none; }
+  .coin-pill { padding: 4px 9px; font-size: 12px; }
   .adventurer-strip {
-    grid-column: 1 / -1;
+    grid-area: strip;
     justify-self: stretch;
-    flex-wrap: wrap;
+    max-width: none;
+    min-width: 0;
+    flex-wrap: nowrap;
+    padding: 4px 10px 4px 4px;
   }
+  .adv-meta-line { display: none; }
+  .adv-name { font-size: 11px; }
+  .adv-name span { font-size: 12px; }
+  .adv-avatar { width: 32px; height: 32px; }
+  #explora-card {
+    grid-area: explora;
+    justify-self: end;
+    padding: 5px 10px 5px 7px;
+    gap: 6px;
+  }
+  #explora-card .ec-emoji { font-size: 16px; }
+  #explora-card .ec-title { font-size: 13px; }
+  #explora-card .ec-sub { display: none; }
+  #explora-card .ec-cta { width: 16px; height: 16px; font-size: 11px; }
   .world { padding: 10px 14px 100px; }
   .journey-hero { padding: 12px 14px 14px; border-radius: var(--radius-lg); }
   .journey-title { font-size: 22px; }
