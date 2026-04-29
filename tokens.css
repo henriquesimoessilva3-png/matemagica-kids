@@ -1,0 +1,224 @@
+/* ============================================================================
+ * MATEMÁGICA — DESIGN TOKENS
+ *
+ * Tema atual em produção: claro
+ * Tema escuro: PREPARADO, valores TODO, NÃO ATIVO
+ *
+ * Arquitetura definida no spec Caroline v6, mudança 2.5.6.7.
+ * Valores numéricos foram congelados na demo v9 (medalhões circulares),
+ * que é a referência visual aprovada pelo Henrique.
+ *
+ * REGRAS PRA QUEM EDITAR:
+ *   1. NUNCA usar cor/fonte/sombra/raio em hex direto dentro de componente.
+ *      Sempre via var(--token). Se faltar token, criar aqui antes de usar.
+ *   2. Não tocar nos valores deste arquivo sem ver o impacto na home v9.
+ *      Toda mudança de paleta passa por aqui — é o único ponto de verdade.
+ *   3. Tema escuro continua comentado até o Henrique decidir ativar.
+ *      Quando ativar, ver roteiro no rodapé deste arquivo.
+ * ============================================================================ */
+
+:root,
+[data-theme="claro"] {
+
+  /* === BACKGROUND DA PÁGINA ============================================== */
+  --bg-page: #fdf6e9;            /* creme do reino — fundo principal */
+  --bg-page-deeper: #f9ecd0;     /* creme um pouco mais quente, base do gradient */
+  --bg-card: #ffffff;            /* fundo dos cards de jogo */
+  --bg-card-hover: #fffbf5;      /* hover dos cards */
+  --bg-hero: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+  --bg-overlay: rgba(45, 27, 94, 0.45);   /* overlay de modal */
+
+  /* === HEADER ============================================================ */
+  --header-grad-start: #7c3aed;  /* roxo vibrante */
+  --header-grad-end:   #5b21b6;  /* roxo profundo */
+  --header-border:     rgba(0, 0, 0, 0.15);
+  --header-shadow:     0 4px 16px rgba(45, 27, 94, 0.20);
+
+  /* === TEXTO ============================================================= */
+  --text-primary:   #2d1b5e;     /* roxo escuro principal */
+  --text-secondary: #4c3a87;     /* roxo médio */
+  --text-muted:     #8a7ba3;     /* cinza-roxo pra subtítulos */
+  --text-inverse:   #ffffff;     /* texto sobre fundo escuro */
+  --text-on-card:   #2d1b5e;     /* texto dentro de cards coloridos */
+  --text-tagline:   #7a5b3a;     /* tagline cor de canela */
+
+  /* === ACENTOS GLOBAIS =================================================== */
+  --accent-gold:        #f59e0b; /* dourado dos CTAs e destaques */
+  --accent-gold-light:  #fbbf24; /* dourado mais claro pro gradient */
+  --accent-gold-deep:   #b56700; /* dourado escuro pra sombra "stamped" do CTA */
+  --accent-rose:        #ec4899; /* rosa quente */
+  --accent-violet:      #7c3aed; /* roxo vibrante (mesmo do header start) */
+  --accent-violet-deep: #5b21b6; /* roxo profundo */
+
+  /* === ACENTOS POR GRUPO TAXONÔMICO (cabeçalhos das 3 colunas) =========== */
+  --accent-descobrir: #d97706;   /* dourado-laranja saturado */
+  --accent-aplicar:   #047857;   /* verde-água escuro */
+  --accent-praticar:  #be185d;   /* rosa-vinho */
+
+  /* === CARDS DE JOGO POR FAMÍLIA CROMÁTICA =============================== */
+  /* Família DESCOBRIR — laranja/dourado */
+  --card-inventa-light: #fff3c4; --card-inventa-dark: #fbbf24;
+  --card-senso-light:   #fef0c2; --card-senso-dark:   #f59e0b;
+  --card-barras-light:  #ffe4cc; --card-barras-dark:  #fb923c;
+  --card-beleza-light:  #ffd9c2; --card-beleza-dark:  #f97316;
+  /* Família APLICAR — verde/água */
+  --card-problemas-light: #d1f5e2; --card-problemas-dark: #34d399;
+  --card-cozinha-light:   #ccede0; --card-cozinha-dark:   #14b8a6;
+  /* Família PRATICAR — rosa/vinho */
+  --card-tabuada-light: #ffd6d0; --card-tabuada-dark: #f87171;
+  --card-soma-light:    #ffd0d8; --card-soma-dark:    #fb7185;
+  --card-flash-light:   #fcd6e8; --card-flash-dark:   #ec4899;
+  --card-fracoes-light: #f9c5d6; --card-fracoes-dark: #db2777;
+
+  /* === MEDALHÕES DOS 5 ANOS (gradiente radial dentro da bolinha) ========= */
+  --year-1-light: #fecaca; --year-1-dark: #f87171; /* Vila dos Bichinhos    */
+  --year-2-light: #99f6e4; --year-2-dark: #2dd4bf; /* Floresta das Dezenas  */
+  --year-3-light: #fde68a; --year-3-dark: #fbbf24; /* Cidade do Milhar      */
+  --year-4-light: #bfdbfe; --year-4-dark: #60a5fa; /* Castelo das Frações   */
+  --year-5-light: #ddd6fe; --year-5-dark: #a78bfa; /* Pico dos Decimais     */
+
+  /* === SOMBRAS =========================================================== */
+  --shadow-sm:         0 2px 4px rgba(45, 27, 94, 0.06);
+  --shadow-md:         0 4px 12px rgba(45, 27, 94, 0.08);
+  --shadow-lg:         0 8px 24px rgba(45, 27, 94, 0.12);
+  --shadow-soft:       0 4px 12px rgba(45, 27, 94, 0.06);
+  --shadow-card:       0 5px 0 rgba(45, 27, 94, 0.10), 0 10px 20px rgba(45, 27, 94, 0.07);
+  --shadow-card-hover: 0 8px 0 rgba(45, 27, 94, 0.10), 0 14px 26px rgba(45, 27, 94, 0.10);
+  --shadow-bigcard:    0 8px 0 rgba(45, 27, 94, 0.10), 0 14px 28px rgba(45, 27, 94, 0.08);
+  --shadow-cta:        0 3px 0 var(--accent-gold-deep), 0 6px 16px rgba(245, 158, 11, 0.25);
+  --shadow-cta-hover:  0 5px 0 var(--accent-gold-deep), 0 9px 18px rgba(245, 158, 11, 0.35);
+  --shadow-medallion:  0 6px 0 rgba(45, 27, 94, 0.16), 0 12px 26px rgba(45, 27, 94, 0.14), inset 0 -4px 8px rgba(45, 27, 94, 0.08);
+  --shadow-medallion-hover: 0 10px 0 rgba(45, 27, 94, 0.16), 0 16px 32px rgba(45, 27, 94, 0.18), inset 0 -4px 8px rgba(45, 27, 94, 0.08);
+
+  /* === BORDAS E RAIOS ==================================================== */
+  --radius-xs:    8px;
+  --radius-sm:    12px;
+  --radius-md:    16px;
+  --radius-lg:    18px;   /* cards de jogo */
+  --radius-xl:    24px;   /* hero card */
+  --radius-pill:  100px;
+  --radius-round: 50%;
+  --border-card:  3px solid white;
+  --border-pill:  2px solid currentColor;
+
+  /* === TIPOGRAFIA ======================================================== */
+  --font-display:  'Bagel Fat One', cursive;          /* logo + títulos grandes */
+  --font-body:     'Fredoka', sans-serif;             /* UI geral */
+  --font-tagline:  'Caveat', cursive;                 /* taglines, manuscrito */
+  --font-mono:     ui-monospace, 'SF Mono', monospace;
+
+  /* === ESPAÇAMENTOS ====================================================== */
+  --space-xxs: 2px;
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  12px;
+  --space-lg:  18px;
+  --space-xl:  24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+
+  /* === MOTION ============================================================ */
+  --transition-fast:    0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base:    0.2s  cubic-bezier(0.34, 1.56, 0.64, 1);   /* spring leve */
+  --transition-spring:  0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-slow:    0.4s  cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* === Z-INDEX =========================================================== */
+  --z-atmosphere: 1;
+  --z-content:    5;
+  --z-header:    50;
+  --z-overlay:   90;
+  --z-modal:    100;
+}
+
+/* ============================================================================
+ * TEMA ESCURO — RESERVADO PRA ATIVAÇÃO FUTURA
+ * ============================================================================
+ * Quando o Henrique decidir validar tema escuro com pais:
+ *   1. Preencher todos os valores TODO abaixo (~3-4h).
+ *   2. Descomentar este bloco inteiro.
+ *   3. Adicionar toggle na UI (ícone sol/lua no header) e persistir
+ *      em localStorage com chave 'matemagica-theme'.
+ *   4. No boot, ler localStorage e setar data-theme no <html>.
+ *   5. Auditoria visual de cada componente nos dois temas (~3h).
+ *
+ * NÃO PREENCHER OS TODOs SEM DECISÃO EXPLÍCITA — esses valores afetam todos
+ * os componentes. Se preencher errado, vira retrofit.
+ * ============================================================================ */
+
+/*
+[data-theme="escuro"] {
+  --bg-page:        #1e2761;
+  --bg-page-deeper: #161a4a;
+  --bg-card:        #2a1f5c;
+  --bg-card-hover:  #322569;
+  --bg-hero:        linear-gradient(135deg, #2a1f5c 0%, #1e2761 100%);
+  --bg-overlay:     rgba(0, 0, 0, 0.65);
+
+  --header-grad-start: TODO;
+  --header-grad-end:   TODO;
+  --header-border:     rgba(255, 255, 255, 0.10);
+  --header-shadow:     0 4px 16px rgba(0, 0, 0, 0.45);
+
+  --text-primary:   #ffffff;
+  --text-secondary: #d1c8f0;
+  --text-muted:     #9c92c0;
+  --text-inverse:   #1a0e3d;
+  --text-on-card:   TODO;
+  --text-tagline:   TODO;
+
+  --accent-gold:        #ffd97a;
+  --accent-gold-light:  TODO;
+  --accent-gold-deep:   TODO;
+  --accent-rose:        TODO;
+  --accent-violet:      TODO;
+  --accent-violet-deep: TODO;
+
+  --accent-descobrir: TODO;
+  --accent-aplicar:   TODO;
+  --accent-praticar:  TODO;
+
+  --card-inventa-light: TODO; --card-inventa-dark: TODO;
+  --card-senso-light:   TODO; --card-senso-dark:   TODO;
+  --card-barras-light:  TODO; --card-barras-dark:  TODO;
+  --card-beleza-light:  TODO; --card-beleza-dark:  TODO;
+  --card-problemas-light: TODO; --card-problemas-dark: TODO;
+  --card-cozinha-light:   TODO; --card-cozinha-dark:   TODO;
+  --card-tabuada-light: TODO; --card-tabuada-dark: TODO;
+  --card-soma-light:    TODO; --card-soma-dark:    TODO;
+  --card-flash-light:   TODO; --card-flash-dark:   TODO;
+  --card-fracoes-light: TODO; --card-fracoes-dark: TODO;
+
+  --year-1-light: TODO; --year-1-dark: TODO;
+  --year-2-light: TODO; --year-2-dark: TODO;
+  --year-3-light: TODO; --year-3-dark: TODO;
+  --year-4-light: TODO; --year-4-dark: TODO;
+  --year-5-light: TODO; --year-5-dark: TODO;
+
+  --shadow-sm:         0 2px 4px rgba(0, 0, 0, 0.35);
+  --shadow-md:         0 4px 12px rgba(0, 0, 0, 0.40);
+  --shadow-lg:         0 8px 24px rgba(0, 0, 0, 0.50);
+  --shadow-soft:       TODO;
+  --shadow-card:       TODO;
+  --shadow-card-hover: TODO;
+  --shadow-bigcard:    TODO;
+  --shadow-cta:        TODO;
+  --shadow-cta-hover:  TODO;
+  --shadow-medallion:  TODO;
+  --shadow-medallion-hover: TODO;
+}
+*/
+
+/* === RESPEITO À PREFERÊNCIA DE MOVIMENTO REDUZIDO =========================
+ * Crianças com sensibilidade vestibular não devem ser excluídas. Toda
+ * animação de transição na home cai pra zero quando este media query bate.
+ * Componentes que criem suas próprias animações devem replicar este guard.
+ * ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  :root, [data-theme="claro"] {
+    --transition-fast:   0s;
+    --transition-base:   0s;
+    --transition-spring: 0s;
+    --transition-slow:   0s;
+  }
+}

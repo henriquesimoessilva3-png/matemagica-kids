@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="claro" data-internas data-game="tabuada">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +12,13 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=38">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Fredoka:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=41">
+<link rel="stylesheet" href="tokens.css?v=41">
+<link rel="stylesheet" href="internas.css?v=41">
+<link rel="stylesheet" href="game-content.css?v=41">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -405,6 +411,7 @@
 </head>
 <body>
 <div class="container">
+  <a href="/" class="voltar" onclick="if(window.history.length>1){event.preventDefault();window.history.back();}">← Voltar ao início</a>
   <h1 class="titulo-tabuada">🧮 Tabuada Mágica</h1>
   <div class="sub-tabuada">Desbloqueie cada tabuada. Ordem não muda o total!</div>
 
@@ -471,8 +478,6 @@
       </div>
     </div>
   </div>
-
-  <a href="/" class="voltar" onclick="if(window.history.length>1){event.preventDefault();window.history.back();}">← Voltar</a>
 </div>
 
 <div class="confete-layer" id="confete-layer"></div>
