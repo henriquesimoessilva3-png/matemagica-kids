@@ -216,13 +216,13 @@ h1 { color: #4a3b8a; margin-bottom: 4px; font-size: 26px; text-align: center; }
 .cap5 .num { background: #b968e8; }
 .cap6 .num { background: #6b54d3; }
 
-/* Botão Voltar — Henrique 29/04 noite: dentro do quadrado branco, canto sup. esquerdo */
+/* Botão Voltar — Henrique 29/04 noite: dentro do quadrado branco, canto sup. esquerdo, roxo escuro com texto branco */
 .voltar, .voltar-topo, .voltar-matemagica, .nav-voltar, .btn-voltar {
   position: relative;
-  background: #ede8fa;
-  color: #4a3b8a;
-  border: 2px solid #d9cefa;
-  padding: 6px 14px;
+  background: #6b54d3;
+  color: #fff;
+  border: 2px solid #4a3b8a;
+  padding: 7px 16px;
   border-radius: 10px;
   font-size: 13px;
   font-weight: 700;
@@ -234,10 +234,12 @@ h1 { color: #4a3b8a; margin-bottom: 4px; font-size: 26px; text-align: center; }
   gap: 4px;
   transition: transform 0.15s, background 0.15s;
   margin: 0 0 12px 0;
+  box-shadow: 0 2px 6px rgba(74, 59, 138, 0.25);
 }
 .voltar:hover, .voltar-topo:hover, .voltar-matemagica:hover, .nav-voltar:hover, .btn-voltar:hover {
-  background: #d9cefa;
+  background: #4a3b8a;
   transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(74, 59, 138, 0.35);
 }
 
 .jogos-lista { display: grid; grid-template-columns: 1fr; gap: 12px; }
