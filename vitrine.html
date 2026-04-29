@@ -712,12 +712,42 @@ footer .legais{
 </div>
 
 <script>
+function getOrCreateExtId(){
+  try {
+    var id = localStorage.getItem('mm_ext_id');
+    if (!id) {
+      id = 'mm_' + (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '_' + Math.random().toString(36).slice(2));
+      localStorage.setItem('mm_ext_id', id);
+    }
+    return id;
+  } catch(e) { return 'mm_' + Date.now(); }
+}
+function getCookie(name){
+  var m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return m ? m.pop() : '';
+}
 function goCheckout(origem){
   if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { value: 27.00, currency: 'BRL' });
   if (typeof clarity === 'function') clarity('set', 'cta_clicked', origem || 'cta');
   var pos = origem || 'cta';
+  var extId = getOrCreateExtId();
+  // Fire-and-forget: salva fbp/fbc no backend pro webhook-hotmart usar no CAPI
+  try {
+    fetch('/api/track-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        external_id: extId,
+        fbp: getCookie('_fbp'),
+        fbc: getCookie('_fbc'),
+        ts: Date.now()
+      }),
+      keepalive: true
+    }).catch(function(){});
+  } catch(e) {}
   var params = new URLSearchParams({
     sck: 'vitrine_v2',
+    xcod: extId,
     utm_source: 'vitrine',
     utm_medium: 'paid',
     utm_campaign: 'vitrine_v2_R27',

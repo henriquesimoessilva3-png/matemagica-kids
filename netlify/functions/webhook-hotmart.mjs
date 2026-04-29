@@ -50,11 +50,23 @@ export default async (req) => {
       { status: 400, headers: { "Content-Type": "application/json" } });
   }
 
+  const store = getStore("licencas");
+
+  // Dedup por transaction_id: Hotmart pode reentregar webhook em caso de retry,
+  // e replays maliciosos com a mesma transaction não devem gerar nova licença.
+  if (transaction) {
+    const existing = await store.get(`tx:${transaction}`, { type: "json" });
+    if (existing && existing.key) {
+      console.log(`Dedup hit: transaction=${transaction} key=${existing.key}`);
+      return new Response(JSON.stringify({ ok: true, key: existing.key, dedup: true }),
+        { status: 200, headers: { "Content-Type": "application/json" } });
+    }
+  }
+
   // Gera chave única no formato MM-XXXX-XXXX-XXXX-XXXX
   const key = gerarChave();
 
   // Salva no Blob
-  const store = getStore("licencas");
   await store.setJSON(key, {
     email,
     nome,
@@ -64,6 +76,11 @@ export default async (req) => {
     ativadaEm: null
   });
 
+  // Indexa por transaction pra dedup em re-entregas/replays
+  if (transaction) {
+    await store.setJSON(`tx:${transaction}`, { key, processedAt: new Date().toISOString() });
+  }
+
   // Envia email com link de ativação (se Resend configurado)
   try {
     await enviarEmail(email, nome, key);
@@ -72,8 +89,22 @@ export default async (req) => {
     console.error("Erro ao enviar email:", e.message);
   }
 
+  // Hotmart eco o `xcod` que enviamos no checkout — usamos como external_id
+  // pra recuperar fbp/fbc/ip/UA capturados client-side em /api/track-checkout
+  const externalId = data.purchase?.xcod || data.checkout?.xcod || data.subscription?.xcod || purchase.xcod || "";
+  let tracking = null;
+  if (externalId) {
+    try {
+      const trackStore = getStore("tracking");
+      tracking = await trackStore.get(externalId, { type: "json" });
+    } catch (e) {
+      console.warn("Erro lendo tracking blob:", e.message);
+    }
+  }
+
   // Dispara Conversions API pra Meta (atribuição confiável, blinda iOS/AdBlock)
-  // Nota: NÃO usamos req IP/User-Agent — vem do servidor Hotmart, não do comprador
+  // Nota: NÃO usamos req IP/UA do webhook — vem do servidor Hotmart, não do comprador.
+  // IP/UA reais do comprador vêm do tracking blob (capturados quando ele clicou no CTA).
   try {
     await disparaCAPI({
       email,
@@ -81,7 +112,12 @@ export default async (req) => {
       phone: buyer.checkout_phone || buyer.phone || "",
       transactionId: transaction,
       value: parseFloat(purchase.price?.value || 27),
-      currency: purchase.price?.currency_value || "BRL"
+      currency: purchase.price?.currency_value || "BRL",
+      externalId,
+      fbp: tracking?.fbp || "",
+      fbc: tracking?.fbc || "",
+      ip: tracking?.ip || "",
+      userAgent: tracking?.userAgent || ""
     });
   } catch (e) {
     console.error("Erro CAPI:", e.message);
@@ -109,7 +145,7 @@ function normalizaTelefone(phone) {
   return digits;
 }
 
-async function disparaCAPI({ email, nome, phone, transactionId, value, currency }) {
+async function disparaCAPI({ email, nome, phone, transactionId, value, currency, externalId, fbp, fbc, ip, userAgent }) {
   const PIXEL_ID = Netlify.env.get("META_PIXEL_ID");
   const ACCESS_TOKEN = Netlify.env.get("META_CAPI_TOKEN");
   if (!PIXEL_ID || !ACCESS_TOKEN) {
@@ -120,11 +156,17 @@ async function disparaCAPI({ email, nome, phone, transactionId, value, currency 
   const [first, ...rest] = (nome || "").trim().split(" ");
   const last = rest.join(" ");
   const phoneNorm = normalizaTelefone(phone);
+  // fbp/fbc são tokens opacos do Pixel — Meta exige NÃO hashear; external_id sim.
   const userData = {
     em: [await sha256Hex(email)],
     ...(first ? { fn: [await sha256Hex(first)] } : {}),
     ...(last ? { ln: [await sha256Hex(last)] } : {}),
-    ...(phoneNorm ? { ph: [await sha256Hex(phoneNorm)] } : {})
+    ...(phoneNorm ? { ph: [await sha256Hex(phoneNorm)] } : {}),
+    ...(externalId ? { external_id: [await sha256Hex(externalId)] } : {}),
+    ...(fbp ? { fbp } : {}),
+    ...(fbc ? { fbc } : {}),
+    ...(ip ? { client_ip_address: ip } : {}),
+    ...(userAgent ? { client_user_agent: userAgent } : {})
   };
 
   const event = {
