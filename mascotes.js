@@ -319,37 +319,36 @@ const MASCOTES = {
         'Cálculos em 3, 2, 1…',
         'Escolhe um ano e vamos! 👇',
         'Cada acerto: +1 crédito 🪙',
-        'Processando diversão…',
+        'Diversão chegando! 💛',
         'Matemática é lógica pura!'
       ],
       boasvindas: [
-        'Processando desafio…',
-        'Modo cálculo: ativado.',
-        'Bip bop! Concentra!',
-        'Iniciando rotina!'
+        'BIP BOP! Bora?',
+        'Foca aí, conseguimos!',
+        'Bip bop! Tô na torcida 💛',
+        'Pega aí!'
       ],
       acerto: [
         'BIP BOP! Correto!',
-        'Cálculo: perfeito!',
-        'Operação bem-sucedida!',
-        'Sistema: descoberta +1!',
-        'Dados confirmados!',
-        'Tentativa: validada!',
+        'BIP BOP! Mandou bem!',
+        'Boa! Estratégia funcionou!',
+        'BIP BOP! Descoberta nova!',
+        'Confere! Acertou!',
         'Robô feliz: 100%',
         'Esforço calculado = vitória!',
-        'Sincronizado!'
+        'Tudo certo! 💛'
       ],
       erro: [
-        'Erro processado. Reprocessando…',
+        'Bip... a próxima é nossa!',
         'Bip… tenta a próxima!',
-        'Recalcular rota.',
-        'Até eu erro, humano.',
-        'Bug no sistema? Não, faz parte!'
+        'Bip... outra rota!',
+        'Até eu erro, humano. 💛',
+        'Errar faz parte — bora!'
       ],
       combo: [
         'Combo turbo!',
         'Turbo modo!',
-        'Máquina perfeita!'
+        'BIP BOP! Tá voando!'
       ]
     },
     svg: `<svg class="mascote" viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg" aria-label="Robô Mati">
@@ -409,6 +408,60 @@ const MASCOTES = {
     </svg>`
   }
 };
+
+// ============== ESTADOS VISUAIS DO MATI (Caroline 1.4.2) ==============
+// Cada estado é um <g> de overlay injetado antes de </svg>.
+// SVGs renderizam em ordem — o overlay cobre o display do peito + olhos
+// pra mudar a "expressão" sem refazer o sprite inteiro.
+MASCOTES.robo.estados = {
+  pensando: `
+    <g class="mati-overlay mati-pensando">
+      <rect x="70" y="172" width="80" height="40" fill="#0a2a1a" rx="4"/>
+      <rect x="73" y="175" width="74" height="34" fill="#5a4a1a" rx="2"/>
+      <text x="98" y="205" font-family="'Segoe UI', Arial" font-size="26" fill="#ffd36b" font-weight="900">?</text>
+      <circle cx="95" cy="98" r="8" fill="#ffd36b"/>
+      <circle cx="125" cy="98" r="8" fill="#ffd36b"/>
+      <circle cx="96" cy="96" r="3" fill="#fff8e0"/>
+      <circle cx="126" cy="96" r="3" fill="#fff8e0"/>
+    </g>`,
+  comemorando: `
+    <g class="mati-overlay mati-comemorando">
+      <rect x="70" y="172" width="80" height="40" fill="#0a2a1a" rx="4"/>
+      <rect x="73" y="175" width="74" height="34" fill="#7a4a00" rx="2"/>
+      <text x="86" y="205" font-family="'Segoe UI', Arial" font-size="22" fill="#ffd36b" font-weight="900">✨ ✨</text>
+      <circle cx="95" cy="98" r="9" fill="#ffd36b"/>
+      <circle cx="125" cy="98" r="9" fill="#ffd36b"/>
+      <text x="93" y="103" font-size="11" fill="#7a4a00" font-weight="900">^</text>
+      <text x="123" y="103" font-size="11" fill="#7a4a00" font-weight="900">^</text>
+      <circle cx="78" cy="38" r="2" fill="#ffd36b" opacity="0.9"/>
+      <circle cx="142" cy="38" r="2" fill="#ffd36b" opacity="0.9"/>
+      <circle cx="65" cy="50" r="1.5" fill="#ffd36b" opacity="0.7"/>
+      <circle cx="155" cy="50" r="1.5" fill="#ffd36b" opacity="0.7"/>
+      <line x1="80" y1="48" x2="86" y2="56" stroke="#ffd36b" stroke-width="1.5" opacity="0.7"/>
+      <line x1="140" y1="48" x2="134" y2="56" stroke="#ffd36b" stroke-width="1.5" opacity="0.7"/>
+    </g>`,
+  errou: `
+    <g class="mati-overlay mati-errou">
+      <rect x="70" y="172" width="80" height="40" fill="#0a2a1a" rx="4"/>
+      <rect x="73" y="175" width="74" height="34" fill="#6a5a30" rx="2"/>
+      <text x="98" y="205" font-family="'Segoe UI', Arial" font-size="26" fill="#ffe5a3" font-weight="900">?</text>
+      <circle cx="95" cy="98" r="8" fill="#ffe5a3"/>
+      <circle cx="125" cy="98" r="8" fill="#ffe5a3"/>
+      <circle cx="96" cy="96" r="3" fill="#fff8e0"/>
+      <circle cx="126" cy="96" r="3" fill="#fff8e0"/>
+      <line x1="110" y1="68" x2="118" y2="50" stroke="#4a5a75" stroke-width="3.5"/>
+      <circle cx="118" cy="48" r="6" fill="#ffe5a3" stroke="#cc9020" stroke-width="1.5"/>
+    </g>`
+};
+
+// Retorna o SVG do mascote com o overlay do estado aplicado.
+// Estado 'idle' (default) ou mascote sem estados → retorna svg base.
+function getMascoteSvgComEstado(mascoteId, estado) {
+  const m = MASCOTES[mascoteId];
+  if (!m) return '';
+  if (!estado || estado === 'idle' || !m.estados || !m.estados[estado]) return m.svg;
+  return m.svg.replace('</svg>', m.estados[estado] + '</svg>');
+}
 
 // ============== ESTADO GLOBAL DO MASCOTE ATIVO ==============
 let _mascoteAtivoId = 'matemago';

@@ -1739,7 +1739,10 @@ feedbackErro = function(msg, dica) {
 let _coachBalaoTimer = null;
 let _coachClassTimer = null;
 
-function renderMascoteCoach() {
+let _matiEstadoAtual = 'idle';
+let _matiEstadoTimer = null;
+
+function renderMascoteCoach(estado) {
   if (typeof MASCOTES === 'undefined') return;
   let el = document.getElementById('mascote-coach');
   if (!el) {
@@ -1749,9 +1752,14 @@ function renderMascoteCoach() {
     document.body.appendChild(el);
   }
   const m = getMascoteAtivo();
+  const novoEstado = estado || 'idle';
+  _matiEstadoAtual = novoEstado;
+  const svgComEstado = (typeof getMascoteSvgComEstado === 'function')
+    ? getMascoteSvgComEstado(getMascoteAtivoId(), novoEstado)
+    : m.svg;
   el.innerHTML = `
     <div class="coach-balao" id="coach-balao"></div>
-    ${m.svg}
+    ${svgComEstado}
   `;
   const svg = el.querySelector('svg');
   if (svg) svg.addEventListener('click', () => reagirMascoteCoach('toque'));
@@ -1775,13 +1783,21 @@ function reagirMascoteCoach(tipo) {
   const el = document.getElementById('mascote-coach');
   if (!el || typeof falaAleatoria !== 'function') return;
   clearTimeout(_coachClassTimer);
+  clearTimeout(_matiEstadoTimer);
   el.classList.remove('reagindo', 'tristonho');
   void el.offsetWidth;
 
+  // Caroline 1.4.4: vincula sprite ao contexto emocional
+  let novoEstado = 'idle';
+  let duracaoEstado = 1800;
   if (tipo === 'acerto' || tipo === 'combo') {
+    novoEstado = 'comemorando';
+    duracaoEstado = 1600;
     el.classList.add('reagindo');
     mostrarBalaoCoach(falaAleatoria(tipo === 'combo' ? 'combo' : 'acerto'), 'acerto', 1600);
   } else if (tipo === 'erro') {
+    novoEstado = 'errou';
+    duracaoEstado = 2200;
     el.classList.add('tristonho');
     mostrarBalaoCoach(falaAleatoria('erro'), 'erro', 2200);
   } else if (tipo === 'boasvindas') {
@@ -1789,7 +1805,21 @@ function reagirMascoteCoach(tipo) {
   } else if (tipo === 'toque') {
     el.classList.add('reagindo');
     mostrarBalaoCoach(falaAleatoria('boasvindas'), null, 1800);
+  } else if (tipo === 'pensando') {
+    novoEstado = 'pensando';
+    duracaoEstado = 8000;
   }
+
+  // Re-renderiza só se o estado mudou (evita resetar animação à toa)
+  if (novoEstado !== _matiEstadoAtual) {
+    renderMascoteCoach(novoEstado);
+  }
+
+  // Volta a idle depois do tempo do estado
+  _matiEstadoTimer = setTimeout(() => {
+    if (_matiEstadoAtual !== 'idle') renderMascoteCoach('idle');
+  }, duracaoEstado + 200);
+
   _coachClassTimer = setTimeout(() => {
     el.classList.remove('reagindo', 'tristonho');
   }, 1100);

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Story 1 — Hook Carta Aberta</title>
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1080px; height: 1920px;
+    overflow: hidden;
+  }
+  body {
+    font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Roboto, sans-serif;
+    background: linear-gradient(160deg, #8a72e8 0%, #6b54d3 50%, #4a3899 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 200px 90px;
+    position: relative;
+  }
+  .logo {
+    text-align: center;
+    font-size: 28px; font-weight: 800; letter-spacing: 4px;
+    color: #fff; margin-bottom: 60px;
+  }
+  .logo .star { color: #ffd36b; }
+  .label {
+    font-size: 30px; font-weight: 900;
+    color: #ffd36b;
+    letter-spacing: 6px;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    align-self: flex-start;
+  }
+  .hook {
+    font-size: 110px; font-weight: 900; line-height: 1.02;
+    color: #fff; letter-spacing: -2px;
+    margin: 0 0 60px;
+  }
+  .hook .accent { color: #ffd36b; }
+  .sub {
+    font-size: 50px; font-weight: 700;
+    color: #fff;
+    opacity: 0.92;
+    line-height: 1.25;
+    margin-bottom: 80px;
+  }
+  .arrow-cta {
+    margin-top: auto;
+    text-align: center;
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #ffd36b;
+    text-transform: uppercase;
+  }
+  .arrow-cta .arrow {
+    display: block;
+    font-size: 80px;
+    margin-bottom: 12px;
+    animation: nudge 1.4s ease-in-out infinite;
+  }
+  @keyframes nudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(14px); }
+  }
+</style>
+</head>
+<body>
+  <div class="logo">MATE<span class="star">✦</span>MÁGICA</div>
+  <div class="label">Carta aberta</div>
+  <h1 class="hook">Eu também<br>sou <span class="accent">pai</span>.</h1>
+  <div class="sub">E vi minha filha<br>travar em matemática.</div>
+  <div class="arrow-cta">
+    <span class="arrow">→</span>
+    Arrasta
+  </div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Story 2 — Reframe Carta Aberta</title>
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1080px; height: 1920px;
+    overflow: hidden;
+  }
+  body {
+    font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Roboto, sans-serif;
+    background: linear-gradient(160deg, #fff5e8 0%, #fef0d4 100%);
+    color: #2a2245;
+    display: flex;
+    flex-direction: column;
+    padding: 160px 80px 120px;
+    position: relative;
+  }
+  .label {
+    font-size: 30px; font-weight: 900;
+    color: #c98a00;
+    letter-spacing: 6px;
+    margin-bottom: 36px;
+    text-transform: uppercase;
+  }
+  .hook {
+    font-size: 96px; font-weight: 900; line-height: 1.02;
+    color: #2a2245; letter-spacing: -2px;
+    margin: 0 0 50px;
+  }
+  .hook .accent { color: #2ebd7c; }
+  .body-text {
+    font-size: 44px; font-weight: 600;
+    color: #4a3b8a;
+    line-height: 1.35;
+    margin-bottom: 50px;
+  }
+  .body-text strong { color: #2a2245; font-weight: 900; }
+  .price-card {
+    background: linear-gradient(135deg, #2ebd7c, #4ab3a5);
+    color: #fff;
+    border-radius: 24px;
+    padding: 36px 32px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(46,189,124,0.3);
+    margin-top: auto;
+  }
+  .price-card .amount {
+    font-size: 88px; font-weight: 900;
+    line-height: 1; margin-bottom: 6px;
+    letter-spacing: -2px;
+  }
+  .price-card .vitalicio {
+    font-size: 34px; font-weight: 900;
+    letter-spacing: 2px; margin-bottom: 4px;
+  }
+  .price-card .nots {
+    font-size: 24px; font-weight: 700;
+    opacity: 0.95;
+  }
+</style>
+</head>
+<body>
+  <div class="label">Não foi estratégia</div>
+  <h1 class="hook">Não cobrei<br>mensalidade.<br>Cobrei <span class="accent">R$ 17</span>.<br>Uma vez.</h1>
+  <div class="body-text">Pra mãe <strong>pagar</strong>, <strong>esquecer</strong>, e o filho usar do 1º ao 5º ano.</div>
+
+  <div class="price-card">
+    <div class="amount">R$ 17</div>
+    <div class="vitalicio">VITALÍCIO</div>
+    <div class="nots">sem mensalidade · pra sempre</div>
+  </div>
+</body>
+</html>

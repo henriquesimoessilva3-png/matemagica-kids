@@ -568,7 +568,7 @@ svg { display: block; margin: 0 auto; }
   position: fixed;
   bottom: 12px;
   right: 12px;
-  width: 120px;
+  width: 140px;
   z-index: 80;
   pointer-events: none;
   user-select: none;
@@ -644,11 +644,11 @@ svg { display: block; margin: 0 auto; }
 .mascote-coach .coach-balao.erro::before { border-top-color: #a83232; }
 
 @media (max-width: 600px) {
-  .mascote-coach { width: 78px; bottom: 6px; right: 6px; opacity: 0.9; }
+  .mascote-coach { width: 110px; bottom: 6px; right: 6px; opacity: 0.92; }
   .mascote-coach .coach-balao { font-size: 11px; max-width: 160px; padding: 5px 9px; }
 }
 @media (max-width: 420px) {
-  .mascote-coach { width: 60px; opacity: 0.85; }
+  .mascote-coach { width: 88px; opacity: 0.88; }
 }
 /* Telas muito estreitas (iPhone SE 1ª gen, Galaxy Fold fechado): encolhe mais e fica translúcido */
 @media (max-width: 360px) {
@@ -1301,8 +1301,8 @@ svg { display: block; margin: 0 auto; }
   body:has(.titulo-soma) .poke-num { font-size: 14px !important; }
   body:has(.titulo-soma) .poke-card { padding: 3px !important; }
 
-  /* Mascote / modais */
-  .mascote-coach { width: 60px !important; }
+  /* Mascote / modais — Caroline 1.4.1: Mati maior em desktop */
+  .mascote-coach { width: 140px !important; }
   .modal { max-width: 460px !important; padding: 18px !important; }
   .emoji-grande { font-size: 30px !important; }
   .container > p, .container > div > p { font-size: 13px !important; line-height: 1.4 !important; }

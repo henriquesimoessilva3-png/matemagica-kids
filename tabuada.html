@@ -12,7 +12,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=24">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=26">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -284,8 +284,9 @@
   .treino-opcoes {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 16px;
   }
+  @media (min-width: 768px) { .treino-opcoes { gap: 20px; } }
   .treino-opcoes button {
     padding: 16px;
     font-size: 22px;
@@ -488,8 +489,8 @@
   </div>
 </div>
 
-<script src="mascotes.js?v=23"></script>
-<script src="jogos_shared.js?v=23"></script>
+<script src="mascotes.js?v=26"></script>
+<script src="jogos_shared.js?v=26"></script>
 <script>
 STORAGE_KEY = 'jogosMatTabuada_v1';
 CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
@@ -699,12 +700,29 @@ function renderPerguntaTreino() {
   const outra = (p.a === _fatorAtual) ? `${p.b} × ${p.a}` : `${p.b} × ${p.a}`;
   document.getElementById('treino-hint').textContent = `Dica: é o mesmo que ${p.b} × ${p.a}`;
 
-  // gera 4 opções (1 certa + 3 próximas)
+  // Caroline 1.5.1: distractors diagnósticos (cada erro mapeia um tipo de confusão)
+  // 1) somou: a+b   2) off-by-tabuada: a×(b±1)   3) trocou fator: a² ou b²
   const certo = p.res;
+  const a = p.a, b = p.b;
   const opcs = new Set([certo]);
-  while (opcs.size < 4) {
-    const d = Math.floor(Math.random() * 5) - 2;
-    const c = certo + d + (Math.random() < 0.3 ? (Math.floor(Math.random()*6) - 3) : 0);
+  // somou
+  const somou = a + b;
+  if (somou > 0 && somou !== certo) opcs.add(somou);
+  // off-by-tabuada (b vizinho — escolhe o mais próximo do certo)
+  for (const off of [b - 1, b + 1]) {
+    if (off >= 0) {
+      const v = a * off;
+      if (v !== certo && v > 0 && !opcs.has(v)) { opcs.add(v); break; }
+    }
+  }
+  // trocou fator (b² primeiro porque costuma ser maior, depois a²)
+  for (const v of [b * b, a * a]) {
+    if (v !== certo && v > 0 && !opcs.has(v)) { opcs.add(v); break; }
+  }
+  // fallback: completa com delta pequeno se houve duplicata
+  let _t = 0;
+  while (opcs.size < 4 && _t++ < 30) {
+    const c = certo + (Math.floor(Math.random() * 7) - 3);
     if (c > 0 && c !== certo) opcs.add(c);
   }
   const arr = Array.from(opcs).sort(() => Math.random() - 0.5);
