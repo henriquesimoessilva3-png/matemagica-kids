@@ -2332,9 +2332,29 @@ function initJogos() {
   renderHeaderPlayer();
   renderMascoteCoach();
   guardaPaginaPremium();
+  registrarUltimoJogo();
   if (detectarModoProva()) {
     iniciarModoProva();
   }
+}
+
+// Caroline 2.5.1: registra último jogo aberto pra "Continuar de onde parou" na home
+function registrarUltimoJogo() {
+  try {
+    const url = (location.pathname.split('/').pop() || '').toLowerCase();
+    // Não registra index, vitrine, dashboard, parent-gated pages, etc
+    if (!url || url === 'index.html' || url === 'vitrine.html' || url === 'quiz.html' ||
+        url === 'dashboard.html' || url === 'imprimir.html' || url === 'provas.html' ||
+        url === 'tabuada.html') return; // tabuada exclui pq tem login flow próprio
+    // Lista permitida — só páginas de jogo de fato
+    const ok = ['flash.html','problemas.html','inventa.html','soma.html','cozinha.html',
+                'fracoes.html','senso.html','cuisenaire.html','beleza.html',
+                'jogos_matematica_1ano.html','jogos_matematica_2ano.html',
+                'jogos_matematica_3ano.html','jogos_matematica_4ano.html',
+                'jogos_matematica_5ano.html'];
+    if (!ok.includes(url)) return;
+    localStorage.setItem('matemagica_ultimo_jogo_v1', JSON.stringify({ url, ts: Date.now() }));
+  } catch(e) {}
 }
 
 // Pulsa o botão "🧘 Respirar" do placar como sugestão sutil após erros seguidos.

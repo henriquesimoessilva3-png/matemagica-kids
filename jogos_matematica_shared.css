@@ -1308,3 +1308,42 @@ svg { display: block; margin: 0 auto; }
   .container > p, .container > div > p { font-size: 13px !important; line-height: 1.4 !important; }
 }
 
+/* ==========================================================
+   CAROLINE 2.6 — HITBOX BOTÕES SECUNDÁRIOS (>= 48x48px)
+   ========================================================== */
+.voltar, .voltar-topo, .nav-voltar {
+  min-height: 48px;
+  display: inline-flex !important;
+  align-items: center;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+.modo-tab, .nivel-tab, .tempo-tab, .op-tab, .chip-dif, .aba {
+  min-height: 48px;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+/* Botões "fechar X" em modais */
+.modal-overlay .modal button.close, .modal-fechar {
+  min-width: 48px;
+  min-height: 48px;
+}
+/* Toggle Estudar/Treinar mais alto (Boaler 2.6.1: 56px) */
+#tab-estudo, #tab-treino {
+  min-height: 56px !important;
+}
+/* Botão "🛒 Loja" no header */
+.hp-rodape .hp-moedas, .hp-rodape span[onclick] {
+  min-height: 32px;
+  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+}
+/* Override pra estudo-btn (botões "Sair", "Estudar mais", etc no tabuada) */
+.estudo-btn { min-height: 44px; }
+@media (max-width: 600px) {
+  .voltar, .voltar-topo, .nav-voltar { min-height: 44px; }
+  .modo-tab, .nivel-tab, .tempo-tab, .op-tab, .chip-dif, .aba { min-height: 44px; }
+}
+

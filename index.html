@@ -31,7 +31,7 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
 
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=27">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=28">
 <style>
   h1.matemagica-titulo {
     font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
@@ -536,21 +536,41 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
 
   <div id="premium-slot"></div>
 
-  <div style="text-align:center;margin-bottom:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+  <!-- Loja vira ícone discreto à direita (Caroline 2.5.1) -->
+  <div style="text-align:center;margin-bottom:14px">
     <button onclick="abrirLoja()" style="display:inline-flex;align-items:center;gap:4px;color:#a87800;background:linear-gradient(135deg,#fff3d6,#ffe5a3);border:1px solid #ffcc4a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit">🛒 Loja · 🪙 <span id="moedas-home">0</span></button>
-    <a href="tabuada.html" style="display:inline-block;color:#a8410a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff3d6,#ffd36b);border:1px solid #ff9a44">🧮 Tabuada</a>
-    <a href="flash.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#ede8fa,#d9c8f5);border:1px solid #b968e8">⚡ Flash</a>
-    <a href="problemas.html" style="display:inline-block;color:#1b4a2a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#e6f7ec,#c8eed4);border:1px solid #7ad09a">📖 Problemas</a>
-    <a href="inventa.html" style="display:inline-block;color:#a8410a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff3d6,#ffd36b);border:1px solid #ff9a44">💡 Inventa</a>
-    <a href="soma.html" style="display:inline-block;color:#1b4a2a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:1px solid #3ac070">➕ Soma</a>
-    <a href="cozinha.html" style="display:inline-block;color:#8b1a10;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#ffe0d0,#fac8a8);border:1px solid #d4794a">🍰 Cozinha</a>
-    <a href="fracoes.html" style="display:inline-block;color:#8b1a10;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff4dc,#ffe0a0);border:1px solid #d4a574">🍕 Frações</a>
-    <a href="senso.html" style="display:inline-block;color:#1b7a3a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:1px solid #2ebd7c">🧠 Senso Numérico</a>
-    <a href="cuisenaire.html" style="display:inline-block;color:#4a3b8a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#f7f5ff,#ede8fa);border:1px solid #c5bbe9">🎨 Barras</a>
-    <a href="beleza.html" style="display:inline-block;color:#6b1c9e;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#ede8fa,#d9c8f5);border:1px solid #b968e8">✨ Beleza</a>
-    <a href="imprimir.html" style="display:inline-block;color:#1b4a2a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:1px solid #4ab3a5">📄 Imprimir</a>
-    <a href="provas.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px;background:#ede8fa;border:1px solid #d9cefa">📚 Revisão</a>
-    <a href="dashboard.html" style="display:inline-block;color:#666;text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px;background:#f7f5ff;border:1px solid #d9cefa">📊 Pais</a>
+  </div>
+
+  <!-- Camada 1: Continuar de onde parou (Caroline 2.5.1) -->
+  <div id="continuar-bloco" style="display:none;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:2.5px solid #4ab3a5;border-radius:16px;padding:14px 16px;margin-bottom:14px;text-align:center">
+    <div style="font-size:11px;color:#1b7a3a;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:4px">Continuar de onde parou</div>
+    <div id="continuar-jogo-nome" style="font-size:18px;font-weight:800;color:#1b4a2a;margin-bottom:8px">Inventa!</div>
+    <a id="continuar-link" href="inventa.html" style="display:inline-block;background:linear-gradient(135deg,#2ebd7c,#1b9a5e);color:#fff;text-decoration:none;padding:10px 22px;border-radius:12px;font-weight:800;font-size:14px;box-shadow:0 4px 10px rgba(46,189,124,0.3)">▶ Continuar</a>
+  </div>
+
+  <!-- Camada 3 (Caroline v2 2.5.2): 3 grupos taxonômicos -->
+  <div style="margin-bottom:8px">
+    <div style="font-size:13px;font-weight:800;color:#6b54d3;letter-spacing:0.3px;margin:14px 0 6px;display:flex;align-items:center;gap:6px"><span style="font-size:18px">🌟</span> Descobrir <span style="font-size:11px;color:#888;font-weight:400;font-style:italic">— onde todas as formas são válidas</span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a href="inventa.html" style="display:inline-block;color:#a8410a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff3d6,#ffd36b);border:1px solid #ff9a44">💡 Inventa!</a>
+      <a href="senso.html" style="display:inline-block;color:#1b7a3a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:1px solid #2ebd7c">🧠 Senso Numérico</a>
+      <a href="cuisenaire.html" style="display:inline-block;color:#4a3b8a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#f7f5ff,#ede8fa);border:1px solid #c5bbe9">🎨 Barras</a>
+      <a href="beleza.html" style="display:inline-block;color:#6b1c9e;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#ede8fa,#d9c8f5);border:1px solid #b968e8">✨ Beleza</a>
+    </div>
+
+    <div style="font-size:13px;font-weight:800;color:#1b7a3a;letter-spacing:0.3px;margin:14px 0 6px;display:flex;align-items:center;gap:6px"><span style="font-size:18px">🌍</span> Aplicar <span style="font-size:11px;color:#888;font-weight:400;font-style:italic">— matemática que aparece no mundo</span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a href="problemas.html" style="display:inline-block;color:#1b4a2a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#e6f7ec,#c8eed4);border:1px solid #7ad09a">📖 Problemas</a>
+      <a href="cozinha.html" style="display:inline-block;color:#8b1a10;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#ffe0d0,#fac8a8);border:1px solid #d4794a">🍰 Cozinha</a>
+    </div>
+
+    <div style="font-size:13px;font-weight:800;color:#a87800;letter-spacing:0.3px;margin:14px 0 6px;display:flex;align-items:center;gap:6px"><span style="font-size:18px">📚</span> Praticar <span style="font-size:11px;color:#888;font-weight:400;font-style:italic">— treinar fato e fluência</span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a href="tabuada.html" style="display:inline-block;color:#a8410a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff3d6,#ffd36b);border:1px solid #ff9a44">🧮 Tabuada</a>
+      <a href="soma.html" style="display:inline-block;color:#1b4a2a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:1px solid #3ac070">➕ Soma</a>
+      <a href="flash.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#ede8fa,#d9c8f5);border:1px solid #b968e8">⚡ Flash</a>
+      <a href="fracoes.html" style="display:inline-block;color:#8b1a10;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff4dc,#ffe0a0);border:1px solid #d4a574">🍕 Frações</a>
+    </div>
   </div>
 
   <a href="explora/index.html" id="explora-card" style="display:flex;align-items:center;gap:14px;margin:0 0 14px;padding:14px 16px;background:linear-gradient(135deg,#fff4dc,#ffe0a0);border:2.5px solid #d4a574;border-radius:14px;text-decoration:none;color:#3a2818;transition:transform 0.2s,box-shadow 0.2s">
@@ -594,6 +614,17 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
       <div class="ano-progresso" data-ano="5"></div>
     </a>
   </div>
+
+  <!-- Caroline 2.5.3: bloco "Para os adultos da casa" — sóbrio, sem cor vibrante -->
+  <div style="margin-top:32px;padding-top:18px;border-top:1px solid #e0dbf5">
+    <div style="font-size:14px;font-weight:700;color:#888;letter-spacing:0.3px;margin-bottom:4px;text-align:center">👨‍👩 Para os adultos da casa</div>
+    <div style="font-size:12px;color:#aaa;margin-bottom:12px;text-align:center">Acompanhamento, revisão e materiais</div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <a href="provas.html" style="display:inline-flex;align-items:center;gap:6px;color:#666;text-decoration:none;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#f7f5ff;border:1px solid #d9cefa">📚 Revisão <span style="opacity:0.5">→</span></a>
+      <a href="imprimir.html" style="display:inline-flex;align-items:center;gap:6px;color:#666;text-decoration:none;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#f7f5ff;border:1px solid #d9cefa">📄 Imprimir <span style="opacity:0.5">→</span></a>
+      <a href="dashboard.html" style="display:inline-flex;align-items:center;gap:6px;color:#666;text-decoration:none;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#f7f5ff;border:1px solid #d9cefa">📊 Dashboard <span style="opacity:0.5">→</span></a>
+    </div>
+  </div>
 </div>
 
 <!-- Modal compartilhado (usado pela Loja e Badges) -->
@@ -610,8 +641,8 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="jogos_shared.js?v=27"></script>
-<script src="mascotes.js?v=27"></script>
+<script src="jogos_shared.js?v=28"></script>
+<script src="mascotes.js?v=28"></script>
 <script>
 // ============== MASCOTE DA TELA INICIAL ==============
 let _falaIdx = 0;
@@ -690,6 +721,34 @@ document.querySelectorAll('.ano-progresso').forEach(el => {
     if (descobertas > 0) el.textContent = `✨ ${descobertas}`;
   } catch(e) {}
 });
+
+// Caroline 2.5.1: "Continuar de onde parou" — lê último jogo aberto
+(function(){
+  const PAGES = {
+    'tabuada.html': '🧮 Tabuada Mágica',
+    'flash.html': '⚡ Flash Mágico',
+    'problemas.html': '📖 Problemas do Dia',
+    'inventa.html': '💡 Inventa!',
+    'soma.html': '➕ Soma',
+    'cozinha.html': '🍰 Cozinha',
+    'fracoes.html': '🍕 Frações',
+    'senso.html': '🧠 Senso Numérico',
+    'cuisenaire.html': '🎨 Barras Mágicas',
+    'beleza.html': '✨ Beleza da Matemática',
+    'jogos_matematica_1ano.html': 'Jogos do 1º Ano',
+    'jogos_matematica_2ano.html': 'Jogos do 2º Ano',
+    'jogos_matematica_3ano.html': 'Jogos do 3º Ano',
+    'jogos_matematica_4ano.html': 'Jogos do 4º Ano',
+    'jogos_matematica_5ano.html': 'Jogos do 5º Ano'
+  };
+  let ult = null;
+  try { ult = JSON.parse(localStorage.getItem('matemagica_ultimo_jogo_v1') || 'null'); } catch(e) {}
+  if (ult && ult.url && PAGES[ult.url]) {
+    document.getElementById('continuar-jogo-nome').textContent = PAGES[ult.url];
+    document.getElementById('continuar-link').href = ult.url;
+    document.getElementById('continuar-bloco').style.display = 'block';
+  }
+})();
 </script>
 
 <script>
