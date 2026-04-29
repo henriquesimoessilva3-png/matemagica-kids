@@ -1,852 +1,475 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="claro">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MATEMÁGICA — Escolha o Ano</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matemágica — A criança joga. A matemática fica.</title>
 
-<!-- Meta Pixel — Matemagica (ID 1840468943289707) -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1840468943289707');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></noscript>
-<!-- End Meta Pixel -->
+  <!-- Meta Pixel — Matemagica (ID 1840468943289707) -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1840468943289707');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></noscript>
+  <!-- End Meta Pixel -->
 
-<!-- Microsoft Clarity (gravação de sessão + heatmap) -->
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "whfer3z4jm");
-</script>
+  <!-- Microsoft Clarity (gravação de sessão + heatmap) -->
+  <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "whfer3z4jm");
+  </script>
 
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=38">
-<!-- Caroline v4 2.5.6.1: Fredoka pra logo/títulos + Fraunces pra tagline -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&family=Fraunces:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
-<style>
-  /* Caroline v4 2.5.6.5 — fundo off-white rosado-bege (Opção A do spec) */
-  body { background: #FAF7F2; }
+  <!-- SEO -->
+  <meta name="description" content="A criança joga. A matemática fica. App gratuito BNCC do 1º ao 5º ano com jogos de matemática, história e geografia.">
+  <meta name="keywords" content="matemática infantil, jogos de matemática, app BNCC, tabuada, matemática 1 ano, matemática 2 ano, matemática 3 ano, matemática 4 ano, matemática 5 ano, história, geografia, BNCC, matemática sem trauma, matemática brincando, app gratuito matemática">
+  <meta name="author" content="Matemágica">
+  <link rel="canonical" href="https://matemagica.app.br/">
 
-  /* Caroline v4 2.5.6.1 — logo com Fredoka + tagline com Fraunces */
-  h1.matemagica-titulo {
-    font-family: 'Fredoka', 'Segoe UI', Arial, sans-serif;
-    font-size: 38px;          /* v4 2.5.5: -15% (de 44 pra ~38) */
-    font-weight: 800;
-    letter-spacing: 1px;
-    background: linear-gradient(135deg, #3D2A6B 0%, #6b54d3 35%, #b968e8 70%, #ffd36b 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    text-align: center;
-    margin: 4px 0 0;          /* v4 2.5.5: padding-top -30% */
-    line-height: 1;
-    text-shadow: 0 2px 6px rgba(107, 84, 211, 0.12);
-  }
-  .sub[style*="font-weight:700"] {
-    font-family: 'Fraunces', 'Segoe UI', serif !important;
-    font-style: italic;
-    font-weight: 500 !important;
-  }
-  h1.matemagica-titulo .estrela-tit {
-    display: inline-block;
-    -webkit-text-fill-color: #ffd36b;
-    color: #ffd36b;
-    animation: estrelaPulsa 1.6s ease-in-out infinite;
-    margin: 0 6px;
-    font-size: 36px;
-  }
+  <!-- PWA / iOS web app -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#7c3aed">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="MATEMÁGICA">
+  <link rel="apple-touch-icon" href="icon-192.svg">
 
-  .ano-grid {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding: 4px 2px 14px;
-    margin: 0 -4px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: #c5bbe9 transparent;
-  }
-  .ano-grid::-webkit-scrollbar { height: 6px; }
-  .ano-grid::-webkit-scrollbar-thumb { background: #c5bbe9; border-radius: 3px; }
-  .ano-grid::-webkit-scrollbar-track { background: transparent; }
-  .ano-card {
-    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
-    border: 0;
-    border-radius: 18px;
-    padding: 18px 12px 16px;
-    cursor: pointer;
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-    text-align: center;
-    text-decoration: none;
-    flex: 0 0 135px;
-    scroll-snap-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    min-height: 170px;
-    /* Caroline v4 2.5.6 — sombra orgânica em vez de borda chapada */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
-  .ano-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(107, 84, 211, 0.18);
-  }
-  .ano-card:active { transform: translateY(1px); transition: transform 80ms ease-in; }
-  .ano-card.ano1 { background: linear-gradient(135deg, #ffebe8, #ffd1ca); }
-  .ano-card.ano2 { background: linear-gradient(135deg, #e0f2ee, #c1e8df); }
-  .ano-card.ano3 { background: linear-gradient(135deg, #fff3d6, #ffe5a3); }
-  .ano-card.ano4 { background: linear-gradient(135deg, #dbedfb, #b8d9f5); }
-  .ano-card.ano5 { background: linear-gradient(135deg, #f0def5, #e0bdea); }
-  .ano-num {
-    font-size: 40px;
-    font-weight: 800;
-    color: #4a3b8a;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .ano-label {
-    font-size: 12px;
-    color: #4a3b8a;
-    font-weight: 700;
-    opacity: 0.9;
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-  }
-  .ano-tema {
-    font-size: 10px;
-    color: #555;
-    line-height: 1.3;
-    flex: 1;
-  }
-  .ano-progresso {
-    margin-top: 8px;
-    font-size: 11px;
-    color: #4a3b8a;
-    font-weight: 700;
-    min-height: 14px;
-  }
-  @media (min-width: 760px) {
-    .ano-grid { overflow-x: visible; justify-content: center; }
-    .ano-card { flex: 1 1 0; min-width: 120px; max-width: 140px; }
-  }
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Matemágica">
+  <meta property="og:title" content="Matemágica — A criança joga. A matemática fica.">
+  <meta property="og:description" content="App gratuito BNCC do 1º ao 5º ano: matemática + história + geografia em um só lugar. Sem login, sem lição forçada.">
+  <meta property="og:url" content="https://matemagica.app.br/">
+  <meta property="og:image" content="https://matemagica.app.br/og-image.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Matemágica — A criança joga. A matemática fica.">
+  <meta property="og:locale" content="pt_BR">
 
-  .intro {
-    text-align: center;
-    color: #888;
-    font-size: 14px;
-    margin-bottom: 18px;
-    line-height: 1.5;
-  }
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Matemágica — A criança joga. A matemática fica.">
+  <meta name="twitter:description" content="App gratuito. Matemática + História + Geografia BNCC. 1º ao 5º ano.">
+  <meta name="twitter:image" content="https://matemagica.app.br/og-image.svg">
 
-  /* ===== MASCOTE ===== */
-  .mascote-wrap {
-    text-align: center;
-    margin: 4px 0 10px;
-    position: relative;
-    user-select: none;
+  <!-- JSON-LD structured data pra SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Matemágica",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Any",
+    "description": "App gratuito BNCC do 1º ao 5º ano com jogos de matemática, história e geografia.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "BRL"
+    },
+    "audience": {
+      "@type": "EducationalAudience",
+      "educationalRole": "student",
+      "audienceType": "Fundamental I (1º ao 5º ano)"
+    },
+    "inLanguage": "pt-BR"
   }
-  .mascote-holder {
-    display: inline-block;
-    line-height: 0;
-  }
-  .mascote-holder svg.mascote {
-    width: 210px;
-    max-width: 60%;
-    height: auto;
-    animation: mascoteBounce 3.6s ease-in-out infinite;
-    filter: drop-shadow(0 8px 14px rgba(107, 84, 211, 0.35));
-    cursor: pointer;
-    transition: transform 0.25s;
-  }
-  .mascote-holder svg.mascote:hover { transform: scale(1.05) rotate(2deg); }
-  .mascote-holder svg.mascote:active { transform: scale(0.96); }
-  @keyframes mascoteBounce {
-    0%, 100% { transform: translateY(0) rotate(-1.2deg); }
-    50%      { transform: translateY(-9px) rotate(1.2deg); }
-  }
+  </script>
 
-  .sim { font-family: 'Segoe UI', Arial, sans-serif; font-weight: 800; fill: #6b54d3; }
-  .sim-1 { animation: simFloatA 4.2s ease-in-out infinite; }
-  .sim-2 { animation: simFloatB 5.1s ease-in-out infinite; }
-  .sim-3 { animation: simFloatA 4.7s ease-in-out infinite reverse; }
-  .sim-4 { animation: simFloatB 3.7s ease-in-out infinite reverse; }
-  .sim-5 { animation: simFloatA 5.4s ease-in-out infinite; }
-  .sim-6 { animation: simFloatB 4.0s ease-in-out infinite; }
-  @keyframes simFloatA {
-    0%, 100% { transform: translateY(0) rotate(-6deg); opacity: 0.35; }
-    50%      { transform: translateY(-7px) rotate(10deg); opacity: 0.85; }
-  }
-  @keyframes simFloatB {
-    0%, 100% { transform: translateY(0) rotate(6deg); opacity: 0.4; }
-    50%      { transform: translateY(7px) rotate(-10deg); opacity: 0.9; }
-  }
-  .estrela-varinha {
-    transform-origin: center; transform-box: fill-box;
-    animation: estrelaPulsa 1.6s ease-in-out infinite;
-  }
-  @keyframes estrelaPulsa {
-    0%, 100% { transform: scale(1);   filter: drop-shadow(0 0 2px #ffd36b); }
-    50%      { transform: scale(1.25); filter: drop-shadow(0 0 8px #ffd36b); }
-  }
-  .olho-brilho { animation: piscar 4s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
-  @keyframes piscar {
-    0%, 46%, 54%, 100% { transform: scaleY(1); }
-    50%                { transform: scaleY(0.1); }
-  }
+  <!-- Fontes do Google (home v9: Bagel Fat One display + Fredoka body + Caveat tagline) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Fredoka:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
 
-  .mascote-balao {
-    display: inline-block;
-    background: #fff;
-    border: 2px solid #6b54d3;
-    color: #4a3b8a;
-    padding: 6px 14px;
-    border-radius: 18px;
-    font-size: 13px;
-    font-weight: 700;
-    position: relative;
-    margin-top: -6px;
-    box-shadow: 0 3px 8px rgba(107, 84, 211, 0.18);
-    animation: balaoFade 0.6s ease-out both;
-    max-width: 280px;
-  }
-  .mascote-balao::before {
-    content: ''; position: absolute; top: -9px; left: 50%;
-    transform: translateX(-50%); width: 0; height: 0;
-    border-left: 8px solid transparent; border-right: 8px solid transparent;
-    border-bottom: 9px solid #6b54d3;
-  }
-  .mascote-balao::after {
-    content: ''; position: absolute; top: -6px; left: 50%;
-    transform: translateX(-50%); width: 0; height: 0;
-    border-left: 6px solid transparent; border-right: 6px solid transparent;
-    border-bottom: 7px solid #fff;
-  }
-  @keyframes balaoFade {
-    from { opacity: 0; transform: translateY(-4px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ===== SELETOR DE MASCOTE ===== */
-  .mascote-seletor {
-    display: flex; gap: 8px; justify-content: center;
-    margin: 10px 0 4px; flex-wrap: wrap;
-  }
-  .mascote-seletor-label {
-    font-size: 11px; color: #888; text-transform: uppercase;
-    letter-spacing: 1px; font-weight: 700;
-    text-align: center; margin-top: 6px;
-  }
-  .mini-mascote {
-    width: 62px; height: 66px;
-    border: 2.5px solid #e0d8f5;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #fafaff, #f0ecff);
-    cursor: pointer;
-    padding: 2px;
-    transition: all 0.2s;
-    overflow: hidden;
-    position: relative;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .mini-mascote:hover {
-    border-color: #b968e8;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 12px rgba(185, 104, 232, 0.25);
-  }
-  .mini-mascote.ativo {
-    border-color: #6b54d3;
-    background: linear-gradient(135deg, #ede8fa, #dccbf5);
-    box-shadow: 0 0 0 3px rgba(107, 84, 211, 0.22);
-  }
-  .mini-mascote svg {
-    width: 100%; height: 100%;
-    display: block;
-    pointer-events: none;
-  }
-  .mini-mascote svg, .mini-mascote svg * {
-    animation: none !important;
-    filter: none !important;
-    transform: none !important;
-  }
-  .mini-mascote .mini-nome {
-    position: absolute; bottom: 1px; left: 0; right: 0;
-    font-size: 8px; font-weight: 700; color: #6b54d3;
-    background: rgba(255,255,255,0.85); padding: 1px 0;
-    text-align: center;
-  }
-  .mini-mascote.ativo::after {
-    content: '✓';
-    position: absolute; top: -6px; right: -6px;
-    background: #6b54d3; color: #fff;
-    width: 18px; height: 18px; border-radius: 50%;
-    font-size: 11px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    border: 2px solid #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  }
-
-  /* === MOBILE: caber em uma viewport sem scroll excessivo === */
-  @media (max-width: 500px) {
-    h1.matemagica-titulo { font-size: 30px; letter-spacing: 1px; }
-    h1.matemagica-titulo .estrela-tit { font-size: 24px; margin: 0 4px; }
-    .sub { font-size: 12px; margin-bottom: 8px; }
-    .mascote-wrap { margin: 2px 0 6px; }
-    .mascote-holder svg.mascote { width: 130px; }
-    .mascote-balao { font-size: 11px; padding: 4px 10px; max-width: 240px; margin-top: -4px; }
-    .mascote-seletor { gap: 6px; margin: 6px 0 2px; }
-    .mini-mascote { width: 46px; height: 50px; }
-    .mini-mascote .mini-nome { font-size: 7px; }
-    .mascote-seletor-label { font-size: 10px; margin-top: 4px; }
-    .intro { font-size: 12px; margin-bottom: 10px; line-height: 1.35; }
-    .ano-card { flex: 0 0 110px; min-height: 140px; padding: 12px 8px; }
-    .ano-num { font-size: 30px; margin-bottom: 2px; }
-    .ano-label { font-size: 11px; }
-    .ano-tema { font-size: 9px; line-height: 1.25; }
-    .ano-progresso { font-size: 10px; margin-top: 4px; }
-  }
-  @media (max-width: 380px) {
-    h1.matemagica-titulo { font-size: 26px; }
-    .mascote-holder svg.mascote { width: 110px; }
-    .mini-mascote { width: 42px; height: 46px; }
-  }
-
-  /* ===== BOTÃO ATALHO NA TELA (canto superior direito) ===== */
-  .container { position: relative; }
-  #btn-atalho-topo {
-    position: absolute;
-    top: 10px; right: 10px;
-    display: inline-flex; align-items: center; gap: 6px;
-    background: linear-gradient(135deg, #2ebd7c, #1b9a5e);
-    color: #fff; border: none;
-    padding: 9px 14px; border-radius: 22px;
-    font-size: 12px; font-weight: 800;
-    cursor: pointer; font-family: inherit;
-    box-shadow: 0 4px 12px rgba(46, 189, 124, 0.35);
-    z-index: 50;
-    animation: bat-pulse 2.5s ease-in-out infinite;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  #btn-atalho-topo:hover {
-    transform: translateY(-2px) scale(1.04);
-    box-shadow: 0 6px 16px rgba(46, 189, 124, 0.5);
-  }
-  #btn-atalho-topo .bat-icon { font-size: 16px; line-height: 1; }
-  @keyframes bat-pulse {
-    0%, 100% { box-shadow: 0 4px 12px rgba(46, 189, 124, 0.35); }
-    50%      { box-shadow: 0 4px 12px rgba(46, 189, 124, 0.35), 0 0 0 8px rgba(46, 189, 124, 0.18); }
-  }
-  @media (max-width: 500px) {
-    #btn-atalho-topo { padding: 7px 11px; font-size: 11px; }
-    #btn-atalho-topo .bat-icon { font-size: 14px; }
-  }
-  @media (max-width: 380px) {
-    #btn-atalho-topo .bat-texto { display: none; }
-    #btn-atalho-topo { padding: 8px 10px; }
-  }
-
-  /* Caroline v4 2.5.6.2 — cards dos jogos: sombra orgânica em vez de borda chapada */
-  .home-col-dir a[href$=".html"] {
-    border: 0 !important;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-    font-family: 'Fredoka', 'Segoe UI', sans-serif !important;
-    font-weight: 600 !important;
-  }
-  .home-col-dir a[href$=".html"]:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.14);
-  }
-  .home-col-dir a[href$=".html"]:active {
-    transform: translateY(1px);
-    transition: transform 80ms ease-in;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-  }
-
-  /* Cabeçalhos dos 3 grupos taxonômicos — Fredoka maior, ornamento sutil */
-  .home-col-dir > div > div[style*="font-weight:800"] {
-    font-family: 'Fredoka', 'Segoe UI', sans-serif !important;
-    font-size: 17px !important;
-    font-weight: 700 !important;
-  }
-
-  /* Layout 2 colunas em desktop (Caroline v3 — 2.5.4: 38%/62%) */
-  .home-cols { display: block; }
-  .acerto-cred {
-    text-align: center;
-    font-size: 13px;
-    font-weight: 700;
-    color: #a87800;
-    background: linear-gradient(135deg, #fff3d6, #ffe5a3);
-    border: 1px solid #ffcc4a;
-    padding: 6px 14px;
-    border-radius: 14px;
-    margin: 8px auto 0;
-    display: inline-block;
-  }
-  @media (min-width: 1024px) {
-    .home-cols {
-      display: grid;
-      grid-template-columns: 38fr 62fr;
-      gap: 32px;
-      align-items: start;
-      margin-bottom: 14px;
-    }
-    .home-col-esq { position: sticky; top: 8px; }
-    .home-col-esq .mascote-wrap {
-      display: block !important;
-      grid-template-columns: none !important;
-      text-align: center !important;
-      gap: 0 !important;
-    }
-    .home-col-esq .mascote-seletor { justify-content: center !important; }
-    .home-col-esq .mascote-seletor-label { text-align: center !important; }
-    .home-col-esq .mascote-holder svg.mascote { width: 187px !important; max-width: 187px !important; }  /* v4 2.5.5: -15% */
-    .home-col-esq .mascote-balao { font-size: 12px !important; padding: 4px 10px !important; margin-top: -4px !important; }
-    .home-col-esq .acerto-cred { font-size: 12px; padding: 5px 12px; margin: 6px auto 0; }
-    .home-col-esq .mascote-seletor { gap: 6px !important; margin-top: 10px !important; }  /* v4 2.5.5: gap -20% */
-    .home-col-esq .mini-mascote { width: 56px !important; height: 60px !important; }  /* v4 2.5.5: -10% */
-    .home-col-esq .mascote-seletor-label { font-size: 9px !important; margin-top: 4px !important; }  /* v4 2.5.5: -15% */
-    /* v4 2.5.5: gap loja-Descobrir -30% */
-    .home-col-dir > div:first-child { margin-bottom: 10px !important; }
-    /* v4 2.5.5: cards de ano mais baixos */
-    .ano-card { min-height: 138px !important; padding: 12px 10px 10px !important; }
-    .ano-num { font-size: 32px !important; }
-    /* v4 2.5.5: bloco adultos mais discreto */
-    .container > div:last-child[style*="margin-top:32px"] { margin-top: 22px !important; }
-  }
-  @media (min-width: 760px) and (max-width: 1023px) {
-    /* Tablet: coluna única (escolhi 'b' do spec — mais simples e legível) */
-    .home-cols { display: block; }
-  }
-
-  /* ===== DESKTOP: COMPACTO, CABE EM 1 TELA ===== */
-  @media (min-width: 760px) {
-    .container { max-width: 980px; padding-top: 10px; padding-bottom: 10px; }
-    h1.matemagica-titulo { font-size: 32px; margin: 2px 0 0; }
-    h1.matemagica-titulo .estrela-tit { font-size: 26px; }
-    .sub { margin: 0 !important; font-size: 14px; }
-    .intro { font-size: 12px; margin-bottom: 10px; }
-
-    /* Mascote side-by-side com seletor */
-    .mascote-wrap {
-      display: grid;
-      grid-template-columns: 160px 1fr;
-      align-items: center;
-      gap: 16px;
-      text-align: left;
-      margin: 6px 0;
-    }
-    .mascote-holder svg.mascote { width: 130px; }
-    .mascote-balao {
-      display: inline-block;
-      margin: 0 0 4px 0;
-      font-size: 12px;
-      padding: 5px 12px;
-    }
-    .mascote-balao::before, .mascote-balao::after { display: none; }
-    .mascote-seletor { justify-content: flex-start; margin: 6px 0 2px; }
-    .mascote-seletor-label { text-align: left; margin-top: 2px; }
-    .mini-mascote { width: 52px; height: 56px; }
-
-    /* Banner premium mais compacto */
-    .premium-ativo {
-      margin: 6px 0 !important;
-      padding: 5px 12px !important;
-      font-size: 11px !important;
-    }
-    .premium-banner {
-      margin: 6px 0 !important;
-      padding: 8px 12px !important;
-    }
-    .premium-banner .pb-texto { font-size: 11px !important; }
-
-    /* Botões de navegação compactos */
-    #premium-slot + div[style*="margin-bottom:14px"] {
-      margin-bottom: 8px !important;
-      gap: 6px !important;
-    }
-    #premium-slot + div[style*="margin-bottom:14px"] > * {
-      padding: 6px 12px !important;
-      font-size: 12px !important;
-    }
-
-    /* Card EXPLORA mais baixo */
-    #explora-card {
-      padding: 10px 14px !important;
-      margin: 6px 0 10px !important;
-    }
-    #explora-card > div[style*="font-size:32px"] { font-size: 24px !important; }
-    #explora-card .eb-emoji { font-size: 24px !important; }
-
-    /* Cards de ano menores verticalmente */
-    .ano-grid { gap: 8px; padding: 2px 0 6px; }
-    .ano-card { min-height: 140px; padding: 12px 10px 10px; }
-    .ano-num { font-size: 32px; }
-    .ano-label { font-size: 11px; margin-bottom: 4px; }
-    .ano-tema { font-size: 10px; line-height: 1.25; }
-  }
-
-  /* ===== Cadeado premium nos cards ===== */
-  .ano-card { position: relative; }
-  .ano-card .cadeado-premium {
-    position: absolute; top: 6px; right: 6px;
-    background: #ffd36b; color: #5a3a00;
-    width: 22px; height: 22px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-  }
-  .ano-card.premium-free-tag::after {
-    content: 'GRÁTIS';
-    position: absolute; top: 6px; left: 6px;
-    background: #2ebd7c; color: #fff;
-    font-size: 9px; font-weight: 800;
-    padding: 2px 6px; border-radius: 8px;
-    letter-spacing: 0.5px;
-  }
-
-  .premium-banner {
-    margin: 14px 0 10px;
-    background: linear-gradient(135deg, #fff3d6, #ffe5a3);
-    border: 2px solid #ffcc4a;
-    border-radius: 12px;
-    padding: 12px 14px;
-    display: flex; align-items: center; gap: 12px;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  .premium-banner:hover { transform: translateY(-2px); }
-  .premium-banner .pb-emoji { font-size: 26px; flex-shrink: 0; }
-  .premium-banner .pb-texto { flex: 1; font-size: 12px; color: #5a3a00; line-height: 1.35; }
-  .premium-banner .pb-texto b { color: #a04a00; font-size: 13px; }
-  .premium-banner .pb-preco {
-    background: #2ebd7c; color: #fff;
-    padding: 6px 10px; border-radius: 10px;
-    font-weight: 800; font-size: 13px;
-    white-space: nowrap;
-  }
-  .premium-ativo {
-    margin: 12px 0 8px;
-    background: linear-gradient(135deg, #d9c8f5, #b968e8);
-    color: #fff;
-    padding: 8px 14px; border-radius: 10px;
-    font-size: 12px; font-weight: 700;
-    text-align: center;
-    letter-spacing: 0.5px;
-  }
-</style>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#6b54d3">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="MATEMÁGICA">
-<link rel="apple-touch-icon" href="icon-192.svg">
-
-<!-- SEO -->
-<meta name="description" content="A criança joga. A matemática fica. App gratuito BNCC do 1º ao 5º ano com jogos de matemática, história e geografia.">
-<meta name="keywords" content="matemática infantil, jogos de matemática, app BNCC, tabuada, matemática 1 ano, matemática 2 ano, matemática 3 ano, matemática 4 ano, matemática 5 ano, história, geografia, BNCC, matemática sem trauma, matemática brincando, app gratuito matemática">
-<meta name="author" content="Matemágica">
-<link rel="canonical" href="https://matemagica.app.br/">
-
-<!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Matemágica">
-<meta property="og:title" content="Matemágica — A criança joga. A matemática fica.">
-<meta property="og:description" content="App gratuito BNCC do 1º ao 5º ano: matemática + história + geografia em um só lugar. Sem login, sem lição forçada.">
-<meta property="og:url" content="https://matemagica.app.br/">
-<meta property="og:image" content="https://matemagica.app.br/og-image.svg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Matemágica — A criança joga. A matemática fica.">
-<meta property="og:locale" content="pt_BR">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Matemágica — A criança joga. A matemática fica.">
-<meta name="twitter:description" content="App gratuito. Matemática + História + Geografia BNCC. 1º ao 5º ano.">
-<meta name="twitter:image" content="https://matemagica.app.br/og-image.svg">
-
-<!-- JSON-LD structured data pra SEO -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Matemágica",
-  "applicationCategory": "EducationalApplication",
-  "operatingSystem": "Any",
-  "description": "App gratuito BNCC do 1º ao 5º ano com jogos de matemática, história e geografia.",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "BRL"
-  },
-  "audience": {
-    "@type": "EducationalAudience",
-    "educationalRole": "student",
-    "audienceType": "Fundamental I (1º ao 5º ano)"
-  },
-  "inLanguage": "pt-BR"
-}
-</script>
+  <!-- Estilos da home v9 -->
+  <link rel="stylesheet" href="tokens.css?v=39">
+  <link rel="stylesheet" href="home.css?v=39">
 </head>
 <body>
-<div class="container">
-  <button type="button" id="btn-atalho-topo" onclick="mostrarTutorialInstalar()" title="Cria um atalho na tela inicial — abre tela cheia, sem barra do navegador, funciona offline">
-    <span class="bat-icon">📱</span>
-    <span class="bat-texto">Atalho na tela</span>
-  </button>
-  <h1 class="matemagica-titulo"><span class="estrela-tit">✦</span>MATEMÁGICA<span class="estrela-tit">✦</span></h1>
-  <div class="sub" style="font-weight:700;color:#6b54d3">A criança joga. A matemática fica.</div>
-  <div class="sub" style="margin-top:2px;font-size:12px;color:#888">Escolha o ano pra começar</div>
 
-  <!-- Layout 2 colunas em desktop: esquerda mascote/seletor · direita loja+continuar+3 grupos -->
-  <div class="home-cols">
-    <div class="home-col-esq">
-      <div class="mascote-wrap">
-        <div class="mascote-holder" id="mascote-holder"></div>
-        <div class="mascote-balao" id="mascote-balao">Carregando…</div>
-        <!-- Caroline v3 2.5.4: "Cada acerto +1" persistente na coluna esquerda -->
-        <div class="acerto-cred">🪙 Cada acerto: +1 crédito</div>
-        <div class="mascote-seletor" id="mascote-seletor" style="margin-top:14px"></div>
-        <div class="mascote-seletor-label">Escolha seu mascote</div>
-      </div>
+<!-- Botão "Atalho na tela" (PWA install) — preserva NÃO REGREDIR do spec Caroline v6 -->
+<button type="button" id="btn-atalho-topo" onclick="if(typeof mostrarTutorialInstalar==='function'){mostrarTutorialInstalar()}" title="Cria um atalho na tela inicial — abre tela cheia, sem barra do navegador, funciona offline">
+  <span class="bat-icon" aria-hidden="true">📱</span>
+  <span class="bat-texto">Atalho na tela</span>
+</button>
 
-      <div class="intro" style="margin-bottom:10px">Jogos alinhados à BNCC · Progresso salvo por ano</div>
+<!-- ============= ATMOSFERA DECORATIVA (camadas fixas) ============= -->
+<div class="constellations" aria-hidden="true"></div>
+<div class="cloud cloud-1" aria-hidden="true"></div>
+<div class="cloud cloud-2" aria-hidden="true"></div>
+<div class="mountains" aria-hidden="true">
+  <svg viewBox="0 0 1400 180" preserveAspectRatio="none">
+    <path d="M0,180 L0,140 L100,90 L200,120 L320,70 L450,110 L580,80 L720,115 L860,75 L1000,105 L1140,85 L1280,110 L1400,95 L1400,180 Z" fill="#7c3aed" opacity="0.5"/>
+    <path d="M0,180 L0,150 L120,120 L240,140 L380,100 L520,135 L640,105 L780,140 L920,110 L1080,140 L1220,115 L1400,145 L1400,180 Z" fill="#5b21b6" opacity="0.6"/>
+  </svg>
+</div>
 
-      <div id="premium-slot"></div>
+<!-- ============= HEADER (topbar roxa sticky) ============= -->
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-mark">M</div>
+    <div class="logo-text">MATEMÁGICA</div>
+  </div>
+
+  <div class="adventurer-strip">
+    <div class="adv-avatar">
+      <div class="adv-avatar-bg"></div>
+      <div class="adv-mati" aria-hidden="true">🤖</div>
     </div>
-
-    <div class="home-col-dir">
-      <!-- Loja entra como primeiro item da coluna direita (Caroline v3 2.5.4) -->
-      <div style="text-align:right;margin-bottom:14px">
-        <button onclick="abrirLoja()" style="display:inline-flex;align-items:center;gap:4px;color:#a87800;background:linear-gradient(135deg,#fff3d6,#ffe5a3);border:1px solid #ffcc4a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit">🛒 Loja · 🪙 <span id="moedas-home">0</span></button>
-      </div>
-
-      <!-- Camada 3 (Caroline v2 2.5.2): 3 grupos taxonômicos -->
-      <div style="margin-bottom:8px">
-    <div style="font-size:13px;font-weight:800;color:#6b54d3;letter-spacing:0.3px;margin:14px 0 6px;display:flex;align-items:center;gap:6px"><span style="font-size:18px">🌟</span> Descobrir <span style="font-size:11px;color:#888;font-weight:400;font-style:italic">— onde todas as formas são válidas</span></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <a href="inventa.html" style="display:inline-block;color:#a8410a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff3d6,#ffd36b);border:1px solid #ff9a44">💡 Inventa!</a>
-      <a href="senso.html" style="display:inline-block;color:#1b7a3a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:1px solid #2ebd7c">🧠 Senso Numérico</a>
-      <a href="cuisenaire.html" style="display:inline-block;color:#4a3b8a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#f7f5ff,#ede8fa);border:1px solid #c5bbe9">🎨 Barras</a>
-      <a href="beleza.html" style="display:inline-block;color:#6b1c9e;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#ede8fa,#d9c8f5);border:1px solid #b968e8">✨ Beleza</a>
-    </div>
-
-    <div style="font-size:13px;font-weight:800;color:#1b7a3a;letter-spacing:0.3px;margin:14px 0 6px;display:flex;align-items:center;gap:6px"><span style="font-size:18px">🌍</span> Aplicar <span style="font-size:11px;color:#888;font-weight:400;font-style:italic">— matemática que aparece no mundo</span></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <a href="problemas.html" style="display:inline-block;color:#1b4a2a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#e6f7ec,#c8eed4);border:1px solid #7ad09a">📖 Problemas</a>
-      <a href="cozinha.html" style="display:inline-block;color:#8b1a10;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#ffe0d0,#fac8a8);border:1px solid #d4794a">🍰 Cozinha</a>
-    </div>
-
-    <div style="font-size:13px;font-weight:800;color:#a87800;letter-spacing:0.3px;margin:14px 0 6px;display:flex;align-items:center;gap:6px"><span style="font-size:18px">📚</span> Praticar <span style="font-size:11px;color:#888;font-weight:400;font-style:italic">— treinar fato e fluência</span></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <a href="tabuada.html" style="display:inline-block;color:#a8410a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff3d6,#ffd36b);border:1px solid #ff9a44">🧮 Tabuada</a>
-      <a href="soma.html" style="display:inline-block;color:#1b4a2a;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#d4f5dd,#a8e6b8);border:1px solid #3ac070">➕ Soma</a>
-      <a href="flash.html" style="display:inline-block;color:#6b54d3;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#ede8fa,#d9c8f5);border:1px solid #b968e8">⚡ Flash</a>
-      <a href="fracoes.html" style="display:inline-block;color:#8b1a10;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#fff4dc,#ffe0a0);border:1px solid #d4a574">🍕 Frações</a>
-    </div>
-
-    <!-- Henrique 29/04 noite — bloco "Para os adultos da casa" movido pra coluna direita pra evitar scroll grande -->
-    <div style="margin-top:18px;padding-top:14px;border-top:1px solid #e0dbf5">
-      <div style="font-size:13px;font-weight:700;color:#888;letter-spacing:0.3px;margin-bottom:2px;text-align:center">👨‍👩 Para os adultos da casa</div>
-      <div style="font-size:11px;color:#aaa;margin-bottom:8px;text-align:center">Acompanhamento, revisão e materiais</div>
-      <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
-        <a href="revisao.html" style="display:inline-flex;align-items:center;gap:5px;color:#666;text-decoration:none;font-size:12px;font-weight:600;padding:6px 12px;border-radius:10px;background:#f7f5ff;border:1px solid #d9cefa">📚 Revisão <span style="opacity:0.5">→</span></a>
-        <a href="imprimir.html" style="display:inline-flex;align-items:center;gap:5px;color:#666;text-decoration:none;font-size:12px;font-weight:600;padding:6px 12px;border-radius:10px;background:#f7f5ff;border:1px solid #d9cefa">📄 Imprimir <span style="opacity:0.5">→</span></a>
-        <a href="dashboard.html" style="display:inline-flex;align-items:center;gap:5px;color:#666;text-decoration:none;font-size:12px;font-weight:600;padding:6px 12px;border-radius:10px;background:#f7f5ff;border:1px solid #d9cefa">📊 Dashboard <span style="opacity:0.5">→</span></a>
-      </div>
-    </div>
-      </div>
+    <div class="adv-info">
+      <div class="adv-name"><span>BIP BOP!</span>Vamos brincar de matemática?</div>
+      <div class="adv-meta-line">Escolhe um reino abaixo pra começar</div>
     </div>
   </div>
 
-  <!-- Henrique 29/04 noite — Anos antes do Explora (era Explora→Anos) -->
-  <div class="ano-grid" id="ano-grid">
-    <a href="jogos_matematica_1ano.html" class="ano-card ano1" data-ano="1">
-      <div class="ano-num">1º</div>
-      <div class="ano-label">1º Ano</div>
-      <div class="ano-tema">Contagem, formas planas, calendário, dinheirinho</div>
-      <div class="ano-progresso" data-ano="1"></div>
-    </a>
-    <a href="jogos_matematica_2ano.html" class="ano-card ano2" data-ano="2">
-      <div class="ano-num">2º</div>
-      <div class="ano-label">2º Ano</div>
-      <div class="ano-tema">Dezenas, somar/subtrair, horas, formas 3D</div>
-      <div class="ano-progresso" data-ano="2"></div>
-    </a>
-    <a href="jogos_matematica_3ano.html" class="ano-card ano3" data-ano="3">
-      <div class="ano-num">3º</div>
-      <div class="ano-label">3º Ano</div>
-      <div class="ano-tema">Milhar, multiplicação, divisão, medidas</div>
-      <div class="ano-progresso" data-ano="3"></div>
-    </a>
-    <a href="jogos_matematica_4ano.html" class="ano-card ano4" data-ano="4">
-      <div class="ano-num">4º</div>
-      <div class="ano-label">4º Ano</div>
-      <div class="ano-tema">Dezenas de milhar, frações, probabilidade</div>
-      <div class="ano-progresso" data-ano="4"></div>
-    </a>
-    <a href="jogos_matematica_5ano.html" class="ano-card ano5" data-ano="5">
-      <div class="ano-num">5º</div>
-      <div class="ano-label">5º Ano</div>
-      <div class="ano-tema">Decimais, frações equivalentes, porcentagem</div>
-      <div class="ano-progresso" data-ano="5"></div>
-    </a>
-  </div>
-
-  <!-- Henrique 29/04 noite — EXPLORA agora vem DEPOIS dos cards de ano -->
-  <a href="explora/index.html" id="explora-card" style="display:flex;align-items:center;gap:14px;margin:14px 0;padding:14px 16px;background:linear-gradient(135deg,#fff4dc,#ffe0a0);border:2.5px solid #d4a574;border-radius:14px;text-decoration:none;color:#3a2818;transition:transform 0.2s,box-shadow 0.2s">
-    <div style="font-size:32px;flex-shrink:0">🌍</div>
-    <div style="flex:1;line-height:1.35">
-      <div style="font-size:15px;font-weight:800;color:#8b5a2b;letter-spacing:0.3px">EXPLORA — História e Geografia</div>
-      <div style="font-size:12px;color:#6b3a15;margin-top:2px">App-irmão com a mesma trupe · BNCC · 1º ao 5º ano</div>
+  <div class="topbar-right">
+    <div class="coin-pill" title="Descobertas acumuladas">
+      <span class="coin-icon" aria-hidden="true"></span>
+      <span data-coin-count>0</span>
     </div>
-    <div style="background:#8b5a2b;color:#fff;font-size:10px;font-weight:800;padding:4px 10px;border-radius:10px;letter-spacing:0.5px;white-space:nowrap">ABRIR →</div>
+
+    <div class="adults-menu" id="adultsMenu">
+      <button class="adults-trigger" id="adultsTrigger" aria-haspopup="true" aria-expanded="false">
+        <span aria-hidden="true">👨‍👩</span>
+        <span>Adultos</span>
+        <span class="arrow" aria-hidden="true">▼</span>
+      </button>
+      <div class="adults-dropdown" role="menu">
+        <div class="label-tiny">Para os adultos da casa</div>
+        <a href="revisao.html" role="menuitem">
+          <span aria-hidden="true">📚</span>
+          <span>Revisão</span>
+        </a>
+        <a href="dashboard.html" role="menuitem">
+          <span aria-hidden="true">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="imprimir.html" role="menuitem">
+          <span aria-hidden="true">📄</span>
+          <span>Imprimir</span>
+        </a>
+      </div>
+    </div>
+
+    <button class="icon-btn" title="Mati" aria-label="Mascote Mati">
+      <span aria-hidden="true">🤖</span>
+    </button>
+  </div>
+</header>
+
+<main class="world">
+
+  <!-- ======= JORNADA — hero com 5 medalhões circulares ======= -->
+  <section class="journey-hero" aria-labelledby="journey-title">
+    <div class="journey-header">
+      <div class="journey-header-left">
+        <span class="journey-eyebrow">🗺️ Sua Jornada Matemágica</span>
+        <h1 id="journey-title" class="journey-title">Escolha o seu Reino</h1>
+        <span class="journey-subtitle-inline">· cada ano é uma terra · alinhado à BNCC</span>
+      </div>
+    </div>
+
+    <div class="year-path">
+      <a class="year-node-wrap" href="jogos_matematica_1ano.html">
+        <div class="year-medallion" data-year="1">
+          <svg class="year-symbol" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
+            <path d="M50 18 L18 46 L26 46 L26 78 L74 78 L74 46 L82 46 Z M42 60 L58 60 L58 78 L42 78 Z"/>
+          </svg>
+          <span class="year-number">1°</span>
+        </div>
+        <div class="year-label">
+          <div class="year-territory">Vila dos Bichinhos</div>
+          <div class="year-desc">contar até 20, formas, dinheirinho</div>
+        </div>
+      </a>
+
+      <a class="year-node-wrap" href="jogos_matematica_2ano.html">
+        <div class="year-medallion" data-year="2">
+          <svg class="year-symbol" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
+            <path d="M28 78 L18 60 L24 60 L16 44 L24 44 L18 28 L38 28 L32 44 L40 44 L32 60 L38 60 L28 78 Z"/>
+            <path d="M70 82 L60 64 L66 64 L58 48 L66 48 L60 32 L80 32 L74 48 L82 48 L74 64 L80 64 L70 82 Z"/>
+          </svg>
+          <span class="year-number">2°</span>
+        </div>
+        <div class="year-label">
+          <div class="year-territory">Floresta das Dezenas</div>
+          <div class="year-desc">somar/subtrair, horas, formas 3D</div>
+        </div>
+      </a>
+
+      <a class="year-node-wrap" href="jogos_matematica_3ano.html">
+        <div class="year-medallion" data-year="3">
+          <svg class="year-symbol" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
+            <rect x="18" y="48" width="18" height="34"/>
+            <rect x="40" y="30" width="22" height="52"/>
+            <rect x="66" y="56" width="16" height="26"/>
+            <rect x="22" y="54" width="3" height="3" fill="#fff" opacity="0.6"/>
+            <rect x="29" y="54" width="3" height="3" fill="#fff" opacity="0.6"/>
+            <rect x="44" y="38" width="3" height="3" fill="#fff" opacity="0.6"/>
+            <rect x="51" y="38" width="3" height="3" fill="#fff" opacity="0.6"/>
+            <rect x="44" y="48" width="3" height="3" fill="#fff" opacity="0.6"/>
+            <rect x="51" y="48" width="3" height="3" fill="#fff" opacity="0.6"/>
+            <rect x="70" y="62" width="3" height="3" fill="#fff" opacity="0.6"/>
+            <rect x="76" y="62" width="3" height="3" fill="#fff" opacity="0.6"/>
+          </svg>
+          <span class="year-number">3°</span>
+        </div>
+        <div class="year-label">
+          <div class="year-territory">Cidade do Milhar</div>
+          <div class="year-desc">multiplicação, divisão, medidas</div>
+        </div>
+      </a>
+
+      <a class="year-node-wrap" href="jogos_matematica_4ano.html">
+        <div class="year-medallion" data-year="4">
+          <svg class="year-symbol" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
+            <path d="M22 82 L22 38 L26 38 L26 30 L34 30 L34 38 L42 38 L42 30 L50 30 L50 22 L58 22 L58 30 L66 30 L66 38 L74 38 L74 30 L82 30 L82 38 L82 82 Z"/>
+          </svg>
+          <span class="year-number">4°</span>
+        </div>
+        <div class="year-label">
+          <div class="year-territory">Castelo das Frações</div>
+          <div class="year-desc">dezenas de milhar, frações</div>
+        </div>
+      </a>
+
+      <a class="year-node-wrap" href="jogos_matematica_5ano.html">
+        <div class="year-medallion" data-year="5">
+          <svg class="year-symbol" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
+            <path d="M14 82 L38 42 L52 64 L68 30 L86 82 Z"/>
+            <path d="M62 38 L68 30 L74 38 L70 42 L66 42 Z" fill="#fff" opacity="0.7"/>
+            <path d="M32 50 L38 42 L44 50 L40 54 L36 54 Z" fill="#fff" opacity="0.7"/>
+          </svg>
+          <span class="year-number">5°</span>
+        </div>
+        <div class="year-label">
+          <div class="year-territory">Pico dos Decimais</div>
+          <div class="year-desc">decimais, equivalentes, %</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ======= EXPLORAÇÃO LIVRE — 3 colunas com cards verticais ======= -->
+  <section class="exploration-section" aria-labelledby="exploration-title">
+    <div class="exploration-intro">
+      <div class="exploration-eyebrow">ou explore livremente</div>
+      <h2 id="exploration-title" class="exploration-title">Jogos da Trupe Matemágica</h2>
+    </div>
+
+    <div class="columns-grid">
+
+      <!-- ===== COLUNA 1 — DESCOBRIR (família laranja/dourado) ===== -->
+      <div class="column">
+        <div class="column-header">
+          <h3 class="column-title descobrir">
+            <span class="column-icon" aria-hidden="true">⭐</span>
+            Descobrir
+          </h3>
+          <span class="column-subtitle">— todas as formas valem</span>
+        </div>
+
+        <div class="column-cards two-cols">
+          <a class="game-card card-inventa" href="inventa.html">
+            <div class="card-icon-wrap">
+              <svg class="card-icon-svg" viewBox="0 0 40 40" fill="none">
+                <path d="M20 4 L24 16 L36 18 L27 26 L30 38 L20 32 L10 38 L13 26 L4 18 L16 16 Z" fill="#f59e0b" stroke="#2d1b5e" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="card-name">Inventa!</div>
+            <div class="card-meta">vários jeitos</div>
+          </a>
+
+          <a class="game-card card-senso" href="senso.html">
+            <div class="card-icon-wrap">
+              <svg class="card-icon-svg" viewBox="0 0 40 40" fill="none">
+                <circle cx="20" cy="20" r="14" fill="#f59e0b" stroke="#2d1b5e" stroke-width="2"/>
+                <path d="M14 20 Q20 12 26 20 Q20 28 14 20" fill="white" opacity="0.85"/>
+                <circle cx="20" cy="20" r="3" fill="#2d1b5e"/>
+              </svg>
+            </div>
+            <div class="card-name">Senso Numérico</div>
+            <div class="card-meta">vários jeitos</div>
+          </a>
+
+          <a class="game-card card-barras" href="cuisenaire.html">
+            <div class="card-icon-wrap">
+              <svg class="card-icon-svg" viewBox="0 0 40 40" fill="none">
+                <rect x="6" y="22" width="6" height="14" fill="#fde68a" stroke="#2d1b5e" stroke-width="1.5" rx="1"/>
+                <rect x="14" y="14" width="6" height="22" fill="#fbbf24" stroke="#2d1b5e" stroke-width="1.5" rx="1"/>
+                <rect x="22" y="8" width="6" height="28" fill="#f97316" stroke="#2d1b5e" stroke-width="1.5" rx="1"/>
+                <rect x="30" y="18" width="6" height="18" fill="#dc2626" stroke="#2d1b5e" stroke-width="1.5" rx="1"/>
+              </svg>
+            </div>
+            <div class="card-name">Barras Mágicas</div>
+            <div class="card-meta">Cuisenaire</div>
+          </a>
+
+          <a class="game-card card-beleza" href="beleza.html">
+            <div class="card-icon-wrap">
+              <svg class="card-icon-svg" viewBox="0 0 40 40" fill="none">
+                <path d="M20 6 C 14 6, 8 12, 8 18 C 8 26, 16 32, 20 36 C 24 32, 32 26, 32 18 C 32 12, 26 6, 20 6 Z" fill="#f97316" stroke="#2d1b5e" stroke-width="2"/>
+                <circle cx="14" cy="16" r="2" fill="white"/>
+                <circle cx="26" cy="16" r="2" fill="white"/>
+              </svg>
+            </div>
+            <div class="card-name">Beleza</div>
+            <div class="card-meta">math no mundo</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ===== COLUNA 2 — APLICAR (família verde/água) ===== -->
+      <div class="column">
+        <div class="column-header">
+          <h3 class="column-title aplicar">
+            <span class="column-icon" aria-hidden="true">🌍</span>
+            Aplicar
+          </h3>
+          <span class="column-subtitle">— math no mundo</span>
+        </div>
+
+        <div class="column-cards one-col">
+          <a class="game-card card-problemas" href="problemas.html">
+            <div class="card-icon-wrap">
+              <svg class="card-icon-svg" viewBox="0 0 40 40" fill="none">
+                <rect x="6" y="6" width="28" height="32" rx="3" fill="#10b981" stroke="#2d1b5e" stroke-width="2"/>
+                <line x1="11" y1="14" x2="29" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                <line x1="11" y1="20" x2="29" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                <line x1="11" y1="26" x2="22" y2="26" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="card-name">Problemas do Dia</div>
+            <div class="card-meta">histórias com nomes BR</div>
+          </a>
+
+          <a class="game-card card-cozinha" href="cozinha.html">
+            <div class="card-icon-wrap">
+              <svg class="card-icon-svg" viewBox="0 0 40 40" fill="none">
+                <ellipse cx="20" cy="28" rx="14" ry="6" fill="#14b8a6" stroke="#2d1b5e" stroke-width="2"/>
+                <rect x="14" y="14" width="12" height="14" fill="#5eead4" stroke="#2d1b5e" stroke-width="2" rx="2"/>
+                <circle cx="17" cy="11" r="2" fill="#dc2626"/>
+                <circle cx="23" cy="9" r="2" fill="#dc2626"/>
+              </svg>
+            </div>
+            <div class="card-name">Cozinha</div>
+            <div class="card-meta">frações reais</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ===== COLUNA 3 — PRATICAR (família rosa/vinho) ===== -->
+      <div class="column">
+        <div class="column-header">
+          <h3 class="column-title praticar">
+            <span class="column-icon" aria-hidden="true">📚</span>
+            Praticar
+          </h3>
+          <span class="column-subtitle">— treinar fluência</span>
+        </div>
+
+        <div class="column-cards two-cols">
+          <a class="game-card card-tabuada" href="tabuada.html">
+            <div class="card-icon-wrap">
+              <svg class="card-icon-svg" viewBox="0 0 40 40" fill="none">
+                <rect x="6" y="6" width="28" height="28" rx="2" fill="#ef4444" stroke="#2d1b5e" stroke-width="2"/>
+                <line x1="6" y1="14" x2="34" y2="14" stroke="#2d1b5e" stroke-width="1.5"/>
+                <line x1="6" y1="22" x2="34" y2="22" stroke="#2d1b5e" stroke-width="1.5"/>
+                <line x1="6" y1="30" x2="34" y2="30" stroke="#2d1b5e" stroke-width="1.5"/>
+                <line x1="14" y1="6" x2="14" y2="34" stroke="#2d1b5e" stroke-width="1.5"/>
+                <line x1="22" y1="6" x2="22" y2="34" stroke="#2d1b5e" stroke-width="1.5"/>
+                <line x1="30" y1="6" x2="30" y2="34" stroke="#2d1b5e" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="card-name">Tabuada</div>
+            <div class="card-meta">mágica</div>
+          </a>
+
+          <a class="game-card card-soma" href="soma.html">
+            <div class="card-icon-wrap">
+              <svg class="card-icon-svg" viewBox="0 0 40 40" fill="none">
+                <circle cx="20" cy="20" r="14" fill="#fb7185" stroke="#2d1b5e" stroke-width="2"/>
+                <line x1="14" y1="20" x2="26" y2="20" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                <line x1="20" y1="14" x2="20" y2="26" stroke="white" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="card-name">Soma</div>
+            <div class="card-meta">famílias até 20</div>
+          </a>
+
+          <a class="game-card card-flash" href="flash.html">
+            <div class="card-icon-wrap">
+              <svg class="card-icon-svg" viewBox="0 0 40 40" fill="none">
+                <path d="M22 4 L10 22 L18 22 L14 36 L30 16 L22 16 Z" fill="#ec4899" stroke="#2d1b5e" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="card-name">Flash</div>
+            <div class="card-meta">olha sem contar</div>
+          </a>
+
+          <a class="game-card card-fracoes" href="fracoes.html">
+            <div class="card-icon-wrap">
+              <svg class="card-icon-svg" viewBox="0 0 40 40" fill="none">
+                <circle cx="20" cy="20" r="14" fill="#db2777" stroke="#2d1b5e" stroke-width="2"/>
+                <path d="M20 6 L20 20 L34 20 A14 14 0 0 0 20 6 Z" fill="#fb7185" stroke="#2d1b5e" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="card-name">Frações</div>
+            <div class="card-meta">pizza primeiro</div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Banner EXPLORA — link discreto pro app-irmão (História/Geografia 4° ano) -->
+  <a id="explora-card" href="explora/index.html">
+    <div class="ec-emoji" aria-hidden="true">🌍</div>
+    <div class="ec-info">
+      <div class="ec-title">EXPLORA — História e Geografia</div>
+      <div class="ec-sub">App-irmão com a mesma trupe · BNCC · 1º ao 5º ano</div>
+    </div>
+    <div class="ec-cta">ABRIR →</div>
   </a>
-</div>
 
-<!-- Modal compartilhado (usado pela Loja e Badges) -->
-<div class="modal-overlay hidden" id="modal-overlay">
-  <div class="modal">
-    <div class="emoji-grande" id="m-emoji">✨</div>
-    <h2 id="m-titulo"></h2>
-    <div id="m-conteudo"></div>
-    <div class="botoes">
-      <button class="acao" id="modal-btn" onclick="fecharModal()">Fechar</button>
-    </div>
-  </div>
-</div>
-<div class="confete-layer" id="confete-layer"></div>
-<div class="toast-celebra" id="toast-celebra"></div>
+</main>
 
-<script src="jogos_shared.js?v=38"></script>
-<script src="mascotes.js?v=38"></script>
-<script>
-// ============== MASCOTE DA TELA INICIAL ==============
-let _falaIdx = 0;
-let _intervaloFala = null;
-
-function renderMascote() {
-  const m = getMascoteAtivo();
-  const holder = document.getElementById('mascote-holder');
-  holder.innerHTML = m.svg;
-  const balao = document.getElementById('mascote-balao');
-  balao.textContent = m.falas.intro[0];
-  _falaIdx = 0;
-  balao.style.animation = 'none';
-  balao.offsetHeight;
-  balao.style.animation = '';
-
-  const svg = holder.querySelector('svg');
-  if (svg) svg.addEventListener('click', onClickMascote);
-
-  document.querySelectorAll('.mini-mascote').forEach(el => {
-    el.classList.toggle('ativo', el.dataset.id === getMascoteAtivoId());
-  });
-}
-
-function renderSeletor() {
-  const bar = document.getElementById('mascote-seletor');
-  bar.innerHTML = Object.entries(MASCOTES).map(([id, m]) =>
-    `<button class="mini-mascote ${id===getMascoteAtivoId()?'ativo':''}" data-id="${id}" title="${m.nome}" onclick="trocarMascote('${id}')">${m.svg}</button>`
-  ).join('');
-}
-
-function trocarMascote(id) {
-  if (!MASCOTES[id]) return;
-  setMascoteAtivo(id);
-  renderMascote();
-}
-
-function trocarFalaMascote() {
-  const m = getMascoteAtivo();
-  _falaIdx = (_falaIdx + 1) % m.falas.intro.length;
-  const b = document.getElementById('mascote-balao');
-  if (!b) return;
-  b.style.animation = 'none';
-  b.offsetHeight;
-  b.textContent = m.falas.intro[_falaIdx];
-  b.style.animation = '';
-}
-
-function onClickMascote() {
-  trocarFalaMascote();
-  const svg = document.querySelector('#mascote-holder svg');
-  if (!svg) return;
-  svg.style.animation = 'none';
-  svg.offsetHeight;
-  svg.style.animation = 'mascoteBounce 0.5s ease-in-out 2, mascoteBounce 3.6s ease-in-out infinite 1s';
-}
-
-renderSeletor();
-renderMascote();
-_intervaloFala = setInterval(trocarFalaMascote, 4500);
-</script>
+<!-- jogos_shared.js: STATE.moedas + mostrarTutorialInstalar() + ehPrimeiroAcesso/iniciarOnboarding -->
+<script src="jogos_shared.js?v=39"></script>
 
 <script>
-const chaves = {
-  1: 'jogosMat1ano_v1',
-  2: 'jogosMat2ano_v1',
-  3: 'jogosMat3ano_v1',
-  4: 'jogosMat4ano_v1',
-  5: 'jogosMat5ano_v1'
-};
-document.querySelectorAll('.ano-progresso').forEach(el => {
-  const ano = el.dataset.ano;
-  try {
-    const data = JSON.parse(localStorage.getItem(chaves[ano]) || '{}');
-    const descobertas = data.estrelas || 0;
-    if (descobertas > 0) el.textContent = `✨ ${descobertas}`;
-  } catch(e) {}
-});
-
-// Bloco "Continuar de onde parou" removido (29/04 noite) — empurrava conteúdo
-// pra baixo e estourava a viewport. Tracking em localStorage continua acontecendo
-// (jogos_shared.js → registrarUltimoJogo) caso queira voltar a exibir mais tarde.
+  // STATE.load() popula moedas/avatar/badges do localStorage; home.js usa STATE.moedas no coin pill.
+  if (typeof STATE !== 'undefined' && typeof STATE.load === 'function') {
+    try { STATE.load(); } catch(e) {}
+  }
+  // Onboarding primeiro acesso (preserva comportamento da home antiga).
+  if (typeof ehPrimeiroAcesso === 'function' && ehPrimeiroAcesso()) {
+    setTimeout(() => { if (typeof iniciarOnboarding === 'function') iniciarOnboarding(); }, 700);
+  }
 </script>
 
+<!-- Comportamento da home v9 -->
+<script src="home.js?v=39" defer></script>
+
+<!-- Service Worker (PWA offline) -->
 <script>
-// Onboarding primeiro acesso — só na home, só 1 vez na vida do navegador
-if (typeof ehPrimeiroAcesso === 'function' && ehPrimeiroAcesso()) {
-  setTimeout(() => { if (typeof iniciarOnboarding === 'function') iniciarOnboarding(); }, 700);
-}
-
-// Carrega STATE (global via matemagica_user_v1 + migra per-year na primeira vez) e mostra saldo
-if (typeof STATE !== 'undefined' && typeof STATE.load === 'function') {
-  STATE.load();
-  const el = document.getElementById('moedas-home');
-  if (el) el.textContent = STATE.moedas;
-
-  // App 100% liberado — nenhum banner nem cadeado.
-  // Todos os cards de ano recebem tag "GRÁTIS".
-  document.querySelectorAll('.ano-card').forEach(card => {
-    card.classList.add('premium-free-tag');
-  });
-}
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js').catch(() => {});
+    });
+  }
 </script>
 
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js').catch(() => {});
-  });
-}
-</script>
 </body>
 </html>
