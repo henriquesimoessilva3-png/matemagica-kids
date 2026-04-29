@@ -84,6 +84,29 @@ body {
 /* ============================================================================
  * HEADER (topbar roxa sticky)
  * ========================================================================== */
+/* Barra fina de oferta acima da topbar — link pra vitrine */
+.topbar-offer {
+  display: block;
+  background: linear-gradient(90deg, #f97316 0%, #ea580c 100%);
+  color: var(--text-inverse);
+  text-align: center;
+  padding: 8px 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid #c2410c;
+  letter-spacing: 0.2px;
+  position: relative;
+  z-index: calc(var(--z-header) + 1);
+  transition: background var(--transition-fast);
+}
+.topbar-offer:hover { background: linear-gradient(90deg, #ea580c 0%, #c2410c 100%); }
+.topbar-offer strong { color: var(--text-inverse); font-weight: 800; }
+@media (max-width: 600px) {
+  .topbar-offer { font-size: 11.5px; padding: 7px 10px; line-height: 1.35; }
+}
+
 .topbar {
   position: sticky;
   top: 0;

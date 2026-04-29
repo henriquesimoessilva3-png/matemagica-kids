@@ -132,6 +132,33 @@ body{
 .cta-grande:active{transform:scale(0.98)}
 .hero-garantia{font-size:13px;opacity:0.85}
 
+/* HERO REALMS — 5 medalhões dos anos como prova visual do produto v9 */
+.hero-realms{margin:24px 0 20px}
+.realms-label,.realms-subtext{
+  text-align:center;font-size:13px;
+  color:rgba(255,255,255,0.85);
+  margin-bottom:10px;
+}
+.realms-subtext{margin-top:10px;font-style:italic;opacity:0.75}
+.realms-row{
+  display:flex;flex-wrap:wrap;
+  justify-content:center;gap:6px;
+}
+.realm-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 12px;border-radius:999px;
+  background:rgba(255,255,255,0.14);
+  color:#fff;
+  font-weight:600;font-size:12px;
+  border:1.5px solid rgba(255,255,255,0.22);
+}
+.realm-num{font-weight:800;font-size:13px;color:var(--amarelo)}
+.realm-name{white-space:nowrap}
+@media(max-width:520px){
+  .realm-name{display:none}
+  .realm-pill{padding:6px 10px;min-width:36px;justify-content:center}
+}
+
 /* BLOCO "+N FAMÍLIAS" - PLACEHOLDER, USE SÓ SE REAL */
 .familias{
   background:var(--branco);
@@ -426,6 +453,18 @@ footer .legais{
       <span class="destaque">R$ 27 — uma vez só, pra sempre</span>
     </div>
 
+    <div class="hero-realms">
+      <p class="realms-label">5 reinos. 1 por ano escolar. BNCC do 1º ao 5º.</p>
+      <div class="realms-row">
+        <span class="realm-pill realm-1"><span class="realm-num">1º</span><span class="realm-name">Vila dos Bichinhos</span></span>
+        <span class="realm-pill realm-2"><span class="realm-num">2º</span><span class="realm-name">Floresta das Dezenas</span></span>
+        <span class="realm-pill realm-3"><span class="realm-num">3º</span><span class="realm-name">Cidade do Milhar</span></span>
+        <span class="realm-pill realm-4"><span class="realm-num">4º</span><span class="realm-name">Castelo das Frações</span></span>
+        <span class="realm-pill realm-5"><span class="realm-num">5º</span><span class="realm-name">Pico dos Decimais</span></span>
+      </div>
+      <p class="realms-subtext">Cada ano vira um mundo. Filho avança matemática como avança fase de jogo.</p>
+    </div>
+
     <button class="cta-grande" onclick="goCheckout('cta_hero')">
       🚀 Quero começar agora — R$ 27
     </button>
@@ -483,9 +522,16 @@ footer .legais{
       <li class="stack-item">
         <div class="esq">
           <div class="nome">🎁 Pokédex Tabuada — Coleção Completa</div>
-          <div class="desc">Memorização gamificada da tabuada por coleção</div>
+          <div class="desc">Memorização gamificada da tabuada por coleção, com macete visual</div>
         </div>
         <div class="preco-decl">R$ 37</div>
+      </li>
+      <li class="stack-item">
+        <div class="esq">
+          <div class="nome">🎁 Pack PDFs BNCC Imprimíveis</div>
+          <div class="desc">4 cadernos de atividade prontos pra imprimir e fazer no papel</div>
+        </div>
+        <div class="preco-decl">R$ 27</div>
       </li>
       <li class="stack-item">
         <div class="esq">
@@ -497,7 +543,7 @@ footer .legais{
     </ul>
 
     <div class="stack-total">
-      <div class="linha">Valor total: R$ 265</div>
+      <div class="linha">Valor total: R$ 292</div>
       <div class="preco">R$ 27</div>
       <div class="obs">10× menor que o valor declarado · 1 pagamento, pra sempre</div>
     </div>
@@ -539,27 +585,10 @@ footer .legais{
   </div>
 </section>
 
-<!-- PROVA SOCIAL — placeholders enquanto não tem real -->
-<section class="prova-bloco">
-  <div class="container">
-    <h2>O que as primeiras famílias estão dizendo</h2>
-    <p class="sub">Testers reais. Resultado em 7-15 dias.</p>
+<!-- PROVA SOCIAL: removida em 29/04 — placeholders [Nome da mãe] estavam LIVE.
+     Henrique optou por NÃO inserir Carta do Criador no momento. Volta com seção
+     de testemunhos só quando tiver 3 depoimentos REAIS com nome+cidade. -->
 
-    <!-- TROCAR placeholders por depoimentos REAIS depois das cobaias -->
-    <div class="depoimento placeholder">
-      "[Depoimento real aqui — peça às 3 amigas-cobaias logo após a primeira semana de uso. Use o nome dela + cidade.]"
-      <div class="quem">— [Nome da mãe], [Cidade]</div>
-    </div>
-    <div class="depoimento placeholder">
-      "[Foco em mudança visível: 'agora pede pra fazer', 'parou de chorar', 'tirou a 1ª nota boa', 'não briga mais comigo na hora da tarefa'.]"
-      <div class="quem">— [Nome da mãe], [Cidade]</div>
-    </div>
-    <div class="depoimento placeholder">
-      "[Inclua se possível: idade do filho + ano escolar + tempo de uso. Ex: 'Filho 8 anos, 3º ano, jogou 12 dias.']"
-      <div class="quem">— [Nome da mãe], [Cidade]</div>
-    </div>
-  </div>
-</section>
 
 <!-- POR QUE FUNCIONA -->
 <section class="argumentos">
