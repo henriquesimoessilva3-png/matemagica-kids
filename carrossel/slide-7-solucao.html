@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Slide 7 — Solução</title>
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1080px; height: 1350px;
+    overflow: hidden;
+  }
+  body {
+    font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Roboto, sans-serif;
+    background: linear-gradient(135deg, #2ebd7c 0%, #4ab3a5 60%, #3a8f88 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 90px 90px 80px;
+  }
+  .logo {
+    text-align: center;
+    font-size: 30px; font-weight: 800; letter-spacing: 4px;
+    color: #fff; margin-bottom: 90px;
+  }
+  .logo .star { color: #ffd36b; }
+
+  .headline {
+    font-size: 96px; font-weight: 900; line-height: 1.04;
+    color: #fff; letter-spacing: -2px;
+    margin: 0 0 50px;
+  }
+  .headline .accent { color: #ffd36b; }
+
+  .desc {
+    font-size: 38px; font-weight: 500; line-height: 1.4;
+    color: #fff; opacity: 0.95;
+    margin-bottom: 70px;
+  }
+  .desc strong { font-weight: 800; opacity: 1; }
+
+  .checks {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .checks li {
+    font-size: 42px; font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    line-height: 1.2;
+  }
+  .checks li::before {
+    content: '✓';
+    background: #ffd36b;
+    color: #2a8a5a;
+    width: 60px; height: 60px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 36px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  }
+</style>
+</head>
+<body>
+  <div class="logo">MATE<span class="star">✦</span>MÁGICA</div>
+
+  <h1 class="headline">Tem solução.<br><span class="accent">Brincando, sem briga.</span></h1>
+
+  <p class="desc">Matemágica é um app brasileiro alinhado à <strong>BNCC do 1º ao 5º ano</strong>.</p>
+
+  <ul class="checks">
+    <li>BNCC completo</li>
+    <li>Do 1º ao 5º ano</li>
+    <li>Sem mensalidade</li>
+    <li>Vitalício</li>
+  </ul>
+</body>
+</html>
