@@ -12,7 +12,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=37">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=38">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -200,8 +200,8 @@
 <div class="confete-layer" id="confete-layer"></div>
 <div class="toast-celebra" id="toast-celebra"></div>
 
-<script src="mascotes.js?v=37"></script>
-<script src="jogos_shared.js?v=37"></script>
+<script src="mascotes.js?v=38"></script>
+<script src="jogos_shared.js?v=38"></script>
 <script>
 STORAGE_KEY = 'jogosMat_default';
 CAPS = {}; TUTORIAIS = {}; JOGOS = {}; DICAS = {};
@@ -220,6 +220,7 @@ function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function rint(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
 // ============== GERADORES DE PROBLEMAS POR OPERAÇÃO ==============
+// Cada gerador retorna {a, b, ...} pra distractors diagnósticos (Caroline 1.5.2)
 const GERADORES = {
   soma: () => {
     const nome = pick(NOMES);
@@ -231,6 +232,7 @@ const GERADORES = {
       texto: `${nome} tinha <b>${a} ${obj}${obj.endsWith('s') ? '' : 's'}</b> ${pick(LUGARES)}. De presente, ganhou mais <b>${b} ${obj}${obj.endsWith('s') ? '' : 's'}</b>.`,
       pergunta: `Quantos ${obj}${obj.endsWith('s') ? '' : 's'} ${nome} tem agora?`,
       resposta: res,
+      a, b,
       tipo: 'soma'
     };
   },
@@ -245,6 +247,7 @@ const GERADORES = {
       texto: `${nome} tinha <b>${a} ${obj}${obj.endsWith('s') ? '' : 's'}</b>. Em uma tarde, ${pick(verbos)} <b>${b}</b>.`,
       pergunta: `Quantos ${obj}${obj.endsWith('s') ? '' : 's'} sobraram com ${nome}?`,
       resposta: res,
+      a, b,
       tipo: 'subtracao'
     };
   },
@@ -259,6 +262,7 @@ const GERADORES = {
       texto: `${nome} organizou <b>${a} ${recipiente}${recipiente.endsWith('s') ? '' : 's'}</b> de ${obj}${obj.endsWith('s') ? '' : 's'}. Em cada ${recipiente} colocou <b>${b} ${obj}${obj.endsWith('s') ? '' : 's'}</b>.`,
       pergunta: `Quantos ${obj}${obj.endsWith('s') ? '' : 's'} ${nome} tem no total?`,
       resposta: res,
+      a, b,
       tipo: 'multiplicacao'
     };
   },
@@ -272,11 +276,31 @@ const GERADORES = {
       texto: `${nome} tem <b>${total} ${obj}${obj.endsWith('s') ? '' : 's'}</b> pra repartir igualzinho entre <b>${nAmigos} amigos</b>.`,
       pergunta: `Quantos ${obj}${obj.endsWith('s') ? '' : 's'} cada amigo recebe?`,
       resposta: perCada,
+      a: total, b: nAmigos,
       tipo: 'divisao'
     };
   },
   mix: null // tratado em gerarProblema
 };
+
+// Caroline 1.5.2 — distractors diagnósticos: cada um revela um tipo específico
+// de erro pedagógico (operação trocada, off-by-one, operandos invertidos).
+// Ajuda professor/pai a entender de quê erro foi via mostrarHipoteseErroInline.
+function gerarDistratoresDiagnosticos(prob) {
+  const { a, b, resposta: r, tipo } = prob;
+  let cands = [];
+  if (tipo === 'soma') {
+    cands = [Math.abs(a - b), a * b, r + 1, r - 1];
+  } else if (tipo === 'subtracao') {
+    cands = [a + b, r + 1, r - 1, a]; // a = "esqueceu de tirar"
+  } else if (tipo === 'multiplicacao') {
+    cands = [a + b, r - a, r + b, r - b]; // somou; off-fileira; off-coluna
+  } else if (tipo === 'divisao') {
+    cands = [a - b, b, r + 1, r - 1]; // subtraiu total-amigos; trocou amigos<>perCada
+  }
+  // Filtra positivos, únicos e diferentes da resposta
+  return [...new Set(cands.filter(v => v > 0 && v !== r))].slice(0, 3);
+}
 
 let _opAtual = 'mix'; // Boaler 2.2.1: default misturado (criança triagra a operação)
 let _probAtual = null;
@@ -317,9 +341,12 @@ function gerarProblema() {
   document.getElementById('historia-pergunta').classList.remove('hidden');
   document.getElementById('prob-feedback').textContent = '';
   document.getElementById('prob-feedback').className = 'prob-feedback';
-  // Gera 4 opções com a certa + 3 distratoras próximas
+  // Caroline 1.5.2: 4 opções = certa + 3 distratoras DIAGNÓSTICAS
+  // (cada erro revela um tipo de pensamento — operação trocada, off-by-one, etc.)
   const certa = _probAtual.resposta;
-  const set = new Set([certa]);
+  const diag = gerarDistratoresDiagnosticos(_probAtual);
+  const set = new Set([certa, ...diag]);
+  // Fallback caso diag não preencha 3 (números muito pequenos/colidem)
   while (set.size < 4) {
     const delta = rint(-4, 4);
     const v = Math.max(0, certa + delta);

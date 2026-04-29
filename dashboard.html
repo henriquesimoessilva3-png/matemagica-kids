@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard dos Pais — Jogos de Matemática</title>
 <!-- Caroline 2.4: barreira leve pros adultos. Persiste por sessão. -->
-<script src="parent-gate.js?v=37"></script>
+<script src="parent-gate.js?v=38"></script>
 <!-- Microsoft Clarity (gravação de sessão + heatmap) -->
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -14,7 +14,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "whfer3z4jm");
 </script>
-<link rel="stylesheet" href="jogos_matematica_shared.css?v=37">
+<link rel="stylesheet" href="jogos_matematica_shared.css?v=38">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
@@ -99,10 +99,21 @@
   .badge-mini .emoji { font-size: 28px; }
   .badge-mini .nome { font-size: 10px; color: #4a3b8a; font-weight: 700; margin-top: 4px; }
 
+  /* Caroline 3.7.x — empty state com Mati pensando (visual mais acolhedor) */
   .vazio {
-    text-align: center; color: #aaa; padding: 20px;
-    background: #f7f5ff; border-radius: 12px; font-size: 13px;
+    text-align: center; color: #6b6080; padding: 22px 18px;
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border: 2px dashed #c5bbe9;
+    border-radius: 14px; font-size: 13px;
+    line-height: 1.5;
+    position: relative;
   }
+  .vazio::before {
+    content: '🤖';
+    display: block; font-size: 32px; margin-bottom: 8px;
+    filter: grayscale(0.3) opacity(0.85);
+  }
+  .vazio a { color: #6b54d3; font-weight: 700; }
 
   .todos-anos-header {
     background: linear-gradient(135deg, #667eea, #764ba2);
@@ -442,7 +453,7 @@ function renderGraficoLinha(ano) {
   if (!temDados) {
     return `<div class="vazio">
       Sem histórico de revisões ainda.<br>
-      <small>Faça uma revisão em <a href="provas.html" style="color:#6b54d3">Revisão</a> pra começar o histórico.</small>
+      <small>Faça uma revisão em <a href="revisao.html" style="color:#6b54d3">Revisão</a> pra começar o histórico.</small>
     </div>`;
   }
 
@@ -572,6 +583,36 @@ function renderHistoricoProvas(ano /* ou null */) {
 }
 
 // ========================================
+// PERGUNTA PRA O JANTAR (Boaler P4) — usada em renderAno e renderTodos
+// ========================================
+const PERGUNTAS_JANTAR = [
+  'Pergunta o que ela <b>descobriu hoje</b> que achou interessante. Não foque em "acertou X" — foca no "o que aprendeu".',
+  'Pergunta qual <b>jeito de resolver</b> ela inventou esta semana. Pede pra ela explicar.',
+  'Conta de uma vez que <b>você errou</b> em matemática quando criança e como descobriu o jeito certo. Errar é normal.',
+  'Pergunta <b>qual jogo do app é o favorito dela</b> e por quê. A resposta diz mais do que qualquer estatística.',
+  'Faz junto: peça pra ela <b>ensinar você</b> uma estratégia. Quem ensina aprende em dobro (Boaler).',
+  'Conta de um <b>uso de matemática</b> que você fez hoje (cozinha, troco, distância) — mostra que matemática é viva.',
+  'Pergunta o que ela acha <b>mais difícil</b> em matemática agora. Sem julgamento — só ouvir. "Em construção" é caminho.',
+  'Pede pra ela <b>desenhar uma fração</b> de algo (pizza, bolo, dia). Concretizar abstrato vira insight.',
+  'Pergunta <b>quantos jeitos diferentes</b> ela conhece pra fazer 10 (4+6, 5+5, 8+2, 100÷10...). Listar é divertido.',
+  'Joga junto: faça uma rodada do <b>Inventa!</b> com ela. Compete consigo mesma — quantas formas em 1 minuto?',
+  'Conta sobre <b>um erro famoso</b> da matemática (Newton vs Leibniz, divisão por zero...). Erros mudaram a história.',
+  'Pergunta: <b>"Onde você viu matemática hoje?"</b> Pode ser placa, troco, hora, número de páginas. Resposta surpreende.'
+];
+function _semanaDoAno(d) {
+  const inicio = new Date(d.getFullYear(), 0, 1);
+  return Math.floor(((d - inicio) / 86400000 + inicio.getDay() + 1) / 7);
+}
+function renderPerguntaJantar() {
+  const idx = _semanaDoAno(new Date()) % PERGUNTAS_JANTAR.length;
+  return `
+    <div style="background:linear-gradient(135deg,#fff4dc,#ffe5a3);border:2px solid #d4a574;border-radius:14px;padding:14px 16px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:800;color:#8b5a2b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">💬 Pergunta pra o jantar (rotaciona toda semana)</div>
+      <div style="font-size:14px;line-height:1.5;color:#3a2818">${PERGUNTAS_JANTAR[idx]}</div>
+    </div>`;
+}
+
+// ========================================
 // VIEW POR ANO
 // ========================================
 function renderAno(ano) {
@@ -603,33 +644,7 @@ function renderAno(ano) {
     heatmap.push({ str, jogado: diasJogados.includes(str), dia: d.getDate() });
   }
 
-  // Boaler P4 (Princípio 4): perguntas pra o jantar — rotativa por semana do ano
-  const PERGUNTAS_JANTAR = [
-    'Pergunta o que ela <b>descobriu hoje</b> que achou interessante. Não foque em "acertou X" — foca no "o que aprendeu".',
-    'Pergunta qual <b>jeito de resolver</b> ela inventou esta semana. Pede pra ela explicar.',
-    'Conta de uma vez que <b>você errou</b> em matemática quando criança e como descobriu o jeito certo. Errar é normal.',
-    'Pergunta <b>qual jogo do app é o favorito dela</b> e por quê. A resposta diz mais do que qualquer estatística.',
-    'Faz junto: peça pra ela <b>ensinar você</b> uma estratégia. Quem ensina aprende em dobro (Boaler).',
-    'Conta de um <b>uso de matemática</b> que você fez hoje (cozinha, troco, distância) — mostra que matemática é viva.',
-    'Pergunta o que ela acha <b>mais difícil</b> em matemática agora. Sem julgamento — só ouvir. "Em construção" é caminho.',
-    'Pede pra ela <b>desenhar uma fração</b> de algo (pizza, bolo, dia). Concretizar abstrato vira insight.',
-    'Pergunta <b>quantos jeitos diferentes</b> ela conhece pra fazer 10 (4+6, 5+5, 8+2, 100÷10...). Listar é divertido.',
-    'Joga junto: faça uma rodada do <b>Inventa!</b> com ela. Compete consigo mesma — quantas formas em 1 minuto?',
-    'Conta sobre <b>um erro famoso</b> da matemática (Newton vs Leibniz, divisão por zero...). Erros mudaram a história.',
-    'Pergunta: <b>"Onde você viu matemática hoje?"</b> Pode ser placa, troco, hora, número de páginas. Resposta surpreende.'
-  ];
-  function _semanaDoAno(d) {
-    const inicio = new Date(d.getFullYear(), 0, 1);
-    return Math.floor(((d - inicio) / 86400000 + inicio.getDay() + 1) / 7);
-  }
-  const perguntaIdx = _semanaDoAno(new Date()) % PERGUNTAS_JANTAR.length;
-
-  let html = `
-    <div style="background:linear-gradient(135deg,#fff4dc,#ffe5a3);border:2px solid #d4a574;border-radius:14px;padding:14px 16px;margin-bottom:16px">
-      <div style="font-size:11px;font-weight:800;color:#8b5a2b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">💬 Pergunta pra o jantar (rotaciona toda semana)</div>
-      <div style="font-size:14px;line-height:1.5;color:#3a2818">${PERGUNTAS_JANTAR[perguntaIdx]}</div>
-    </div>
-
+  let html = renderPerguntaJantar() + `
     <div class="resumo-grid">
       <div class="card-stat gold"><div class="valor">✨ ${estrelas}</div><div class="label">Descobertas totais</div></div>
       <div class="card-stat"><div class="valor">Nv ${nivel}</div><div class="label">${xp} XP</div></div>
@@ -709,7 +724,7 @@ function renderTodos() {
   const piores = jogosGlobal.filter(j => j.tentativas >= 3).sort((a,b) => a.taxa - b.taxa).slice(0, 5);
   const taxaGeral = totais.tentativas ? Math.round((totais.acertos / totais.tentativas) * 100) : 0;
 
-  let html = `
+  let html = renderPerguntaJantar() + `
     <div class="todos-anos-header">
       <div style="text-align:center">
         <div class="total">✨ ${totais.estrelas}</div>

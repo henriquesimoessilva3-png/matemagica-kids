@@ -1,5 +1,5 @@
 // Service Worker — cache offline do Matemágica (network-first pra código, cache pra offline)
-const CACHE = 'matemagica-v21';
+const CACHE = 'matemagica-v22';
 const ARQUIVOS = [
   '/',
   '/index.html',
@@ -15,7 +15,7 @@ const ARQUIVOS = [
   '/icon-192.svg',
   '/icon-512.svg',
   '/dashboard.html',
-  '/provas.html',
+  '/revisao.html',
   '/imprimir.html',
   '/tabuada.html'
 ];

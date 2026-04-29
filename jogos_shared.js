@@ -1351,7 +1351,29 @@ function feedbackAcerto(msg) {
     setTimeout(() => mostrarCapsulaMundoReal(), 1800);
   }
 
-  setTimeout(() => { if (jogoAtivo) JOGOS[jogoAtivo].iniciar(); }, 1400);
+  setTimeout(() => { if (jogoAtivo) iniciarComTransicao(JOGOS[jogoAtivo].iniciar); }, 1400);
+}
+
+// Caroline 3.6.1 — anima saída/entrada da pergunta atual ao trocar.
+// Pega o primeiro `.pergunta` da página, aplica .pergunta-saindo, espera animação,
+// chama o init do jogo (que vai re-renderizar), depois aplica .pergunta-entrando.
+function iniciarComTransicao(initFn) {
+  if (typeof initFn !== 'function') return;
+  const p = document.querySelector('.pergunta');
+  // prefers-reduced-motion: pula direto
+  const reduzir = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!p || reduzir) { initFn(); return; }
+  p.classList.add('pergunta-saindo');
+  setTimeout(() => {
+    initFn();
+    // initFn pode ter trocado a pergunta — pega a nova
+    const np = document.querySelector('.pergunta');
+    if (np) {
+      np.classList.remove('pergunta-saindo');
+      np.classList.add('pergunta-entrando');
+      setTimeout(() => np.classList.remove('pergunta-entrando'), 450);
+    }
+  }, 260);
 }
 
 // ============== CÁPSULAS "MATEMÁTICA NO MUNDO REAL" ==============
@@ -1690,8 +1712,7 @@ function mostrarResultadoProva() {
 
       <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center">
         <button class="acao" onclick="reiniciarProva()">🔄 Revisar de novo</button>
-        <button class="acao sec" onclick="location.href='provas.html'">📚 Outra revisão</button>
-        <!-- nota: arquivo provas.html mantido por compat; rename + redirect 301 fica pra sprint posterior -->
+        <button class="acao sec" onclick="location.href='revisao.html'">📚 Outra revisão</button>
         <button class="acao sec" onclick="location.href='index.html'">✓ Já estou pronta(o)</button>
       </div>
 
@@ -1714,7 +1735,7 @@ function reiniciarProva() {
 function sairDaProva() {
   if (!confirm('Sair da revisão agora? O progresso desta execução não será salvo no histórico.')) return;
   try { sessionStorage.removeItem('modoProva'); } catch(e) {}
-  location.href = 'provas.html';
+  location.href = 'revisao.html';
 }
 
 // Override dos feedbacks originais pra distinguir modo prova
@@ -1754,6 +1775,10 @@ function renderMascoteCoach(estado) {
   const m = getMascoteAtivo();
   const novoEstado = estado || 'idle';
   _matiEstadoAtual = novoEstado;
+  // Caroline 1.4.2 — adiciona classe de estado pra CSS aplicar destaque visual
+  // (escala, glow, animação) — sem isso o overlay fica imperceptível no canto.
+  el.classList.remove('estado-pensando', 'estado-comemorando', 'estado-errou');
+  if (novoEstado !== 'idle') el.classList.add('estado-' + novoEstado);
   const svgComEstado = (typeof getMascoteSvgComEstado === 'function')
     ? getMascoteSvgComEstado(getMascoteAtivoId(), novoEstado)
     : m.svg;
@@ -1763,6 +1788,10 @@ function renderMascoteCoach(estado) {
   `;
   const svg = el.querySelector('svg');
   if (svg) svg.addEventListener('click', () => reagirMascoteCoach('toque'));
+  // Caroline 1.4.4 — quando volta pra idle, arma timer de inatividade
+  if (typeof iniciarTimerInatividade === 'function' && novoEstado === 'idle') {
+    iniciarTimerInatividade();
+  }
 }
 
 function mostrarBalaoCoach(texto, tipo, duracao) {
@@ -1824,6 +1853,37 @@ function reagirMascoteCoach(tipo) {
     el.classList.remove('reagindo', 'tristonho');
   }, 1100);
 }
+
+// ============== TIMER DE INATIVIDADE (Caroline 1.4.4) ==============
+// Se a criança fica >15s sem interagir, o Mati entra em estado "pensando" pra
+// sinalizar acompanhamento sem pressionar. Reseta a cada input/click.
+let _inatividadeTimer = null;
+const INATIVIDADE_MS = 15000;
+
+function iniciarTimerInatividade() {
+  cancelarTimerInatividade();
+  _inatividadeTimer = setTimeout(() => {
+    // Só dispara se ainda estiver em idle (não interrompe outras reações)
+    if (_matiEstadoAtual === 'idle') {
+      reagirMascoteCoach('pensando');
+    }
+  }, INATIVIDADE_MS);
+}
+
+function cancelarTimerInatividade() {
+  if (_inatividadeTimer) {
+    clearTimeout(_inatividadeTimer);
+    _inatividadeTimer = null;
+  }
+}
+
+// Listeners globais — qualquer interação reseta o timer
+['click', 'keydown', 'touchstart', 'pointerdown'].forEach(ev => {
+  document.addEventListener(ev, () => {
+    cancelarTimerInatividade();
+    if (_matiEstadoAtual === 'idle') iniciarTimerInatividade();
+  }, { passive: true });
+});
 
 // ============== METACOGNIÇÃO (mascote pensa em voz alta, Quora/Boaler) ==============
 // Mostra como o mascote pensa na 1ª vez que a criança vê um tipo de jogo por sessão.
@@ -2357,7 +2417,7 @@ function registrarUltimoJogo() {
     const url = (location.pathname.split('/').pop() || '').toLowerCase();
     // Não registra index, vitrine, dashboard, parent-gated pages, etc
     if (!url || url === 'index.html' || url === 'vitrine.html' || url === 'quiz.html' ||
-        url === 'dashboard.html' || url === 'imprimir.html' || url === 'provas.html' ||
+        url === 'dashboard.html' || url === 'imprimir.html' || url === 'revisao.html' ||
         url === 'tabuada.html') return; // tabuada exclui pq tem login flow próprio
     // Lista permitida — só páginas de jogo de fato
     const ok = ['flash.html','problemas.html','inventa.html','soma.html','cozinha.html',

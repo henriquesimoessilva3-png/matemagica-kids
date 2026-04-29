@@ -5,6 +5,12 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Renome 29/04: provas.html -> revisao.html (URL semântica). 301 preserva SEO/bookmarks.
+[[redirects]]
+  from = "/provas.html"
+  to = "/revisao.html"
+  status = 301
+
 [[headers]]
   for = "/service-worker.js"
   [headers.values]
