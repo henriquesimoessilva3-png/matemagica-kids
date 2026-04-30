@@ -61,29 +61,30 @@
     margin: 8px 0 6px;
     text-align: center;
   }
-  /* Override do shared.css - 10 colunas em 1 linha, sem labels de status */
+  /* Override do shared.css - 10 colunas em 1 linha, formato pill */
   html[data-game="tabuada"] .container .pokedex-grid {
     display: grid !important;
     grid-template-columns: repeat(10, 1fr) !important;
-    gap: 5px !important;
-    margin-bottom: 10px !important;
+    gap: 6px !important;
+    margin-bottom: 12px !important;
   }
   html[data-game="tabuada"] .container .poke-card {
-    aspect-ratio: 1 / 1.15 !important;
-    padding: 4px 2px !important;
+    aspect-ratio: auto !important;
+    padding: 10px 6px !important;
+    min-height: 44px !important;
     border-radius: 10px !important;
   }
   html[data-game="tabuada"] .container .poke-card .poke-label { display: none !important; }
-  /* esconde o "×1" header tambem - mantem so numero + estrelas */
   html[data-game="tabuada"] .container .poke-card > div:first-child:not(.poke-num):not(.poke-estrelas) { display: none !important; }
   .poke-card {
-    aspect-ratio: 1 / 1.15;
     border-radius: 10px;
-    padding: 4px 2px;
+    padding: 10px 6px;
+    min-height: 44px;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     cursor: pointer;
     transition: all 0.2s;
     border: 2px solid transparent;
@@ -133,22 +134,20 @@
     opacity: 0;
   }
 
-  /* ===== SELETOR DE MODO ===== */
+  /* ===== SELETOR DE MODO (dentro do quadro estudo-area) ===== */
   .modo-tabs {
     display: flex;
-    gap: 8px;
-    margin: 14px 0 10px;
-    justify-content: center;
+    gap: 6px;
   }
   .modo-tab {
     background: #f7f5ff;
     border: 2px solid #c5bbe9;
     color: #6b54d3;
-    padding: 9px 18px;
-    border-radius: 20px;
+    padding: 5px 12px;
+    border-radius: 16px;
     font-weight: 700;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     transition: all 0.15s;
   }
   .modo-tab:hover { background: #ede8fa; }
@@ -158,8 +157,15 @@
   .estudo-area {
     background: linear-gradient(135deg, #f7f5ff, #ede8fa);
     border-radius: 16px;
-    padding: 16px 14px 14px;
+    padding: 14px 14px 14px;
     margin-bottom: 12px;
+    position: relative;
+  }
+  .estudo-area .modo-tabs {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    z-index: 2;
   }
   .estudo-titulo {
     font-size: 22px;
@@ -170,7 +176,8 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     text-align: center;
-    margin-bottom: 12px;
+    margin: 0 0 14px;
+    padding-top: 4px;
     letter-spacing: 0.5px;
     line-height: 1.1;
   }
@@ -213,16 +220,28 @@
   }
   .comut-box .comut-detalhe { font-size: 14px !important; }
   .comut-insight {
-    margin-top: 14px;
-    background: #fff3d6;
-    border-left: 5px solid #ffd36b;
-    border-radius: 10px;
-    padding: 14px 18px;
-    font-size: 16px;
-    color: #5a3a00;
-    line-height: 1.5;
+    margin: 8px auto 14px;
+    background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+    border: 1.5px solid #c4b5fd;
+    border-radius: 18px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: #5b21b6;
+    line-height: 1.35;
+    text-align: center;
+    display: inline-block;
+    width: auto;
+    max-width: fit-content;
+    font-weight: 600;
   }
-  .comut-insight strong { color: #8a5a10; }
+  .comut-insight .comut-icon {
+    font-weight: 900;
+    color: #6b54d3;
+    margin-right: 4px;
+  }
+  .comut-insight strong, .comut-insight b { color: #4c1d95; }
+  /* wrapper pra centralizar a badge inline */
+  .comutativa-par + .comut-insight { display: block; margin-left: auto; margin-right: auto; }
 
   .macete-card {
     margin-top: 12px;
@@ -434,10 +453,30 @@
   }
   .upsell-result-btn:active { transform: translateY(1px); }
 
-  /* High specificity (mobile-first) - dominar game-content.css que aplica 13px */
-  html[data-game="tabuada"] .container .comut-insight { font-size: 14px !important; padding: 12px 14px !important; line-height: 1.45 !important; }
-  html[data-game="tabuada"] .container .macete-card { font-size: 14px !important; padding: 12px 14px !important; line-height: 1.5 !important; }
-  html[data-game="tabuada"] .container .macete-card .macete-corpo { font-size: 14px !important; }
+  /* High specificity (mobile-first) - dominar game-content.css */
+  /* Truque magico (comutativa) = badge roxa compacta, regra geral */
+  html[data-game="tabuada"] .container .comut-insight {
+    font-size: 12px !important;
+    padding: 6px 14px !important;
+    line-height: 1.35 !important;
+    background: linear-gradient(135deg, #ede9fe, #ddd6fe) !important;
+    border: 1.5px solid #c4b5fd !important;
+    border-left: 1.5px solid #c4b5fd !important;
+    border-radius: 18px !important;
+    color: #5b21b6 !important;
+    box-shadow: none !important;
+    margin: 6px auto 14px !important;
+    display: block !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    font-family: inherit !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+  }
+  html[data-game="tabuada"] .container .comut-insight :is(b, strong) { color: #4c1d95 !important; }
+  /* Macete do mestre = destaque amarelo principal */
+  html[data-game="tabuada"] .container .macete-card { font-size: 15px !important; padding: 14px 16px !important; line-height: 1.55 !important; }
+  html[data-game="tabuada"] .container .macete-card .macete-corpo { font-size: 15px !important; }
   html[data-game="tabuada"] .container .upsell-banner { font-size: 14px !important; padding: 11px 14px !important; }
 
   /* ========================================================
@@ -460,21 +499,21 @@
     .poke-estrelas { font-size: 10px !important; min-height: 12px !important; }
     .poke-card.bloq .poke-num::before { font-size: 28px !important; top: 8px !important; }
 
-    .modo-tabs { margin: 12px 0 10px !important; gap: 8px !important; }
-    .modo-tab { padding: 9px 18px !important; font-size: 14px !important; }
+    .estudo-area .modo-tabs { gap: 6px !important; top: 12px !important; left: 14px !important; }
+    .modo-tab { padding: 5px 12px !important; font-size: 12px !important; border-radius: 16px !important; }
 
-    .estudo-area { padding: 16px 16px !important; margin-bottom: 12px !important; }
-    .estudo-titulo { font-size: 22px !important; margin-bottom: 12px !important; }
+    .estudo-area { padding: 14px 16px 14px !important; margin-bottom: 12px !important; }
+    .estudo-titulo { font-size: 22px !important; margin: 0 0 14px !important; padding-top: 4px !important; }
     .comutativa-par { gap: 14px !important; }
     .comut-box { padding: 14px 12px !important; }
     .comut-expr { font-size: 24px !important; margin-bottom: 8px !important; }
     .comut-result { font-size: 24px !important; margin-top: 6px !important; }
     .comut-viz { gap: 4px !important; margin: 8px auto !important; }
     .comut-viz .dot { width: 14px !important; height: 14px !important; }
-    .comut-insight { padding: 12px 16px !important; font-size: 14px !important; margin-top: 12px !important; }
-    .macete-card { padding: 12px 16px !important; font-size: 14px !important; margin-top: 10px !important; }
+    .comut-insight { padding: 7px 16px !important; font-size: 13px !important; margin: 8px auto 14px !important; }
+    .macete-card { padding: 14px 18px !important; font-size: 15px !important; margin-top: 10px !important; }
     .macete-card .macete-header { font-size: 14px !important; margin-bottom: 6px !important; }
-    .macete-card .macete-corpo { font-size: 14px !important; line-height: 1.55 !important; }
+    .macete-card .macete-corpo { font-size: 15px !important; line-height: 1.55 !important; }
     .estudo-controles { gap: 10px !important; margin-top: 12px !important; }
     .estudo-btn { padding: 8px 16px !important; font-size: 13px !important; }
 
@@ -497,8 +536,19 @@
     .hp-rodape { font-size: 12px !important; }
 
     /* High specificity - dominar game-content.css */
-    html[data-game="tabuada"] .container .comut-insight { font-size: 14px !important; padding: 12px 16px !important; }
-    html[data-game="tabuada"] .container .macete-card { font-size: 14px !important; padding: 12px 16px !important; }
+    html[data-game="tabuada"] .container .comut-insight {
+      font-size: 13px !important;
+      padding: 7px 16px !important;
+      background: linear-gradient(135deg, #ede9fe, #ddd6fe) !important;
+      border: 1.5px solid #c4b5fd !important;
+      border-left: 1.5px solid #c4b5fd !important;
+      border-radius: 18px !important;
+      color: #5b21b6 !important;
+      margin: 8px auto 14px !important;
+      width: fit-content !important;
+      max-width: 100% !important;
+    }
+    html[data-game="tabuada"] .container .macete-card { font-size: 15px !important; padding: 14px 18px !important; }
     html[data-game="tabuada"] .container .upsell-banner { font-size: 13px !important; padding: 9px 14px !important; }
   }
 </style>
@@ -520,17 +570,16 @@
   <div class="pokedex-grid" id="pokedex-grid"></div>
   <div class="resumo-txt" id="resumo-txt"></div>
 
-  <div class="modo-tabs">
-    <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
-    <button class="modo-tab" id="tab-treino" onclick="mudarModo('treino')">⚡ Treinar</button>
-  </div>
-
   <div id="painel-estudo">
     <div class="estudo-area">
+      <div class="modo-tabs">
+        <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
+        <button class="modo-tab" id="tab-treino" onclick="mudarModo('treino')">⚡ Treinar</button>
+      </div>
       <div class="estudo-titulo" id="estudo-titulo">Tabuada do <span id="estudo-tab-num">2</span></div>
       <div class="comutativa-par" id="comutativa-par"></div>
       <div class="comut-insight">
-        <strong>💡 Truque mágico:</strong> <span id="insight-texto">...</span>
+        <span class="comut-icon">↔</span> <span id="insight-texto">...</span>
       </div>
       <div class="macete-card" id="macete-card"></div>
       <div class="estudo-controles">
@@ -729,7 +778,7 @@ function renderEstudo() {
     </div>
   `;
   document.getElementById('insight-texto').innerHTML =
-    `<b>${a} × ${b}</b> é a mesma coisa que <b>${b} × ${a}</b>. Se já sabe um, já sabe o outro! Por isso só precisa decorar metade. ✨`;
+    `Ordem não muda o total · decora metade`;
 
   // Macete específico da tabuada
   const macEl = document.getElementById('macete-card');
