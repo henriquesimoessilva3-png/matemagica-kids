@@ -725,14 +725,83 @@
     border-radius: 8px;
     border: 1.5px solid #c5bbe9;
   }
-  .pen-campo {
-    background: linear-gradient(180deg, #b3e0f7 0%, #b3e0f7 30%, #6dc46d 30%, #5cb85c 100%);
+  .pen-escolha {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .pen-dif {
+    border: 3px solid;
     border-radius: 12px;
-    padding: 10px;
-    position: relative;
-    min-height: 200px;
-    border: 3px solid #fff;
-    box-shadow: 0 0 0 2px #c5bbe9;
+    padding: 12px 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    font-family: inherit;
+    background: #fff;
+  }
+  .pen-dif:hover { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+  .pen-dif-facil { border-color: #2ebd7c; color: #1b6b3a; }
+  .pen-dif-facil:hover { background: #d6f5e3; }
+  .pen-dif-media { border-color: #ff9a44; color: #6a4020; }
+  .pen-dif-media:hover { background: #fff3d6; }
+  .pen-dif-dificil { border-color: #d04040; color: #6b1a1a; }
+  .pen-dif-dificil:hover { background: #fde0e0; }
+  .pen-dif-label { font-size: 16px; font-weight: 900; letter-spacing: 0.5px; }
+  .pen-dif-tabs { font-size: 11px; opacity: 0.8; margin: 4px 0; }
+  .pen-dif-chance { font-size: 13px; font-weight: 800; }
+
+  .pen-quiz-dif {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: #6b54d3;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    background: #ede8fa;
+    border-radius: 8px;
+    display: inline-block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .pen-adv {
+    background: linear-gradient(135deg, #fff3d6, #ffd36b);
+    border: 3px solid #ff9a44;
+    border-radius: 14px;
+    padding: 24px 16px;
+    text-align: center;
+  }
+  .pen-adv-flag { font-size: 56px; margin-bottom: 8px; line-height: 1; }
+  .pen-adv-titulo {
+    font-size: 20px;
+    font-weight: 900;
+    color: #6a4020;
+    margin-bottom: 6px;
+  }
+  .pen-adv-info {
+    font-size: 14px;
+    color: #6a4020;
+    margin-bottom: 12px;
+  }
+  .pen-adv-info b { color: #d04040; }
+  .pen-adv-pensando {
+    font-size: 28px;
+    animation: pen-pensar 0.8s infinite;
+  }
+  @keyframes pen-pensar {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+
+  .pen-msg-sub {
+    font-size: 13px;
+    color: #888;
+    margin: -6px 0 12px;
+    line-height: 1.4;
   }
   .pen-trave {
     position: absolute;
@@ -863,17 +932,18 @@
     .pen-placar { font-size: 22px !important; }
     .pen-placar b { font-size: 26px !important; }
     .pen-status { font-size: 16px !important; padding: 10px 14px !important; }
-    .pen-campo { min-height: 280px !important; padding: 14px !important; }
-    .pen-trave { height: 130px !important; }
-    .pen-rede { height: 122px !important; }
-    .pen-zonas { height: 150px !important; gap: 6px !important; margin-top: 8px !important; }
-    .pen-zona { font-size: 14px !important; }
-    .pen-zona .z-conta { font-size: 20px !important; }
-    .pen-zona .z-tag { font-size: 11px !important; }
-    .pen-goleiro { font-size: 44px !important; top: 60px !important; }
+    .pen-escolha { gap: 12px !important; }
+    .pen-dif { padding: 18px 10px !important; }
+    .pen-dif-label { font-size: 22px !important; }
+    .pen-dif-tabs { font-size: 13px !important; }
+    .pen-dif-chance { font-size: 16px !important; }
+    .pen-adv-flag { font-size: 80px !important; }
+    .pen-adv-titulo { font-size: 28px !important; }
+    .pen-adv-info { font-size: 18px !important; }
     .pen-pergunta { font-size: 40px !important; }
     .pen-opcao { font-size: 26px !important; padding: 14px !important; }
     .pen-msg { font-size: 32px !important; }
+    .pen-msg-sub { font-size: 15px !important; }
   }
 
   /* High specificity (mobile-first) - dominar game-content.css */
@@ -1089,26 +1159,38 @@
             <span><b id="pen-g-adv">0</b> <span id="pen-flag-adv">🇦🇷</span></span>
           </div>
         </div>
-        <div class="pen-status" id="pen-status">⚽ VOCÊ COBRA — escolha onde chutar</div>
-        <div class="pen-campo" id="pen-campo">
-          <div class="pen-trave"></div>
-          <div class="pen-rede"></div>
-          <div class="pen-goleiro" id="pen-goleiro">🧤</div>
-          <div class="pen-zonas">
-            <button class="pen-zona z-dificil" data-idx="0" onclick="clicarZonaPen(0)"><span class="z-conta">×</span><span class="z-tag">canto</span></button>
-            <button class="pen-zona z-dificil" data-idx="1" onclick="clicarZonaPen(1)"><span class="z-conta">×</span><span class="z-tag">canto</span></button>
-            <button class="pen-zona z-facil" data-idx="2" onclick="clicarZonaPen(2)"><span class="z-conta">×</span><span class="z-tag">fácil</span></button>
-            <button class="pen-zona z-facil" data-idx="3" onclick="clicarZonaPen(3)"><span class="z-conta">×</span><span class="z-tag">fácil</span></button>
-            <button class="pen-zona z-dificil" data-idx="4" onclick="clicarZonaPen(4)"><span class="z-conta">×</span><span class="z-tag">canto</span></button>
-            <button class="pen-zona z-dificil" data-idx="5" onclick="clicarZonaPen(5)"><span class="z-conta">×</span><span class="z-tag">canto</span></button>
-          </div>
+        <div class="pen-status" id="pen-status">⚽ VOCÊ COBRA — escolha a dificuldade</div>
+        <div class="pen-escolha" id="pen-escolha">
+          <button class="pen-dif pen-dif-facil" onclick="escolherDifPen('facil')">
+            <div class="pen-dif-label">FÁCIL</div>
+            <div class="pen-dif-tabs">tabuadas 1 · 2 · 10</div>
+            <div class="pen-dif-chance">25% de gol</div>
+          </button>
+          <button class="pen-dif pen-dif-media" onclick="escolherDifPen('media')">
+            <div class="pen-dif-label">MÉDIA</div>
+            <div class="pen-dif-tabs">tabuadas 3 · 4 · 5 · 6</div>
+            <div class="pen-dif-chance">50% de gol</div>
+          </button>
+          <button class="pen-dif pen-dif-dificil" onclick="escolherDifPen('dificil')">
+            <div class="pen-dif-label">DIFÍCIL</div>
+            <div class="pen-dif-tabs">tabuadas 7 · 8 · 9</div>
+            <div class="pen-dif-chance">80% de gol</div>
+          </button>
         </div>
         <div class="pen-quiz hidden" id="pen-quiz">
+          <div class="pen-quiz-dif" id="pen-quiz-dif">DIFÍCIL · 80% gol</div>
           <div class="pen-pergunta" id="pen-pergunta">3 × 7 = ?</div>
           <div class="pen-opcoes" id="pen-opcoes"></div>
         </div>
+        <div class="pen-adv hidden" id="pen-adv">
+          <div class="pen-adv-flag" id="pen-adv-flag">🇦🇷</div>
+          <div class="pen-adv-titulo" id="pen-adv-titulo">Argentina cobra...</div>
+          <div class="pen-adv-info" id="pen-adv-info">Escolheu DIFÍCIL · resolvendo 7 × 8</div>
+          <div class="pen-adv-pensando">🤔 ...</div>
+        </div>
         <div class="pen-resultado hidden" id="pen-resultado">
           <div class="pen-msg" id="pen-msg">⚽ GOOOOL!</div>
+          <div class="pen-msg-sub" id="pen-msg-sub"></div>
           <button class="estudo-btn principal" onclick="proximaCobranca()">Continuar →</button>
         </div>
       </div>
@@ -1563,19 +1645,26 @@ function mudarModo(m) {
   if (m !== 'jogo' && _jogoEstado.intervalo) { clearInterval(_jogoEstado.intervalo); _jogoEstado.intervalo = null; }
 }
 
-// ============== PENALTI COPA DO MUNDO ==============
+// ============== PENALTI COPA DO MUNDO (v2 - 3 dificuldades, adv tb erra) ==============
 const PEN_FASES = [
-  { nome: 'Oitavas de Final', adv: 'Argentina', flag: '🇦🇷', minTab: 2, maxTab: 6 },
-  { nome: 'Quartas de Final', adv: 'França', flag: '🇫🇷', minTab: 3, maxTab: 7 },
-  { nome: 'Semifinal', adv: 'Alemanha', flag: '🇩🇪', minTab: 4, maxTab: 9 },
-  { nome: 'FINAL', adv: 'Espanha', flag: '🇪🇸', minTab: 5, maxTab: 10 }
+  { nome: 'Oitavas de Final', adv: 'Argentina', flag: '🇦🇷', advProbAcerto: 0.65 },
+  { nome: 'Quartas de Final', adv: 'França', flag: '🇫🇷', advProbAcerto: 0.78 },
+  { nome: 'Semifinal', adv: 'Alemanha', flag: '🇩🇪', advProbAcerto: 0.88 },
+  { nome: 'FINAL', adv: 'Espanha', flag: '🇪🇸', advProbAcerto: 0.95 }
 ];
-let _penEstado = { faseIdx: 0, cobUser: 0, cobAdv: 0, modo: 'cobrar', gUser: 0, gAdv: 0, zonas: [], zonaEscolhida: null, ativo: false };
+const PEN_DIFS = {
+  facil:   { tabs: [1, 2, 10], probGol: 0.25, label: 'FÁCIL',   chance: '25% gol' },
+  media:   { tabs: [3, 4, 5, 6], probGol: 0.50, label: 'MÉDIA',   chance: '50% gol' },
+  dificil: { tabs: [7, 8, 9], probGol: 0.80, label: 'DIFÍCIL', chance: '80% gol' }
+};
+const PEN_TOTAL_COBS = 3;  // 3 cobrancas user + 3 adv = 6 total
+
+let _penEstado = { faseIdx: 0, cobUser: 0, cobAdv: 0, modo: 'cobrar', gUser: 0, gAdv: 0, contaAtual: null, ativo: false };
 
 function penRand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
 function iniciarPenalti() {
-  _penEstado = { faseIdx: 0, cobUser: 0, cobAdv: 0, modo: 'cobrar', gUser: 0, gAdv: 0, zonas: [], zonaEscolhida: null, ativo: true };
+  _penEstado = { faseIdx: 0, cobUser: 0, cobAdv: 0, modo: 'cobrar', gUser: 0, gAdv: 0, contaAtual: null, ativo: true };
   document.getElementById('pen-overlay').classList.add('hidden');
   document.getElementById('pen-jogo').classList.remove('hidden');
   document.getElementById('pen-btn-overlay').onclick = iniciarPenalti;
@@ -1592,83 +1681,53 @@ function continuarPenalti() {
 
 function proximaCobranca() {
   const total = _penEstado.cobUser + _penEstado.cobAdv;
-  if (total >= 10) return finalDaFasePen();
+  if (total >= PEN_TOTAL_COBS * 2) return finalDaFasePen();
   _penEstado.modo = (total % 2 === 0) ? 'cobrar' : 'defender';
   const fase = PEN_FASES[_penEstado.faseIdx];
   document.getElementById('pen-fase').textContent = fase.nome;
   document.getElementById('pen-flag-adv').textContent = fase.flag;
   document.getElementById('pen-g-user').textContent = _penEstado.gUser;
   document.getElementById('pen-g-adv').textContent = _penEstado.gAdv;
-  if (_penEstado.modo === 'cobrar') {
-    document.getElementById('pen-cob-num').textContent = `Cobrança ${_penEstado.cobUser + 1}/5`;
-    document.getElementById('pen-status').textContent = '⚽ VOCÊ COBRA — escolha onde chutar';
-    gerarZonasCobrar();
-  } else {
-    document.getElementById('pen-cob-num').textContent = `Defesa ${_penEstado.cobAdv + 1}/5`;
-    document.getElementById('pen-status').textContent = '🧤 VOCÊ DEFENDE — adversário vai chutar...';
-    gerarZonaDefender();
-  }
-  document.getElementById('pen-campo').classList.remove('hidden');
+  // Esconde tudo
+  document.getElementById('pen-escolha').classList.add('hidden');
   document.getElementById('pen-quiz').classList.add('hidden');
+  document.getElementById('pen-adv').classList.add('hidden');
   document.getElementById('pen-resultado').classList.add('hidden');
-}
-
-function gerarZonasCobrar() {
-  const fase = PEN_FASES[_penEstado.faseIdx];
-  const zonas = [];
-  for (let i = 0; i < 6; i++) {
-    const a = penRand(fase.minTab, fase.maxTab);
-    const b = penRand(fase.minTab, fase.maxTab);
-    const tipo = (i === 2 || i === 3) ? 'facil' : 'dificil';
-    zonas.push({ a, b, prod: a * b, tipo, idx: i });
+  if (_penEstado.modo === 'cobrar') {
+    document.getElementById('pen-cob-num').textContent = `Cobrança ${_penEstado.cobUser + 1}/${PEN_TOTAL_COBS}`;
+    document.getElementById('pen-status').textContent = '⚽ VOCÊ COBRA — escolha a dificuldade';
+    document.getElementById('pen-escolha').classList.remove('hidden');
+  } else {
+    document.getElementById('pen-cob-num').textContent = `${fase.adv} cobra · ${_penEstado.cobAdv + 1}/${PEN_TOTAL_COBS}`;
+    document.getElementById('pen-status').textContent = `🇧🇷 ${fase.adv} VAI COBRAR`;
+    cobrancaAdversario();
   }
-  _penEstado.zonas = zonas;
-  document.querySelectorAll('.pen-zona').forEach((el, i) => {
-    el.style.display = '';
-    el.style.opacity = '1';
-    el.classList.remove('zona-adv-escolhida');
-    el.style.pointerEvents = 'auto';
-    el.querySelector('.z-conta').textContent = `${zonas[i].a}×${zonas[i].b}`;
-    el.querySelector('.z-tag').textContent = zonas[i].tipo === 'dificil' ? 'difícil' : 'fácil 50%';
-  });
 }
 
-function gerarZonaDefender() {
-  const fase = PEN_FASES[_penEstado.faseIdx];
-  const a = penRand(fase.minTab, fase.maxTab);
-  const b = penRand(fase.minTab, fase.maxTab);
-  const tipo = Math.random() < 0.6 ? 'dificil' : 'facil';
-  const indices = tipo === 'dificil' ? [0,1,4,5] : [2,3];
-  const idx = indices[penRand(0, indices.length - 1)];
-  _penEstado.zonaEscolhida = { a, b, prod: a*b, tipo, idx };
-  document.querySelectorAll('.pen-zona').forEach((el, i) => {
-    if (i === idx) {
-      el.style.display = '';
-      el.classList.add('zona-adv-escolhida');
-      el.querySelector('.z-conta').textContent = `${a}×${b}`;
-      el.querySelector('.z-tag').textContent = tipo === 'dificil' ? 'CANTO!' : 'fácil 50%';
-      el.style.pointerEvents = 'none';
-    } else {
-      el.style.display = 'none';
-    }
-  });
-  setTimeout(() => abrirQuizPen(_penEstado.zonaEscolhida), 1000);
-}
-
-function clicarZonaPen(idx) {
+function escolherDifPen(dif) {
   if (!_penEstado.ativo || _penEstado.modo !== 'cobrar') return;
-  _penEstado.zonaEscolhida = _penEstado.zonas[idx];
-  document.querySelectorAll('.pen-zona').forEach((el, i) => {
-    if (i !== idx) el.style.opacity = '0.4';
-    else el.classList.add('zona-adv-escolhida');
-  });
-  setTimeout(() => abrirQuizPen(_penEstado.zonaEscolhida), 300);
+  const conf = PEN_DIFS[dif];
+  // Sorteia tabuada da categoria
+  const tab = conf.tabs[penRand(0, conf.tabs.length - 1)];
+  // Outro fator entre 1-10
+  const outro = penRand(1, 10);
+  // Ordem aleatoria
+  const inverter = Math.random() < 0.5;
+  const a = inverter ? outro : tab;
+  const b = inverter ? tab : outro;
+  _penEstado.contaAtual = { a, b, prod: a * b, dif };
+  abrirQuizPen();
 }
 
-function abrirQuizPen(zona) {
+function abrirQuizPen() {
+  document.getElementById('pen-escolha').classList.add('hidden');
   document.getElementById('pen-quiz').classList.remove('hidden');
-  document.getElementById('pen-pergunta').textContent = `${zona.a} × ${zona.b} = ?`;
-  const certa = zona.prod;
+  const c = _penEstado.contaAtual;
+  const conf = PEN_DIFS[c.dif];
+  document.getElementById('pen-quiz-dif').textContent = `${conf.label} · ${conf.chance}`;
+  document.getElementById('pen-pergunta').textContent = `${c.a} × ${c.b} = ?`;
+  // 4 opcoes
+  const certa = c.prod;
   const opcoes = new Set([certa]);
   while (opcoes.size < 4) {
     const delta = penRand(-15, 15);
@@ -1682,42 +1741,87 @@ function abrirQuizPen(zona) {
 }
 
 function responderQuizPen(resp) {
-  const z = _penEstado.zonaEscolhida;
-  const acertou = resp === z.prod;
-  let res;
-  if (_penEstado.modo === 'cobrar') {
-    if (acertou) {
-      const fezGol = (z.tipo === 'dificil') ? true : (Math.random() < 0.5);
-      if (fezGol) { _penEstado.gUser++; res = 'gol-fez'; } else res = 'gol-pegou';
-    } else res = 'gol-pegou';
-    _penEstado.cobUser++;
+  const c = _penEstado.contaAtual;
+  const conf = PEN_DIFS[c.dif];
+  const acertou = resp === c.prod;
+  let res, sub;
+  if (acertou) {
+    const fezGol = Math.random() < conf.probGol;
+    if (fezGol) {
+      _penEstado.gUser++;
+      res = 'gol-fez';
+      sub = `Acertou ${c.a}×${c.b}=${c.prod} e teve sorte no chute!`;
+    } else {
+      res = 'gol-fora';
+      sub = `Acertou ${c.a}×${c.b}=${c.prod}, mas o chute saiu (${conf.chance})`;
+    }
   } else {
-    if (acertou) {
-      const defendeu = (z.tipo === 'dificil') ? true : (Math.random() < 0.5);
-      if (defendeu) res = 'def-pegou'; else { _penEstado.gAdv++; res = 'def-tomou'; }
-    } else { _penEstado.gAdv++; res = 'def-tomou'; }
-    _penEstado.cobAdv++;
+    res = 'gol-errou';
+    sub = `Errou! A conta era ${c.a}×${c.b}=${c.prod}`;
   }
-  document.querySelectorAll('.pen-zona').forEach(el => el.style.opacity = '1');
-  mostrarResPen(res);
+  _penEstado.cobUser++;
+  mostrarResPen(res, sub);
 }
 
-function mostrarResPen(res) {
+function cobrancaAdversario() {
+  document.getElementById('pen-adv').classList.remove('hidden');
+  const fase = PEN_FASES[_penEstado.faseIdx];
+  // Adv escolhe dificuldade aleatoria
+  const difs = ['facil', 'media', 'dificil'];
+  const dif = difs[penRand(0, 2)];
+  const conf = PEN_DIFS[dif];
+  // Sorteia conta
+  const tab = conf.tabs[penRand(0, conf.tabs.length - 1)];
+  const outro = penRand(1, 10);
+  const a = Math.random() < 0.5 ? outro : tab;
+  const b = a === outro ? tab : outro;
+  document.getElementById('pen-adv-flag').textContent = fase.flag;
+  document.getElementById('pen-adv-titulo').textContent = `${fase.adv} cobra...`;
+  document.getElementById('pen-adv-info').innerHTML = `Escolheu <b>${conf.label}</b> · resolvendo <b>${a} × ${b}</b>`;
+  // Espera 1.8s entao decide
+  setTimeout(() => {
+    const acertouConta = Math.random() < fase.advProbAcerto;
+    let res, sub;
+    if (acertouConta) {
+      const fezGol = Math.random() < conf.probGol;
+      if (fezGol) {
+        _penEstado.gAdv++;
+        res = 'adv-gol';
+        sub = `${fase.adv} acertou ${a}×${b}=${a*b} e fez!`;
+      } else {
+        res = 'adv-fora';
+        sub = `${fase.adv} acertou a conta mas chutou pra fora`;
+      }
+    } else {
+      res = 'adv-errou';
+      sub = `${fase.adv} errou a conta! Mandou bem longe`;
+    }
+    _penEstado.cobAdv++;
+    document.getElementById('pen-adv').classList.add('hidden');
+    mostrarResPen(res, sub);
+  }, 1800);
+}
+
+function mostrarResPen(res, sub) {
   document.getElementById('pen-quiz').classList.add('hidden');
+  document.getElementById('pen-adv').classList.add('hidden');
   const elRes = document.getElementById('pen-resultado');
   const elMsg = document.getElementById('pen-msg');
   elRes.classList.remove('hidden');
   document.getElementById('pen-g-user').textContent = _penEstado.gUser;
   document.getElementById('pen-g-adv').textContent = _penEstado.gAdv;
   const msgs = {
-    'gol-fez': { txt: '⚽ GOOOOL!', cls: 'gol' },
-    'gol-pegou': { txt: '🧤 Goleiro pegou!', cls: 'tomou' },
-    'def-pegou': { txt: '🛡️ DEFESA INCRÍVEL!', cls: 'defesa' },
-    'def-tomou': { txt: '😢 Tomou o gol', cls: 'tomou' }
+    'gol-fez':   { txt: '⚽ GOOOOL!', cls: 'gol' },
+    'gol-fora':  { txt: '😬 Saiu rente!', cls: 'tomou' },
+    'gol-errou': { txt: '❌ Errou a conta!', cls: 'tomou' },
+    'adv-gol':   { txt: '😢 Gol contra!', cls: 'tomou' },
+    'adv-fora':  { txt: '🎉 Mandou pra fora!', cls: 'gol' },
+    'adv-errou': { txt: '🎯 Adv errou a conta!', cls: 'gol' }
   };
   const m = msgs[res];
   elMsg.textContent = m.txt;
   elMsg.className = 'pen-msg ' + m.cls;
+  document.getElementById('pen-msg-sub').textContent = sub || '';
 }
 
 function finalDaFasePen() {
