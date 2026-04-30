@@ -491,7 +491,7 @@
   }
   .leg-item { display: inline-flex; align-items: center; gap: 4px; }
   .leg-color { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
-  .leg-diag { background: linear-gradient(135deg, #ffd36b, #ff9a44); border: 1px solid #d99a40; }
+  .leg-diag { background: #fff; border: 2px solid #ffcc4a; }
   .leg-upper { background: #fff; border: 1.5px solid #c5bbe9; }
 
   .matriz-grid {
@@ -503,9 +503,9 @@
   .m-cell {
     background: #fff;
     border-radius: 6px;
-    padding: 8px 4px;
+    padding: 3px 2px;
     text-align: center;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: #4a3b8a;
     line-height: 1;
@@ -516,6 +516,8 @@
     cursor: pointer;
     transition: all 0.12s;
     user-select: none;
+    border: 2px solid transparent;
+    box-sizing: border-box;
   }
   .m-target {
     font-size: 15px !important;
@@ -530,8 +532,9 @@
   }
   .m-prod:hover { transform: scale(1.08); box-shadow: 0 2px 6px rgba(107, 84, 211, 0.25); z-index: 1; }
   .m-diag {
-    background: linear-gradient(135deg, #ffd36b, #ff9a44);
-    color: #6a4020;
+    background: #fff;
+    border: 2px solid #ffcc4a;
+    color: #4a3b8a;
     font-weight: 800;
   }
   .m-highlight {
@@ -562,9 +565,9 @@
     .matriz-area { padding: 18px 16px !important; }
     .matriz-titulo { font-size: 22px !important; margin-bottom: 10px !important; }
     .matriz-legenda { font-size: 13px !important; gap: 18px !important; }
-    .matriz-grid { gap: 4px !important; }
-    .m-cell { font-size: 18px !important; padding: 10px 4px !important; }
-    .m-target { font-size: 17px !important; }
+    .matriz-grid { gap: 3px !important; }
+    .m-cell { font-size: 17px !important; padding: 4px 2px !important; }
+    .m-target { font-size: 16px !important; }
     .matriz-dica { font-size: 13px !important; }
   }
 
