@@ -1332,17 +1332,24 @@
   .kart-rival {
     position: absolute;
     bottom: 60px;
-    left: 18%;
-    font-size: 32px;
+    font-size: 30px;
     z-index: 2;
-    transition: transform 0.4s ease-out, opacity 0.3s, left 0.5s;
+    transform: translateX(-50%);
+    transition: bottom 0.4s ease-out, left 0.5s;
     filter: drop-shadow(0 3px 4px rgba(0,0,0,0.4));
   }
-  .kart-rival.lento { animation: kart-rival-slip 1s; }
+  .kart-rival.lento { animation: kart-rival-slip 0.9s; }
   @keyframes kart-rival-slip {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-30deg) translateX(-8px); }
-    75% { transform: rotate(30deg) translateX(8px); }
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(-30deg) translateX(-8px); }
+    75% { transform: translateX(-50%) rotate(30deg) translateX(8px); }
+  }
+  .kart-veiculo.lento { animation: kart-veiculo-slip 0.8s; }
+  @keyframes kart-veiculo-slip {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    20% { transform: translateX(-55%) rotate(-18deg); }
+    50% { transform: translateX(-50%) rotate(0deg); }
+    80% { transform: translateX(-45%) rotate(18deg); }
   }
 
   .kart-itens {
@@ -1985,7 +1992,9 @@
           <div class="kart-faixa kart-faixa-1"></div>
           <div class="kart-faixa kart-faixa-2"></div>
           <div class="kart-faixa kart-faixa-3"></div>
-          <div class="kart-rival" id="kart-rival">🦊</div>
+          <div class="kart-rival" id="kart-rival-0" style="left:18%">🦊</div>
+          <div class="kart-rival" id="kart-rival-1" style="left:50%">🐉</div>
+          <div class="kart-rival" id="kart-rival-2" style="left:82%">🐱</div>
           <div class="kart-conta-flutuante hidden" id="kart-conta-flutuante">7 × 8</div>
           <div class="kart-veiculo" id="kart-veiculo">🦄</div>
           <div class="kart-feedback hidden" id="kart-feedback">+50m</div>
@@ -2951,35 +2960,92 @@ function resetCarrossel() {
 }
 
 // ============== MAGICO KART ==============
-let _kartEstado = { piloto: '🦄', nome: 'Unicórnio', dist: 0, distRival: 0, estrelas: 0, tempo: 90, expr: null, ativo: false, intervalos: null, quizTimer: null, itens: { banana: 0, casco: 0, turbo: 0 }, rivalLento: 0 };
+const KART_PILOTOS = [
+  { emoji: '🦄', nome: 'Unicórnio' },
+  { emoji: '🐉', nome: 'Dragão' },
+  { emoji: '🦊', nome: 'Raposa' },
+  { emoji: '🐢', nome: 'Tartaruga' },
+  { emoji: '🐱', nome: 'Gato' },
+  { emoji: '🐰', nome: 'Coelho' },
+];
+const KART_LANES = [18, 50, 82];
+
+let _kartEstado = {
+  piloto: '🦄', nome: 'Unicórnio',
+  dist: 0, estrelas: 0, tempo: 90,
+  expr: null, ativo: false,
+  intervalos: null, quizTimer: null,
+  itens: { banana: 0, casco: 0, turbo: 0 },
+  lento: 0,
+  rivais: []
+};
 
 function kartRand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
 function iniciarKart(emoji, nome) {
-  _kartEstado = { piloto: emoji, nome, dist: 0, distRival: 0, estrelas: 0, tempo: 90, expr: null, ativo: true, intervalos: [], quizTimer: null, itens: { banana: 0, casco: 0, turbo: 0 }, rivalLento: 0 };
+  // Sorteia 3 rivais entre os pilotos restantes
+  const restantes = KART_PILOTOS.filter(p => p.emoji !== emoji);
+  for (let i = restantes.length - 1; i > 0; i--) {
+    const j = kartRand(0, i);
+    [restantes[i], restantes[j]] = [restantes[j], restantes[i]];
+  }
+  const escolhidos = restantes.slice(0, 3);
+  _kartEstado = {
+    piloto: emoji, nome,
+    dist: 0, estrelas: 0, tempo: 90,
+    expr: null, ativo: true,
+    intervalos: [], quizTimer: null,
+    itens: { banana: 0, casco: 0, turbo: 0 },
+    lento: 0,
+    rivais: escolhidos.map((p, i) => ({
+      emoji: p.emoji, nome: p.nome,
+      dist: 0, lento: 0,
+      lane: KART_LANES[i]
+    }))
+  };
   document.getElementById('kart-overlay').classList.add('hidden');
   document.getElementById('kart-jogo').classList.remove('hidden');
   document.getElementById('kart-fim').classList.add('hidden');
   document.getElementById('kart-veiculo').textContent = emoji;
+  // Pinta os 3 rivais com seus emojis e lanes
+  _kartEstado.rivais.forEach((r, i) => {
+    const el = document.getElementById('kart-rival-' + i);
+    if (el) {
+      el.textContent = r.emoji;
+      el.style.left = r.lane + '%';
+    }
+  });
   atualizarHudKart();
   atualizarItensKart();
+  atualizarRivaisPos();
   // Timer global
   _kartEstado.intervalos.push(setInterval(() => {
     if (!_kartEstado.ativo) return;
     _kartEstado.tempo--;
+    if (_kartEstado.lento > 0) _kartEstado.lento--;
     if (_kartEstado.tempo <= 0) terminarKart('tempo');
     atualizarHudKart();
   }, 1000));
-  // Rival avanca a cada 2s ~3-5m (lento, manageable)
+  // Rivais avancam a cada 2s, cada um independente
   _kartEstado.intervalos.push(setInterval(() => {
-    if (!_kartEstado.ativo || _kartEstado.rivalLento > 0) {
-      _kartEstado.rivalLento = Math.max(0, _kartEstado.rivalLento - 1);
-      return;
-    }
-    _kartEstado.distRival = Math.min(500, _kartEstado.distRival + kartRand(3, 6));
-    if (_kartEstado.distRival >= 500) terminarKart('rival');
-    atualizarRivalPos();
+    if (!_kartEstado.ativo) return;
+    let venceu = null;
+    _kartEstado.rivais.forEach(r => {
+      if (r.lento > 0) { r.lento--; return; }
+      r.dist = Math.min(500, r.dist + kartRand(2, 5));
+      if (r.dist >= 500 && !venceu) venceu = r;
+    });
+    atualizarRivaisPos();
+    if (venceu) terminarKart('rival', venceu);
   }, 2000));
+  // Rivais usam itens a cada ~7s (70% chance)
+  _kartEstado.intervalos.push(setInterval(() => {
+    if (!_kartEstado.ativo) return;
+    if (Math.random() < 0.7 && _kartEstado.rivais.length > 0) {
+      const idx = kartRand(0, _kartEstado.rivais.length - 1);
+      rivalUsaItem(idx);
+    }
+  }, 7000));
   proximaContaKart();
 }
 
@@ -2995,14 +3061,78 @@ function atualizarItensKart() {
   document.getElementById('kart-qty-turbo').textContent = _kartEstado.itens.turbo;
 }
 
-function atualizarRivalPos() {
-  // Rival avanca visualmente conforme distRival se aproxima de user
-  const rival = document.getElementById('kart-rival');
-  if (rival) {
-    const diff = _kartEstado.distRival - _kartEstado.dist;
-    // Quando rival passa user, ele "sai" da tela. Quando user passa rival, rival fica perto da linha de fundo
-    const top = Math.max(50, Math.min(140, 100 - diff * 0.3));
-    rival.style.bottom = top + 'px';
+function atualizarRivaisPos() {
+  _kartEstado.rivais.forEach((r, i) => {
+    const el = document.getElementById('kart-rival-' + i);
+    if (!el) return;
+    const diff = r.dist - _kartEstado.dist;
+    const top = Math.max(50, Math.min(150, 100 - diff * 0.3));
+    el.style.bottom = top + 'px';
+  });
+}
+
+function rivalUsaItem(idx) {
+  const r = _kartEstado.rivais[idx];
+  if (!r) return;
+  const v = Math.random();
+  let tipo = null;
+  if (v < 0.35) tipo = 'banana';
+  else if (v < 0.6) tipo = 'casco';
+  else if (v < 0.85) tipo = 'turbo';
+  else return;
+  if (tipo === 'banana') {
+    // Atinge user + outros rivais
+    _kartEstado.lento = 2;
+    const veic = document.getElementById('kart-veiculo');
+    if (veic) {
+      veic.classList.add('lento');
+      setTimeout(() => veic.classList.remove('lento'), 800);
+    }
+    _kartEstado.rivais.forEach((o, i) => {
+      if (i === idx) return;
+      o.lento = 2;
+      const el = document.getElementById('kart-rival-' + i);
+      if (el) {
+        el.classList.add('lento');
+        setTimeout(() => el.classList.remove('lento'), 800);
+      }
+    });
+    showFeedbackKart(r.emoji + ' jogou 🍌!', 'erro');
+  } else if (tipo === 'casco') {
+    // Acha lider entre user e outros rivais (excluindo quem jogou)
+    let liderDist = _kartEstado.dist;
+    let liderIdx = -1;  // -1 = user
+    _kartEstado.rivais.forEach((o, i) => {
+      if (i === idx) return;
+      if (o.dist > liderDist) { liderDist = o.dist; liderIdx = i; }
+    });
+    if (liderIdx === -1) {
+      _kartEstado.dist = Math.max(0, _kartEstado.dist - 30);
+      _kartEstado.lento = 1;
+      const veic = document.getElementById('kart-veiculo');
+      if (veic) {
+        veic.classList.add('lento');
+        setTimeout(() => veic.classList.remove('lento'), 800);
+      }
+      atualizarHudKart();
+      showFeedbackKart(r.emoji + ' jogou 🐢 em você!', 'erro');
+    } else {
+      const alvo = _kartEstado.rivais[liderIdx];
+      alvo.dist = Math.max(0, alvo.dist - 30);
+      alvo.lento = 1;
+      const el = document.getElementById('kart-rival-' + liderIdx);
+      if (el) {
+        el.classList.add('lento');
+        setTimeout(() => el.classList.remove('lento'), 800);
+      }
+      showFeedbackKart(r.emoji + ' acertou 🐢 em ' + alvo.emoji, 'erro');
+    }
+    atualizarRivaisPos();
+  } else if (tipo === 'turbo') {
+    r.dist = Math.min(500, r.dist + 60);
+    showFeedbackKart(r.emoji + ' usou 🚀!', 'erro');
+    atualizarRivaisPos();
+    if (r.dist >= 500) terminarKart('rival', r);
   }
 }
 
@@ -3063,10 +3193,11 @@ function responderKart(resp) {
     else if (parseInt(b.textContent) === resp) b.classList.add('errou');
   });
   if (certo) {
-    _kartEstado.dist = Math.min(500, _kartEstado.dist + 50);
+    const ganho = _kartEstado.lento > 0 ? 25 : 50;
+    _kartEstado.dist = Math.min(500, _kartEstado.dist + ganho);
     _kartEstado.estrelas++;
-    atualizarRivalPos();
-    showFeedbackKart('+50m', 'acerto');
+    atualizarRivaisPos();
+    showFeedbackKart('+' + ganho + 'm', 'acerto');
     sortearPremioKart();
     if (_kartEstado.dist >= 500) { setTimeout(() => terminarKart('venceu'), 800); return; }
   } else {
@@ -3112,23 +3243,37 @@ function usarItemKart(tipo) {
   _kartEstado.itens[tipo]--;
   atualizarItensKart();
   if (tipo === 'banana') {
-    // Rival escorrega: para de avancar 4s
-    _kartEstado.rivalLento = 2;  // 2 ciclos de 2s = 4s
-    document.getElementById('kart-rival').classList.add('lento');
-    setTimeout(() => document.getElementById('kart-rival').classList.remove('lento'), 1000);
-    showFeedbackKart('🍌 Rival escorregou!', 'acerto');
+    // Atinge TODOS os rivais
+    _kartEstado.rivais.forEach((r, i) => {
+      r.lento = 2;
+      const el = document.getElementById('kart-rival-' + i);
+      if (el) {
+        el.classList.add('lento');
+        setTimeout(() => el.classList.remove('lento'), 900);
+      }
+    });
+    showFeedbackKart('🍌 Todos rivais escorregaram!', 'acerto');
   } else if (tipo === 'casco') {
-    // Casco acerta rival: rival recua 30m
-    _kartEstado.distRival = Math.max(0, _kartEstado.distRival - 30);
-    _kartEstado.rivalLento = 1;
-    document.getElementById('kart-rival').classList.add('lento');
-    setTimeout(() => document.getElementById('kart-rival').classList.remove('lento'), 800);
-    atualizarRivalPos();
-    showFeedbackKart('🐢 Casco acertou!', 'acerto');
+    // Mira no LIDER dos rivais (quem tá mais na frente)
+    if (_kartEstado.rivais.length === 0) return;
+    let liderIdx = 0;
+    _kartEstado.rivais.forEach((r, i) => {
+      if (r.dist > _kartEstado.rivais[liderIdx].dist) liderIdx = i;
+    });
+    const lider = _kartEstado.rivais[liderIdx];
+    lider.dist = Math.max(0, lider.dist - 30);
+    lider.lento = 1;
+    const el = document.getElementById('kart-rival-' + liderIdx);
+    if (el) {
+      el.classList.add('lento');
+      setTimeout(() => el.classList.remove('lento'), 800);
+    }
+    atualizarRivaisPos();
+    showFeedbackKart('🐢 Casco no líder ' + lider.emoji + '!', 'acerto');
   } else if (tipo === 'turbo') {
     _kartEstado.dist = Math.min(500, _kartEstado.dist + 80);
     atualizarHudKart();
-    atualizarRivalPos();
+    atualizarRivaisPos();
     showFeedbackKart('🚀 Turbo +80m!', 'acerto');
     if (_kartEstado.dist >= 500) terminarKart('venceu');
   }
@@ -3142,7 +3287,7 @@ function pararKart() {
   _kartEstado.quizTimer = null;
 }
 
-function terminarKart(razao) {
+function terminarKart(razao, rivalWinner) {
   pararKart();
   document.getElementById('kart-jogo').classList.add('hidden');
   document.getElementById('kart-fim').classList.remove('hidden');
@@ -3151,7 +3296,8 @@ function terminarKart(razao) {
     document.getElementById('kart-fim-texto').innerHTML = `${_kartEstado.piloto} <b>${_kartEstado.nome}</b> venceu a corrida!<br>⭐ ${_kartEstado.estrelas} estrelas em ${90 - _kartEstado.tempo}s`;
   } else if (razao === 'rival') {
     document.getElementById('kart-fim-emoji').textContent = '😢';
-    document.getElementById('kart-fim-texto').innerHTML = `O rival 🦊 chegou primeiro!<br>Você fez ${_kartEstado.dist}m com ⭐ ${_kartEstado.estrelas}`;
+    const w = rivalWinner ? `${rivalWinner.emoji} <b>${rivalWinner.nome}</b>` : 'Um rival';
+    document.getElementById('kart-fim-texto').innerHTML = `${w} chegou primeiro!<br>Você fez ${_kartEstado.dist}m com ⭐ ${_kartEstado.estrelas}`;
   } else {
     document.getElementById('kart-fim-emoji').textContent = '⏰';
     document.getElementById('kart-fim-texto').innerHTML = `Tempo esgotado!<br>Você fez ${_kartEstado.dist}m com ⭐ ${_kartEstado.estrelas}`;
