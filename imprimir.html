@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+  try {
+    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
+    if (!lic || !lic.key) location.replace('vitrine.html?premium_required=1');
+  } catch(e) { location.replace('vitrine.html?premium_required=1'); }
+})();
+</script>
 <title>Para Imprimir — MATEMÁGICA</title>
 <!-- Caroline 2.4: barreira leve pros adultos. Persiste por sessão. -->
 <script src="parent-gate.js?v=38"></script>
