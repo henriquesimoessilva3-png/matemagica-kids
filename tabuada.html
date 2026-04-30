@@ -128,21 +128,24 @@
     opacity: 0;
   }
 
-  /* ===== SELETOR DE MODO (dentro do quadro estudo-area) ===== */
+  /* ===== SELETOR DE MODO (acima do quadro, alinhado a esquerda) ===== */
   .modo-tabs {
     display: flex;
     gap: 6px;
+    margin: 6px 0 -2px 4px;
+    justify-content: flex-start;
   }
   .modo-tab {
-    background: #f7f5ff;
+    background: #fff;
     border: 2px solid #c5bbe9;
     color: #6b54d3;
-    padding: 5px 12px;
+    padding: 6px 14px;
     border-radius: 16px;
     font-weight: 700;
     cursor: pointer;
     font-size: 12px;
     transition: all 0.15s;
+    box-shadow: 0 2px 4px rgba(107,84,211,0.08);
   }
   .modo-tab:hover { background: #ede8fa; }
   .modo-tab.ativo { background: #6b54d3; color: #fff; border-color: #6b54d3; }
@@ -153,13 +156,6 @@
     border-radius: 16px;
     padding: 14px 14px 14px;
     margin-bottom: 12px;
-    position: relative;
-  }
-  .estudo-area .modo-tabs {
-    position: absolute;
-    top: 12px;
-    left: 14px;
-    z-index: 2;
   }
   .estudo-titulo {
     font-size: 22px;
@@ -170,8 +166,7 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     text-align: center;
-    margin: 0 0 14px;
-    padding-top: 4px;
+    margin: 0 0 8px;
     letter-spacing: 0.5px;
     line-height: 1.1;
   }
@@ -214,7 +209,7 @@
   }
   .comut-box .comut-detalhe { font-size: 14px !important; }
   .comut-insight {
-    margin: 8px auto 14px;
+    margin: 0 auto 12px;
     background: linear-gradient(135deg, #ede9fe, #ddd6fe);
     border: 1.5px solid #c4b5fd;
     border-radius: 18px;
@@ -223,9 +218,9 @@
     color: #5b21b6;
     line-height: 1.35;
     text-align: center;
-    display: inline-block;
-    width: auto;
-    max-width: fit-content;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
     font-weight: 600;
   }
   .comut-insight .comut-icon {
@@ -234,8 +229,6 @@
     margin-right: 4px;
   }
   .comut-insight strong, .comut-insight b { color: #4c1d95; }
-  /* wrapper pra centralizar a badge inline */
-  .comutativa-par + .comut-insight { display: block; margin-left: auto; margin-right: auto; }
 
   .macete-card {
     margin-top: 12px;
@@ -459,7 +452,7 @@
     border-radius: 18px !important;
     color: #5b21b6 !important;
     box-shadow: none !important;
-    margin: 6px auto 14px !important;
+    margin: 0 auto 12px !important;
     display: block !important;
     width: fit-content !important;
     max-width: 100% !important;
@@ -493,11 +486,11 @@
     .poke-estrelas { font-size: 9px !important; min-height: 10px !important; }
     .poke-card.bloq .poke-num::before { font-size: 22px !important; top: 4px !important; }
 
-    .estudo-area .modo-tabs { gap: 6px !important; top: 12px !important; left: 14px !important; }
-    .modo-tab { padding: 5px 12px !important; font-size: 12px !important; border-radius: 16px !important; }
+    .modo-tabs { margin: 6px 0 -2px 4px !important; gap: 6px !important; justify-content: flex-start !important; }
+    .modo-tab { padding: 6px 14px !important; font-size: 12px !important; border-radius: 16px !important; }
 
     .estudo-area { padding: 14px 16px 14px !important; margin-bottom: 12px !important; }
-    .estudo-titulo { font-size: 22px !important; margin: 0 0 14px !important; padding-top: 4px !important; }
+    .estudo-titulo { font-size: 22px !important; margin: 0 0 8px !important; padding-top: 0 !important; }
     .comutativa-par { gap: 14px !important; }
     .comut-box { padding: 14px 12px !important; }
     .comut-expr { font-size: 24px !important; margin-bottom: 8px !important; }
@@ -541,7 +534,7 @@
       border-left: 1.5px solid #c4b5fd !important;
       border-radius: 18px !important;
       color: #5b21b6 !important;
-      margin: 8px auto 14px !important;
+      margin: 0 auto 12px !important;
       width: fit-content !important;
       max-width: 100% !important;
     }
@@ -567,17 +560,18 @@
   <div class="pokedex-grid" id="pokedex-grid"></div>
   <div class="resumo-txt" id="resumo-txt"></div>
 
+  <div class="modo-tabs">
+    <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
+    <button class="modo-tab" id="tab-treino" onclick="mudarModo('treino')">⚡ Treinar</button>
+  </div>
+
   <div id="painel-estudo">
     <div class="estudo-area">
-      <div class="modo-tabs">
-        <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
-        <button class="modo-tab" id="tab-treino" onclick="mudarModo('treino')">⚡ Treinar</button>
-      </div>
       <div class="estudo-titulo" id="estudo-titulo">Tabuada do <span id="estudo-tab-num">2</span></div>
-      <div class="comutativa-par" id="comutativa-par"></div>
       <div class="comut-insight">
         <span class="comut-icon">↔</span> <span id="insight-texto">...</span>
       </div>
+      <div class="comutativa-par" id="comutativa-par"></div>
       <div class="macete-card" id="macete-card"></div>
       <div class="estudo-controles">
         <button class="estudo-btn" onclick="mudarFator(-1)">← Anterior</button>
