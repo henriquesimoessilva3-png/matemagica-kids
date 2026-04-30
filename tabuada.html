@@ -563,6 +563,92 @@
     .matriz-dica { font-size: 13px !important; }
   }
 
+  /* ===== JOGO TIRO CERTEIRO ===== */
+  .jogo-area {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border-radius: 16px;
+    padding: 14px 12px;
+    margin-bottom: 12px;
+  }
+  .jogo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .jogo-stats { display: flex; gap: 12px; font-size: 14px; font-weight: 700; color: #4a3b8a; }
+  .jogo-stat { white-space: nowrap; }
+  .jogo-pergunta {
+    background: linear-gradient(135deg, #fff5d6, #ffd36b);
+    border: 3px solid #ff9a44;
+    border-radius: 14px;
+    padding: 18px 14px;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 900;
+    color: #4a3b8a;
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+  .jogo-pergunta b { color: #6b54d3; }
+  .jogo-pista {
+    position: relative;
+    height: 36px;
+    background: #fff;
+    border: 2px solid #6dc2e8;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    padding: 0 30px 0 4px;
+  }
+  .jogo-pista-fundo {
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    transform: translateY(-50%);
+    text-align: center;
+    font-size: 18px;
+    opacity: 0.4;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .jogo-bichinho {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    font-size: 24px;
+    transition: left 0.4s ease-out;
+    z-index: 2;
+  }
+  .jogo-meta {
+    position: absolute;
+    top: 50%; right: 4px;
+    transform: translateY(-50%);
+    font-size: 24px;
+    z-index: 1;
+  }
+  .m-jogo { cursor: pointer; }
+  .m-jogo:hover { background: #ede8fa; transform: scale(1.06); }
+  .jogo-acerto { animation: jogo-acerto-anim 0.5s ease-out !important; }
+  .jogo-erro { animation: jogo-erro-anim 0.4s !important; }
+  @keyframes jogo-acerto-anim {
+    0% { background: linear-gradient(135deg, #6ee7a8, #34d36f) !important; transform: scale(1.3); }
+    50% { background: linear-gradient(135deg, #6ee7a8, #34d36f) !important; transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+  @keyframes jogo-erro-anim {
+    0%, 100% { transform: translateX(0); background: #fca5a5 !important; }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  @media (min-width: 760px) {
+    .jogo-area { padding: 18px 16px !important; }
+    .jogo-pergunta { font-size: 40px !important; padding: 22px !important; }
+    .jogo-stats { font-size: 16px !important; }
+  }
+
   /* High specificity (mobile-first) - dominar game-content.css */
   /* Truque magico (comutativa) = badge roxa compacta, regra geral */
   html[data-game="tabuada"] .container .comut-insight {
@@ -690,6 +776,7 @@
     <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
     <button class="modo-tab" id="tab-treino" onclick="mudarModo('treino')">⚡ Treinar</button>
     <button class="modo-tab" id="tab-matriz" onclick="mudarModo('matriz')">📊 Tabela</button>
+    <button class="modo-tab" id="tab-jogo" onclick="mudarModo('jogo')">🎯 Jogar</button>
   </div>
 
   <div id="painel-estudo">
@@ -748,6 +835,29 @@
       </div>
       <div class="matriz-grid" id="matriz-grid"></div>
       <div class="matriz-dica">💡 Toque num resultado pra ver a conta — aparece nos dois espelhos (3×5 e 5×3)</div>
+    </div>
+  </div>
+
+  <div id="painel-jogo" class="hidden">
+    <div class="jogo-area">
+      <div class="jogo-header">
+        <div class="jogo-stats">
+          <span class="jogo-stat">⭐ <span id="jogo-pontos">0</span></span>
+          <span class="jogo-stat">❤️ <span id="jogo-vidas">3</span></span>
+          <span class="jogo-stat">⏱ <span id="jogo-tempo">60</span>s</span>
+        </div>
+        <button class="estudo-btn" onclick="iniciarJogo()">🔄 Reiniciar</button>
+      </div>
+      <div class="jogo-pergunta">
+        <span id="jogo-expr">Clique em <b>Reiniciar</b> pra começar</span>
+      </div>
+      <div class="jogo-pista">
+        <div class="jogo-pista-fundo">🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊</div>
+        <span class="jogo-bichinho" id="jogo-bichinho">🐠</span>
+        <span class="jogo-meta">🏁</span>
+      </div>
+      <div class="matriz-grid" id="jogo-grid"></div>
+      <div class="matriz-dica">💡 Acerte o produto na tabela. Cada acerto move o peixinho 🐠 rumo à bandeira 🏁</div>
     </div>
   </div>
 </div>
@@ -1162,12 +1272,94 @@ function mudarModo(m) {
   document.getElementById('painel-treino').classList.toggle('hidden', m !== 'treino');
   document.getElementById('painel-resultado').classList.toggle('hidden', m !== 'resultado');
   document.getElementById('painel-matriz').classList.toggle('hidden', m !== 'matriz');
+  document.getElementById('painel-jogo').classList.toggle('hidden', m !== 'jogo');
   document.getElementById('tab-estudo').classList.toggle('ativo', m === 'estudo');
   document.getElementById('tab-treino').classList.toggle('ativo', m === 'treino' || m === 'resultado');
   document.getElementById('tab-matriz').classList.toggle('ativo', m === 'matriz');
+  document.getElementById('tab-jogo').classList.toggle('ativo', m === 'jogo');
   if (m === 'estudo') renderEstudo();
   if (m === 'treino') renderPerguntaTreino();
   if (m === 'matriz') gerarMatriz();
+  if (m === 'jogo') gerarGridJogo();
+  if (m !== 'jogo' && _jogoEstado.intervalo) { clearInterval(_jogoEstado.intervalo); _jogoEstado.intervalo = null; }
+}
+
+// ============== JOGO TIRO CERTEIRO ==============
+let _jogoEstado = { pontos: 0, vidas: 3, tempo: 60, expr: null, intervalo: null, ativo: false };
+
+function gerarGridJogo() {
+  const el = document.getElementById('jogo-grid');
+  if (!el || el.children.length) return;
+  let html = '<div class="m-cell m-corner">×</div>';
+  for (let c = 1; c <= 10; c++) html += `<div class="m-cell m-header">${c}</div>`;
+  for (let r = 1; r <= 10; r++) {
+    html += `<div class="m-cell m-header">${r}</div>`;
+    for (let c = 1; c <= 10; c++) {
+      let cls = 'm-cell m-prod m-jogo';
+      if (r === c) cls += ' m-diag';
+      html += `<div class="${cls}" data-r="${r}" data-c="${c}" onclick="clicarJogo(${r},${c})">${r * c}</div>`;
+    }
+  }
+  el.innerHTML = html;
+}
+
+function iniciarJogo() {
+  _jogoEstado = { pontos: 0, vidas: 3, tempo: 60, expr: null, intervalo: null, ativo: true };
+  proximaPerguntaJogo();
+  atualizarStatsJogo();
+  if (_jogoEstado.intervalo) clearInterval(_jogoEstado.intervalo);
+  _jogoEstado.intervalo = setInterval(tickJogo, 1000);
+}
+
+function proximaPerguntaJogo() {
+  const a = Math.floor(Math.random() * 10) + 1;
+  const b = Math.floor(Math.random() * 10) + 1;
+  _jogoEstado.expr = { a, b, prod: a * b };
+  document.getElementById('jogo-expr').innerHTML = `<b>${a}</b> × <b>${b}</b> = ?`;
+}
+
+function clicarJogo(r, c) {
+  if (!_jogoEstado.ativo || _jogoEstado.vidas <= 0 || _jogoEstado.tempo <= 0) return;
+  const cell = document.querySelector(`.m-jogo[data-r="${r}"][data-c="${c}"]`);
+  if (!cell) return;
+  if (r * c === _jogoEstado.expr.prod) {
+    _jogoEstado.pontos++;
+    cell.classList.add('jogo-acerto');
+    setTimeout(() => cell.classList.remove('jogo-acerto'), 500);
+    if (_jogoEstado.pontos >= 20) { terminarJogo('venceu'); return; }
+    proximaPerguntaJogo();
+  } else {
+    _jogoEstado.vidas--;
+    cell.classList.add('jogo-erro');
+    setTimeout(() => cell.classList.remove('jogo-erro'), 500);
+    if (_jogoEstado.vidas <= 0) terminarJogo('vidas');
+  }
+  atualizarStatsJogo();
+}
+
+function tickJogo() {
+  if (!_jogoEstado.ativo) return;
+  _jogoEstado.tempo--;
+  document.getElementById('jogo-tempo').textContent = _jogoEstado.tempo;
+  if (_jogoEstado.tempo <= 0) terminarJogo('tempo');
+}
+
+function atualizarStatsJogo() {
+  document.getElementById('jogo-pontos').textContent = _jogoEstado.pontos;
+  document.getElementById('jogo-vidas').textContent = _jogoEstado.vidas;
+  document.getElementById('jogo-tempo').textContent = _jogoEstado.tempo;
+  const bichinho = document.getElementById('jogo-bichinho');
+  if (bichinho) bichinho.style.left = Math.min(_jogoEstado.pontos * 5, 95) + '%';
+}
+
+function terminarJogo(razao) {
+  _jogoEstado.ativo = false;
+  if (_jogoEstado.intervalo) { clearInterval(_jogoEstado.intervalo); _jogoEstado.intervalo = null; }
+  let msg;
+  if (razao === 'venceu') msg = `🏆 Venceu! ${_jogoEstado.pontos} acertos em ${60 - _jogoEstado.tempo}s`;
+  else if (razao === 'tempo') msg = `⏰ Tempo esgotou! Você fez ${_jogoEstado.pontos} pontos`;
+  else msg = `💔 Suas vidas acabaram. Você fez ${_jogoEstado.pontos} pontos`;
+  document.getElementById('jogo-expr').innerHTML = msg;
 }
 
 // ============== MATRIZ COMPLETA (visao de consulta) ==============
