@@ -183,10 +183,9 @@
   }
   .estudo-header {
     display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 14px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
     margin-bottom: 8px;
   }
   .estudo-titulo {
@@ -474,12 +473,12 @@
   /* ===== MATRIZ COMPLETA ===== */
   .matriz-area {
     background: linear-gradient(135deg, #f7f5ff, #ede8fa);
-    border-radius: 16px;
-    padding: 14px 12px;
-    margin-bottom: 12px;
+    border-radius: 14px;
+    padding: 8px 8px 6px;
+    margin-bottom: 10px;
   }
   .matriz-titulo {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 800;
     background: linear-gradient(135deg, #6b54d3 0%, #ff7b6b 100%);
     -webkit-background-clip: text;
@@ -487,7 +486,7 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
   .matriz-legenda {
     display: flex;
@@ -503,18 +502,19 @@
   .leg-diag { background: #fff; border: 2px solid #ffcc4a; }
   .leg-upper { background: #fff; border: 1.5px solid #c5bbe9; }
 
-  .matriz-grid {
+  html[data-game="tabuada"] .container .matriz-grid {
     display: grid;
     grid-template-columns: repeat(11, 1fr);
     gap: 2px;
-    max-width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
   }
   .m-cell {
     background: #fff;
-    border-radius: 6px;
-    padding: 3px 2px;
+    border-radius: 5px;
+    padding: 2px 1px;
     text-align: center;
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 700;
     color: #4a3b8a;
     line-height: 1;
@@ -525,12 +525,12 @@
     cursor: pointer;
     transition: all 0.12s;
     user-select: none;
-    border: 2px solid transparent;
+    border: 1.5px solid transparent;
     box-sizing: border-box;
   }
   .m-target {
-    font-size: 14px !important;
-    letter-spacing: 0.5px !important;
+    font-size: 11px !important;
+    letter-spacing: 0px !important;
     font-weight: 700 !important;
   }
   .m-corner { background: transparent; cursor: default; }
@@ -564,21 +564,20 @@
     50% { transform: scale(1.22); box-shadow: 0 5px 14px rgba(208, 64, 64, 0.6); }
   }
   .matriz-dica {
-    margin-top: 10px;
+    margin-top: 6px;
     text-align: center;
-    font-size: 11px;
+    font-size: 10px;
     color: #6b54d3;
-    line-height: 1.4;
+    line-height: 1.3;
   }
 
   @media (min-width: 760px) {
-    .matriz-area { padding: 18px 16px !important; }
-    .matriz-titulo { font-size: 22px !important; margin-bottom: 10px !important; }
-    .matriz-legenda { font-size: 13px !important; gap: 18px !important; }
+    .matriz-area { padding: 10px 12px 8px !important; }
+    .matriz-titulo { font-size: 16px !important; margin-bottom: 6px !important; }
     .matriz-grid { gap: 3px !important; }
-    .m-cell { font-size: 17px !important; padding: 4px 2px !important; }
-    .m-target { font-size: 16px !important; }
-    .matriz-dica { font-size: 13px !important; }
+    .m-cell { font-size: 14px !important; padding: 3px 2px !important; }
+    .m-target { font-size: 13px !important; }
+    .matriz-dica { font-size: 12px !important; margin-top: 8px !important; }
   }
 
   /* ===== JOGO TIRO CERTEIRO ===== */
@@ -598,6 +597,21 @@
   }
   .jogo-stats { display: flex; gap: 12px; font-size: 14px; font-weight: 700; color: #4a3b8a; }
   .jogo-stat { white-space: nowrap; }
+  .jogo-acao { display: flex; align-items: center; gap: 8px; }
+  .jogo-aviso {
+    font-size: 12px;
+    font-weight: 700;
+    color: #6b54d3;
+    padding: 4px 10px;
+    background: #ede8fa;
+    border-radius: 12px;
+    white-space: nowrap;
+    animation: jogo-aviso-pulse 1.4s infinite;
+  }
+  @keyframes jogo-aviso-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
   .jogo-pergunta {
     background: linear-gradient(135deg, #fff5d6, #ffd36b);
     border: 3px solid #ff9a44;
@@ -1242,12 +1256,9 @@
 
   <div id="painel-matriz" class="hidden">
     <div class="matriz-area">
-      <div class="matriz-titulo">Tabela de consulta · 1×1 a 10×10</div>
-      <div class="matriz-legenda">
-        <span class="leg-item"><span class="leg-color leg-diag"></span> diagonal · X×X</span>
-      </div>
+      <div class="matriz-titulo">Tabela · 1×1 a 10×10</div>
       <div class="matriz-grid" id="matriz-grid"></div>
-      <div class="matriz-dica">💡 Toque num resultado pra ver a conta — aparece nos dois espelhos (3×5 e 5×3)</div>
+      <div class="matriz-dica">💡 Toque num resultado pra ver a conta nos dois espelhos</div>
     </div>
   </div>
 
@@ -1328,10 +1339,13 @@
           <span class="jogo-stat">❤️ <span id="jogo-vidas">3</span></span>
           <span class="jogo-stat">⏱ <span id="jogo-tempo">60</span>s</span>
         </div>
-        <button class="estudo-btn" onclick="iniciarJogo()">🔄 Reiniciar</button>
+        <div class="jogo-acao">
+          <span class="jogo-aviso" id="jogo-aviso">← clique pra começar</span>
+          <button class="estudo-btn" onclick="iniciarJogo()">🔄 Reiniciar</button>
+        </div>
       </div>
-      <div class="jogo-pergunta">
-        <span id="jogo-expr">Clique em <b>Reiniciar</b> pra começar</span>
+      <div class="jogo-pergunta hidden" id="jogo-pergunta-box">
+        <span id="jogo-expr">5 × 10 = ?</span>
       </div>
       <div class="jogo-pista">
         <div class="jogo-pista-fundo">🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊</div>
@@ -1776,10 +1790,20 @@ const PEN_FASES = [
   { nome: 'FINAL', adv: 'Espanha', flag: '🇪🇸', advProbAcerto: 0.95 }
 ];
 const PEN_DIFS = {
-  facil:   { tabs: [1, 2, 10], probGol: 0.15, label: 'FÁCIL',   chance: '15% gol' },
-  media:   { tabs: [3, 4, 5, 6], probGol: 0.60, label: 'MÉDIA',   chance: '60% gol' },
-  dificil: { tabs: [7, 8, 9], probGol: 0.95, label: 'DIFÍCIL', chance: '95% gol' }
+  facil:   { probGol: 0.15, label: 'FÁCIL',   chance: '15% gol', desc: 'tabuadas 1 e 2' },
+  media:   { probGol: 0.60, label: 'MÉDIA',   chance: '60% gol', desc: 'tabuadas 3, 4 e 5' },
+  dificil: { probGol: 0.95, label: 'DIFÍCIL', chance: '95% gol', desc: 'tabuadas 6 a 10' }
 };
+
+// Gera conta segundo regra: FACIL = pelo menos um fator 1 ou 2;
+// MEDIA = ambos >=3, pelo menos um {3,4,5}; DIFICIL = ambos >=6
+function penGeraConta(dif) {
+  let a, b;
+  if (dif === 'facil')      { a = penRand(1, 2);  b = penRand(1, 10); }
+  else if (dif === 'media') { a = penRand(3, 5);  b = penRand(3, 10); }
+  else                       { a = penRand(6, 10); b = penRand(6, 10); }
+  return Math.random() < 0.5 ? { a: b, b: a } : { a, b };
+}
 const PEN_COBS_INICIAL = 3;  // 3 cobrancas user + 3 adv = 6 total (mais em morte sub)
 
 let _penEstado = { faseIdx: 0, cobUser: 0, cobAdv: 0, maxCobs: 3, modo: 'cobrar', gUser: 0, gAdv: 0, contaAtual: null, ativo: false, morteSubita: false };
@@ -2033,6 +2057,8 @@ function gerarGridJogo() {
 
 function iniciarJogo() {
   _jogoEstado = { pontos: 0, vidas: 3, tempo: 60, expr: null, intervalo: null, ativo: true };
+  document.getElementById('jogo-aviso').classList.add('hidden');
+  document.getElementById('jogo-pergunta-box').classList.remove('hidden');
   proximaPerguntaJogo();
   atualizarStatsJogo();
   if (_jogoEstado.intervalo) clearInterval(_jogoEstado.intervalo);
@@ -2085,9 +2111,16 @@ function terminarJogo(razao) {
   if (_jogoEstado.intervalo) { clearInterval(_jogoEstado.intervalo); _jogoEstado.intervalo = null; }
   let msg;
   if (razao === 'venceu') msg = `🏆 Venceu! ${_jogoEstado.pontos} acertos em ${60 - _jogoEstado.tempo}s`;
-  else if (razao === 'tempo') msg = `⏰ Tempo esgotou! Você fez ${_jogoEstado.pontos} pontos`;
-  else msg = `💔 Suas vidas acabaram. Você fez ${_jogoEstado.pontos} pontos`;
+  else if (razao === 'tempo') msg = `⏰ Tempo esgotou! ${_jogoEstado.pontos} pontos`;
+  else msg = `💔 Vidas acabaram. ${_jogoEstado.pontos} pontos`;
   document.getElementById('jogo-expr').innerHTML = msg;
+  // Mostra aviso "← clique" de novo
+  const aviso = document.getElementById('jogo-aviso');
+  if (aviso) {
+    aviso.textContent = msg;
+    aviso.classList.remove('hidden');
+  }
+  document.getElementById('jogo-pergunta-box').classList.add('hidden');
 }
 
 // ============== MATRIZ COMPLETA (visao de consulta) ==============
