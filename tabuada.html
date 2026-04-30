@@ -22,6 +22,15 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6b54d3">
 <style>
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 4px 0 10px;
+  }
+  .header-row .voltar { margin: 0 !important; flex-shrink: 0; }
+  .header-row .header-spacer { width: 100px; flex-shrink: 0; }
   h1.titulo-tabuada {
     font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
     font-size: 22px;
@@ -33,10 +42,15 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     text-align: center;
-    margin: 4px 0 8px;
+    margin: 0;
     line-height: 1.1;
+    flex: 1;
   }
   .sub-tabuada { display: none; }
+  @media (max-width: 480px) {
+    .header-row .header-spacer { display: none; }
+    h1.titulo-tabuada { font-size: 18px !important; text-align: right; }
+  }
 
   /* ===== HEADER PLAYER override (super compacto, foco no estudo) ===== */
   .header-player { padding: 4px 8px !important; gap: 8px !important; margin-bottom: 8px !important; border-width: 1px !important; border-radius: 12px !important; }
@@ -54,22 +68,28 @@
 
   /* ===== POKÉDEX (fileira compacta) ===== */
   .pokedex-titulo { display: none; }
-  /* Override do shared.css - 10 colunas em 1 linha, formato pill */
+  /* Override do shared.css - 10 colunas em 1 linha, formato pill com estrelas */
   html[data-game="tabuada"] .container .pokedex-grid {
     display: grid !important;
     grid-template-columns: repeat(10, 1fr) !important;
     gap: 5px !important;
-    margin-bottom: 6px !important;
-    margin-top: 4px !important;
+    margin-bottom: 8px !important;
+    margin-top: 6px !important;
   }
   html[data-game="tabuada"] .container .poke-card {
     aspect-ratio: auto !important;
-    padding: 6px 4px !important;
-    min-height: 32px !important;
-    border-radius: 8px !important;
+    padding: 6px 3px !important;
+    min-height: 46px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 1px !important;
   }
   html[data-game="tabuada"] .container .poke-card .poke-label { display: none !important; }
-  html[data-game="tabuada"] .container .poke-card > div:first-child:not(.poke-num):not(.poke-estrelas) { display: none !important; }
+  /* Esconde o "×N" header do topo */
+  html[data-game="tabuada"] .container .poke-card > .poke-label:first-child { display: none !important; }
   .poke-card {
     border-radius: 10px;
     padding: 10px 6px;
@@ -103,17 +123,18 @@
   .poke-card.n2 { background: linear-gradient(135deg, #ffe29a, #ffb347); color: #6a4020; border-color: #ff9a44; }
   .poke-card.n3 { background: linear-gradient(135deg, #c8f2d8, #7ae0a0); color: #1b4a2a; border-color: #3ac070; }
   .poke-num {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 800;
     line-height: 1;
     margin-top: 0;
   }
   .poke-label { display: none; }
   .poke-estrelas {
-    font-size: 8px;
-    letter-spacing: -1.5px;
-    min-height: 9px;
+    font-size: 10px;
+    letter-spacing: 0px;
+    min-height: 11px;
     line-height: 1;
+    margin-top: 1px;
   }
   .poke-card.bloq .poke-num::before {
     content: '?';
@@ -479,12 +500,12 @@
     .upsell-banner .ub-arrow { font-size: 14px !important; }
 
     .pokedex-titulo { display: none !important; }
-    html[data-game="tabuada"] .container .pokedex-grid { grid-template-columns: repeat(10, 1fr) !important; gap: 5px !important; margin-bottom: 6px !important; margin-top: 4px !important; }
-    html[data-game="tabuada"] .container .poke-card { padding: 6px 4px !important; aspect-ratio: auto !important; min-height: 32px !important; border-radius: 8px !important; }
+    html[data-game="tabuada"] .container .pokedex-grid { grid-template-columns: repeat(10, 1fr) !important; gap: 6px !important; margin-bottom: 8px !important; margin-top: 6px !important; }
+    html[data-game="tabuada"] .container .poke-card { padding: 7px 4px !important; aspect-ratio: auto !important; min-height: 50px !important; border-radius: 10px !important; }
     html[data-game="tabuada"] .container .poke-card .poke-label { display: none !important; }
-    .poke-num { font-size: 16px !important; margin-top: 0 !important; }
-    .poke-estrelas { font-size: 9px !important; min-height: 10px !important; }
-    .poke-card.bloq .poke-num::before { font-size: 22px !important; top: 4px !important; }
+    .poke-num { font-size: 20px !important; margin-top: 0 !important; }
+    .poke-estrelas { font-size: 11px !important; min-height: 12px !important; letter-spacing: 0 !important; margin-top: 2px !important; }
+    .poke-card.bloq .poke-num::before { font-size: 26px !important; top: 6px !important; }
 
     .modo-tabs { margin: 6px 0 -2px 4px !important; gap: 6px !important; justify-content: flex-start !important; }
     .modo-tab { padding: 6px 14px !important; font-size: 12px !important; border-radius: 16px !important; }
@@ -545,8 +566,11 @@
 </head>
 <body>
 <div class="container">
-  <a href="/vitrine.html" class="voltar">← Voltar à oferta</a>
-  <h1 class="titulo-tabuada">🧮 Tabuada Mágica</h1>
+  <div class="header-row">
+    <a href="/vitrine.html" class="voltar">← Voltar à oferta</a>
+    <h1 class="titulo-tabuada">🧮 Tabuada Mágica</h1>
+    <span class="header-spacer"></span>
+  </div>
   <div class="sub-tabuada">Desbloqueie cada tabuada. Ordem não muda o total!</div>
 
   <a href="javascript:void(0)" class="upsell-banner" onclick="goCheckout('banner_topo')">
