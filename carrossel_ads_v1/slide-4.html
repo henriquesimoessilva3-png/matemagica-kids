@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){
+  try {
+    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
+    if (!lic || !lic.key) location.replace('/vitrine.html?premium_required=1');
+  } catch(e) { location.replace('/vitrine.html?premium_required=1'); }
+})();
+</script>
+<title>Slide 4 — Sinal 3</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="slide sinal slide-4">
+  <div class="number-row">
+    <div class="number">03</div>
+    <div class="number-meta">SINAL 3 / 5</div>
+  </div>
+
+  <h2 class="titulo">"Eu não sou<br><span class="accent">bom em mat.</span>"</h2>
+
+  <p class="corpo">Aos <strong>8 anos</strong>. Antes mesmo de saber o que é fração. É o <strong>sintoma</strong>, não a causa — e vai grudar nele a vida inteira se ninguém intervir agora.</p>
+
+  <div class="next-cue">→ ARRASTA · SINAL 4</div>
+
+  <div class="brand-row">
+    <span>MATEMÁGICA</span>
+    <span class="domain">matemagica.app.br</span>
+  </div>
+</div>
+</body>
+</html>

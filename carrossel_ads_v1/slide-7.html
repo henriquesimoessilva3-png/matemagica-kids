@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){
+  try {
+    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
+    if (!lic || !lic.key) location.replace('/vitrine.html?premium_required=1');
+  } catch(e) { location.replace('/vitrine.html?premium_required=1'); }
+})();
+</script>
+<title>Slide 7 — Solução</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.screenshot-wrap {
+  margin-top: 14px;
+  width: 100%;
+  height: 540px;
+  overflow: hidden;
+  border: 5px solid var(--ink);
+  background: #fdf6e9;
+  box-shadow: 12px 12px 0 var(--ink);
+  position: relative;
+}
+.screenshot-wrap img {
+  width: 1080px;
+  display: block;
+  margin: 0;
+  margin-top: -98px; /* corta as 2 topbars (laranja + roxa) */
+}
+</style>
+</head>
+<body>
+<div class="slide slide-7">
+  <div class="eyebrow">Existe um método</div>
+
+  <h2 class="titulo">Que separa as<br><span class="accent">3 travas.</span></h2>
+
+  <p class="lead"><strong>Visual.</strong> <strong>Sequencial.</strong> <strong>Ansiedade.</strong> Cada uma pede uma resposta diferente — Matemágica é o único app brasileiro que mapeia as 3, do 1º ao 5º ano.</p>
+
+  <div class="screenshot-wrap">
+    <img src="home-fullshot.png" alt="Home Matemágica v9">
+  </div>
+
+  <div class="brand-row">
+    <span>MATEMÁGICA</span>
+    <span class="domain">matemagica.app.br</span>
+  </div>
+</div>
+</body>
+</html>

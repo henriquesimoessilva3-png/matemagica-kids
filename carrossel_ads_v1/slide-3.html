@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){
+  try {
+    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
+    if (!lic || !lic.key) location.replace('/vitrine.html?premium_required=1');
+  } catch(e) { location.replace('/vitrine.html?premium_required=1'); }
+})();
+</script>
+<title>Slide 3 — Sinal 2</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="slide sinal slide-3">
+  <div class="number-row">
+    <div class="number">02</div>
+    <div class="number-meta">SINAL 2 / 5</div>
+  </div>
+
+  <h2 class="titulo">A tabuada<br><span class="accent">não cola.</span></h2>
+
+  <p class="corpo">Você repete. Ele decora por 1 hora. No outro dia <strong>sumiu</strong>. Não é falta de talento — é falta de <strong>associação visual</strong>. Cérebro 6-10 não fixa por repetição seca.</p>
+
+  <div class="next-cue">→ ARRASTA · SINAL 3</div>
+
+  <div class="brand-row">
+    <span>MATEMÁGICA</span>
+    <span class="domain">matemagica.app.br</span>
+  </div>
+</div>
+</body>
+</html>

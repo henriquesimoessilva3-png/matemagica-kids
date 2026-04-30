@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){
+  try {
+    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
+    if (!lic || !lic.key) location.replace('/vitrine.html?premium_required=1');
+  } catch(e) { location.replace('/vitrine.html?premium_required=1'); }
+})();
+</script>
+<title>Slide 2 — Sinal 1</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="slide sinal slide-2">
+  <div class="number-row">
+    <div class="number">01</div>
+    <div class="number-meta">SINAL 1 / 5</div>
+  </div>
+
+  <h2 class="titulo">Ele <span class="accent">chora</span><br>antes da<br>tarefa.</h2>
+
+  <p class="corpo">Não é manha. <strong>Stanford</strong> já provou: ansiedade matemática <strong>bloqueia a memória</strong> de trabalho. Quanto mais ele tenta forçar, mais esquece.</p>
+
+  <div class="next-cue">→ ARRASTA · SINAL 2</div>
+
+  <div class="brand-row">
+    <span>MATEMÁGICA</span>
+    <span class="domain">matemagica.app.br</span>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){
+  try {
+    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
+    if (!lic || !lic.key) location.replace('/vitrine.html?premium_required=1');
+  } catch(e) { location.replace('/vitrine.html?premium_required=1'); }
+})();
+</script>
+<title>Slide 8 — Oferta</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="slide slide-8 brutalist">
+  <div class="eyebrow">Acesso completo · pagamento único</div>
+
+  <div class="preco-block">
+    <div class="preco-line1"><span class="currency">R$</span>27</div>
+    <div class="preco-meta">uma vez. <span class="em">pra sempre.</span></div>
+  </div>
+
+  <div class="bullets">
+    <div class="bullet">
+      <span class="check">✓</span>
+      <span><strong>Matemágica</strong> + <strong>EXPLORA</strong> (História + Geo)</span>
+    </div>
+    <div class="bullet">
+      <span class="check">✓</span>
+      <span>BNCC completo do <strong>1º ao 5º ano</strong></span>
+    </div>
+    <div class="bullet">
+      <span class="check">✓</span>
+      <span><strong>Garantia 7 dias</strong> condicional</span>
+    </div>
+    <div class="bullet">
+      <span class="check">✓</span>
+      <span><strong>Sem mensalidade</strong>, sem letrinha miúda</span>
+    </div>
+  </div>
+
+  <div class="cta-bar">TOCA AQUI · OFERTA COMPLETA →</div>
+
+  <div class="brand-row">
+    <span>MATEMÁGICA</span>
+    <span class="domain">matemagica.app.br</span>
+  </div>
+</div>
+</body>
+</html>

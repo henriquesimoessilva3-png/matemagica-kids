@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){
+  try {
+    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
+    if (!lic || !lic.key) location.replace('/vitrine.html?premium_required=1');
+  } catch(e) { location.replace('/vitrine.html?premium_required=1'); }
+})();
+</script>
+<title>Slide 6 — Sinal 5</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="slide sinal slide-6">
+  <div class="number-row">
+    <div class="number">05</div>
+    <div class="number-meta">SINAL 5 / 5</div>
+  </div>
+
+  <h2 class="titulo">Ele só toca<br>em mat se for<br><span class="accent">jogo.</span></h2>
+
+  <p class="corpo"><strong>Roblox?</strong> 3 horas. <strong>Tarefa?</strong> 5 minutos vira drama. Não é defeito — é o cérebro dele dizendo <strong>COMO ele aprende</strong>. A escola não tá ouvindo.</p>
+
+  <div class="next-cue">→ ARRASTA PRA SOLUÇÃO</div>
+
+  <div class="brand-row">
+    <span>MATEMÁGICA</span>
+    <span class="domain">matemagica.app.br</span>
+  </div>
+</div>
+</body>
+</html>

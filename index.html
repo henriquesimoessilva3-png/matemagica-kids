@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+(function(){
+  try {
+    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
+    if (!lic || !lic.key) location.replace('vitrine.html?premium_required=1');
+  } catch(e) { location.replace('vitrine.html?premium_required=1'); }
+})();
+</script>
   <title>Matemágica — A criança joga. A matemática fica.</title>
 
   <!-- Meta Pixel — Matemagica (ID 1840468943289707) -->

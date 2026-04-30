@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){
+  try {
+    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
+    if (!lic || !lic.key) location.replace('/vitrine.html?premium_required=1');
+  } catch(e) { location.replace('/vitrine.html?premium_required=1'); }
+})();
+</script>
+<title>Slide 1 — Capa</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="slide slide-1 brutalist">
+  <div class="eyebrow">Pra mãe que viu o filho chorar antes da prova</div>
+
+  <h1 class="headline">
+    <span class="strike">Não é talento.</span><br>
+    É <span class="accent">método.</span>
+  </h1>
+
+  <p class="subhead">5 sinais de que a escola está <em>destruindo</em> a matemática do seu filho — e como reverter <strong>antes do 6º ano</strong>.</p>
+
+  <div class="cta-bar">ARRASTA PRA VER OS 5 SINAIS →</div>
+
+  <div class="brand-row">
+    <span>MATEMÁGICA</span>
+    <span class="domain">matemagica.app.br</span>
+  </div>
+</div>
+</body>
+</html>
