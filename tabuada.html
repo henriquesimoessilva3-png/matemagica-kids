@@ -150,29 +150,41 @@
   }
 
   /* ===== SELETOR DE MODO (acima do quadro, alinhado a esquerda) ===== */
+  html[data-game] .container .modo-tabs,
   .modo-tabs {
-    display: flex;
-    gap: 4px;
-    margin: 10px 0 4px 4px;
-    padding-top: 3px;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+    display: flex !important;
+    gap: 3px !important;
+    margin: 10px 0 4px 4px !important;
+    padding-top: 3px !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
   }
+  html[data-game] .container .modo-tabs .modo-tab,
   .modo-tab {
-    background: #fff;
-    border: 1.5px solid #c5bbe9;
-    color: #6b54d3;
-    padding: 3px 9px;
-    border-radius: 12px;
-    font-weight: 700;
+    background: #fff !important;
+    border: 1.5px solid #c5bbe9 !important;
+    color: #6b54d3 !important;
+    padding: 8px 9px !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
     cursor: pointer;
-    font-size: 11px;
-    transition: all 0.15s;
-    box-shadow: 0 1px 3px rgba(107,84,211,0.08);
-    white-space: nowrap;
+    font-size: 11px !important;
+    line-height: 1 !important;
+    transition: all 0.15s !important;
+    box-shadow: 0 1px 3px rgba(107,84,211,0.08) !important;
+    white-space: nowrap !important;
+    min-height: 0 !important;
+    flex-shrink: 0;
   }
-  .modo-tab:hover { background: #ede8fa; }
-  .modo-tab.ativo { background: #6b54d3; color: #fff; border-color: #6b54d3; }
+  html[data-game] .container .modo-tabs #tab-estudo,
+  html[data-game] .container .modo-tabs #tab-treino {
+    min-height: 0 !important;
+  }
+  html[data-game] .container .modo-tabs .modo-tab:hover,
+  .modo-tab:hover { background: #ede8fa !important; }
+  html[data-game] .container .modo-tabs .modo-tab.ativo,
+  .modo-tab.ativo { background: #6b54d3 !important; color: #fff !important; border-color: #6b54d3 !important; }
 
   /* ===== ESTUDO ===== */
   .estudo-area {
@@ -1761,7 +1773,6 @@
 
   <div class="pokedex-titulo">🎴 Sua coleção de tabuadas</div>
   <div class="pokedex-grid" id="pokedex-grid"></div>
-  <div class="resumo-txt" id="resumo-txt"></div>
 
   <div class="modo-tabs">
     <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
@@ -2135,14 +2146,6 @@ function renderPokedex() {
       </button>`;
   }
   el.innerHTML = html;
-
-  // resumo
-  const dominadas = [1,2,3,4,5,6,7,8,9,10].filter(t => nivelTabuada(t) === 3).length;
-  const treinadas = [1,2,3,4,5,6,7,8,9,10].filter(t => nivelTabuada(t) >= 1).length;
-  const txt = dominadas === 10
-    ? '🏆 Você dominou todas as tabuadas! Lenda!'
-    : `${dominadas}/10 dominadas · ${treinadas}/10 já treinadas`;
-  document.getElementById('resumo-txt').textContent = txt;
 }
 
 // ============== MACETES BRASILEIROS (um por fator) ==============
