@@ -492,7 +492,7 @@
   .leg-item { display: inline-flex; align-items: center; gap: 4px; }
   .leg-color { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
   .leg-diag { background: linear-gradient(135deg, #ffd36b, #ff9a44); border: 1px solid #d99a40; }
-  .leg-upper { background: #f0eaff; border: 1px solid #c5bbe9; }
+  .leg-upper { background: #fff; border: 1.5px solid #c5bbe9; }
 
   .matriz-grid {
     display: grid;
@@ -530,15 +530,6 @@
     color: #6a4020;
     font-weight: 800;
   }
-  .m-upper {
-    background: #f0eaff;
-    color: #9b8fc7;
-    font-weight: 500;
-  }
-  .m-dominado {
-    background: linear-gradient(135deg, #c8f2d8, #8fd9a8);
-    color: #1b4a2a;
-  }
   .m-highlight {
     background: #ffe4d3 !important;
     color: #8a3a10 !important;
@@ -547,9 +538,13 @@
     background: linear-gradient(135deg, #ff7b6b, #d04040) !important;
     color: #fff !important;
     font-weight: 900 !important;
-    transform: scale(1.12);
-    box-shadow: 0 3px 8px rgba(208, 64, 64, 0.4);
+    box-shadow: 0 3px 10px rgba(208, 64, 64, 0.45) !important;
     z-index: 2;
+    animation: pulse-target 0.7s ease-in-out infinite;
+  }
+  @keyframes pulse-target {
+    0%, 100% { transform: scale(1.12); }
+    50% { transform: scale(1.22); box-shadow: 0 5px 14px rgba(208, 64, 64, 0.6); }
   }
   .matriz-dica {
     margin-top: 10px;
@@ -747,13 +742,12 @@
 
   <div id="painel-matriz" class="hidden">
     <div class="matriz-area">
-      <div class="matriz-titulo">Tabela completa · 1×1 a 10×10</div>
+      <div class="matriz-titulo">Tabela de consulta · 1×1 a 10×10</div>
       <div class="matriz-legenda">
         <span class="leg-item"><span class="leg-color leg-diag"></span> diagonal · X×X</span>
-        <span class="leg-item"><span class="leg-color leg-upper"></span> ordem espelhada (X×Y = Y×X)</span>
       </div>
       <div class="matriz-grid" id="matriz-grid"></div>
-      <div class="matriz-dica">💡 Toque numa célula pra destacar a linha e coluna · só precisa decorar metade!</div>
+      <div class="matriz-dica">💡 Toque num resultado pra ver a conta — aparece nos dois espelhos (3×5 e 5×3)</div>
     </div>
   </div>
 </div>
@@ -1176,7 +1170,7 @@ function mudarModo(m) {
   if (m === 'matriz') gerarMatriz();
 }
 
-// ============== MATRIZ COMPLETA ==============
+// ============== MATRIZ COMPLETA (visao de consulta) ==============
 function gerarMatriz() {
   const el = document.getElementById('matriz-grid');
   if (!el) return;
@@ -1187,10 +1181,6 @@ function gerarMatriz() {
     for (let c = 1; c <= 10; c++) {
       let cls = 'm-cell m-prod';
       if (r === c) cls += ' m-diag';
-      else if (c > r) cls += ' m-upper';
-      else cls += ' m-lower';
-      const dominado = nivelTabuada(r) === 3 || nivelTabuada(c) === 3;
-      if (dominado && c <= r) cls += ' m-dominado';
       html += `<div class="${cls}" data-r="${r}" data-c="${c}" onclick="destacarMatriz(${r},${c})">${r * c}</div>`;
     }
   }
@@ -1198,15 +1188,31 @@ function gerarMatriz() {
 }
 
 function destacarMatriz(r, c) {
+  // Restaura produto nas celulas que estavam em target
+  document.querySelectorAll('.m-cell.m-target').forEach(e => {
+    const rr = +e.dataset.r;
+    const cc = +e.dataset.c;
+    if (rr && cc) e.textContent = rr * cc;
+  });
+  // Limpa highlights anteriores
   document.querySelectorAll('.m-cell.m-highlight, .m-cell.m-target').forEach(e => {
     e.classList.remove('m-highlight', 'm-target');
   });
-  document.querySelectorAll(`.m-cell[data-r="${r}"], .m-cell[data-c="${c}"]`).forEach(e => {
+  // Pinta linha r e coluna c (so produtos)
+  document.querySelectorAll(`.m-prod[data-r="${r}"], .m-prod[data-c="${c}"]`).forEach(e => {
     e.classList.add('m-highlight');
   });
-  document.querySelectorAll(`.m-cell[data-r="${r}"][data-c="${c}"], .m-cell[data-r="${c}"][data-c="${r}"]`).forEach(e => {
-    e.classList.add('m-target');
-  });
+  // As 2 celulas espelho ficam em vermelho com a EXPRESSAO piscando
+  const cellRC = document.querySelector(`.m-prod[data-r="${r}"][data-c="${c}"]`);
+  const cellCR = document.querySelector(`.m-prod[data-r="${c}"][data-c="${r}"]`);
+  if (cellRC) {
+    cellRC.classList.add('m-target');
+    cellRC.textContent = `${r}×${c}`;
+  }
+  if (cellCR && cellCR !== cellRC) {
+    cellCR.classList.add('m-target');
+    cellCR.textContent = `${c}×${r}`;
+  }
 }
 
 // ============== INIT ==============
