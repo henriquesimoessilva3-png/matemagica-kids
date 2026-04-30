@@ -461,6 +461,112 @@
   }
   .upsell-result-btn:active { transform: translateY(1px); }
 
+  /* ===== MATRIZ COMPLETA ===== */
+  .matriz-area {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border-radius: 16px;
+    padding: 14px 12px;
+    margin-bottom: 12px;
+  }
+  .matriz-titulo {
+    font-size: 18px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #6b54d3 0%, #ff7b6b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .matriz-legenda {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: #5b21b6;
+    margin-bottom: 10px;
+  }
+  .leg-item { display: inline-flex; align-items: center; gap: 4px; }
+  .leg-color { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
+  .leg-diag { background: linear-gradient(135deg, #ffd36b, #ff9a44); border: 1px solid #d99a40; }
+  .leg-upper { background: #f0eaff; border: 1px solid #c5bbe9; }
+
+  .matriz-grid {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    gap: 2px;
+    max-width: 100%;
+  }
+  .m-cell {
+    background: #fff;
+    border-radius: 4px;
+    padding: 4px 2px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4a3b8a;
+    line-height: 1;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .m-corner { background: transparent; cursor: default; }
+  .m-header {
+    background: linear-gradient(135deg, #6b54d3, #b968e8);
+    color: #fff;
+    font-weight: 800;
+    cursor: default;
+  }
+  .m-prod:hover { transform: scale(1.08); box-shadow: 0 2px 6px rgba(107, 84, 211, 0.25); z-index: 1; }
+  .m-diag {
+    background: linear-gradient(135deg, #ffd36b, #ff9a44);
+    color: #6a4020;
+    font-weight: 800;
+  }
+  .m-upper {
+    background: #f0eaff;
+    color: #9b8fc7;
+    font-weight: 500;
+  }
+  .m-dominado {
+    background: linear-gradient(135deg, #c8f2d8, #8fd9a8);
+    color: #1b4a2a;
+  }
+  .m-highlight {
+    background: #ffe4d3 !important;
+    color: #8a3a10 !important;
+  }
+  .m-target {
+    background: linear-gradient(135deg, #ff7b6b, #d04040) !important;
+    color: #fff !important;
+    font-weight: 900 !important;
+    transform: scale(1.12);
+    box-shadow: 0 3px 8px rgba(208, 64, 64, 0.4);
+    z-index: 2;
+  }
+  .matriz-dica {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 11px;
+    color: #6b54d3;
+    line-height: 1.4;
+  }
+
+  @media (min-width: 760px) {
+    .matriz-area { padding: 18px 16px !important; }
+    .matriz-titulo { font-size: 22px !important; margin-bottom: 10px !important; }
+    .matriz-legenda { font-size: 13px !important; gap: 18px !important; }
+    .matriz-grid { gap: 3px !important; }
+    .m-cell { font-size: 14px !important; padding: 6px 3px !important; }
+    .matriz-dica { font-size: 13px !important; }
+  }
+
   /* High specificity (mobile-first) - dominar game-content.css */
   /* Truque magico (comutativa) = badge roxa compacta, regra geral */
   html[data-game="tabuada"] .container .comut-insight {
@@ -587,6 +693,7 @@
   <div class="modo-tabs">
     <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
     <button class="modo-tab" id="tab-treino" onclick="mudarModo('treino')">⚡ Treinar</button>
+    <button class="modo-tab" id="tab-matriz" onclick="mudarModo('matriz')">📊 Tabela</button>
   </div>
 
   <div id="painel-estudo">
@@ -634,6 +741,18 @@
         <p class="upsell-result-msg">Quer continuar com soma, fração, problemas e mais?</p>
         <button class="upsell-result-btn" onclick="goCheckout('cta_resultado')">Liberar 1º ao 5º ano · R$27 →</button>
       </div>
+    </div>
+  </div>
+
+  <div id="painel-matriz" class="hidden">
+    <div class="matriz-area">
+      <div class="matriz-titulo">Tabela completa · 1×1 a 10×10</div>
+      <div class="matriz-legenda">
+        <span class="leg-item"><span class="leg-color leg-diag"></span> diagonal · X×X</span>
+        <span class="leg-item"><span class="leg-color leg-upper"></span> ordem espelhada (X×Y = Y×X)</span>
+      </div>
+      <div class="matriz-grid" id="matriz-grid"></div>
+      <div class="matriz-dica">💡 Toque numa célula pra destacar a linha e coluna · só precisa decorar metade!</div>
     </div>
   </div>
 </div>
@@ -1047,10 +1166,46 @@ function mudarModo(m) {
   document.getElementById('painel-estudo').classList.toggle('hidden', m !== 'estudo');
   document.getElementById('painel-treino').classList.toggle('hidden', m !== 'treino');
   document.getElementById('painel-resultado').classList.toggle('hidden', m !== 'resultado');
+  document.getElementById('painel-matriz').classList.toggle('hidden', m !== 'matriz');
   document.getElementById('tab-estudo').classList.toggle('ativo', m === 'estudo');
   document.getElementById('tab-treino').classList.toggle('ativo', m === 'treino' || m === 'resultado');
+  document.getElementById('tab-matriz').classList.toggle('ativo', m === 'matriz');
   if (m === 'estudo') renderEstudo();
   if (m === 'treino') renderPerguntaTreino();
+  if (m === 'matriz') gerarMatriz();
+}
+
+// ============== MATRIZ COMPLETA ==============
+function gerarMatriz() {
+  const el = document.getElementById('matriz-grid');
+  if (!el) return;
+  let html = '<div class="m-cell m-corner">×</div>';
+  for (let c = 1; c <= 10; c++) html += `<div class="m-cell m-header">${c}</div>`;
+  for (let r = 1; r <= 10; r++) {
+    html += `<div class="m-cell m-header">${r}</div>`;
+    for (let c = 1; c <= 10; c++) {
+      let cls = 'm-cell m-prod';
+      if (r === c) cls += ' m-diag';
+      else if (c > r) cls += ' m-upper';
+      else cls += ' m-lower';
+      const dominado = nivelTabuada(r) === 3 || nivelTabuada(c) === 3;
+      if (dominado && c <= r) cls += ' m-dominado';
+      html += `<div class="${cls}" data-r="${r}" data-c="${c}" onclick="destacarMatriz(${r},${c})">${r * c}</div>`;
+    }
+  }
+  el.innerHTML = html;
+}
+
+function destacarMatriz(r, c) {
+  document.querySelectorAll('.m-cell.m-highlight, .m-cell.m-target').forEach(e => {
+    e.classList.remove('m-highlight', 'm-target');
+  });
+  document.querySelectorAll(`.m-cell[data-r="${r}"], .m-cell[data-c="${c}"]`).forEach(e => {
+    e.classList.add('m-highlight');
+  });
+  document.querySelectorAll(`.m-cell[data-r="${r}"][data-c="${c}"], .m-cell[data-r="${c}"][data-c="${r}"]`).forEach(e => {
+    e.classList.add('m-target');
+  });
 }
 
 // ============== INIT ==============
