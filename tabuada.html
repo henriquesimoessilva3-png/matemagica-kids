@@ -838,6 +838,38 @@
     </div>
   </div>
 
+  <div id="painel-penalti" class="hidden">
+    <div class="penalti-area">
+      <div class="penalti-header">
+        <div class="penalti-stats">
+          <span>⚽ Gols: <b id="pen-gols">0</b></span>
+          <span>🎯 Cobranças: <b id="pen-cobs">0</b></span>
+        </div>
+        <button class="estudo-btn" onclick="iniciarPenalti()">🔄 Reiniciar</button>
+      </div>
+      <div class="penalti-instrucao" id="pen-instr">Escolha onde chutar — cantos valem mais!</div>
+      <div class="penalti-campo">
+        <div class="pen-trave"></div>
+        <div class="pen-zona z-cima-esq" data-tipo="dificil" data-id="0" onclick="escolherZona(0)"><span class="z-conta" id="pen-c0">3×7</span><span class="z-tag">DIFÍCIL</span></div>
+        <div class="pen-zona z-cima-dir" data-tipo="dificil" data-id="1" onclick="escolherZona(1)"><span class="z-conta" id="pen-c1">5×8</span><span class="z-tag">DIFÍCIL</span></div>
+        <div class="pen-zona z-meia-esq" data-tipo="facil" data-id="2" onclick="escolherZona(2)"><span class="z-conta" id="pen-c2">2×3</span><span class="z-tag">fácil 50%</span></div>
+        <div class="pen-zona z-meia-dir" data-tipo="facil" data-id="3" onclick="escolherZona(3)"><span class="z-conta" id="pen-c3">5×2</span><span class="z-tag">fácil 50%</span></div>
+        <div class="pen-zona z-baixo-esq" data-tipo="dificil" data-id="4" onclick="escolherZona(4)"><span class="z-conta" id="pen-c4">9×4</span><span class="z-tag">DIFÍCIL</span></div>
+        <div class="pen-zona z-baixo-dir" data-tipo="dificil" data-id="5" onclick="escolherZona(5)"><span class="z-conta" id="pen-c5">6×2</span><span class="z-tag">DIFÍCIL</span></div>
+        <div class="pen-goleiro" id="pen-goleiro">🧤</div>
+        <div class="pen-bola" id="pen-bola">⚽</div>
+      </div>
+      <div class="penalti-quiz hidden" id="pen-quiz">
+        <div class="penalti-pergunta" id="pen-pergunta">3 × 7 = ?</div>
+        <div class="penalti-opcoes" id="pen-opcoes"></div>
+      </div>
+      <div class="penalti-msg hidden" id="pen-msg">
+        <div class="pen-msg-text" id="pen-msg-text">GOOOL! ⚽</div>
+        <button class="estudo-btn principal" onclick="proximaCobranca()">Próxima cobrança →</button>
+      </div>
+    </div>
+  </div>
+
   <div id="painel-jogo" class="hidden">
     <div class="jogo-area">
       <div class="jogo-header">
@@ -1399,11 +1431,11 @@ function destacarMatriz(r, c) {
   const cellCR = document.querySelector(`.m-prod[data-r="${c}"][data-c="${r}"]`);
   if (cellRC) {
     cellRC.classList.add('m-target');
-    cellRC.textContent = `${r}×${c}`;
+    cellRC.textContent = `${r}×${c}=${r * c}`;
   }
   if (cellCR && cellCR !== cellRC) {
     cellCR.classList.add('m-target');
-    cellCR.textContent = `${c}×${r}`;
+    cellCR.textContent = `${c}×${r}=${c * r}`;
   }
 }
 
