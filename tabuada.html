@@ -509,7 +509,7 @@
     grid-template-columns: repeat(11, minmax(0, 1fr));
     gap: 2px;
     width: 100%;
-    max-width: 480px;
+    max-width: 640px;
     margin: 0 auto;
   }
   .m-cell {
@@ -533,8 +533,10 @@
   }
   .m-target {
     font-size: 11px !important;
-    letter-spacing: 0px !important;
+    letter-spacing: -0.3px !important;
     font-weight: 700 !important;
+    overflow: visible !important;
+    white-space: nowrap !important;
   }
   .m-corner { background: transparent; cursor: default; }
   .m-header {
