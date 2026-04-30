@@ -984,6 +984,178 @@
     .cor-opcao { font-size: 22px !important; padding: 10px !important; }
   }
 
+  /* ===== CARROSSEL (sala de aula) ===== */
+  .cars-area {
+    background: linear-gradient(135deg, #fff5e8, #fde0c8);
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .cars-overlay { text-align: center; padding: 18px 12px; }
+  .cars-ov-titulo {
+    font-size: 22px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #6b54d3, #ff7b6b);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .cars-ov-texto { font-size: 13px; color: #5a3a00; margin-bottom: 14px; line-height: 1.4; }
+  .cars-alunos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .cars-aluno {
+    background: #fff;
+    border: 2px solid #ffd36b;
+    border-radius: 12px;
+    padding: 10px 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-family: inherit;
+  }
+  .cars-aluno:hover { background: #fff5d6; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(255,154,68,0.25); }
+  .ca-emoji { font-size: 36px; line-height: 1; }
+  .ca-nome { font-size: 12px; font-weight: 700; color: #6a4020; }
+
+  .cars-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    background: #fff;
+    padding: 6px 12px;
+    border-radius: 12px;
+    border: 1.5px solid #ffd36b;
+  }
+  .cars-aluno-info { font-size: 14px; font-weight: 700; color: #6a4020; display: flex; align-items: center; gap: 6px; }
+  .cars-aluno-info span:first-child { font-size: 22px; }
+  .cars-estrelas { font-size: 14px; font-weight: 800; color: #d99a40; }
+
+  .cars-sala {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .cars-prof {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 80px;
+  }
+  .cars-prof-emoji {
+    font-size: 44px;
+    line-height: 1;
+    background: #fff;
+    border: 2px solid #ff9a44;
+    border-radius: 50%;
+    width: 60px; height: 60px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(255,154,68,0.3);
+  }
+  .cars-prof-balao {
+    font-size: 10px;
+    background: #fff;
+    border: 1.5px solid #c5bbe9;
+    border-radius: 8px;
+    padding: 4px 6px;
+    color: #4a3b8a;
+    text-align: center;
+    line-height: 1.3;
+    width: 100%;
+  }
+  .cars-lousa {
+    background: linear-gradient(135deg, #2a4d2a, #1f3d1f);
+    border: 6px solid #8b5a2b;
+    border-radius: 8px;
+    padding: 14px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), 0 3px 8px rgba(0,0,0,0.2);
+  }
+  .cars-conta {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 900;
+    font-family: 'Caveat', 'Comic Sans MS', cursive;
+    letter-spacing: 1.5px;
+    text-shadow: 1px 1px 0 #fff5;
+  }
+
+  .cars-carteira {
+    background: linear-gradient(180deg, #ffe8a3, #ffd36b);
+    border: 2px solid #c89400;
+    border-radius: 10px;
+    padding: 8px;
+    position: relative;
+  }
+  .cars-carteira-tag {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: #fff;
+    padding: 2px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #6a4020;
+    border-radius: 8px;
+    border: 1.5px solid #c89400;
+  }
+  .cars-opcoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .cars-opcao {
+    background: #fff;
+    border: 2px solid #c5bbe9;
+    color: #4a3b8a;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .cars-opcao:hover { background: #ede8fa; }
+  .cars-opcao.acertou { background: #6ee7a8 !important; color: #1b4a2a !important; }
+  .cars-opcao.errou { background: #fca5a5 !important; color: #6b1a1a !important; }
+
+  .cars-fim {
+    background: #fff;
+    border: 3px solid #ff9a44;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+  }
+  .cars-fim-emoji { font-size: 56px; margin-bottom: 6px; line-height: 1; }
+  .cars-fim-texto {
+    font-size: 20px;
+    font-weight: 900;
+    color: #6a4020;
+    margin-bottom: 14px;
+  }
+
+  @media (min-width: 760px) {
+    .cars-ov-titulo { font-size: 28px !important; }
+    .cars-ov-texto { font-size: 15px !important; }
+    .ca-emoji { font-size: 44px !important; }
+    .ca-nome { font-size: 13px !important; }
+    .cars-prof-emoji { width: 70px !important; height: 70px !important; font-size: 50px !important; }
+    .cars-prof-balao { font-size: 12px !important; }
+    .cars-conta { font-size: 36px !important; }
+    .cars-opcao { font-size: 22px !important; padding: 12px !important; }
+  }
+
   /* ===== Cenario do gol + animacao da bola ===== */
   .pen-cenario {
     position: relative;
@@ -1356,6 +1528,7 @@
     <button class="modo-tab" id="tab-jogo" onclick="mudarModo('jogo')">🎯 Jogar</button>
     <button class="modo-tab" id="tab-penalti" onclick="mudarModo('penalti')">⚽ Pênalti</button>
     <button class="modo-tab" id="tab-corrida" onclick="mudarModo('corrida')">🏁 Corrida</button>
+    <button class="modo-tab" id="tab-carrossel" onclick="mudarModo('carrossel')">🎓 Carrossel</button>
   </div>
 
   <div id="painel-estudo">
@@ -1481,6 +1654,50 @@
           <div class="pen-msg-sub" id="pen-msg-sub"></div>
           <button class="estudo-btn principal" onclick="proximaCobranca()">Continuar →</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="painel-carrossel" class="hidden">
+    <div class="cars-area">
+      <div class="cars-overlay" id="cars-overlay">
+        <div class="cars-ov-titulo">🎓 Escola Encantada</div>
+        <div class="cars-ov-texto">Escolha o aluno e ajude ele a virar destaque da turma da Profa. Lena!</div>
+        <div class="cars-alunos">
+          <button class="cars-aluno" onclick="iniciarCarrossel('👧🏼','Joana')"><span class="ca-emoji">👧🏼</span><span class="ca-nome">Joana</span></button>
+          <button class="cars-aluno" onclick="iniciarCarrossel('👦🏿','Cesinha')"><span class="ca-emoji">👦🏿</span><span class="ca-nome">Cesinha</span></button>
+          <button class="cars-aluno" onclick="iniciarCarrossel('👧🏻','Vivi')"><span class="ca-emoji">👧🏻</span><span class="ca-nome">Vivi</span></button>
+          <button class="cars-aluno" onclick="iniciarCarrossel('👦🏼','Davi')"><span class="ca-emoji">👦🏼</span><span class="ca-nome">Davi</span></button>
+          <button class="cars-aluno" onclick="iniciarCarrossel('👦🏽','Tito')"><span class="ca-emoji">👦🏽</span><span class="ca-nome">Tito</span></button>
+          <button class="cars-aluno" onclick="iniciarCarrossel('👧🏽','Camila')"><span class="ca-emoji">👧🏽</span><span class="ca-nome">Camila</span></button>
+        </div>
+      </div>
+      <div class="cars-jogo hidden" id="cars-jogo">
+        <div class="cars-header">
+          <div class="cars-aluno-info">
+            <span id="cars-aluno-emoji">👧🏼</span>
+            <span id="cars-aluno-nome">Maria Joaquina</span>
+          </div>
+          <div class="cars-estrelas" id="cars-estrelas">⭐ 0/10</div>
+        </div>
+        <div class="cars-sala">
+          <div class="cars-prof">
+            <div class="cars-prof-emoji">👩‍🏫</div>
+            <div class="cars-prof-balao" id="cars-balao">Vamos lá, turma! Quanto é...</div>
+          </div>
+          <div class="cars-lousa">
+            <div class="cars-conta" id="cars-conta">5 × 7 = ?</div>
+          </div>
+        </div>
+        <div class="cars-carteira">
+          <div class="cars-carteira-tag">📒 Caderno</div>
+          <div class="cars-opcoes" id="cars-opcoes"></div>
+        </div>
+      </div>
+      <div class="cars-fim hidden" id="cars-fim">
+        <div class="cars-fim-emoji" id="cars-fim-emoji">🏆</div>
+        <div class="cars-fim-texto" id="cars-fim-texto">Aluno Destaque do Mês!</div>
+        <button class="estudo-btn principal" onclick="resetCarrossel()">🔄 Outra aula</button>
       </div>
     </div>
   </div>
@@ -1956,12 +2173,14 @@ function mudarModo(m) {
   document.getElementById('painel-jogo').classList.toggle('hidden', m !== 'jogo');
   document.getElementById('painel-penalti').classList.toggle('hidden', m !== 'penalti');
   document.getElementById('painel-corrida').classList.toggle('hidden', m !== 'corrida');
+  document.getElementById('painel-carrossel').classList.toggle('hidden', m !== 'carrossel');
   document.getElementById('tab-estudo').classList.toggle('ativo', m === 'estudo');
   document.getElementById('tab-treino').classList.toggle('ativo', m === 'treino' || m === 'resultado');
   document.getElementById('tab-matriz').classList.toggle('ativo', m === 'matriz');
   document.getElementById('tab-jogo').classList.toggle('ativo', m === 'jogo');
   document.getElementById('tab-penalti').classList.toggle('ativo', m === 'penalti');
   document.getElementById('tab-corrida').classList.toggle('ativo', m === 'corrida');
+  document.getElementById('tab-carrossel').classList.toggle('ativo', m === 'carrossel');
   if (m !== 'corrida' && _corEstado.intervalos) pararCorrida();
   if (m === 'estudo') renderEstudo();
   if (m === 'treino') renderPerguntaTreino();
@@ -2191,8 +2410,8 @@ function iniciarCorrida(userEmoji, userNome) {
     posicoes: [0, 0, 0, 0],
     emojis: [userEmoji, outros[0], outros[1], outros[2]],
     nomes: [userNome, nomesMap[outros[0]], nomesMap[outros[1]], nomesMap[outros[2]]],
-    velocidades: [0, 8 + Math.random()*4, 9 + Math.random()*5, 10 + Math.random()*6],
-    tempos: [0, 2400 + Math.random()*600, 2200 + Math.random()*600, 2000 + Math.random()*500],
+    velocidades: [0, 5 + Math.random()*3, 6 + Math.random()*3, 6 + Math.random()*4],
+    tempos: [0, 3200 + Math.random()*800, 3000 + Math.random()*800, 2800 + Math.random()*700],
     ativo: true, intervalos: [], expr: null, tempoRestante: 5, tempoTimer: null
   };
   document.getElementById('cor-overlay').classList.add('hidden');
@@ -2305,6 +2524,96 @@ function terminarCorrida(vencedorIdx) {
 function resetCorrida() {
   document.getElementById('cor-fim').classList.add('hidden');
   document.getElementById('cor-overlay').classList.remove('hidden');
+}
+
+// ============== CARROSSEL (Escola Encantada) ==============
+const CARS_BALOES_ACERTO = [
+  'Muito bem, {n}! Excelente!',
+  'Que esperto(a), {n}!',
+  'Resposta certa, {n}! 🌟',
+  '{n} acertou! A turma aplaude 👏',
+  'Brilhante, {n}!'
+];
+const CARS_BALOES_ERRO = [
+  'Quase, {n}! Tenta de novo.',
+  'Não foi dessa vez, {n}.',
+  'Calma, {n}, pensa bem.',
+  '{n}, atenção na conta!'
+];
+const CARS_BALOES_PERGUNTA = [
+  'Turma, quanto é...',
+  'Vamos lá! Quanto é...',
+  '{n}, me diga: quanto é...',
+  'Atenção na lousa: quanto é...'
+];
+let _carsEstado = { aluno: '', emoji: '', estrelas: 0, expr: null, ativo: false };
+
+function carsRand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function carsPick(arr) { return arr[carsRand(0, arr.length - 1)]; }
+
+function iniciarCarrossel(emoji, nome) {
+  _carsEstado = { aluno: nome, emoji, estrelas: 0, expr: null, ativo: true };
+  document.getElementById('cars-overlay').classList.add('hidden');
+  document.getElementById('cars-jogo').classList.remove('hidden');
+  document.getElementById('cars-fim').classList.add('hidden');
+  document.getElementById('cars-aluno-emoji').textContent = emoji;
+  document.getElementById('cars-aluno-nome').textContent = nome;
+  proximaContaCarrossel();
+}
+
+function proximaContaCarrossel() {
+  if (!_carsEstado.ativo) return;
+  const a = carsRand(2, 10);
+  const b = carsRand(2, 10);
+  _carsEstado.expr = { a, b, prod: a * b };
+  document.getElementById('cars-conta').textContent = `${a} × ${b} = ?`;
+  document.getElementById('cars-balao').textContent = carsPick(CARS_BALOES_PERGUNTA).replace('{n}', _carsEstado.aluno);
+  // 4 opções
+  const opts = new Set([a*b]);
+  while (opts.size < 4) {
+    const op = a*b + carsRand(-12, 12);
+    if (op > 0 && op !== a*b) opts.add(op);
+  }
+  const arr = [...opts].sort(() => Math.random() - 0.5);
+  document.getElementById('cars-opcoes').innerHTML = arr.map(o =>
+    `<button class="cars-opcao" onclick="responderCarrossel(${o})">${o}</button>`
+  ).join('');
+  document.getElementById('cars-estrelas').textContent = `⭐ ${_carsEstado.estrelas}/10`;
+}
+
+function responderCarrossel(resp) {
+  if (!_carsEstado.ativo) return;
+  const acertou = resp === _carsEstado.expr.prod;
+  document.querySelectorAll('.cars-opcao').forEach(b => {
+    if (parseInt(b.textContent) === _carsEstado.expr.prod) b.classList.add('acertou');
+    else if (parseInt(b.textContent) === resp) b.classList.add('errou');
+  });
+  if (acertou) {
+    _carsEstado.estrelas++;
+    document.getElementById('cars-balao').textContent = carsPick(CARS_BALOES_ACERTO).replace('{n}', _carsEstado.aluno);
+    if (_carsEstado.estrelas >= 10) {
+      setTimeout(() => terminarCarrossel(true), 800);
+      return;
+    }
+  } else {
+    document.getElementById('cars-balao').textContent = carsPick(CARS_BALOES_ERRO).replace('{n}', _carsEstado.aluno);
+  }
+  setTimeout(() => proximaContaCarrossel(), 1100);
+}
+
+function terminarCarrossel(venceu) {
+  _carsEstado.ativo = false;
+  document.getElementById('cars-jogo').classList.add('hidden');
+  document.getElementById('cars-fim').classList.remove('hidden');
+  if (venceu) {
+    document.getElementById('cars-fim-emoji').textContent = '🏆';
+    document.getElementById('cars-fim-texto').innerHTML = `${_carsEstado.emoji} <b>${_carsEstado.aluno}</b> virou Aluno Destaque do Mês!<br>10 estrelas no caderno ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐`;
+  }
+}
+
+function resetCarrossel() {
+  document.getElementById('cars-fim').classList.add('hidden');
+  document.getElementById('cars-overlay').classList.remove('hidden');
 }
 
 function finalDaFasePen() {
