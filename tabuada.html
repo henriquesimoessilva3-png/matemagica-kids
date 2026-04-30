@@ -852,6 +852,17 @@
     margin-bottom: 8px;
   }
   .cor-ov-texto { font-size: 13px; color: #4a3b8a; margin-bottom: 14px; }
+  .cor-nivel-info {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffd36b, #ff9a44);
+    color: #6a4020;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 4px 14px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    border: 1.5px solid #d99a40;
+  }
   .cor-personagens {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1154,6 +1165,237 @@
     .cars-prof-balao { font-size: 12px !important; }
     .cars-conta { font-size: 36px !important; }
     .cars-opcao { font-size: 22px !important; padding: 12px !important; }
+  }
+
+  /* ===== MAGICO KART ===== */
+  .kart-area {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .kart-overlay { text-align: center; padding: 16px 12px; }
+  .kart-ov-titulo {
+    font-size: 22px; font-weight: 900;
+    background: linear-gradient(135deg, #6b54d3, #ff7b6b);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .kart-ov-texto { font-size: 13px; color: #4a3b8a; margin-bottom: 12px; line-height: 1.4; }
+  .kart-ov-escolha { font-size: 13px; font-weight: 700; color: #6b54d3; margin-bottom: 8px; }
+  .kart-pilotos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .kart-piloto {
+    background: #fff; border: 2px solid #c5bbe9; border-radius: 12px;
+    padding: 10px 6px; cursor: pointer; transition: all 0.15s;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    font-family: inherit;
+  }
+  .kart-piloto:hover { background: #ede8fa; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(107,84,211,0.25); }
+  .kp-emoji { font-size: 36px; line-height: 1; }
+  .kp-nome { font-size: 12px; font-weight: 700; color: #4a3b8a; }
+
+  .kart-hud {
+    display: flex; justify-content: space-between; gap: 6px;
+    margin-bottom: 6px;
+  }
+  .kart-hud-item {
+    background: #fff; padding: 4px 10px; border-radius: 10px;
+    font-size: 13px; font-weight: 700; color: #4a3b8a;
+    border: 1.5px solid #c5bbe9; flex: 1; text-align: center; white-space: nowrap;
+  }
+
+  .kart-pista {
+    position: relative;
+    height: 200px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1.5px #c5bbe9;
+    margin-bottom: 8px;
+  }
+  .kart-ceu {
+    position: absolute; top: 0; left: 0; right: 0; height: 40%;
+    background: linear-gradient(180deg, #87ceeb 0%, #b3e0f7 100%);
+  }
+  .kart-asfalto {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+    background: linear-gradient(180deg, #6b6b7a 0%, #4a4a5a 70%, #3a3a4a 100%);
+    clip-path: polygon(40% 0%, 60% 0%, 100% 100%, 0% 100%);
+  }
+  .kart-borda {
+    position: absolute; bottom: 0; width: 6px;
+    background: repeating-linear-gradient(180deg, #fff 0 12px, #d04040 12px 24px);
+    z-index: 1;
+  }
+  .kart-borda-esq { left: 0; height: 60%; transform: skew(-15deg); transform-origin: bottom; }
+  .kart-borda-dir { right: 0; height: 60%; transform: skew(15deg); transform-origin: bottom; }
+  .kart-faixa {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 6px; background: #fff; border-radius: 2px;
+    animation: kart-faixa-anim 0.6s linear infinite;
+  }
+  .kart-faixa-1 { bottom: 5%; height: 30px; }
+  .kart-faixa-2 { bottom: 25%; height: 18px; }
+  .kart-faixa-3 { bottom: 42%; height: 10px; }
+  @keyframes kart-faixa-anim {
+    0% { opacity: 0.3; transform: translateX(-50%) scale(0.5); }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; transform: translateX(-50%) scale(1.5) translateY(20px); }
+  }
+
+  .kart-veiculo {
+    position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+    font-size: 56px; line-height: 1;
+    z-index: 3;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+  }
+  .kart-conta-flutuante {
+    position: absolute; top: 30%; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg, #ffd36b, #ff9a44);
+    color: #4a3b8a;
+    font-size: 22px; font-weight: 900;
+    padding: 6px 16px;
+    border-radius: 12px;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    z-index: 2;
+    animation: kart-conta-aproxima 1.2s ease-in forwards;
+  }
+  @keyframes kart-conta-aproxima {
+    0% { top: 5%; transform: translateX(-50%) scale(0.4); opacity: 0.6; }
+    100% { top: 50%; transform: translateX(-50%) scale(1); opacity: 1; }
+  }
+  .kart-feedback {
+    position: absolute; top: 30%; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.7); color: #fff;
+    padding: 6px 14px; border-radius: 10px;
+    font-size: 18px; font-weight: 900;
+    z-index: 4;
+    animation: kart-feedback-anim 1s ease-out forwards;
+  }
+  .kart-feedback.acerto { background: rgba(46,189,124,0.9); }
+  .kart-feedback.erro { background: rgba(208,64,64,0.9); }
+  @keyframes kart-feedback-anim {
+    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    20%, 80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+  }
+
+  .kart-quiz {
+    background: #fff;
+    border: 2.5px solid #ffd36b;
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
+  .kart-quiz-timer-bar {
+    height: 6px;
+    background: #f0eaff;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .kart-timer-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6ee7a8, #ffd36b, #d04040);
+    transition: width 0.1s linear;
+    width: 100%;
+  }
+  .kart-pergunta {
+    font-size: 24px; font-weight: 900; color: #4a3b8a;
+    text-align: center; margin-bottom: 8px;
+  }
+  .kart-opcoes {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px;
+  }
+  .kart-opcao {
+    background: #f7f5ff; border: 2px solid #c5bbe9; color: #4a3b8a;
+    padding: 8px 4px; font-size: 18px; font-weight: 800;
+    border-radius: 10px; cursor: pointer; font-family: inherit;
+  }
+  .kart-opcao:hover { background: #ede8fa; }
+  .kart-opcao.acertou { background: #6ee7a8 !important; color: #1b4a2a !important; }
+  .kart-opcao.errou { background: #fca5a5 !important; color: #6b1a1a !important; }
+
+  .kart-rival {
+    position: absolute;
+    bottom: 60px;
+    left: 18%;
+    font-size: 32px;
+    z-index: 2;
+    transition: transform 0.4s ease-out, opacity 0.3s, left 0.5s;
+    filter: drop-shadow(0 3px 4px rgba(0,0,0,0.4));
+  }
+  .kart-rival.lento { animation: kart-rival-slip 1s; }
+  @keyframes kart-rival-slip {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-30deg) translateX(-8px); }
+    75% { transform: rotate(30deg) translateX(8px); }
+  }
+
+  .kart-itens {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .kart-item {
+    background: #fff;
+    border: 2px solid #c5bbe9;
+    border-radius: 10px;
+    padding: 4px 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #4a3b8a;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .kart-item:hover:not(:disabled) { background: #ede8fa; transform: translateY(-2px); }
+  .kart-item:disabled { opacity: 0.35; cursor: default; }
+  .kart-item span { font-size: 13px; font-weight: 800; color: #6b54d3; }
+
+  .kart-sorteio {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #ffd36b, #ff9a44);
+    border: 4px solid #fff;
+    border-radius: 16px;
+    padding: 20px 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    z-index: 10;
+    text-align: center;
+    animation: kart-sorteio-pop 0.4s ease-out;
+  }
+  @keyframes kart-sorteio-pop {
+    0% { transform: translate(-50%, -50%) scale(0); }
+    70% { transform: translate(-50%, -50%) scale(1.2); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+  }
+  .kart-sorteio-titulo { font-size: 14px; font-weight: 700; color: #6a4020; margin-bottom: 6px; }
+  .kart-sorteio-item { font-size: 60px; line-height: 1; }
+
+  .kart-fim {
+    background: #fff; border: 3px solid #6b54d3;
+    border-radius: 14px; padding: 18px; text-align: center;
+  }
+  .kart-fim-emoji { font-size: 60px; margin-bottom: 6px; line-height: 1; }
+  .kart-fim-texto {
+    font-size: 22px; font-weight: 900; color: #6b54d3;
+    margin-bottom: 14px;
+  }
+
+  @media (min-width: 760px) {
+    .kart-ov-titulo { font-size: 28px !important; }
+    .kart-pista { height: 260px !important; }
+    .kart-veiculo { font-size: 72px !important; }
+    .kart-conta-flutuante { font-size: 28px !important; padding: 8px 20px !important; }
+    .kart-pergunta { font-size: 30px !important; }
+    .kart-opcao { font-size: 22px !important; padding: 12px 6px !important; }
+    .kp-emoji { font-size: 44px !important; }
   }
 
   /* ===== Cenario do gol + animacao da bola ===== */
@@ -1529,6 +1771,7 @@
     <button class="modo-tab" id="tab-penalti" onclick="mudarModo('penalti')">⚽ Pênalti</button>
     <button class="modo-tab" id="tab-corrida" onclick="mudarModo('corrida')">🏁 Corrida</button>
     <button class="modo-tab" id="tab-carrossel" onclick="mudarModo('carrossel')">🎓 Escola Encantada</button>
+    <button class="modo-tab" id="tab-kart" onclick="mudarModo('kart')">🏎️ Mágico Kart</button>
   </div>
 
   <div id="painel-estudo">
@@ -1702,11 +1945,69 @@
     </div>
   </div>
 
+  <div id="painel-kart" class="hidden">
+    <div class="kart-area">
+      <div class="kart-overlay" id="kart-overlay">
+        <div class="kart-ov-titulo">🏎️ Mágico Kart</div>
+        <div class="kart-ov-texto">Acerte as contas pra acelerar! Chegue aos <b>500m</b> antes do tempo acabar.</div>
+        <div class="kart-ov-escolha">Escolha seu piloto:</div>
+        <div class="kart-pilotos">
+          <button class="kart-piloto" onclick="iniciarKart('🦄','Unicórnio')"><span class="kp-emoji">🦄</span><span class="kp-nome">Unicórnio</span></button>
+          <button class="kart-piloto" onclick="iniciarKart('🐉','Dragão')"><span class="kp-emoji">🐉</span><span class="kp-nome">Dragão</span></button>
+          <button class="kart-piloto" onclick="iniciarKart('🦊','Raposa')"><span class="kp-emoji">🦊</span><span class="kp-nome">Raposa</span></button>
+          <button class="kart-piloto" onclick="iniciarKart('🐢','Tartaruga')"><span class="kp-emoji">🐢</span><span class="kp-nome">Tartaruga</span></button>
+          <button class="kart-piloto" onclick="iniciarKart('🐱','Gato')"><span class="kp-emoji">🐱</span><span class="kp-nome">Gato</span></button>
+          <button class="kart-piloto" onclick="iniciarKart('🐰','Coelho')"><span class="kp-emoji">🐰</span><span class="kp-nome">Coelho</span></button>
+        </div>
+      </div>
+      <div class="kart-jogo hidden" id="kart-jogo">
+        <div class="kart-hud">
+          <span class="kart-hud-item">🏁 <span id="kart-dist">0</span>/500m</span>
+          <span class="kart-hud-item">⭐ <span id="kart-estrelas">0</span></span>
+          <span class="kart-hud-item">⏱ <span id="kart-tempo">90</span>s</span>
+        </div>
+        <div class="kart-pista" id="kart-pista">
+          <div class="kart-ceu"></div>
+          <div class="kart-asfalto"></div>
+          <div class="kart-borda kart-borda-esq"></div>
+          <div class="kart-borda kart-borda-dir"></div>
+          <div class="kart-faixa kart-faixa-1"></div>
+          <div class="kart-faixa kart-faixa-2"></div>
+          <div class="kart-faixa kart-faixa-3"></div>
+          <div class="kart-rival" id="kart-rival">🦊</div>
+          <div class="kart-conta-flutuante hidden" id="kart-conta-flutuante">7 × 8</div>
+          <div class="kart-veiculo" id="kart-veiculo">🦄</div>
+          <div class="kart-feedback hidden" id="kart-feedback">+50m</div>
+        </div>
+        <div class="kart-itens" id="kart-itens">
+          <button class="kart-item" onclick="usarItemKart('banana')">🍌 <span id="kart-qty-banana">0</span></button>
+          <button class="kart-item" onclick="usarItemKart('casco')">🐢 <span id="kart-qty-casco">0</span></button>
+          <button class="kart-item" onclick="usarItemKart('turbo')">🚀 <span id="kart-qty-turbo">0</span></button>
+        </div>
+        <div class="kart-sorteio hidden" id="kart-sorteio">
+          <div class="kart-sorteio-titulo">Você ganhou:</div>
+          <div class="kart-sorteio-item" id="kart-sorteio-item">🎁</div>
+        </div>
+        <div class="kart-quiz hidden" id="kart-quiz">
+          <div class="kart-quiz-timer-bar"><div class="kart-timer-fill" id="kart-timer-fill"></div></div>
+          <div class="kart-pergunta" id="kart-pergunta">7 × 8 = ?</div>
+          <div class="kart-opcoes" id="kart-opcoes"></div>
+        </div>
+      </div>
+      <div class="kart-fim hidden" id="kart-fim">
+        <div class="kart-fim-emoji" id="kart-fim-emoji">🏆</div>
+        <div class="kart-fim-texto" id="kart-fim-texto">Chegou na meta!</div>
+        <button class="estudo-btn principal" onclick="resetKart()">🔄 Correr de novo</button>
+      </div>
+    </div>
+  </div>
+
   <div id="painel-corrida" class="hidden">
     <div class="corrida-area">
       <div class="cor-overlay" id="cor-overlay">
         <div class="cor-ov-titulo">🏁 Corrida da Tabuada</div>
-        <div class="cor-ov-texto">Escolha seu corredor — vai disputar com os outros 3!</div>
+        <div class="cor-nivel-info" id="cor-nivel-info">Nível 1 · Bronze 🥉</div>
+        <div class="cor-ov-texto">Escolha seu corredor — venha 5 níveis pra ser CAMPEÃO!</div>
         <div class="cor-personagens">
           <button class="cor-pers" onclick="iniciarCorrida('🦄', 'Unicórnio')"><span class="cp-emoji">🦄</span><span class="cp-nome">Unicórnio</span></button>
           <button class="cor-pers" onclick="iniciarCorrida('🐱', 'Gato')"><span class="cp-emoji">🐱</span><span class="cp-nome">Gato</span></button>
@@ -2174,6 +2475,7 @@ function mudarModo(m) {
   document.getElementById('painel-penalti').classList.toggle('hidden', m !== 'penalti');
   document.getElementById('painel-corrida').classList.toggle('hidden', m !== 'corrida');
   document.getElementById('painel-carrossel').classList.toggle('hidden', m !== 'carrossel');
+  document.getElementById('painel-kart').classList.toggle('hidden', m !== 'kart');
   document.getElementById('tab-estudo').classList.toggle('ativo', m === 'estudo');
   document.getElementById('tab-treino').classList.toggle('ativo', m === 'treino' || m === 'resultado');
   document.getElementById('tab-matriz').classList.toggle('ativo', m === 'matriz');
@@ -2181,6 +2483,8 @@ function mudarModo(m) {
   document.getElementById('tab-penalti').classList.toggle('ativo', m === 'penalti');
   document.getElementById('tab-corrida').classList.toggle('ativo', m === 'corrida');
   document.getElementById('tab-carrossel').classList.toggle('ativo', m === 'carrossel');
+  document.getElementById('tab-kart').classList.toggle('ativo', m === 'kart');
+  if (m !== 'kart' && _kartEstado.intervalos) pararKart();
   if (m !== 'corrida' && _corEstado.intervalos) pararCorrida();
   if (m === 'estudo') renderEstudo();
   if (m === 'treino') renderPerguntaTreino();
@@ -2397,7 +2701,11 @@ function mostrarResPen(res, sub) {
 
 // ============== CORRIDA DA TABUADA ==============
 const COR_PERSONAGENS = ['🦄', '🐱', '🐶', '🐰'];
-let _corEstado = { userIdx: 0, posicoes: [0,0,0,0], nomes: [], emojis: [], ativo: false, intervalos: null, expr: null, tempoRestante: 5, tempoTimer: null };
+const COR_PREMIOS = ['🥉', '🥈', '🥇', '💎', '🏆'];
+const COR_NIVEL_NOMES = ['Bronze', 'Prata', 'Ouro', 'Diamante', 'CAMPEÃO'];
+let _corNivel = 1;  // persiste entre corridas
+let _corPremiosGanhos = [];
+let _corEstado = { userIdx: 0, posicoes: [0,0,0,0], nomes: [], emojis: [], ativo: false, intervalos: null, expr: null, tempoRestante: 5, tempoTimer: null, nivel: 1 };
 
 function corRand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
@@ -2405,14 +2713,19 @@ function iniciarCorrida(userEmoji, userNome) {
   // Monta lista: user no idx 0, outros 3 aleatorios
   const outros = COR_PERSONAGENS.filter(e => e !== userEmoji);
   const nomesMap = { '🦄': 'Unicórnio', '🐱': 'Gato', '🐶': 'Cachorro', '🐰': 'Coelho' };
+  // Velocidade aumenta por nivel (1=atual, 5=mais rapido que original)
+  const n = _corNivel;
+  const velBase = 4 + n * 1.2;  // n=1: 5.2, n=5: 10
+  const tempoBase = 3500 - n * 250;  // n=1: 3250, n=5: 2250
   _corEstado = {
     userIdx: 0,
     posicoes: [0, 0, 0, 0],
     emojis: [userEmoji, outros[0], outros[1], outros[2]],
     nomes: [userNome, nomesMap[outros[0]], nomesMap[outros[1]], nomesMap[outros[2]]],
-    velocidades: [0, 5 + Math.random()*3, 6 + Math.random()*3, 6 + Math.random()*4],
-    tempos: [0, 3200 + Math.random()*800, 3000 + Math.random()*800, 2800 + Math.random()*700],
-    ativo: true, intervalos: [], expr: null, tempoRestante: 5, tempoTimer: null
+    velocidades: [0, velBase + Math.random()*2, velBase + 0.5 + Math.random()*2, velBase + 1 + Math.random()*2.5],
+    tempos: [0, tempoBase + Math.random()*400, tempoBase + Math.random()*400, tempoBase - 200 + Math.random()*400],
+    ativo: true, intervalos: [], expr: null, tempoRestante: 5, tempoTimer: null,
+    nivel: n
   };
   document.getElementById('cor-overlay').classList.add('hidden');
   document.getElementById('cor-jogo').classList.remove('hidden');
@@ -2513,17 +2826,35 @@ function terminarCorrida(vencedorIdx) {
   document.getElementById('cor-jogo').classList.add('hidden');
   document.getElementById('cor-fim').classList.remove('hidden');
   if (vencedorIdx === _corEstado.userIdx) {
-    document.getElementById('cor-fim-emoji').textContent = '🏆';
-    document.getElementById('cor-fim-texto').textContent = `Você venceu com ${_corEstado.emojis[0]} ${_corEstado.nomes[0]}!`;
+    const nivelAtual = _corEstado.nivel;
+    const premio = COR_PREMIOS[nivelAtual - 1];
+    const nomePremio = COR_NIVEL_NOMES[nivelAtual - 1];
+    _corPremiosGanhos.push(premio);
+    document.getElementById('cor-fim-emoji').textContent = premio;
+    if (nivelAtual >= 5) {
+      // Venceu o ultimo nivel - resetar pra reiniciar
+      document.getElementById('cor-fim-texto').innerHTML = `🏆 <b>CAMPEÃO ABSOLUTO!</b><br>${_corEstado.emojis[0]} ${_corEstado.nomes[0]} venceu os 5 níveis!<br>Prêmios: ${_corPremiosGanhos.join(' ')}`;
+      _corNivel = 1;
+      _corPremiosGanhos = [];
+    } else {
+      _corNivel = nivelAtual + 1;
+      document.getElementById('cor-fim-texto').innerHTML = `Vitória no nível ${nivelAtual} <b>${nomePremio}</b>!<br>Prêmio: ${premio}<br>Próximo: nível ${_corNivel} <b>${COR_NIVEL_NOMES[_corNivel - 1]}</b> (mais rápido!)`;
+    }
   } else {
     document.getElementById('cor-fim-emoji').textContent = '😢';
-    document.getElementById('cor-fim-texto').textContent = `${_corEstado.emojis[vencedorIdx]} ${_corEstado.nomes[vencedorIdx]} chegou primeiro!`;
+    document.getElementById('cor-fim-texto').innerHTML = `${_corEstado.emojis[vencedorIdx]} <b>${_corEstado.nomes[vencedorIdx]}</b> chegou primeiro no nível ${_corEstado.nivel}!<br>Tente de novo!`;
   }
 }
 
 function resetCorrida() {
   document.getElementById('cor-fim').classList.add('hidden');
   document.getElementById('cor-overlay').classList.remove('hidden');
+  // Atualiza info do nivel
+  const niv = _corNivel;
+  const premio = COR_PREMIOS[niv - 1];
+  const nome = COR_NIVEL_NOMES[niv - 1];
+  const ganhos = _corPremiosGanhos.length ? ` · já ganhou ${_corPremiosGanhos.join(' ')}` : '';
+  document.getElementById('cor-nivel-info').innerHTML = `Nível ${niv} · ${nome} ${premio}${ganhos}`;
 }
 
 // ============== CARROSSEL (Escola Encantada) ==============
@@ -2614,6 +2945,219 @@ function terminarCarrossel(venceu) {
 function resetCarrossel() {
   document.getElementById('cars-fim').classList.add('hidden');
   document.getElementById('cars-overlay').classList.remove('hidden');
+}
+
+// ============== MAGICO KART ==============
+let _kartEstado = { piloto: '🦄', nome: 'Unicórnio', dist: 0, distRival: 0, estrelas: 0, tempo: 90, expr: null, ativo: false, intervalos: null, quizTimer: null, itens: { banana: 0, casco: 0, turbo: 0 }, rivalLento: 0 };
+
+function kartRand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function iniciarKart(emoji, nome) {
+  _kartEstado = { piloto: emoji, nome, dist: 0, distRival: 0, estrelas: 0, tempo: 90, expr: null, ativo: true, intervalos: [], quizTimer: null, itens: { banana: 0, casco: 0, turbo: 0 }, rivalLento: 0 };
+  document.getElementById('kart-overlay').classList.add('hidden');
+  document.getElementById('kart-jogo').classList.remove('hidden');
+  document.getElementById('kart-fim').classList.add('hidden');
+  document.getElementById('kart-veiculo').textContent = emoji;
+  atualizarHudKart();
+  atualizarItensKart();
+  // Timer global
+  _kartEstado.intervalos.push(setInterval(() => {
+    if (!_kartEstado.ativo) return;
+    _kartEstado.tempo--;
+    if (_kartEstado.tempo <= 0) terminarKart('tempo');
+    atualizarHudKart();
+  }, 1000));
+  // Rival avanca a cada 2s ~3-5m (lento, manageable)
+  _kartEstado.intervalos.push(setInterval(() => {
+    if (!_kartEstado.ativo || _kartEstado.rivalLento > 0) {
+      _kartEstado.rivalLento = Math.max(0, _kartEstado.rivalLento - 1);
+      return;
+    }
+    _kartEstado.distRival = Math.min(500, _kartEstado.distRival + kartRand(3, 6));
+    if (_kartEstado.distRival >= 500) terminarKart('rival');
+    atualizarRivalPos();
+  }, 2000));
+  proximaContaKart();
+}
+
+function atualizarHudKart() {
+  document.getElementById('kart-dist').textContent = _kartEstado.dist;
+  document.getElementById('kart-estrelas').textContent = _kartEstado.estrelas;
+  document.getElementById('kart-tempo').textContent = _kartEstado.tempo;
+}
+
+function atualizarItensKart() {
+  document.getElementById('kart-qty-banana').textContent = _kartEstado.itens.banana;
+  document.getElementById('kart-qty-casco').textContent = _kartEstado.itens.casco;
+  document.getElementById('kart-qty-turbo').textContent = _kartEstado.itens.turbo;
+}
+
+function atualizarRivalPos() {
+  // Rival avanca visualmente conforme distRival se aproxima de user
+  const rival = document.getElementById('kart-rival');
+  if (rival) {
+    const diff = _kartEstado.distRival - _kartEstado.dist;
+    // Quando rival passa user, ele "sai" da tela. Quando user passa rival, rival fica perto da linha de fundo
+    const top = Math.max(50, Math.min(140, 100 - diff * 0.3));
+    rival.style.bottom = top + 'px';
+  }
+}
+
+function proximaContaKart() {
+  if (!_kartEstado.ativo) return;
+  const a = kartRand(2, 10);
+  const b = kartRand(2, 10);
+  _kartEstado.expr = { a, b, prod: a * b };
+  // Mostra conta voando
+  const fl = document.getElementById('kart-conta-flutuante');
+  fl.classList.remove('hidden');
+  fl.textContent = `${a} × ${b}`;
+  fl.style.animation = 'none';
+  void fl.offsetWidth;
+  fl.style.animation = '';
+  // Apos 1.2s (animacao termina), mostra quiz com timer
+  setTimeout(() => {
+    if (!_kartEstado.ativo) return;
+    fl.classList.add('hidden');
+    abrirQuizKart();
+  }, 1200);
+}
+
+function abrirQuizKart() {
+  document.getElementById('kart-quiz').classList.remove('hidden');
+  document.getElementById('kart-pergunta').textContent = `${_kartEstado.expr.a} × ${_kartEstado.expr.b} = ?`;
+  // 4 opcoes
+  const certa = _kartEstado.expr.prod;
+  const opts = new Set([certa]);
+  while (opts.size < 4) {
+    const op = certa + kartRand(-15, 15);
+    if (op > 0 && op !== certa) opts.add(op);
+  }
+  const arr = [...opts].sort(() => Math.random() - 0.5);
+  document.getElementById('kart-opcoes').innerHTML = arr.map(o =>
+    `<button class="kart-opcao" onclick="responderKart(${o})">${o}</button>`
+  ).join('');
+  // Timer 5s com barra
+  let pct = 100;
+  document.getElementById('kart-timer-fill').style.width = '100%';
+  if (_kartEstado.quizTimer) clearInterval(_kartEstado.quizTimer);
+  _kartEstado.quizTimer = setInterval(() => {
+    pct -= 2;
+    document.getElementById('kart-timer-fill').style.width = pct + '%';
+    if (pct <= 0) {
+      clearInterval(_kartEstado.quizTimer);
+      responderKart(-1);  // tempo esgotado
+    }
+  }, 100);
+}
+
+function responderKart(resp) {
+  if (!_kartEstado.ativo) return;
+  if (_kartEstado.quizTimer) { clearInterval(_kartEstado.quizTimer); _kartEstado.quizTimer = null; }
+  const certo = resp === _kartEstado.expr.prod;
+  document.querySelectorAll('.kart-opcao').forEach(b => {
+    if (parseInt(b.textContent) === _kartEstado.expr.prod) b.classList.add('acertou');
+    else if (parseInt(b.textContent) === resp) b.classList.add('errou');
+  });
+  if (certo) {
+    _kartEstado.dist = Math.min(500, _kartEstado.dist + 50);
+    _kartEstado.estrelas++;
+    atualizarRivalPos();
+    showFeedbackKart('+50m', 'acerto');
+    sortearPremioKart();
+    if (_kartEstado.dist >= 500) { setTimeout(() => terminarKart('venceu'), 800); return; }
+  } else {
+    showFeedbackKart('Errou! 🚧', 'erro');
+  }
+  atualizarHudKart();
+  setTimeout(() => {
+    document.getElementById('kart-quiz').classList.add('hidden');
+    proximaContaKart();
+  }, 1500);
+}
+
+function showFeedbackKart(txt, cls) {
+  const fb = document.getElementById('kart-feedback');
+  fb.textContent = txt;
+  fb.className = 'kart-feedback ' + cls;
+  fb.classList.remove('hidden');
+  setTimeout(() => fb.classList.add('hidden'), 1000);
+}
+
+function sortearPremioKart() {
+  // Premio aleatorio: banana 40%, casco 25%, turbo 25%, nada 10%
+  const r = Math.random();
+  let item, emoji;
+  if (r < 0.4) { item = 'banana'; emoji = '🍌'; }
+  else if (r < 0.65) { item = 'casco'; emoji = '🐢'; }
+  else if (r < 0.9) { item = 'turbo'; emoji = '🚀'; }
+  else { return; }  // azar - nao ganhou item
+  _kartEstado.itens[item]++;
+  atualizarItensKart();
+  // Mostra sorteio
+  const sort = document.getElementById('kart-sorteio');
+  document.getElementById('kart-sorteio-item').textContent = emoji;
+  sort.classList.remove('hidden');
+  sort.style.animation = 'none';
+  void sort.offsetWidth;
+  sort.style.animation = '';
+  setTimeout(() => sort.classList.add('hidden'), 900);
+}
+
+function usarItemKart(tipo) {
+  if (!_kartEstado.ativo || _kartEstado.itens[tipo] <= 0) return;
+  _kartEstado.itens[tipo]--;
+  atualizarItensKart();
+  if (tipo === 'banana') {
+    // Rival escorrega: para de avancar 4s
+    _kartEstado.rivalLento = 2;  // 2 ciclos de 2s = 4s
+    document.getElementById('kart-rival').classList.add('lento');
+    setTimeout(() => document.getElementById('kart-rival').classList.remove('lento'), 1000);
+    showFeedbackKart('🍌 Rival escorregou!', 'acerto');
+  } else if (tipo === 'casco') {
+    // Casco acerta rival: rival recua 30m
+    _kartEstado.distRival = Math.max(0, _kartEstado.distRival - 30);
+    _kartEstado.rivalLento = 1;
+    document.getElementById('kart-rival').classList.add('lento');
+    setTimeout(() => document.getElementById('kart-rival').classList.remove('lento'), 800);
+    atualizarRivalPos();
+    showFeedbackKart('🐢 Casco acertou!', 'acerto');
+  } else if (tipo === 'turbo') {
+    _kartEstado.dist = Math.min(500, _kartEstado.dist + 80);
+    atualizarHudKart();
+    atualizarRivalPos();
+    showFeedbackKart('🚀 Turbo +80m!', 'acerto');
+    if (_kartEstado.dist >= 500) terminarKart('venceu');
+  }
+}
+
+function pararKart() {
+  _kartEstado.ativo = false;
+  if (_kartEstado.intervalos) _kartEstado.intervalos.forEach(id => clearInterval(id));
+  if (_kartEstado.quizTimer) clearInterval(_kartEstado.quizTimer);
+  _kartEstado.intervalos = null;
+  _kartEstado.quizTimer = null;
+}
+
+function terminarKart(razao) {
+  pararKart();
+  document.getElementById('kart-jogo').classList.add('hidden');
+  document.getElementById('kart-fim').classList.remove('hidden');
+  if (razao === 'venceu') {
+    document.getElementById('kart-fim-emoji').textContent = '🏆';
+    document.getElementById('kart-fim-texto').innerHTML = `${_kartEstado.piloto} <b>${_kartEstado.nome}</b> venceu a corrida!<br>⭐ ${_kartEstado.estrelas} estrelas em ${90 - _kartEstado.tempo}s`;
+  } else if (razao === 'rival') {
+    document.getElementById('kart-fim-emoji').textContent = '😢';
+    document.getElementById('kart-fim-texto').innerHTML = `O rival 🦊 chegou primeiro!<br>Você fez ${_kartEstado.dist}m com ⭐ ${_kartEstado.estrelas}`;
+  } else {
+    document.getElementById('kart-fim-emoji').textContent = '⏰';
+    document.getElementById('kart-fim-texto').innerHTML = `Tempo esgotado!<br>Você fez ${_kartEstado.dist}m com ⭐ ${_kartEstado.estrelas}`;
+  }
+}
+
+function resetKart() {
+  document.getElementById('kart-fim').classList.add('hidden');
+  document.getElementById('kart-overlay').classList.remove('hidden');
 }
 
 function finalDaFasePen() {
