@@ -182,12 +182,14 @@
     margin-bottom: 12px;
   }
   .estudo-header {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     margin-bottom: 8px;
   }
+  .estudo-header .estudo-titulo { justify-self: start; }
+  .estudo-header .comut-insight { grid-column: 2; }
   .estudo-titulo {
     font-size: 22px;
     font-weight: 900;
@@ -540,7 +542,7 @@
     font-weight: 800;
     cursor: default;
   }
-  .m-prod:hover { transform: scale(1.08); box-shadow: 0 2px 6px rgba(107, 84, 211, 0.25); z-index: 1; }
+  .m-prod:hover { background: #ede8fa; }
   .m-diag {
     background: #fff;
     border: 2px solid #ffcc4a;
@@ -555,13 +557,12 @@
     background: linear-gradient(135deg, #ff7b6b, #d04040) !important;
     color: #fff !important;
     font-weight: 900 !important;
-    box-shadow: 0 3px 10px rgba(208, 64, 64, 0.45) !important;
     z-index: 2;
-    animation: pulse-target 0.7s ease-in-out infinite;
+    animation: pulse-target 0.8s ease-in-out infinite;
   }
   @keyframes pulse-target {
-    0%, 100% { transform: scale(1.12); }
-    50% { transform: scale(1.22); box-shadow: 0 5px 14px rgba(208, 64, 64, 0.6); }
+    0%, 100% { background: linear-gradient(135deg, #ff7b6b, #d04040) !important; }
+    50% { background: linear-gradient(135deg, #ff9080, #e05050) !important; }
   }
   .matriz-dica {
     margin-top: 6px;
@@ -1861,15 +1862,7 @@ function proximaCobranca() {
 
 function escolherDifPen(dif) {
   if (!_penEstado.ativo || _penEstado.modo !== 'cobrar') return;
-  const conf = PEN_DIFS[dif];
-  // Sorteia tabuada da categoria
-  const tab = conf.tabs[penRand(0, conf.tabs.length - 1)];
-  // Outro fator entre 1-10
-  const outro = penRand(1, 10);
-  // Ordem aleatoria
-  const inverter = Math.random() < 0.5;
-  const a = inverter ? outro : tab;
-  const b = inverter ? tab : outro;
+  const { a, b } = penGeraConta(dif);
   _penEstado.contaAtual = { a, b, prod: a * b, dif };
   abrirQuizPen();
 }
@@ -1921,15 +1914,10 @@ function responderQuizPen(resp) {
 function cobrancaAdversario() {
   document.getElementById('pen-adv').classList.remove('hidden');
   const fase = PEN_FASES[_penEstado.faseIdx];
-  // Adv escolhe dificuldade aleatoria
   const difs = ['facil', 'media', 'dificil'];
   const dif = difs[penRand(0, 2)];
   const conf = PEN_DIFS[dif];
-  // Sorteia conta
-  const tab = conf.tabs[penRand(0, conf.tabs.length - 1)];
-  const outro = penRand(1, 10);
-  const a = Math.random() < 0.5 ? outro : tab;
-  const b = a === outro ? tab : outro;
+  const { a, b } = penGeraConta(dif);
   document.getElementById('pen-adv-flag').textContent = fase.flag;
   document.getElementById('pen-adv-titulo').textContent = `${fase.adv} cobra...`;
   document.getElementById('pen-adv-info').innerHTML = `Escolheu <b>${conf.label}</b> · resolvendo <b>${a} × ${b}</b>`;
