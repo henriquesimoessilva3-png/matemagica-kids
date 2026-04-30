@@ -183,11 +183,11 @@
   }
   .estudo-header {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: center;
-    gap: 12px;
+    gap: 14px;
     flex-wrap: wrap;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   .estudo-titulo {
     font-size: 22px;
@@ -1066,37 +1066,38 @@
      visual aos cards/jogo. So afeta tabuada.html.
      ======================================================== */
   @media (min-width: 760px) {
-    .container { padding: 8px 18px 10px !important; }
-    h1.titulo-tabuada { font-size: 22px !important; margin: 2px 0 8px !important; }
+    .container { padding: 6px 16px 8px !important; }
+    h1.titulo-tabuada { font-size: 18px !important; margin: 2px 0 4px !important; }
     .sub-tabuada { display: none !important; }
-    .upsell-banner { padding: 7px 12px !important; font-size: 12px !important; margin-bottom: 8px !important; }
-    .upsell-banner .ub-arrow { font-size: 14px !important; }
+    .upsell-banner { padding: 5px 12px !important; font-size: 11px !important; margin-bottom: 6px !important; }
+    .upsell-banner .ub-arrow { font-size: 13px !important; }
 
     .pokedex-titulo { display: none !important; }
-    html[data-game="tabuada"] .container .pokedex-grid { grid-template-columns: repeat(10, 1fr) !important; gap: 6px !important; margin-bottom: 8px !important; margin-top: 6px !important; }
-    html[data-game="tabuada"] .container .poke-card { padding: 7px 4px !important; aspect-ratio: auto !important; min-height: 50px !important; border-radius: 10px !important; }
+    html[data-game="tabuada"] .container .pokedex-grid { grid-template-columns: repeat(10, 1fr) !important; gap: 4px !important; margin-bottom: 4px !important; margin-top: 4px !important; }
+    html[data-game="tabuada"] .container .poke-card { padding: 4px 2px !important; aspect-ratio: auto !important; min-height: 36px !important; border-radius: 8px !important; }
     html[data-game="tabuada"] .container .poke-card .poke-label { display: none !important; }
-    .poke-num { font-size: 20px !important; margin-top: 0 !important; }
-    .poke-estrelas { font-size: 11px !important; min-height: 12px !important; letter-spacing: 0 !important; margin-top: 2px !important; }
-    .poke-card.bloq .poke-num::before { font-size: 26px !important; top: 6px !important; }
+    .poke-num { font-size: 16px !important; margin-top: 0 !important; }
+    .poke-estrelas { font-size: 9px !important; min-height: 10px !important; letter-spacing: 0 !important; margin-top: 1px !important; }
+    .poke-card.bloq .poke-num::before { font-size: 22px !important; top: 4px !important; }
+    .resumo-txt { font-size: 10px !important; margin-top: 2px !important; }
 
     .modo-tabs { margin: 10px 0 4px 4px !important; padding-top: 3px !important; gap: 5px !important; justify-content: flex-start !important; }
     .modo-tab { padding: 5px 12px !important; font-size: 12px !important; border-radius: 14px !important; }
 
-    .estudo-area { padding: 14px 16px 14px !important; margin-bottom: 12px !important; }
-    .estudo-titulo { font-size: 22px !important; margin: 0 0 8px !important; padding-top: 0 !important; }
-    .comutativa-par { gap: 14px !important; }
-    .comut-box { padding: 14px 12px !important; }
-    .comut-expr { font-size: 24px !important; margin-bottom: 8px !important; }
-    .comut-result { font-size: 24px !important; margin-top: 6px !important; }
-    .comut-viz { gap: 4px !important; margin: 8px auto !important; }
-    .comut-viz .dot { width: 14px !important; height: 14px !important; }
-    .comut-insight { padding: 7px 16px !important; font-size: 13px !important; margin: 8px auto 14px !important; }
-    .macete-card { padding: 14px 18px !important; font-size: 15px !important; margin-top: 10px !important; }
-    .macete-card .macete-header { font-size: 14px !important; margin-bottom: 6px !important; }
-    .macete-card .macete-corpo { font-size: 15px !important; line-height: 1.55 !important; }
-    .estudo-controles { gap: 10px !important; margin-top: 12px !important; }
-    .estudo-btn { padding: 8px 16px !important; font-size: 13px !important; }
+    .estudo-area { padding: 10px 14px 12px !important; margin-bottom: 10px !important; }
+    .estudo-titulo { font-size: 20px !important; margin: 0 !important; padding-top: 0 !important; }
+    .comutativa-par { gap: 10px !important; }
+    .comut-box { padding: 10px 10px !important; }
+    .comut-expr { font-size: 22px !important; margin-bottom: 4px !important; }
+    .comut-result { font-size: 22px !important; margin-top: 4px !important; }
+    .comut-viz { gap: 3px !important; margin: 6px auto !important; }
+    .comut-viz .dot { width: 13px !important; height: 13px !important; }
+    .comut-insight { padding: 5px 14px !important; font-size: 12px !important; margin: 0 !important; }
+    .macete-card { padding: 8px 14px !important; font-size: 13px !important; margin-top: 8px !important; }
+    .macete-card .macete-header { font-size: 13px !important; margin-bottom: 4px !important; }
+    .macete-card .macete-corpo { font-size: 13px !important; line-height: 1.45 !important; }
+    .estudo-controles { gap: 8px !important; margin-top: 10px !important; }
+    .estudo-btn { padding: 6px 14px !important; font-size: 12px !important; }
 
     .treino-header { padding: 10px 14px !important; margin-bottom: 12px !important; }
     .treino-placar { font-size: 22px !important; }
@@ -1753,14 +1754,14 @@ const PEN_DIFS = {
   media:   { tabs: [3, 4, 5, 6], probGol: 0.60, label: 'MÉDIA',   chance: '60% gol' },
   dificil: { tabs: [7, 8, 9], probGol: 0.95, label: 'DIFÍCIL', chance: '95% gol' }
 };
-const PEN_TOTAL_COBS = 3;  // 3 cobrancas user + 3 adv = 6 total
+const PEN_COBS_INICIAL = 3;  // 3 cobrancas user + 3 adv = 6 total (mais em morte sub)
 
-let _penEstado = { faseIdx: 0, cobUser: 0, cobAdv: 0, modo: 'cobrar', gUser: 0, gAdv: 0, contaAtual: null, ativo: false };
+let _penEstado = { faseIdx: 0, cobUser: 0, cobAdv: 0, maxCobs: 3, modo: 'cobrar', gUser: 0, gAdv: 0, contaAtual: null, ativo: false, morteSubita: false };
 
 function penRand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
 function iniciarPenalti() {
-  _penEstado = { faseIdx: 0, cobUser: 0, cobAdv: 0, modo: 'cobrar', gUser: 0, gAdv: 0, contaAtual: null, ativo: true };
+  _penEstado = { faseIdx: 0, cobUser: 0, cobAdv: 0, maxCobs: PEN_COBS_INICIAL, modo: 'cobrar', gUser: 0, gAdv: 0, contaAtual: null, ativo: true, morteSubita: false };
   document.getElementById('pen-overlay').classList.add('hidden');
   document.getElementById('pen-jogo').classList.remove('hidden');
   document.getElementById('pen-btn-overlay').onclick = iniciarPenalti;
@@ -1777,7 +1778,15 @@ function continuarPenalti() {
 
 function proximaCobranca() {
   const total = _penEstado.cobUser + _penEstado.cobAdv;
-  if (total >= PEN_TOTAL_COBS * 2) return finalDaFasePen();
+  if (total >= _penEstado.maxCobs * 2) {
+    // Verifica empate -> morte subita
+    if (_penEstado.gUser === _penEstado.gAdv) {
+      _penEstado.maxCobs++;
+      _penEstado.morteSubita = true;
+    } else {
+      return finalDaFasePen();
+    }
+  }
   _penEstado.modo = (total % 2 === 0) ? 'cobrar' : 'defender';
   const fase = PEN_FASES[_penEstado.faseIdx];
   document.getElementById('pen-fase').textContent = fase.nome;
@@ -1789,13 +1798,14 @@ function proximaCobranca() {
   document.getElementById('pen-quiz').classList.add('hidden');
   document.getElementById('pen-adv').classList.add('hidden');
   document.getElementById('pen-resultado').classList.add('hidden');
+  const ms = _penEstado.morteSubita ? ' · MORTE SÚBITA' : '';
   if (_penEstado.modo === 'cobrar') {
-    document.getElementById('pen-cob-num').textContent = `Cobrança ${_penEstado.cobUser + 1}/${PEN_TOTAL_COBS}`;
-    document.getElementById('pen-status').textContent = '⚽ VOCÊ COBRA — escolha a dificuldade';
+    document.getElementById('pen-cob-num').textContent = `Cobrança ${_penEstado.cobUser + 1}/${_penEstado.maxCobs}${ms}`;
+    document.getElementById('pen-status').textContent = _penEstado.morteSubita ? '⚽ MORTE SÚBITA — escolha a dificuldade' : '⚽ VOCÊ COBRA — escolha a dificuldade';
     document.getElementById('pen-escolha').classList.remove('hidden');
   } else {
-    document.getElementById('pen-cob-num').textContent = `${fase.adv} cobra · ${_penEstado.cobAdv + 1}/${PEN_TOTAL_COBS}`;
-    document.getElementById('pen-status').textContent = `🇧🇷 ${fase.adv} VAI COBRAR`;
+    document.getElementById('pen-cob-num').textContent = `${fase.adv} cobra · ${_penEstado.cobAdv + 1}/${_penEstado.maxCobs}${ms}`;
+    document.getElementById('pen-status').textContent = `🇧🇷 ${fase.adv} VAI COBRAR${ms}`;
     cobrancaAdversario();
   }
 }
@@ -1933,7 +1943,6 @@ function finalDaFasePen() {
   document.getElementById('pen-overlay').classList.remove('hidden');
   const fase = PEN_FASES[_penEstado.faseIdx];
   const venceu = _penEstado.gUser > _penEstado.gAdv;
-  const empate = _penEstado.gUser === _penEstado.gAdv;
   const elBtn = document.getElementById('pen-btn-overlay');
   if (venceu) {
     if (_penEstado.faseIdx === PEN_FASES.length - 1) {
@@ -1947,6 +1956,8 @@ function finalDaFasePen() {
       const placar = `${_penEstado.gUser} x ${_penEstado.gAdv}`;
       _penEstado.gUser = 0; _penEstado.gAdv = 0;
       _penEstado.cobUser = 0; _penEstado.cobAdv = 0;
+      _penEstado.maxCobs = PEN_COBS_INICIAL;
+      _penEstado.morteSubita = false;
       const prox = PEN_FASES[_penEstado.faseIdx];
       document.getElementById('pen-ov-titulo').innerHTML = `🎉 Passou pra ${prox.nome.toUpperCase()}!`;
       document.getElementById('pen-ov-texto').innerHTML = `Vitória ${placar} sobre ${fase.adv}!<br>Próximo: <b>${prox.flag} ${prox.adv}</b><br>(contas vão ficar mais difíceis)`;
@@ -1954,7 +1965,7 @@ function finalDaFasePen() {
       elBtn.onclick = continuarPenalti;
     }
   } else {
-    document.getElementById('pen-ov-titulo').innerHTML = empate ? '⚖️ Empate = eliminado!' : '😢 Eliminado!';
+    document.getElementById('pen-ov-titulo').innerHTML = '😢 Eliminado!';
     document.getElementById('pen-ov-texto').innerHTML = `${fase.adv} venceu por <b>${_penEstado.gAdv} x ${_penEstado.gUser}</b>.<br>Estude mais e tente de novo!`;
     elBtn.textContent = '🔄 Tentar de novo';
     elBtn.onclick = iniciarPenalti;
