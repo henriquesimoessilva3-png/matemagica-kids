@@ -1258,14 +1258,12 @@
 
   .kart-veiculo {
     position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
-    font-size: 56px; line-height: 1;
+    line-height: 1;
     z-index: 3;
     filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
-    text-align: center;
   }
-  .kart-veic-img { display: block; line-height: 1; }
-  .kart-veic-label { display: block; font-size: 18px; line-height: 1; margin-top: -2px; }
-  .kart-rival .kart-veic-label { font-size: 12px; margin-top: -1px; }
+  .kart-veiculo svg { width: 76px; height: 76px; display: block; }
+  .kart-rival svg { width: 42px; height: 42px; display: block; }
   .kart-conta-flutuante {
     position: absolute; top: 30%; left: 50%; transform: translateX(-50%);
     background: linear-gradient(135deg, #ffd36b, #ff9a44);
@@ -2973,17 +2971,28 @@ const KART_PILOTOS = [
   { emoji: '🐰', nome: 'Coelho' },
 ];
 const KART_LANES = [18, 50, 82];
-const KART_VEICULOS = {
-  '🦄': '🏎️',
-  '🐉': '🚗',
-  '🦊': '🚙',
-  '🐢': '🚐',
-  '🐱': '🚕',
-  '🐰': '🏍️',
+const KART_CORES = {
+  '🦄': { body: '#ec5fb8', wing: '#b73d8c' },
+  '🐉': { body: '#2eb86b', wing: '#1f8a4f' },
+  '🦊': { body: '#f57e1b', wing: '#c46116' },
+  '🐢': { body: '#6b8e23', wing: '#4f6a1b' },
+  '🐱': { body: '#9b6dff', wing: '#7547d4' },
+  '🐰': { body: '#4ec9ec', wing: '#379bb8' },
 };
 function kartRenderHTML(animalEmoji) {
-  const veic = KART_VEICULOS[animalEmoji] || '🏎️';
-  return `<span class="kart-veic-img">${veic}</span><span class="kart-veic-label">${animalEmoji}</span>`;
+  const c = KART_CORES[animalEmoji] || { body: '#888', wing: '#555' };
+  return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="30" cy="56" rx="24" ry="3" fill="rgba(0,0,0,0.28)"/>
+    <ellipse cx="8" cy="48" rx="5" ry="9" fill="#1a1a1a"/>
+    <ellipse cx="8" cy="48" rx="3" ry="6" fill="#3a3a3a"/>
+    <ellipse cx="52" cy="48" rx="5" ry="9" fill="#1a1a1a"/>
+    <ellipse cx="52" cy="48" rx="3" ry="6" fill="#3a3a3a"/>
+    <rect x="4" y="46" width="52" height="6" rx="2" fill="#1a1a1a"/>
+    <rect x="13" y="22" width="34" height="26" rx="6" fill="${c.body}" stroke="#fff" stroke-width="2"/>
+    <rect x="9" y="16" width="42" height="6" rx="2" fill="${c.wing}"/>
+    <rect x="14" y="12" width="32" height="5" rx="2" fill="${c.wing}"/>
+    <text x="30" y="40" font-size="18" text-anchor="middle" dominant-baseline="middle">${animalEmoji}</text>
+  </svg>`;
 }
 
 let _kartEstado = {
