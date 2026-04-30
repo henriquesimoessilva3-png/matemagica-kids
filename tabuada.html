@@ -24,9 +24,9 @@
 <style>
   h1.titulo-tabuada {
     font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
-    font-size: 40px;
+    font-size: 32px;
     font-weight: 900;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.2px;
     background: linear-gradient(135deg, #6b54d3 0%, #ff7b6b 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -36,41 +36,41 @@
     margin: 6px 0 2px;
     line-height: 1.1;
   }
-  .sub-tabuada { text-align: center; color: #888; font-size: 15px; margin-bottom: 14px; }
+  .sub-tabuada { text-align: center; color: #888; font-size: 13px; margin-bottom: 12px; }
 
   /* ===== HEADER PLAYER override (compacta só nesta pagina) ===== */
-  .header-player { padding: 8px 12px !important; gap: 10px !important; margin-bottom: 12px !important; border-width: 1.5px !important; }
-  .hp-avatar { width: 46px !important; height: 46px !important; }
-  .hp-avatar .hp-cabeca { font-size: 28px !important; }
-  .hp-avatar .hp-chapeu { font-size: 18px !important; }
-  .hp-avatar .hp-nivel-bolha { width: 20px !important; height: 20px !important; font-size: 11px !important; }
-  .hp-avatar .hp-bichinho { width: 22px !important; height: 22px !important; font-size: 16px !important; }
-  .hp-topo { font-size: 14px !important; margin-bottom: 3px !important; }
-  .hp-xp-texto { font-size: 14px !important; }
-  .hp-moedas { font-size: 13px !important; padding: 2px 10px !important; }
-  .hp-xp-bar { height: 9px !important; }
-  .hp-rodape { font-size: 13px !important; margin-top: 4px !important; gap: 12px !important; }
+  .header-player { padding: 6px 10px !important; gap: 8px !important; margin-bottom: 10px !important; border-width: 1.5px !important; }
+  .hp-avatar { width: 40px !important; height: 40px !important; }
+  .hp-avatar .hp-cabeca { font-size: 24px !important; }
+  .hp-avatar .hp-chapeu { font-size: 16px !important; }
+  .hp-avatar .hp-nivel-bolha { width: 18px !important; height: 18px !important; font-size: 10px !important; }
+  .hp-avatar .hp-bichinho { width: 20px !important; height: 20px !important; font-size: 14px !important; }
+  .hp-topo { font-size: 12px !important; margin-bottom: 2px !important; }
+  .hp-xp-texto { font-size: 12px !important; }
+  .hp-moedas { font-size: 11px !important; padding: 2px 8px !important; }
+  .hp-xp-bar { height: 8px !important; }
+  .hp-rodape { font-size: 11px !important; margin-top: 3px !important; gap: 10px !important; }
 
   /* ===== POKÉDEX ===== */
   .pokedex-titulo {
-    font-size: 17px;
+    font-size: 14px;
     color: #4a3b8a;
-    font-weight: 800;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin: 14px 0 10px;
+    margin: 12px 0 8px;
     text-align: center;
   }
   .pokedex-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin-bottom: 14px;
+    gap: 8px;
+    margin-bottom: 12px;
   }
   .poke-card {
-    aspect-ratio: 4 / 5;
-    border-radius: 14px;
-    padding: 8px 6px;
+    aspect-ratio: 3 / 4;
+    border-radius: 12px;
+    padding: 6px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -99,29 +99,29 @@
   .poke-card.n2 { background: linear-gradient(135deg, #ffe29a, #ffb347); color: #6a4020; border-color: #ff9a44; }
   .poke-card.n3 { background: linear-gradient(135deg, #c8f2d8, #7ae0a0); color: #1b4a2a; border-color: #3ac070; }
   .poke-num {
-    font-size: 38px;
+    font-size: 30px;
     font-weight: 900;
     line-height: 1;
     margin-top: 4px;
   }
   .poke-label {
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 700;
-    opacity: 0.78;
+    opacity: 0.75;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
   }
   .poke-estrelas {
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: -1px;
-    min-height: 16px;
+    min-height: 14px;
   }
   .poke-card.bloq .poke-num::before {
     content: '?';
     position: absolute;
-    font-size: 56px;
+    font-size: 46px;
     left: 0; right: 0;
-    top: 22px;
+    top: 18px;
     color: #6b54d3;
     opacity: 0.4;
   }
@@ -132,19 +132,19 @@
   /* ===== SELETOR DE MODO ===== */
   .modo-tabs {
     display: flex;
-    gap: 10px;
-    margin: 14px 0 12px;
+    gap: 8px;
+    margin: 14px 0 10px;
     justify-content: center;
   }
   .modo-tab {
     background: #f7f5ff;
     border: 2px solid #c5bbe9;
     color: #6b54d3;
-    padding: 11px 22px;
-    border-radius: 22px;
+    padding: 9px 18px;
+    border-radius: 20px;
     font-weight: 700;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     transition: all 0.15s;
   }
   .modo-tab:hover { background: #ede8fa; }
@@ -153,12 +153,12 @@
   /* ===== ESTUDO ===== */
   .estudo-area {
     background: linear-gradient(135deg, #f7f5ff, #ede8fa);
-    border-radius: 18px;
-    padding: 22px 18px 20px;
-    margin-bottom: 14px;
+    border-radius: 16px;
+    padding: 16px 14px 14px;
+    margin-bottom: 12px;
   }
   .estudo-titulo {
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 900;
     background: linear-gradient(135deg, #6b54d3 0%, #ff7b6b 100%);
     -webkit-background-clip: text;
@@ -166,46 +166,46 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     text-align: center;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     letter-spacing: 0.5px;
     line-height: 1.1;
   }
   .comutativa-par {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 12px;
   }
   .comut-box {
     background: #fff;
     border: 2.5px solid #c5bbe9;
-    border-radius: 14px;
-    padding: 16px 12px;
+    border-radius: 12px;
+    padding: 12px 10px;
     text-align: center;
   }
   .comut-expr {
-    font-size: 30px;
+    font-size: 24px;
     font-weight: 800;
     color: #4a3b8a;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
   .comut-viz {
     display: grid;
-    gap: 4px;
+    gap: 3px;
     justify-content: center;
-    margin: 10px auto;
+    margin: 8px auto;
   }
   .comut-viz .dot {
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
     background: linear-gradient(135deg, #ffd36b, #ff9a44);
     border-radius: 50%;
     box-shadow: 0 1px 2px rgba(0,0,0,0.15);
   }
   .comut-result {
-    font-size: 30px;
+    font-size: 24px;
     font-weight: 800;
     color: #1b7a3a;
-    margin-top: 8px;
+    margin-top: 6px;
   }
   .comut-box .comut-detalhe { font-size: 14px !important; }
   .comut-insight {
@@ -242,18 +242,18 @@
 
   .estudo-controles {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     justify-content: center;
-    margin-top: 14px;
+    margin-top: 12px;
   }
   .estudo-btn {
     background: #fff;
     border: 2px solid #c5bbe9;
     color: #6b54d3;
-    padding: 10px 18px;
-    border-radius: 12px;
+    padding: 8px 14px;
+    border-radius: 11px;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 13px;
     cursor: pointer;
   }
   .estudo-btn:hover { background: #ede8fa; }
@@ -286,43 +286,43 @@
     height: 100%;
     transition: width 0.4s;
   }
-  .treino-placar { font-size: 28px; font-weight: 900; }
-  .treino-label { font-size: 13px; opacity: 0.95; text-transform: uppercase; }
+  .treino-placar { font-size: 24px; font-weight: 900; }
+  .treino-label { font-size: 11px; opacity: 0.9; text-transform: uppercase; }
 
   .treino-pergunta {
     background: #fff;
     border: 3px solid #ffd36b;
-    border-radius: 16px;
-    padding: 30px 18px;
+    border-radius: 14px;
+    padding: 22px 14px;
     text-align: center;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .treino-expr {
-    font-size: 56px;
+    font-size: 44px;
     font-weight: 800;
     color: #4a3b8a;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     line-height: 1.05;
   }
   .treino-hint {
-    font-size: 14px;
+    font-size: 12px;
     color: #888;
   }
 
   .treino-opcoes {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 18px;
+    gap: 14px;
   }
-  @media (min-width: 768px) { .treino-opcoes { gap: 22px; } }
+  @media (min-width: 768px) { .treino-opcoes { gap: 18px; } }
   .treino-opcoes button {
-    padding: 22px 16px;
-    font-size: 30px;
+    padding: 16px 12px;
+    font-size: 24px;
     font-weight: 800;
     background: #f7f5ff;
     color: #4a3b8a;
     border: 3px solid #c5bbe9;
-    border-radius: 14px;
+    border-radius: 12px;
     cursor: pointer;
     transition: all 0.15s;
   }
@@ -367,11 +367,11 @@
 
   /* ===== RESUMO ===== */
   .resumo-txt {
-    font-size: 14px;
+    font-size: 12px;
     color: #666;
     text-align: center;
     line-height: 1.4;
-    margin-top: 8px;
+    margin-top: 6px;
   }
 
   /* === UPSELL FREEMIUM === */
@@ -379,15 +379,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
     background: linear-gradient(135deg, #fff5e8 0%, #faf6ff 100%);
-    border: 1.5px solid #ffd36b;
-    border-radius: 14px;
-    padding: 14px 18px;
-    margin: 0 0 14px;
+    border: 1px solid #ffd36b;
+    border-radius: 12px;
+    padding: 11px 14px;
+    margin: 0 0 12px;
     text-decoration: none;
     color: #4a3b8a;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.35;
     box-shadow: 0 2px 8px rgba(107, 84, 211, 0.06);
   }
@@ -395,7 +395,7 @@
   .upsell-banner .ub-text strong { color: #6b54d3; font-weight: 800; }
   .upsell-banner .ub-arrow {
     color: #2ebd7c;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 900;
     flex-shrink: 0;
   }
@@ -431,9 +431,10 @@
   .upsell-result-btn:active { transform: translateY(1px); }
 
   /* High specificity (mobile-first) - dominar game-content.css que aplica 13px */
-  html[data-game="tabuada"] .container .comut-insight { font-size: 16px !important; padding: 14px 18px !important; }
-  html[data-game="tabuada"] .container .macete-card { font-size: 16px !important; padding: 16px 18px !important; }
-  html[data-game="tabuada"] .container .upsell-banner { font-size: 15px !important; padding: 14px 18px !important; }
+  html[data-game="tabuada"] .container .comut-insight { font-size: 14px !important; padding: 12px 14px !important; line-height: 1.45 !important; }
+  html[data-game="tabuada"] .container .macete-card { font-size: 14px !important; padding: 12px 14px !important; line-height: 1.5 !important; }
+  html[data-game="tabuada"] .container .macete-card .macete-corpo { font-size: 14px !important; }
+  html[data-game="tabuada"] .container .upsell-banner { font-size: 14px !important; padding: 11px 14px !important; }
 
   /* ========================================================
      DESKTOP override (>=760px) — sobrescreve "desktop compacto"
@@ -441,60 +442,60 @@
      visual aos cards/jogo. So afeta tabuada.html.
      ======================================================== */
   @media (min-width: 760px) {
-    .container { padding: 14px 22px 14px !important; }
-    h1.titulo-tabuada { font-size: 36px !important; margin: 4px 0 4px !important; }
-    .sub-tabuada { font-size: 15px !important; margin-bottom: 12px !important; }
-    .upsell-banner { padding: 12px 18px !important; font-size: 15px !important; margin-bottom: 12px !important; }
-    .upsell-banner .ub-arrow { font-size: 22px !important; }
+    .container { padding: 10px 18px 10px !important; }
+    h1.titulo-tabuada { font-size: 28px !important; margin: 2px 0 2px !important; }
+    .sub-tabuada { font-size: 13px !important; margin-bottom: 10px !important; }
+    .upsell-banner { padding: 9px 14px !important; font-size: 13px !important; margin-bottom: 10px !important; }
+    .upsell-banner .ub-arrow { font-size: 18px !important; }
 
-    .pokedex-titulo { font-size: 18px !important; margin: 14px 0 10px !important; }
-    .pokedex-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 12px !important; margin-bottom: 16px !important; }
-    .poke-card { padding: 10px 8px !important; aspect-ratio: 4 / 5 !important; }
-    .poke-num { font-size: 42px !important; margin-top: 6px !important; }
-    .poke-label { font-size: 12px !important; }
-    .poke-estrelas { font-size: 15px !important; min-height: 18px !important; }
-    .poke-card.bloq .poke-num::before { font-size: 60px !important; top: 24px !important; }
+    .pokedex-titulo { font-size: 14px !important; margin: 10px 0 8px !important; }
+    .pokedex-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 10px !important; margin-bottom: 12px !important; }
+    .poke-card { padding: 8px 6px !important; aspect-ratio: 3 / 4 !important; }
+    .poke-num { font-size: 32px !important; margin-top: 4px !important; }
+    .poke-label { font-size: 10px !important; }
+    .poke-estrelas { font-size: 12px !important; min-height: 14px !important; }
+    .poke-card.bloq .poke-num::before { font-size: 48px !important; top: 20px !important; }
 
-    .modo-tabs { margin: 16px 0 14px !important; gap: 12px !important; }
-    .modo-tab { padding: 12px 26px !important; font-size: 17px !important; }
+    .modo-tabs { margin: 12px 0 10px !important; gap: 8px !important; }
+    .modo-tab { padding: 9px 18px !important; font-size: 14px !important; }
 
-    .estudo-area { padding: 24px 22px !important; margin-bottom: 14px !important; }
-    .estudo-titulo { font-size: 30px !important; margin-bottom: 18px !important; }
-    .comutativa-par { gap: 18px !important; }
-    .comut-box { padding: 20px 14px !important; }
-    .comut-expr { font-size: 34px !important; margin-bottom: 12px !important; }
-    .comut-result { font-size: 34px !important; margin-top: 10px !important; }
-    .comut-viz { gap: 5px !important; margin: 12px auto !important; }
-    .comut-viz .dot { width: 20px !important; height: 20px !important; }
-    .comut-insight { padding: 16px 20px !important; font-size: 17px !important; margin-top: 16px !important; }
-    .macete-card { padding: 18px 20px !important; font-size: 17px !important; margin-top: 14px !important; }
-    .macete-card .macete-header { font-size: 16px !important; margin-bottom: 8px !important; }
-    .macete-card .macete-corpo { font-size: 17px !important; line-height: 1.55 !important; }
-    .estudo-controles { gap: 12px !important; margin-top: 16px !important; }
-    .estudo-btn { padding: 12px 22px !important; font-size: 16px !important; }
+    .estudo-area { padding: 16px 16px !important; margin-bottom: 12px !important; }
+    .estudo-titulo { font-size: 22px !important; margin-bottom: 12px !important; }
+    .comutativa-par { gap: 14px !important; }
+    .comut-box { padding: 14px 12px !important; }
+    .comut-expr { font-size: 24px !important; margin-bottom: 8px !important; }
+    .comut-result { font-size: 24px !important; margin-top: 6px !important; }
+    .comut-viz { gap: 4px !important; margin: 8px auto !important; }
+    .comut-viz .dot { width: 14px !important; height: 14px !important; }
+    .comut-insight { padding: 12px 16px !important; font-size: 14px !important; margin-top: 12px !important; }
+    .macete-card { padding: 12px 16px !important; font-size: 14px !important; margin-top: 10px !important; }
+    .macete-card .macete-header { font-size: 14px !important; margin-bottom: 6px !important; }
+    .macete-card .macete-corpo { font-size: 14px !important; line-height: 1.55 !important; }
+    .estudo-controles { gap: 10px !important; margin-top: 12px !important; }
+    .estudo-btn { padding: 8px 16px !important; font-size: 13px !important; }
 
-    .treino-header { padding: 14px 18px !important; margin-bottom: 16px !important; }
-    .treino-placar { font-size: 30px !important; }
-    .treino-label { font-size: 14px !important; }
-    .treino-pergunta { padding: 36px 22px !important; margin-bottom: 18px !important; }
-    .treino-expr { font-size: 64px !important; margin-bottom: 10px !important; }
-    .treino-hint { font-size: 16px !important; }
-    .treino-opcoes { gap: 22px !important; }
-    .treino-opcoes button { padding: 28px 18px !important; font-size: 34px !important; }
-    .resumo-txt { font-size: 14px !important; margin-top: 8px !important; }
+    .treino-header { padding: 10px 14px !important; margin-bottom: 12px !important; }
+    .treino-placar { font-size: 22px !important; }
+    .treino-label { font-size: 12px !important; }
+    .treino-pergunta { padding: 22px 16px !important; margin-bottom: 14px !important; }
+    .treino-expr { font-size: 44px !important; margin-bottom: 6px !important; }
+    .treino-hint { font-size: 13px !important; }
+    .treino-opcoes { gap: 14px !important; }
+    .treino-opcoes button { padding: 18px 12px !important; font-size: 24px !important; }
+    .resumo-txt { font-size: 12px !important; margin-top: 6px !important; }
 
-    .header-player { padding: 12px 16px !important; gap: 14px !important; margin-bottom: 14px !important; }
-    .hp-avatar { width: 56px !important; height: 56px !important; }
-    .hp-avatar .hp-cabeca { font-size: 34px !important; }
-    .hp-topo { font-size: 15px !important; }
-    .hp-xp-texto { font-size: 15px !important; }
-    .hp-xp-bar { height: 11px !important; }
-    .hp-rodape { font-size: 14px !important; }
+    .header-player { padding: 8px 12px !important; gap: 10px !important; margin-bottom: 10px !important; }
+    .hp-avatar { width: 44px !important; height: 44px !important; }
+    .hp-avatar .hp-cabeca { font-size: 26px !important; }
+    .hp-topo { font-size: 13px !important; }
+    .hp-xp-texto { font-size: 13px !important; }
+    .hp-xp-bar { height: 9px !important; }
+    .hp-rodape { font-size: 12px !important; }
 
     /* High specificity - dominar game-content.css */
-    html[data-game="tabuada"] .container .comut-insight { font-size: 17px !important; padding: 16px 20px !important; }
-    html[data-game="tabuada"] .container .macete-card { font-size: 17px !important; padding: 18px 20px !important; }
-    html[data-game="tabuada"] .container .upsell-banner { font-size: 16px !important; padding: 14px 20px !important; }
+    html[data-game="tabuada"] .container .comut-insight { font-size: 14px !important; padding: 12px 16px !important; }
+    html[data-game="tabuada"] .container .macete-card { font-size: 14px !important; padding: 12px 16px !important; }
+    html[data-game="tabuada"] .container .upsell-banner { font-size: 13px !important; padding: 9px 14px !important; }
   }
 </style>
 </head>
