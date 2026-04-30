@@ -835,6 +835,155 @@
     line-height: 1.4;
   }
 
+  /* ===== CORRIDA DA TABUADA ===== */
+  .corrida-area {
+    background: linear-gradient(135deg, #f7f5ff, #ede8fa);
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .cor-overlay { text-align: center; padding: 18px 12px; }
+  .cor-ov-titulo {
+    font-size: 22px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #6b54d3, #ff7b6b);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .cor-ov-texto { font-size: 13px; color: #4a3b8a; margin-bottom: 14px; }
+  .cor-personagens {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .cor-pers {
+    background: #fff;
+    border: 2px solid #c5bbe9;
+    border-radius: 12px;
+    padding: 10px 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-family: inherit;
+  }
+  .cor-pers:hover { background: #ede8fa; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(107,84,211,0.2); }
+  .cp-emoji { font-size: 36px; line-height: 1; }
+  .cp-nome { font-size: 12px; font-weight: 700; color: #4a3b8a; }
+
+  .cor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4a3b8a;
+  }
+  .cor-tempo {
+    background: #ffd36b;
+    padding: 4px 10px;
+    border-radius: 10px;
+    color: #6a4020;
+  }
+  .cor-instr { font-size: 12px; color: #6b54d3; }
+
+  .cor-pista {
+    background: linear-gradient(180deg, #b3e0f7 0%, #b3e0f7 25%, #6dc46d 25%, #4a9e4a 100%);
+    border-radius: 12px;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1.5px #c5bbe9;
+    padding: 6px 8px 6px 6px;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cor-raia {
+    height: 36px;
+    border-bottom: 1.5px dashed rgba(255,255,255,0.6);
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .cor-raia:last-child { border-bottom: none; }
+  .cor-raia .raia-emoji {
+    position: absolute;
+    left: 2%;
+    font-size: 26px;
+    transition: left 0.4s ease-out;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+    z-index: 2;
+  }
+  .cor-raia .raia-meta {
+    position: absolute;
+    right: 4px;
+    font-size: 22px;
+    z-index: 1;
+  }
+  .cor-raia.user-raia { background: rgba(255,255,255,0.25); }
+
+  .cor-quiz {
+    background: #fff;
+    border: 2.5px solid #ffd36b;
+    border-radius: 12px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .cor-pergunta {
+    font-size: 26px;
+    font-weight: 900;
+    color: #4a3b8a;
+    margin-bottom: 8px;
+  }
+  .cor-opcoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 6px;
+  }
+  .cor-opcao {
+    background: #f7f5ff;
+    border: 2px solid #c5bbe9;
+    color: #4a3b8a;
+    padding: 8px 4px;
+    font-size: 18px;
+    font-weight: 800;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .cor-opcao:hover { background: #ede8fa; }
+  .cor-opcao.acertou { background: #6ee7a8 !important; color: #1b4a2a !important; }
+  .cor-opcao.errou { background: #fca5a5 !important; color: #6b1a1a !important; }
+
+  .cor-fim {
+    background: #fff;
+    border: 3px solid #6b54d3;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+  }
+  .cor-fim-emoji { font-size: 60px; margin-bottom: 6px; line-height: 1; }
+  .cor-fim-texto {
+    font-size: 22px;
+    font-weight: 900;
+    color: #6b54d3;
+    margin-bottom: 14px;
+  }
+
+  @media (min-width: 760px) {
+    .cor-ov-titulo { font-size: 28px !important; }
+    .cor-ov-texto { font-size: 15px !important; }
+    .cp-emoji { font-size: 48px !important; }
+    .cp-nome { font-size: 14px !important; }
+    .cor-raia { height: 44px !important; }
+    .cor-raia .raia-emoji { font-size: 32px !important; }
+    .cor-pergunta { font-size: 32px !important; }
+    .cor-opcao { font-size: 22px !important; padding: 10px !important; }
+  }
+
   /* ===== Cenario do gol + animacao da bola ===== */
   .pen-cenario {
     position: relative;
@@ -1206,6 +1355,7 @@
     <button class="modo-tab" id="tab-matriz" onclick="mudarModo('matriz')">📊 Tabela</button>
     <button class="modo-tab" id="tab-jogo" onclick="mudarModo('jogo')">🎯 Jogar</button>
     <button class="modo-tab" id="tab-penalti" onclick="mudarModo('penalti')">⚽ Pênalti</button>
+    <button class="modo-tab" id="tab-corrida" onclick="mudarModo('corrida')">🏁 Corrida</button>
   </div>
 
   <div id="painel-estudo">
@@ -1331,6 +1481,37 @@
           <div class="pen-msg-sub" id="pen-msg-sub"></div>
           <button class="estudo-btn principal" onclick="proximaCobranca()">Continuar →</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="painel-corrida" class="hidden">
+    <div class="corrida-area">
+      <div class="cor-overlay" id="cor-overlay">
+        <div class="cor-ov-titulo">🏁 Corrida da Tabuada</div>
+        <div class="cor-ov-texto">Escolha seu corredor — vai disputar com os outros 3!</div>
+        <div class="cor-personagens">
+          <button class="cor-pers" onclick="iniciarCorrida('🦄', 'Unicórnio')"><span class="cp-emoji">🦄</span><span class="cp-nome">Unicórnio</span></button>
+          <button class="cor-pers" onclick="iniciarCorrida('🐱', 'Gato')"><span class="cp-emoji">🐱</span><span class="cp-nome">Gato</span></button>
+          <button class="cor-pers" onclick="iniciarCorrida('🐶', 'Cachorro')"><span class="cp-emoji">🐶</span><span class="cp-nome">Cachorro</span></button>
+          <button class="cor-pers" onclick="iniciarCorrida('🐰', 'Coelho')"><span class="cp-emoji">🐰</span><span class="cp-nome">Coelho</span></button>
+        </div>
+      </div>
+      <div class="cor-jogo hidden" id="cor-jogo">
+        <div class="cor-header">
+          <span class="cor-tempo">⏱ <span id="cor-tempo">5</span>s</span>
+          <span class="cor-instr">Acerte rápido pra avançar!</span>
+        </div>
+        <div class="cor-pista" id="cor-pista"></div>
+        <div class="cor-quiz">
+          <div class="cor-pergunta" id="cor-pergunta">5 × 7 = ?</div>
+          <div class="cor-opcoes" id="cor-opcoes"></div>
+        </div>
+      </div>
+      <div class="cor-fim hidden" id="cor-fim">
+        <div class="cor-fim-emoji" id="cor-fim-emoji">🏆</div>
+        <div class="cor-fim-texto" id="cor-fim-texto">Você venceu!</div>
+        <button class="estudo-btn principal" onclick="resetCorrida()">🔄 Correr de novo</button>
       </div>
     </div>
   </div>
@@ -1774,11 +1955,14 @@ function mudarModo(m) {
   document.getElementById('painel-matriz').classList.toggle('hidden', m !== 'matriz');
   document.getElementById('painel-jogo').classList.toggle('hidden', m !== 'jogo');
   document.getElementById('painel-penalti').classList.toggle('hidden', m !== 'penalti');
+  document.getElementById('painel-corrida').classList.toggle('hidden', m !== 'corrida');
   document.getElementById('tab-estudo').classList.toggle('ativo', m === 'estudo');
   document.getElementById('tab-treino').classList.toggle('ativo', m === 'treino' || m === 'resultado');
   document.getElementById('tab-matriz').classList.toggle('ativo', m === 'matriz');
   document.getElementById('tab-jogo').classList.toggle('ativo', m === 'jogo');
   document.getElementById('tab-penalti').classList.toggle('ativo', m === 'penalti');
+  document.getElementById('tab-corrida').classList.toggle('ativo', m === 'corrida');
+  if (m !== 'corrida' && _corEstado.intervalos) pararCorrida();
   if (m === 'estudo') renderEstudo();
   if (m === 'treino') renderPerguntaTreino();
   if (m === 'matriz') gerarMatriz();
@@ -1990,6 +2174,137 @@ function mostrarResPen(res, sub) {
       // Goleiro defendeu central
     }
   }
+}
+
+// ============== CORRIDA DA TABUADA ==============
+const COR_PERSONAGENS = ['🦄', '🐱', '🐶', '🐰'];
+let _corEstado = { userIdx: 0, posicoes: [0,0,0,0], nomes: [], emojis: [], ativo: false, intervalos: null, expr: null, tempoRestante: 5, tempoTimer: null };
+
+function corRand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function iniciarCorrida(userEmoji, userNome) {
+  // Monta lista: user no idx 0, outros 3 aleatorios
+  const outros = COR_PERSONAGENS.filter(e => e !== userEmoji);
+  const nomesMap = { '🦄': 'Unicórnio', '🐱': 'Gato', '🐶': 'Cachorro', '🐰': 'Coelho' };
+  _corEstado = {
+    userIdx: 0,
+    posicoes: [0, 0, 0, 0],
+    emojis: [userEmoji, outros[0], outros[1], outros[2]],
+    nomes: [userNome, nomesMap[outros[0]], nomesMap[outros[1]], nomesMap[outros[2]]],
+    velocidades: [0, 8 + Math.random()*4, 9 + Math.random()*5, 10 + Math.random()*6],
+    tempos: [0, 2400 + Math.random()*600, 2200 + Math.random()*600, 2000 + Math.random()*500],
+    ativo: true, intervalos: [], expr: null, tempoRestante: 5, tempoTimer: null
+  };
+  document.getElementById('cor-overlay').classList.add('hidden');
+  document.getElementById('cor-jogo').classList.remove('hidden');
+  document.getElementById('cor-fim').classList.add('hidden');
+  renderPista();
+  proximaCorridaQuiz();
+  // IA dos adversarios - 1 timer por adv
+  for (let i = 1; i < 4; i++) {
+    const tempo = _corEstado.tempos[i];
+    const v = _corEstado.velocidades[i];
+    const id = setInterval(() => {
+      if (!_corEstado.ativo) return;
+      _corEstado.posicoes[i] = Math.min(100, _corEstado.posicoes[i] + v);
+      atualizarPosicoes();
+      if (_corEstado.posicoes[i] >= 100) terminarCorrida(i);
+    }, tempo);
+    _corEstado.intervalos.push(id);
+  }
+}
+
+function renderPista() {
+  const el = document.getElementById('cor-pista');
+  let html = '';
+  for (let i = 0; i < 4; i++) {
+    const cls = i === _corEstado.userIdx ? 'cor-raia user-raia' : 'cor-raia';
+    html += `<div class="${cls}" data-i="${i}"><span class="raia-emoji" id="raia-${i}">${_corEstado.emojis[i]}</span><span class="raia-meta">🏁</span></div>`;
+  }
+  el.innerHTML = html;
+}
+
+function atualizarPosicoes() {
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById('raia-' + i);
+    if (el) el.style.left = Math.min(_corEstado.posicoes[i], 88) + '%';
+  }
+}
+
+function proximaCorridaQuiz() {
+  if (!_corEstado.ativo) return;
+  const a = corRand(2, 10);
+  const b = corRand(2, 10);
+  _corEstado.expr = { a, b, prod: a * b };
+  document.getElementById('cor-pergunta').textContent = `${a} × ${b} = ?`;
+  // 4 opcoes
+  const opts = new Set([a*b]);
+  while (opts.size < 4) {
+    const op = a*b + corRand(-15, 15);
+    if (op > 0 && op !== a*b) opts.add(op);
+  }
+  const arr = [...opts].sort(() => Math.random() - 0.5);
+  document.getElementById('cor-opcoes').innerHTML = arr.map(o =>
+    `<button class="cor-opcao" onclick="responderCorrida(${o})">${o}</button>`
+  ).join('');
+  // Reset timer 5s
+  _corEstado.tempoRestante = 5;
+  document.getElementById('cor-tempo').textContent = 5;
+  if (_corEstado.tempoTimer) clearInterval(_corEstado.tempoTimer);
+  _corEstado.tempoTimer = setInterval(() => {
+    _corEstado.tempoRestante--;
+    document.getElementById('cor-tempo').textContent = _corEstado.tempoRestante;
+    if (_corEstado.tempoRestante <= 0) {
+      clearInterval(_corEstado.tempoTimer);
+      proximaCorridaQuiz();  // tempo esgotado, proxima sem avancar
+    }
+  }, 1000);
+}
+
+function responderCorrida(resp) {
+  if (!_corEstado.ativo) return;
+  const acertou = resp === _corEstado.expr.prod;
+  if (_corEstado.tempoTimer) { clearInterval(_corEstado.tempoTimer); _corEstado.tempoTimer = null; }
+  if (acertou) {
+    _corEstado.posicoes[_corEstado.userIdx] = Math.min(100, _corEstado.posicoes[_corEstado.userIdx] + 12);
+    atualizarPosicoes();
+    if (_corEstado.posicoes[_corEstado.userIdx] >= 100) {
+      terminarCorrida(_corEstado.userIdx);
+      return;
+    }
+  }
+  // Feedback rapido
+  document.querySelectorAll('.cor-opcao').forEach(b => {
+    if (parseInt(b.textContent) === _corEstado.expr.prod) b.classList.add('acertou');
+    else if (parseInt(b.textContent) === resp) b.classList.add('errou');
+  });
+  setTimeout(() => proximaCorridaQuiz(), 600);
+}
+
+function pararCorrida() {
+  _corEstado.ativo = false;
+  if (_corEstado.intervalos) _corEstado.intervalos.forEach(id => clearInterval(id));
+  if (_corEstado.tempoTimer) clearInterval(_corEstado.tempoTimer);
+  _corEstado.intervalos = null;
+  _corEstado.tempoTimer = null;
+}
+
+function terminarCorrida(vencedorIdx) {
+  pararCorrida();
+  document.getElementById('cor-jogo').classList.add('hidden');
+  document.getElementById('cor-fim').classList.remove('hidden');
+  if (vencedorIdx === _corEstado.userIdx) {
+    document.getElementById('cor-fim-emoji').textContent = '🏆';
+    document.getElementById('cor-fim-texto').textContent = `Você venceu com ${_corEstado.emojis[0]} ${_corEstado.nomes[0]}!`;
+  } else {
+    document.getElementById('cor-fim-emoji').textContent = '😢';
+    document.getElementById('cor-fim-texto').textContent = `${_corEstado.emojis[vencedorIdx]} ${_corEstado.nomes[vencedorIdx]} chegou primeiro!`;
+  }
+}
+
+function resetCorrida() {
+  document.getElementById('cor-fim').classList.add('hidden');
+  document.getElementById('cor-overlay').classList.remove('hidden');
 }
 
 function finalDaFasePen() {
