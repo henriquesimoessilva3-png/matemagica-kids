@@ -1261,7 +1261,11 @@
     font-size: 56px; line-height: 1;
     z-index: 3;
     filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+    text-align: center;
   }
+  .kart-veic-img { display: block; line-height: 1; }
+  .kart-veic-label { display: block; font-size: 18px; line-height: 1; margin-top: -2px; }
+  .kart-rival .kart-veic-label { font-size: 12px; margin-top: -1px; }
   .kart-conta-flutuante {
     position: absolute; top: 30%; left: 50%; transform: translateX(-50%);
     background: linear-gradient(135deg, #ffd36b, #ff9a44);
@@ -2969,6 +2973,18 @@ const KART_PILOTOS = [
   { emoji: '🐰', nome: 'Coelho' },
 ];
 const KART_LANES = [18, 50, 82];
+const KART_VEICULOS = {
+  '🦄': '🏎️',
+  '🐉': '🚗',
+  '🦊': '🚙',
+  '🐢': '🚐',
+  '🐱': '🚕',
+  '🐰': '🏍️',
+};
+function kartRenderHTML(animalEmoji) {
+  const veic = KART_VEICULOS[animalEmoji] || '🏎️';
+  return `<span class="kart-veic-img">${veic}</span><span class="kart-veic-label">${animalEmoji}</span>`;
+}
 
 let _kartEstado = {
   piloto: '🦄', nome: 'Unicórnio',
@@ -3006,12 +3022,12 @@ function iniciarKart(emoji, nome) {
   document.getElementById('kart-overlay').classList.add('hidden');
   document.getElementById('kart-jogo').classList.remove('hidden');
   document.getElementById('kart-fim').classList.add('hidden');
-  document.getElementById('kart-veiculo').textContent = emoji;
-  // Pinta os 3 rivais com seus emojis e lanes
+  document.getElementById('kart-veiculo').innerHTML = kartRenderHTML(emoji);
+  // Pinta os 3 rivais com seus veiculos + label animal e lanes
   _kartEstado.rivais.forEach((r, i) => {
     const el = document.getElementById('kart-rival-' + i);
     if (el) {
-      el.textContent = r.emoji;
+      el.innerHTML = kartRenderHTML(r.emoji);
       el.style.left = r.lane + '%';
     }
   });
@@ -3026,13 +3042,13 @@ function iniciarKart(emoji, nome) {
     if (_kartEstado.tempo <= 0) terminarKart('tempo');
     atualizarHudKart();
   }, 1000));
-  // Rivais avancam a cada 2s, cada um independente
+  // Rivais avancam a cada 2s, cada um independente (velocidade real de disputa)
   _kartEstado.intervalos.push(setInterval(() => {
     if (!_kartEstado.ativo) return;
     let venceu = null;
     _kartEstado.rivais.forEach(r => {
       if (r.lento > 0) { r.lento--; return; }
-      r.dist = Math.min(500, r.dist + kartRand(2, 5));
+      r.dist = Math.min(500, r.dist + kartRand(6, 12));
       if (r.dist >= 500 && !venceu) venceu = r;
     });
     atualizarRivaisPos();
