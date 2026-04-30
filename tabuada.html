@@ -24,55 +24,49 @@
 <style>
   h1.titulo-tabuada {
     font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
-    font-size: 32px;
-    font-weight: 900;
-    letter-spacing: 1.2px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 1px;
     background: linear-gradient(135deg, #6b54d3 0%, #ff7b6b 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
     text-align: center;
-    margin: 6px 0 2px;
+    margin: 4px 0 8px;
     line-height: 1.1;
   }
-  .sub-tabuada { text-align: center; color: #888; font-size: 13px; margin-bottom: 12px; }
+  .sub-tabuada { display: none; }
 
-  /* ===== HEADER PLAYER override (compacta só nesta pagina) ===== */
-  .header-player { padding: 6px 10px !important; gap: 8px !important; margin-bottom: 10px !important; border-width: 1.5px !important; }
-  .hp-avatar { width: 40px !important; height: 40px !important; }
-  .hp-avatar .hp-cabeca { font-size: 24px !important; }
-  .hp-avatar .hp-chapeu { font-size: 16px !important; }
-  .hp-avatar .hp-nivel-bolha { width: 18px !important; height: 18px !important; font-size: 10px !important; }
-  .hp-avatar .hp-bichinho { width: 20px !important; height: 20px !important; font-size: 14px !important; }
-  .hp-topo { font-size: 12px !important; margin-bottom: 2px !important; }
-  .hp-xp-texto { font-size: 12px !important; }
-  .hp-moedas { font-size: 11px !important; padding: 2px 8px !important; }
-  .hp-xp-bar { height: 8px !important; }
-  .hp-rodape { font-size: 11px !important; margin-top: 3px !important; gap: 10px !important; }
+  /* ===== HEADER PLAYER override (super compacto, foco no estudo) ===== */
+  .header-player { padding: 4px 8px !important; gap: 8px !important; margin-bottom: 8px !important; border-width: 1px !important; border-radius: 12px !important; }
+  .hp-avatar { width: 30px !important; height: 30px !important; }
+  .hp-avatar .hp-cabeca { font-size: 18px !important; }
+  .hp-avatar .hp-chapeu { display: none !important; }
+  .hp-avatar .hp-nivel-bolha { width: 14px !important; height: 14px !important; font-size: 8px !important; bottom: -2px !important; right: -2px !important; }
+  .hp-avatar .hp-bichinho { display: none !important; }
+  .hp-topo { font-size: 10px !important; margin-bottom: 2px !important; }
+  .hp-xp-texto { font-size: 10px !important; }
+  .hp-moedas { font-size: 10px !important; padding: 1px 6px !important; }
+  .hp-xp-bar { height: 5px !important; }
+  /* Esconde rodape de stats (xp acumulado, dias, trofeu, loja) - distrai do estudo */
+  .hp-rodape { display: none !important; }
 
   /* ===== POKÉDEX (fileira compacta) ===== */
-  .pokedex-titulo {
-    font-size: 12px;
-    color: #4a3b8a;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 8px 0 6px;
-    text-align: center;
-  }
+  .pokedex-titulo { display: none; }
   /* Override do shared.css - 10 colunas em 1 linha, formato pill */
   html[data-game="tabuada"] .container .pokedex-grid {
     display: grid !important;
     grid-template-columns: repeat(10, 1fr) !important;
-    gap: 6px !important;
-    margin-bottom: 12px !important;
+    gap: 5px !important;
+    margin-bottom: 6px !important;
+    margin-top: 4px !important;
   }
   html[data-game="tabuada"] .container .poke-card {
     aspect-ratio: auto !important;
-    padding: 10px 6px !important;
-    min-height: 44px !important;
-    border-radius: 10px !important;
+    padding: 6px 4px !important;
+    min-height: 32px !important;
+    border-radius: 8px !important;
   }
   html[data-game="tabuada"] .container .poke-card .poke-label { display: none !important; }
   html[data-game="tabuada"] .container .poke-card > div:first-child:not(.poke-num):not(.poke-estrelas) { display: none !important; }
@@ -109,16 +103,16 @@
   .poke-card.n2 { background: linear-gradient(135deg, #ffe29a, #ffb347); color: #6a4020; border-color: #ff9a44; }
   .poke-card.n3 { background: linear-gradient(135deg, #c8f2d8, #7ae0a0); color: #1b4a2a; border-color: #3ac070; }
   .poke-num {
-    font-size: 17px;
-    font-weight: 900;
+    font-size: 14px;
+    font-weight: 800;
     line-height: 1;
-    margin-top: 2px;
+    margin-top: 0;
   }
   .poke-label { display: none; }
   .poke-estrelas {
-    font-size: 9px;
+    font-size: 8px;
     letter-spacing: -1.5px;
-    min-height: 11px;
+    min-height: 9px;
     line-height: 1;
   }
   .poke-card.bloq .poke-num::before {
@@ -390,11 +384,11 @@
 
   /* ===== RESUMO ===== */
   .resumo-txt {
-    font-size: 12px;
-    color: #666;
+    font-size: 10px;
+    color: #888;
     text-align: center;
-    line-height: 1.4;
-    margin-top: 6px;
+    line-height: 1.3;
+    margin-top: 2px;
   }
 
   /* === UPSELL FREEMIUM === */
@@ -402,23 +396,23 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
     background: linear-gradient(135deg, #fff5e8 0%, #faf6ff 100%);
     border: 1px solid #ffd36b;
-    border-radius: 12px;
-    padding: 11px 14px;
-    margin: 0 0 12px;
+    border-radius: 10px;
+    padding: 7px 12px;
+    margin: 0 0 10px;
     text-decoration: none;
     color: #4a3b8a;
-    font-size: 14px;
-    line-height: 1.35;
-    box-shadow: 0 2px 8px rgba(107, 84, 211, 0.06);
+    font-size: 12px;
+    line-height: 1.3;
+    box-shadow: 0 1px 4px rgba(107, 84, 211, 0.06);
   }
   .upsell-banner .ub-text { flex: 1; }
   .upsell-banner .ub-text strong { color: #6b54d3; font-weight: 800; }
   .upsell-banner .ub-arrow {
     color: #2ebd7c;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 900;
     flex-shrink: 0;
   }
@@ -485,19 +479,19 @@
      visual aos cards/jogo. So afeta tabuada.html.
      ======================================================== */
   @media (min-width: 760px) {
-    .container { padding: 10px 18px 10px !important; }
-    h1.titulo-tabuada { font-size: 28px !important; margin: 2px 0 2px !important; }
-    .sub-tabuada { font-size: 13px !important; margin-bottom: 10px !important; }
-    .upsell-banner { padding: 9px 14px !important; font-size: 13px !important; margin-bottom: 10px !important; }
-    .upsell-banner .ub-arrow { font-size: 18px !important; }
+    .container { padding: 8px 18px 10px !important; }
+    h1.titulo-tabuada { font-size: 22px !important; margin: 2px 0 8px !important; }
+    .sub-tabuada { display: none !important; }
+    .upsell-banner { padding: 7px 12px !important; font-size: 12px !important; margin-bottom: 8px !important; }
+    .upsell-banner .ub-arrow { font-size: 14px !important; }
 
-    .pokedex-titulo { font-size: 12px !important; margin: 8px 0 6px !important; }
-    html[data-game="tabuada"] .container .pokedex-grid { grid-template-columns: repeat(10, 1fr) !important; gap: 6px !important; margin-bottom: 10px !important; }
-    html[data-game="tabuada"] .container .poke-card { padding: 4px 2px !important; aspect-ratio: 1 / 1.15 !important; border-radius: 10px !important; }
+    .pokedex-titulo { display: none !important; }
+    html[data-game="tabuada"] .container .pokedex-grid { grid-template-columns: repeat(10, 1fr) !important; gap: 5px !important; margin-bottom: 6px !important; margin-top: 4px !important; }
+    html[data-game="tabuada"] .container .poke-card { padding: 6px 4px !important; aspect-ratio: auto !important; min-height: 32px !important; border-radius: 8px !important; }
     html[data-game="tabuada"] .container .poke-card .poke-label { display: none !important; }
-    .poke-num { font-size: 22px !important; margin-top: 2px !important; }
-    .poke-estrelas { font-size: 10px !important; min-height: 12px !important; }
-    .poke-card.bloq .poke-num::before { font-size: 28px !important; top: 8px !important; }
+    .poke-num { font-size: 16px !important; margin-top: 0 !important; }
+    .poke-estrelas { font-size: 9px !important; min-height: 10px !important; }
+    .poke-card.bloq .poke-num::before { font-size: 22px !important; top: 4px !important; }
 
     .estudo-area .modo-tabs { gap: 6px !important; top: 12px !important; left: 14px !important; }
     .modo-tab { padding: 5px 12px !important; font-size: 12px !important; border-radius: 16px !important; }
@@ -527,13 +521,16 @@
     .treino-opcoes button { padding: 18px 12px !important; font-size: 24px !important; }
     .resumo-txt { font-size: 12px !important; margin-top: 6px !important; }
 
-    .header-player { padding: 8px 12px !important; gap: 10px !important; margin-bottom: 10px !important; }
-    .hp-avatar { width: 44px !important; height: 44px !important; }
-    .hp-avatar .hp-cabeca { font-size: 26px !important; }
-    .hp-topo { font-size: 13px !important; }
-    .hp-xp-texto { font-size: 13px !important; }
-    .hp-xp-bar { height: 9px !important; }
-    .hp-rodape { font-size: 12px !important; }
+    .header-player { padding: 5px 10px !important; gap: 10px !important; margin-bottom: 8px !important; border-radius: 12px !important; }
+    .hp-avatar { width: 32px !important; height: 32px !important; }
+    .hp-avatar .hp-cabeca { font-size: 20px !important; }
+    .hp-avatar .hp-chapeu { display: none !important; }
+    .hp-avatar .hp-bichinho { display: none !important; }
+    .hp-topo { font-size: 11px !important; margin-bottom: 2px !important; }
+    .hp-xp-texto { font-size: 11px !important; }
+    .hp-moedas { font-size: 11px !important; padding: 2px 8px !important; }
+    .hp-xp-bar { height: 6px !important; }
+    .hp-rodape { display: none !important; }
 
     /* High specificity - dominar game-content.css */
     html[data-game="tabuada"] .container .comut-insight {
