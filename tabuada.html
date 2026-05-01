@@ -3039,12 +3039,11 @@ function iniciarKart(emoji, nome) {
   const veicEl = document.getElementById('kart-veiculo');
   veicEl.innerHTML = kartRenderHTML(emoji);
   veicEl.style.left = PLAYER_LANE + '%';
-  // Pinta os 3 rivais com seus veiculos + label animal e lanes
+  // Pinta os 3 rivais (left e bottom serão setados via atualizarRivaisPos com perspectiva)
   _kartEstado.rivais.forEach((r, i) => {
     const el = document.getElementById('kart-rival-' + i);
     if (el) {
       el.innerHTML = kartRenderHTML(r.emoji);
-      el.style.left = r.lane + '%';
     }
   });
   atualizarHudKart();
@@ -3064,7 +3063,7 @@ function iniciarKart(emoji, nome) {
     let venceu = null;
     _kartEstado.rivais.forEach(r => {
       if (r.lento > 0) { r.lento--; return; }
-      r.dist = Math.min(500, r.dist + kartRand(10, 18));
+      r.dist = Math.min(500, r.dist + kartRand(7, 13));
       if (r.dist >= 500 && !venceu) venceu = r;
     });
     atualizarRivaisPos();
@@ -3094,12 +3093,22 @@ function atualizarItensKart() {
 }
 
 function atualizarRivaisPos() {
+  // Asfalto ocupa 60% da pista (height 200px default → asfalto 0-120px no bottom).
+  // Clip-path do asfalto: trapézio 40-60% no topo, 0-100% no bottom.
+  // Pra cada rival, o "left" comprime conforme ele sobe (fica longe), mantendo dentro do trapézio.
   _kartEstado.rivais.forEach((r, i) => {
     const el = document.getElementById('kart-rival-' + i);
     if (!el) return;
     const diff = r.dist - _kartEstado.dist;
-    const top = Math.max(50, Math.min(150, 100 - diff * 0.3));
-    el.style.bottom = top + 'px';
+    // Bottom clampado em 20-110 pra ficar dentro do asfalto (não invade o céu)
+    const bottomPx = Math.max(20, Math.min(110, 65 - diff * 0.25));
+    el.style.bottom = bottomPx + 'px';
+    // Perspectiva: x bounds do trapézio na altura "bottomPx"
+    // y_clip_asfalto = 100 - bottomPx/120*100 → xMin = 0.333*bottomPx, xMax = 100 - 0.333*bottomPx
+    const xMin = 0.333 * bottomPx;
+    const xMax = 100 - 0.333 * bottomPx;
+    const laneNorm = r.lane / 100;
+    el.style.left = (xMin + laneNorm * (xMax - xMin)) + '%';
   });
 }
 
