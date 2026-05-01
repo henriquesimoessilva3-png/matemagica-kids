@@ -1257,7 +1257,7 @@
   }
 
   .kart-veiculo {
-    position: absolute; bottom: 4px; transform: translateX(-50%);
+    position: absolute; bottom: 12px; transform: translateX(-50%);
     line-height: 1;
     z-index: 3;
     filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
@@ -2974,8 +2974,8 @@ const KART_PILOTOS = [
   { emoji: '🐱', nome: 'Gato' },
   { emoji: '🐰', nome: 'Coelho' },
 ];
-const PLAYER_LANE = 60;
-const RIVAL_LANES = [15, 38, 85];
+const PLAYER_LANE = 50;
+const RIVAL_LANES = [15, 35, 85];
 const KART_CORES = {
   '🦄': { body: '#ec5fb8', wing: '#b73d8c' },
   '🐉': { body: '#2eb86b', wing: '#1f8a4f' },
@@ -3029,7 +3029,7 @@ function iniciarKart(emoji, nome) {
     lento: 0,
     rivais: escolhidos.map((p, i) => ({
       emoji: p.emoji, nome: p.nome,
-      dist: 0, lento: 0,
+      dist: kartRand(5, 30), lento: 0,
       lane: RIVAL_LANES[i]
     }))
   };
