@@ -3100,8 +3100,10 @@ function atualizarRivaisPos() {
     const el = document.getElementById('kart-rival-' + i);
     if (!el) return;
     const diff = r.dist - _kartEstado.dist;
+    // diff > 0 = rival à frente (longe, alto na tela)
+    // diff < 0 = rival atrás (perto da câmera, baixo na tela)
     // Bottom clampado em 20-110 pra ficar dentro do asfalto (não invade o céu)
-    const bottomPx = Math.max(20, Math.min(110, 65 - diff * 0.25));
+    const bottomPx = Math.max(20, Math.min(110, 65 + diff * 0.25));
     el.style.bottom = bottomPx + 'px';
     // Perspectiva: x bounds do trapézio na altura "bottomPx"
     // y_clip_asfalto = 100 - bottomPx/120*100 → xMin = 0.333*bottomPx, xMax = 100 - 0.333*bottomPx
