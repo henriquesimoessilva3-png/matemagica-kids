@@ -132,6 +132,30 @@ body{
 .cta-grande:active{transform:scale(0.98)}
 .hero-garantia{font-size:13px;opacity:0.85}
 
+/* v2.2 — botão demo above fold (lilás, distinto do laranja pago) */
+.cta-demo-hero{
+  display:block;width:100%;
+  background:#A855F7;
+  color:var(--branco);
+  border:2px solid var(--branco);
+  padding:14px 20px;
+  font-size:16px;font-weight:700;
+  border-radius:14px;
+  cursor:pointer;
+  text-decoration:none;
+  text-align:center;
+  margin:18px 0 6px;
+  box-shadow:0 4px 14px rgba(168,85,247,0.35);
+  transition:transform 0.1s;
+}
+.cta-demo-hero:active{transform:scale(0.98)}
+.cta-demo-microcopy{
+  font-size:13px;
+  opacity:0.85;
+  text-align:center;
+  margin-bottom:8px;
+}
+
 /* HERO REALMS — 5 medalhões dos anos como prova visual do produto v9 */
 .hero-realms{margin:24px 0 20px}
 .realms-label,.realms-subtext{
@@ -446,6 +470,16 @@ footer .legais{
       Método brasileiro de matemática para casa.<br>
       Do 1º ao 5º ano. BNCC. Sem precisar virar professora.
     </p>
+
+    <!-- v2.2 — demo above fold (gancho gratuito antes do preço) -->
+    <a class="cta-demo-hero"
+       href="/tabuada.html"
+       target="_blank"
+       rel="noopener"
+       onclick="if(typeof clarity==='function')clarity('set','demo_clicado_above_fold','true');if(typeof fbq==='function')fbq('trackCustom','DemoClickedAboveFold');">
+      🎮 Testa grátis a Tabuada Mágica
+    </a>
+    <p class="cta-demo-microcopy">Sem cadastro, sem cartão. Filho joga em 10 segundos.</p>
 
     <div class="hero-comparativo">
       <span class="risco">Apps similares: R$ 30–50 por mês</span>
