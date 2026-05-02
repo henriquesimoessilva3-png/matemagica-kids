@@ -77,6 +77,74 @@ body{
   padding:6px 12px;border-radius:20px;
   font-weight:700;font-size:14px;
 }
+.topo-chave{
+  background:none;border:none;cursor:pointer;
+  color:var(--roxo);font-weight:700;font-size:13px;
+  text-decoration:underline;padding:6px 4px;
+  font-family:inherit;
+}
+.topo-chave:hover{color:var(--roxo-esc)}
+
+/* PAINEL DE ATIVAÇÃO */
+.ativacao-banner{
+  background:linear-gradient(135deg,#fff8e1,#fde68a);
+  border-bottom:2px solid #f59e0b;
+  padding:12px 16px;
+  text-align:center;
+}
+.ativacao-banner-texto{
+  font-size:14px;color:#7a4f00;margin-bottom:8px;
+}
+.ativacao-banner-texto strong{color:#5a3a00}
+.ativacao-toggle{
+  background:#7B2FF7;color:#fff;border:none;cursor:pointer;
+  padding:8px 18px;border-radius:20px;
+  font-weight:700;font-size:14px;
+  font-family:inherit;
+  box-shadow:0 2px 6px rgba(123,47,247,0.3);
+}
+.ativacao-toggle:hover{background:#5B1CB8}
+.ativacao-form{
+  display:none;
+  max-width:480px;margin:10px auto 0;
+  background:#fff;border-radius:12px;
+  padding:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+  text-align:left;
+}
+.ativacao-form.aberto{display:block}
+.ativacao-form label{
+  display:block;font-size:13px;color:var(--texto-claro);
+  margin-bottom:6px;font-weight:600;
+}
+.ativacao-form-row{display:flex;gap:8px;flex-wrap:wrap}
+.ativacao-form input{
+  flex:1;min-width:200px;
+  padding:10px 12px;
+  border:2px solid var(--borda);border-radius:8px;
+  font-size:15px;font-family:monospace;
+  text-transform:uppercase;
+  color:var(--texto);
+}
+.ativacao-form input:focus{
+  outline:none;border-color:var(--roxo);
+}
+.ativacao-form button{
+  background:var(--verde);color:#fff;border:none;cursor:pointer;
+  padding:10px 18px;border-radius:8px;
+  font-weight:700;font-size:14px;font-family:inherit;
+}
+.ativacao-form button:hover{background:#16a34a}
+.ativacao-form button:disabled{opacity:0.6;cursor:not-allowed}
+.ativacao-msg{
+  margin-top:8px;font-size:13px;
+  padding:8px 10px;border-radius:6px;display:none;
+}
+.ativacao-msg.erro{display:block;background:#fee2e2;color:#991b1b}
+.ativacao-msg.ok{display:block;background:#dcfce7;color:#166534}
+.ativacao-hint{
+  font-size:12px;color:var(--texto-claro);margin-top:8px;
+}
 
 /* HERO */
 .hero{
@@ -455,7 +523,33 @@ footer .legais{
 <!-- TOPO STICKY (visível sempre, mostra preço) -->
 <div class="topo-sticky">
   <div class="topo-marca">Mate<span>✨</span>mágica</div>
+  <button type="button" class="topo-chave" onclick="abrirAtivacao()">🔑 Já comprei</button>
   <div class="topo-preco">R$ 27 vitalício</div>
+</div>
+
+<!-- BANNER DE ATIVAÇÃO (pra quem já comprou e voltou colar a chave) -->
+<div class="ativacao-banner" id="ativacao-banner">
+  <div class="ativacao-banner-texto">
+    Já comprou o <strong>Matemágica Completo</strong>? Cole a chave de ativação que chegou no seu email.
+  </div>
+  <button type="button" class="ativacao-toggle" onclick="abrirAtivacao()">🔑 Inserir chave de ativação</button>
+
+  <form class="ativacao-form" id="ativacao-form" onsubmit="submeterAtivacao(event)">
+    <label for="ativacao-input">Sua chave de ativação (vinda por email)</label>
+    <div class="ativacao-form-row">
+      <input
+        type="text"
+        id="ativacao-input"
+        placeholder="MM-XXXX-XXXX-XXXX-XXXX"
+        autocomplete="off"
+        autocapitalize="characters"
+        spellcheck="false"
+        required>
+      <button type="submit" id="ativacao-submit">Ativar</button>
+    </div>
+    <div class="ativacao-msg" id="ativacao-msg" role="status"></div>
+    <div class="ativacao-hint">Não achou o email? Olha em "Promoções" ou na pasta de spam — chega em até 5 minutos depois da compra.</div>
+  </form>
 </div>
 
 <!-- HERO -->
@@ -817,6 +911,76 @@ function goCheckout(origem){
   });
   window.location.href = 'https://pay.hotmart.com/A105538417J?' + params.toString();
 }
+
+// ====== ATIVAÇÃO DE LICENÇA ======
+function abrirAtivacao(){
+  var form = document.getElementById('ativacao-form');
+  var banner = document.getElementById('ativacao-banner');
+  if (form) form.classList.add('aberto');
+  if (banner) banner.scrollIntoView({ behavior:'smooth', block:'start' });
+  setTimeout(function(){
+    var input = document.getElementById('ativacao-input');
+    if (input) input.focus();
+  }, 250);
+}
+
+function _setAtivacaoMsg(texto, tipo){
+  var msg = document.getElementById('ativacao-msg');
+  if (!msg) return;
+  msg.className = 'ativacao-msg ' + (tipo || '');
+  msg.textContent = texto || '';
+}
+
+async function submeterAtivacao(ev){
+  if (ev && ev.preventDefault) ev.preventDefault();
+  var input = document.getElementById('ativacao-input');
+  var btn = document.getElementById('ativacao-submit');
+  if (!input) return;
+  var key = (input.value || '').trim().toUpperCase();
+  if (!key) {
+    _setAtivacaoMsg('Cole a chave que veio no email.', 'erro');
+    return;
+  }
+  if (btn) { btn.disabled = true; btn.textContent = 'Validando...'; }
+  _setAtivacaoMsg('', '');
+  try {
+    var r = await fetch('/api/ativar?key=' + encodeURIComponent(key));
+    var data = await r.json();
+    if (data && data.valid) {
+      try {
+        localStorage.setItem('matemagica_licenca_v1', JSON.stringify({
+          key: key,
+          email: data.email || null,
+          ativadaEm: new Date().toISOString()
+        }));
+      } catch(e) {}
+      try {
+        if (typeof fbq === 'function' && !data.jaAtivada) {
+          fbq('track', 'Purchase', { value: 27.00, currency: 'BRL' });
+        }
+      } catch(e) {}
+      _setAtivacaoMsg('Chave ativada! Redirecionando...', 'ok');
+      setTimeout(function(){ location.href = 'index.html'; }, 800);
+      return;
+    }
+    var erro = (data && data.error) ? data.error : 'verifique e tente de novo';
+    _setAtivacaoMsg('Chave inválida: ' + erro, 'erro');
+  } catch(e) {
+    _setAtivacaoMsg('Erro de rede. Tenta de novo em instantes.', 'erro');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Ativar'; }
+  }
+}
+
+// Auto-abre o painel quando o usuário foi redirecionado por falta de licença
+(function autoAbrirSeRedirecionado(){
+  try {
+    var params = new URLSearchParams(location.search);
+    if (params.get('premium_required') === '1') {
+      setTimeout(abrirAtivacao, 300);
+    }
+  } catch(e) {}
+})();
 
 // Track scroll depth (Clarity)
 var scrollMarcos = {25:false,50:false,75:false,90:false};
