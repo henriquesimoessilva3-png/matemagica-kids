@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tabuada Mágica — MATEMÁGICA</title>
+<script>
+(function(){
+  try {
+    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
+    if (lic && lic.key) document.documentElement.classList.add('mm-licensed');
+  } catch(e) {}
+})();
+</script>
+<style>
+html.mm-licensed .voltar,
+html.mm-licensed .upsell-banner,
+html.mm-licensed .upsell-result { display: none !important; }
+</style>
 <!-- Microsoft Clarity (gravação de sessão + heatmap) -->
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){

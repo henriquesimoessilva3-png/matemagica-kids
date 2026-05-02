@@ -3,6 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<script>
+(function(){
+  try {
+    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
+    var p = new URLSearchParams(location.search);
+    if (lic && lic.key && p.get('force') !== '1') location.replace('index.html');
+  } catch(e) {}
+})();
+</script>
 <title>Matemágica — A criança joga. A matemática fica.</title>
 <meta name="description" content="App brasileiro de matemática 1º ao 5º ano BNCC. Seu filho VAI querer usar todo dia. R$27 vitalício, sem mensalidade, garantia 7 dias.">
 
