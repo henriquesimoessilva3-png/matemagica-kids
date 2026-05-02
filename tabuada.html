@@ -1788,17 +1788,17 @@
   <div class="pokedex-grid" id="pokedex-grid"></div>
 
   <div class="modo-tabs">
-    <button class="modo-tab ativo" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
+    <button class="modo-tab ativo" id="tab-penalti" onclick="mudarModo('penalti')">⚽ Pênalti</button>
+    <button class="modo-tab" id="tab-carrossel" onclick="mudarModo('carrossel')">🎓 Escola Encantada</button>
+    <button class="modo-tab" id="tab-corrida" onclick="mudarModo('corrida')">🏁 Corrida</button>
+    <button class="modo-tab" id="tab-kart" onclick="mudarModo('kart')">🏎️ Mágico Kart</button>
+    <button class="modo-tab" id="tab-estudo" onclick="mudarModo('estudo')">📖 Estudar</button>
     <button class="modo-tab" id="tab-treino" onclick="mudarModo('treino')">⚡ Treinar</button>
     <button class="modo-tab" id="tab-matriz" onclick="mudarModo('matriz')">📊 Tabela</button>
     <button class="modo-tab" id="tab-jogo" onclick="mudarModo('jogo')">🐠 Peixinho</button>
-    <button class="modo-tab" id="tab-penalti" onclick="mudarModo('penalti')">⚽ Pênalti</button>
-    <button class="modo-tab" id="tab-corrida" onclick="mudarModo('corrida')">🏁 Corrida</button>
-    <button class="modo-tab" id="tab-carrossel" onclick="mudarModo('carrossel')">🎓 Escola Encantada</button>
-    <button class="modo-tab" id="tab-kart" onclick="mudarModo('kart')">🏎️ Mágico Kart</button>
   </div>
 
-  <div id="painel-estudo">
+  <div id="painel-estudo" class="hidden">
     <div class="estudo-area">
       <div class="estudo-header">
         <div class="estudo-titulo" id="estudo-titulo">Tabuada do <span id="estudo-tab-num">2</span></div>
@@ -1856,7 +1856,7 @@
     </div>
   </div>
 
-  <div id="painel-penalti" class="hidden">
+  <div id="painel-penalti">
     <div class="penalti-area">
       <div class="pen-overlay" id="pen-overlay">
         <div class="pen-overlay-titulo" id="pen-ov-titulo">⚽ Pênaltis · Copa do Mundo</div>
