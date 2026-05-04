@@ -475,10 +475,11 @@ main {
           <option value="2ª série (Médio)">2ª série (Médio)</option>
           <option value="3ª série (Médio)">3ª série (Médio)</option>
         </select>
+        <span class="hint">Define o vocabulário e a complexidade do resumo.</span>
       </div>
       <div class="form-row">
-        <label for="materia">Matéria (opcional)</label>
-        <input type="text" id="materia" placeholder="ex.: História, Ciências, Português" list="materias-sug">
+        <label for="materia">Matéria <span style="color: var(--text-muted); font-weight: 500;">(opcional)</span></label>
+        <input type="text" id="materia" placeholder="deixe em branco que detecto pela foto" list="materias-sug">
         <datalist id="materias-sug">
           <option value="Matemática">
           <option value="Português">
@@ -489,6 +490,7 @@ main {
           <option value="Educação Física">
           <option value="Artes">
         </datalist>
+        <span class="hint">Útil só pra caderno sem cabeçalho ou conteúdo ambíguo.</span>
       </div>
     </div>
     <div class="form-row">
