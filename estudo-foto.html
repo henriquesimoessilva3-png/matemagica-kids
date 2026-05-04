@@ -723,6 +723,19 @@ main {
       <span class="hint">Haiku é ótimo pra maioria dos casos. Sonnet vale a pena pra páginas com muito texto denso.</span>
     </div>
 
+    <hr style="border: 0; border-top: 1px solid #ece6f5; margin: 18px 0 14px;">
+
+    <div class="form-row">
+      <label for="googleKey">Chave Google Cloud TTS <span style="color: var(--text-muted); font-weight: 500;">(opcional)</span></label>
+      <input type="password" id="googleKey" placeholder="AIzaSy..." autocomplete="off">
+      <span class="hint">
+        Pra usar vozes naturais pt-BR (Antônio, Brenda, Camila, Humberto). Sem ela, usa as vozes do navegador.
+        <br>Tutorial: <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">console.cloud.google.com</a> →
+        criar projeto → habilitar "Cloud Text-to-Speech API" → Credenciais → Criar chave de API → restringir a <code>matemagica.app.br/*</code>.
+        <br>Free tier: <strong>1M caracteres/mês</strong> (≈ 1.250 estudos com áudio).
+      </span>
+    </div>
+
     <div class="modal-actions">
       <button class="btn btn-ghost" id="closeConfig">Cancelar</button>
       <button class="btn btn-primary" id="saveConfig">Salvar</button>
@@ -741,6 +754,7 @@ const LS_KEY_MODEL = 'matemagica_estudofoto_model';
 const LS_KEY_LAST = 'matemagica_estudofoto_last';
 const LS_KEY_VOICE = 'matemagica_estudofoto_voice';
 const LS_KEY_RATE = 'matemagica_estudofoto_rate';
+const LS_KEY_GOOGLE_TTS = 'matemagica_estudofoto_googletts';
 const MAX_PHOTOS = 50;
 const MANY_PHOTOS_WARNING = 20;  // a partir daqui, avisa que vai demorar e custar mais
 const MAX_DIM = 1280;     // redimensiona o maior lado pra economizar tokens
@@ -763,13 +777,19 @@ function hide(el) { el.classList.add('hidden'); }
 // === Persistência ===
 function loadConfig() {
   $('#apiKey').value = localStorage.getItem(LS_KEY_API) || '';
+  $('#googleKey').value = localStorage.getItem(LS_KEY_GOOGLE_TTS) || '';
   const model = localStorage.getItem(LS_KEY_MODEL);
   if (model) $('#model').value = model;
 }
 function saveConfig() {
   localStorage.setItem(LS_KEY_API, $('#apiKey').value.trim());
+  localStorage.setItem(LS_KEY_GOOGLE_TTS, $('#googleKey').value.trim());
   localStorage.setItem(LS_KEY_MODEL, $('#model').value);
+  // Re-renderiza vozes (pode ter mudado entre Web Speech e Google)
+  if (typeof populateVoices === 'function') populateVoices();
 }
+function getGoogleKey() { return localStorage.getItem(LS_KEY_GOOGLE_TTS) || ''; }
+function isGoogleTTSEnabled() { return !!getGoogleKey(); }
 function getApiKey() { return localStorage.getItem(LS_KEY_API) || ''; }
 function getModel() { return localStorage.getItem(LS_KEY_MODEL) || 'claude-haiku-4-5-20251001'; }
 
@@ -1260,10 +1280,19 @@ $('#btnExplicaDif').addEventListener('click', () => {
   generate(true);
 });
 
-// === Áudio (TTS Web Speech, custo zero) ===
+// === Áudio: Web Speech (grátis) ou Google Cloud TTS (BYOK) ===
 let ttsUtter = null;
+let currentAudio = null; // HTMLAudioElement quando tocando via Google
 let selectedVoiceName = localStorage.getItem(LS_KEY_VOICE) || '';
 let selectedRate = parseFloat(localStorage.getItem(LS_KEY_RATE) || '1') || 1;
+
+// Vozes do Google Cloud TTS pt-BR (Neural2 + Wavenet, todas no free tier)
+const GOOGLE_VOICES = [
+  { id: 'pt-BR-Neural2-B', label: 'Antônio',  gender: '♂' },
+  { id: 'pt-BR-Neural2-A', label: 'Brenda',   gender: '♀' },
+  { id: 'pt-BR-Neural2-C', label: 'Camila',   gender: '♀' },
+  { id: 'pt-BR-Wavenet-B', label: 'Humberto', gender: '♂' },
+];
 
 // Pega só o "primeiro nome" pra caber no botão (ex: "Microsoft Maria - Portuguese (Brazil)" → "Maria")
 function shortVoiceName(v) {
@@ -1278,9 +1307,30 @@ function shortVoiceName(v) {
   return n || v.name.slice(0, 14);
 }
 
-// Renderiza botões de voz baseado nas vozes disponíveis no navegador
+// Renderiza botões de voz: usa Google TTS se chave configurada, senão Web Speech
 function populateVoices() {
-  if (!('speechSynthesis' in window)) return;
+  const wrap = $('#ttsVoiceButtons');
+  if (!wrap) return;
+
+  // ─── Google Cloud TTS configurado: usa lista fixa de vozes pt-BR ───
+  if (isGoogleTTSEnabled()) {
+    if (!GOOGLE_VOICES.some(v => v.id === selectedVoiceName)) {
+      selectedVoiceName = GOOGLE_VOICES[0].id;
+      localStorage.setItem(LS_KEY_VOICE, selectedVoiceName);
+    }
+    wrap.innerHTML = GOOGLE_VOICES.map(v => {
+      const active = v.id === selectedVoiceName ? ' active' : '';
+      return `<button type="button" class="${active.trim()}" data-name="${v.id}" title="Google ${v.id}">${v.label} ${v.gender}</button>`;
+    }).join('');
+    attachVoiceClickHandlers(wrap);
+    return;
+  }
+
+  // ─── Sem Google: usa Web Speech do navegador ───
+  if (!('speechSynthesis' in window)) {
+    wrap.innerHTML = '';
+    return;
+  }
   const all = window.speechSynthesis.getVoices();
   if (!all.length) return; // dispara de novo via onvoiceschanged
 
@@ -1292,38 +1342,54 @@ function populateVoices() {
     return a.name.localeCompare(b.name);
   });
 
-  const wrap = $('#ttsVoiceButtons');
-  if (!wrap) return;
-
   if (ordered.length === 0) {
-    wrap.innerHTML = ''; // CSS mostra placeholder
+    wrap.innerHTML = '';
     return;
   }
 
-  // Se a voz salva não está disponível, usa a primeira pt-BR
   if (!selectedVoiceName || !ordered.some(v => v.name === selectedVoiceName)) {
     selectedVoiceName = ordered[0].name;
     localStorage.setItem(LS_KEY_VOICE, selectedVoiceName);
   }
 
-  wrap.innerHTML = ordered.map((v, i) => {
+  wrap.innerHTML = ordered.map(v => {
     const active = v.name === selectedVoiceName ? ' active' : '';
     return `<button type="button" class="${active.trim()}" data-name="${escapeHtml(v.name)}" data-lang="${v.lang}" title="${escapeHtml(v.name)} (${v.lang})">${escapeHtml(shortVoiceName(v))}</button>`;
   }).join('');
 
+  attachVoiceClickHandlers(wrap);
+}
+
+function attachVoiceClickHandlers(wrap) {
   wrap.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => {
       wrap.querySelectorAll('button').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       selectedVoiceName = btn.dataset.name;
       localStorage.setItem(LS_KEY_VOICE, selectedVoiceName);
-      // Se está tocando, reinicia com a nova voz
-      if (window.speechSynthesis?.speaking) {
-        window.speechSynthesis.cancel();
+      if (isAudioPlaying()) {
+        stopAudio();
         setTimeout(playResumo, 80);
       }
     });
   });
+}
+
+function isAudioPlaying() {
+  if (currentAudio && !currentAudio.paused && !currentAudio.ended) return true;
+  if (window.speechSynthesis?.speaking) return true;
+  return false;
+}
+
+function stopAudio() {
+  if (currentAudio) {
+    try { currentAudio.pause(); } catch {}
+    currentAudio = null;
+  }
+  if (window.speechSynthesis?.speaking) {
+    window.speechSynthesis.cancel();
+  }
+  setAudioBtnState(false);
 }
 
 // Botões de velocidade
@@ -1368,19 +1434,26 @@ function setAudioBtnState(playing) {
   }
 }
 
-function playResumo() {
-  if (!('speechSynthesis' in window)) {
-    alert('Seu navegador não suporta leitura em voz alta.');
-    return;
-  }
-  if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
-    window.speechSynthesis.cancel();
-    setAudioBtnState(false);
+async function playResumo() {
+  // Toggle: se já tá tocando, para
+  if (isAudioPlaying()) {
+    stopAudio();
     return;
   }
   const texto = (state.result?.resumo || []).join('\n\n');
   if (!texto.trim()) return;
 
+  if (isGoogleTTSEnabled()) {
+    return playWithGoogleTTS(texto);
+  }
+  return playWithWebSpeech(texto);
+}
+
+function playWithWebSpeech(texto) {
+  if (!('speechSynthesis' in window)) {
+    alert('Seu navegador não suporta leitura em voz alta.');
+    return;
+  }
   ttsUtter = new SpeechSynthesisUtterance(texto);
   ttsUtter.lang = 'pt-BR';
   ttsUtter.rate = selectedRate || 1;
@@ -1397,6 +1470,58 @@ function playResumo() {
   setAudioBtnState(true);
 }
 
+async function playWithGoogleTTS(texto) {
+  const key = getGoogleKey();
+  if (!key) return playWithWebSpeech(texto);
+
+  setAudioBtnState(true);
+
+  try {
+    // Google TTS aceita até 5000 chars por chamada — corta com folga
+    const trimmed = texto.length > 4500 ? texto.slice(0, 4500) : texto;
+
+    const resp = await fetch(
+      `https://texttospeech.googleapis.com/v1/text:synthesize?key=${encodeURIComponent(key)}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          input: { text: trimmed },
+          voice: { languageCode: 'pt-BR', name: selectedVoiceName },
+          audioConfig: {
+            audioEncoding: 'MP3',
+            speakingRate: selectedRate || 1,
+            pitch: 0,
+          },
+        }),
+      }
+    );
+
+    if (!resp.ok) {
+      let msg = `HTTP ${resp.status}`;
+      try {
+        const j = await resp.json();
+        if (j.error?.message) msg = j.error.message;
+      } catch {}
+      throw new Error(msg);
+    }
+
+    const json = await resp.json();
+    if (!json.audioContent) throw new Error('Resposta sem audioContent');
+
+    currentAudio = new Audio('data:audio/mp3;base64,' + json.audioContent);
+    currentAudio.onended = () => { currentAudio = null; setAudioBtnState(false); };
+    currentAudio.onerror = () => { currentAudio = null; setAudioBtnState(false); alert('Erro ao reproduzir áudio.'); };
+    await currentAudio.play();
+  } catch (err) {
+    console.error('Google TTS:', err);
+    setAudioBtnState(false);
+    alert('Google TTS deu erro: ' + (err.message || err) + '\n\nVoltando pra voz do navegador.');
+    // Fallback: Web Speech
+    setTimeout(() => playWithWebSpeech(texto), 100);
+  }
+}
+
 const playAudioBtn = $('#btnAudioPlay');
 playAudioBtn?.addEventListener('click', playResumo);
 
@@ -1405,10 +1530,7 @@ $('#btnAudio').addEventListener('click', playResumo);
 
 // Quando vier um novo resumo (incluindo /diferente), para qualquer áudio em curso
 function stopAudioOnRender() {
-  if (window.speechSynthesis?.speaking) {
-    window.speechSynthesis.cancel();
-    setAudioBtnState(false);
-  }
+  stopAudio(); // já cuida tanto do Web Speech quanto do Google
 }
 
 // === Boot: pede a chave na primeira visita ===
