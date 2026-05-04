@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="claro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="Tire foto da página do livro do seu filho e a IA gera resumo, conceitos-chave e exercícios com gabarito. Funciona com qualquer matéria.">
+<meta name="robots" content="noindex">
+<title>Matemágica — Estudo com Foto (beta)</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7c3aed">
+<link rel="apple-touch-icon" href="icon-192.svg">
+<link rel="stylesheet" href="tokens.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  background: linear-gradient(135deg, var(--bg-page) 0%, var(--bg-page-deeper) 100%);
+  min-height: 100vh;
+  color: var(--text-primary);
+}
+
+/* ============ HEADER ============ */
+.topbar {
+  background: linear-gradient(135deg, var(--header-grad-start), var(--header-grad-end));
+  color: var(--text-inverse);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--header-shadow);
+  position: sticky; top: 0; z-index: var(--z-header);
+}
+.topbar a.back {
+  color: var(--text-inverse);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  opacity: 0.9;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.topbar a.back:hover { opacity: 1; }
+.topbar h1 {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: normal;
+  margin: 0; flex: 1;
+  letter-spacing: 0.5px;
+}
+.topbar .beta-tag {
+  background: var(--accent-gold);
+  color: var(--text-primary);
+  font-size: 10px; font-weight: 800;
+  padding: 3px 8px; border-radius: var(--radius-pill);
+  letter-spacing: 0.5px;
+}
+.topbar .icon-btn {
+  background: rgba(255,255,255,0.15);
+  border: none; color: var(--text-inverse);
+  width: 36px; height: 36px;
+  border-radius: var(--radius-round);
+  cursor: pointer; font-size: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background var(--transition-fast);
+}
+.topbar .icon-btn:hover { background: rgba(255,255,255,0.28); }
+
+/* ============ LAYOUT ============ */
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px 18px 60px;
+}
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-card);
+}
+.card h2 {
+  font-family: var(--font-display);
+  font-weight: normal;
+  font-size: 22px; margin: 0 0 8px;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+}
+.card .subtitle {
+  font-size: 14px; color: var(--text-muted);
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+.card.muted {
+  background: rgba(255,255,255,0.6);
+  box-shadow: var(--shadow-soft);
+}
+.hidden { display: none !important; }
+
+/* ============ FORM ============ */
+.form-row {
+  display: flex; flex-direction: column; gap: 6px;
+  margin-bottom: 14px;
+}
+.form-row label {
+  font-size: 13px; font-weight: 700;
+  color: var(--text-secondary);
+}
+.form-row input, .form-row select, .form-row textarea {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 2px solid #ece6f5;
+  font-family: var(--font-body);
+  font-size: 15px;
+  background: white; color: var(--text-primary);
+  transition: border-color var(--transition-fast);
+  width: 100%;
+}
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+  outline: none;
+  border-color: var(--accent-violet);
+}
+.form-row .hint {
+  font-size: 12px; color: var(--text-muted); line-height: 1.4;
+}
+.form-row .hint a { color: var(--accent-violet); }
+
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+@media (max-width: 480px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+/* ============ BOTÕES ============ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 22px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-weight: 700; font-size: 15px;
+  border: none; cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  text-decoration: none;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
+  color: var(--text-primary);
+  box-shadow: var(--shadow-cta);
+}
+.btn-primary:hover { box-shadow: var(--shadow-cta-hover); }
+.btn-primary:disabled {
+  background: #ddd; color: #888; cursor: not-allowed;
+  box-shadow: none;
+}
+.btn-secondary {
+  background: var(--accent-violet);
+  color: white;
+  box-shadow: 0 3px 0 var(--accent-violet-deep);
+}
+.btn-secondary:hover { box-shadow: 0 5px 0 var(--accent-violet-deep); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 2px solid #ddd6f0;
+}
+.btn-ghost:hover { background: rgba(124,58,237,0.06); border-color: var(--accent-violet); }
+.btn-block { width: 100%; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn-row .btn { flex: 1; min-width: 140px; }
+
+/* ============ UPLOAD DE FOTOS ============ */
+.uploader {
+  border: 2px dashed #c8b8e8;
+  border-radius: var(--radius-md);
+  padding: 28px 18px;
+  text-align: center;
+  background: rgba(124,58,237,0.04);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.uploader:hover, .uploader.drag {
+  border-color: var(--accent-violet);
+  background: rgba(124,58,237,0.08);
+}
+.uploader .ico { font-size: 38px; display: block; margin-bottom: 6px; }
+.uploader .big { font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+.uploader .small { font-size: 12px; color: var(--text-muted); }
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.thumb {
+  position: relative;
+  aspect-ratio: 3/4;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #eee;
+  box-shadow: var(--shadow-sm);
+}
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb .rm {
+  position: absolute; top: 4px; right: 4px;
+  background: rgba(0,0,0,0.65); color: white;
+  border: none; cursor: pointer;
+  width: 24px; height: 24px;
+  border-radius: var(--radius-round);
+  font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.thumb .rm:hover { background: rgba(0,0,0,0.85); }
+.thumb .num {
+  position: absolute; bottom: 4px; left: 4px;
+  background: rgba(0,0,0,0.65); color: white;
+  font-size: 11px; font-weight: 700;
+  padding: 2px 6px; border-radius: var(--radius-xs);
+}
+
+/* ============ LOADING ============ */
+.loading {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 40px 20px;
+  text-align: center;
+  gap: 14px;
+}
+.spinner {
+  width: 48px; height: 48px;
+  border: 4px solid #e8e0f5;
+  border-top-color: var(--accent-violet);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading .msg {
+  font-size: 15px; color: var(--text-secondary);
+  font-weight: 600;
+}
+.loading .sub { font-size: 12px; color: var(--text-muted); }
+
+/* ============ RESULTADO ============ */
+.result-title {
+  font-family: var(--font-display);
+  font-weight: normal;
+  font-size: 26px;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+.result-meta {
+  font-size: 12px; color: var(--text-muted);
+  margin-bottom: 18px;
+}
+.result-meta .pill {
+  display: inline-block;
+  background: rgba(124,58,237,0.1);
+  color: var(--accent-violet-deep);
+  font-weight: 700; font-size: 11px;
+  padding: 3px 9px; border-radius: var(--radius-pill);
+  margin-right: 6px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-weight: normal;
+  font-size: 18px;
+  color: var(--accent-violet-deep);
+  margin: 0 0 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title .ico { font-size: 22px; }
+.resumo p {
+  font-size: 15px; line-height: 1.65;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+.conceitos {
+  display: grid; gap: 10px;
+}
+.conceito {
+  background: rgba(245,158,11,0.08);
+  border-left: 4px solid var(--accent-gold);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+}
+.conceito .termo {
+  font-weight: 800; color: var(--text-primary);
+  font-size: 14px; display: block; margin-bottom: 2px;
+}
+.conceito .def {
+  font-size: 14px; color: var(--text-secondary);
+  line-height: 1.45;
+}
+.pergunta {
+  background: white;
+  border: 2px solid #ece6f5;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.pergunta .num {
+  display: inline-block;
+  background: var(--accent-violet);
+  color: white;
+  width: 26px; height: 26px;
+  border-radius: var(--radius-round);
+  font-size: 13px; font-weight: 800;
+  text-align: center; line-height: 26px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.pergunta .tipo {
+  display: inline-block;
+  background: #eee;
+  color: var(--text-secondary);
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: var(--radius-pill);
+  margin-left: 6px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.pergunta .enun {
+  font-size: 15px; line-height: 1.5;
+  color: var(--text-primary);
+  margin: 8px 0 12px;
+}
+.opcoes { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.opcoes li {
+  background: #f6f3fb;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex; gap: 8px;
+}
+.opcoes li .letra {
+  font-weight: 800; color: var(--accent-violet-deep);
+  flex-shrink: 0;
+}
+.opcoes li.correct {
+  background: rgba(4,120,87,0.12);
+  color: #065f46;
+  border: 1.5px solid #10b981;
+}
+.opcoes li.correct .letra { color: #047857; }
+.gabarito {
+  margin-top: 10px;
+  background: rgba(4,120,87,0.08);
+  border-left: 4px solid #10b981;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: #064e3b;
+  line-height: 1.5;
+}
+.gabarito strong { color: #047857; }
+.gabarito.hidden-answer .answer-text { filter: blur(5px); user-select: none; cursor: pointer; }
+
+.toolbar {
+  position: sticky; bottom: 14px;
+  background: white;
+  padding: 12px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-lg);
+  margin: 18px auto 0;
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  z-index: 50;
+}
+.toolbar .btn {
+  padding: 9px 14px; font-size: 13px;
+}
+
+/* ============ MODAL ============ */
+.modal-bg {
+  position: fixed; inset: 0;
+  background: var(--bg-overlay);
+  z-index: var(--z-modal);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: white;
+  border-radius: var(--radius-lg);
+  max-width: 480px; width: 100%;
+  padding: 24px;
+  box-shadow: var(--shadow-lg);
+  max-height: 90vh; overflow-y: auto;
+}
+.modal h3 {
+  font-family: var(--font-display); font-weight: normal;
+  font-size: 20px; margin: 0 0 6px;
+}
+.modal p { font-size: 14px; color: var(--text-muted); margin: 0 0 14px; line-height: 1.5; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 12px; }
+
+/* ============ ALERTAS ============ */
+.alert {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 14px; line-height: 1.5;
+  margin-bottom: 14px;
+}
+.alert-info { background: rgba(124,58,237,0.08); color: var(--accent-violet-deep); }
+.alert-error { background: #fee; color: #c00; border-left: 4px solid #c00; }
+.alert-warn { background: #fff8e1; color: #7a4f00; border-left: 4px solid var(--accent-gold); }
+
+/* ============ PRINT ============ */
+@media print {
+  body { background: white; }
+  .topbar, .toolbar, .uploader, #config-card, #upload-card, .btn-row, .no-print { display: none !important; }
+  main { max-width: none; padding: 0; }
+  .card { box-shadow: none; padding: 0; margin-bottom: 14px; page-break-inside: avoid; }
+  .pergunta { page-break-inside: avoid; }
+  .gabarito.hidden-answer .answer-text { filter: none; }
+  .result-title { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="back" href="index.html" aria-label="Voltar">← Início</a>
+  <h1>Estudo com Foto</h1>
+  <span class="beta-tag">BETA</span>
+  <button class="icon-btn" id="openConfig" title="Configurações" aria-label="Configurações">⚙</button>
+</header>
+
+<main>
+
+  <!-- ============ CONFIG INICIAL ============ -->
+  <section class="card" id="config-card">
+    <h2>📷 Tire foto, vire estudo</h2>
+    <p class="subtitle">
+      Fotografe as páginas do livro ou caderno do seu filho e a IA cria
+      <strong>resumo</strong>, <strong>conceitos-chave</strong> e
+      <strong>exercícios com gabarito</strong> — pra qualquer matéria.
+    </p>
+
+    <div class="form-grid">
+      <div class="form-row">
+        <label for="ano">Ano escolar do filho</label>
+        <select id="ano">
+          <option value="1º ano (Fundamental)">1º ano (Fundamental)</option>
+          <option value="2º ano (Fundamental)">2º ano (Fundamental)</option>
+          <option value="3º ano (Fundamental)">3º ano (Fundamental)</option>
+          <option value="4º ano (Fundamental)" selected>4º ano (Fundamental)</option>
+          <option value="5º ano (Fundamental)">5º ano (Fundamental)</option>
+          <option value="6º ano (Fundamental)">6º ano (Fundamental)</option>
+          <option value="7º ano (Fundamental)">7º ano (Fundamental)</option>
+          <option value="8º ano (Fundamental)">8º ano (Fundamental)</option>
+          <option value="9º ano (Fundamental)">9º ano (Fundamental)</option>
+          <option value="1ª série (Médio)">1ª série (Médio)</option>
+          <option value="2ª série (Médio)">2ª série (Médio)</option>
+          <option value="3ª série (Médio)">3ª série (Médio)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="materia">Matéria (opcional)</label>
+        <input type="text" id="materia" placeholder="ex.: História, Ciências, Português" list="materias-sug">
+        <datalist id="materias-sug">
+          <option value="Matemática">
+          <option value="Português">
+          <option value="História">
+          <option value="Geografia">
+          <option value="Ciências">
+          <option value="Inglês">
+          <option value="Educação Física">
+          <option value="Artes">
+        </datalist>
+      </div>
+    </div>
+    <div class="form-row">
+      <label for="qtd">Quantas perguntas gerar?</label>
+      <select id="qtd">
+        <option value="5">5 perguntas (rápido)</option>
+        <option value="10" selected>10 perguntas (recomendado)</option>
+        <option value="15">15 perguntas</option>
+        <option value="20">20 perguntas (revisão completa)</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- ============ UPLOAD DE FOTOS ============ -->
+  <section class="card" id="upload-card">
+    <h2>1. Adicione as fotos das páginas</h2>
+    <p class="subtitle">Até 10 fotos por estudo. Tente enquadrar bem a página, com boa luz.</p>
+
+    <label class="uploader" id="uploader">
+      <input type="file" id="fileInput" accept="image/*" capture="environment" multiple style="display:none">
+      <span class="ico">📸</span>
+      <div class="big">Tirar foto ou escolher imagens</div>
+      <div class="small">JPG ou PNG · até 10 fotos</div>
+    </label>
+
+    <div class="thumbs" id="thumbs"></div>
+
+    <div style="margin-top: 18px;">
+      <button class="btn btn-primary btn-block" id="generate" disabled>
+        ✨ Gerar resumo e exercícios
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ LOADING ============ -->
+  <section class="card hidden" id="loading-card">
+    <div class="loading">
+      <div class="spinner"></div>
+      <div class="msg" id="loadingMsg">Lendo as páginas…</div>
+      <div class="sub">Isso costuma levar 20 a 60 segundos</div>
+    </div>
+  </section>
+
+  <!-- ============ RESULTADO ============ -->
+  <section class="hidden" id="result-section">
+    <div class="card" id="result-card">
+      <h2 class="result-title" id="resultTitulo">—</h2>
+      <div class="result-meta" id="resultMeta"></div>
+
+      <div class="resumo" id="resumoBox">
+        <h3 class="section-title"><span class="ico">📖</span> Resumo</h3>
+        <div id="resumoTexto"></div>
+      </div>
+
+      <div style="margin-top: 22px;">
+        <h3 class="section-title"><span class="ico">🔑</span> Conceitos-chave</h3>
+        <div class="conceitos" id="conceitosBox"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="section-title"><span class="ico">📝</span> Exercícios</h3>
+      <p class="subtitle no-print" id="gabaritoToggleHint">
+        Clique no gabarito de uma questão pra revelar a resposta — assim o filho tenta antes.
+      </p>
+      <div id="perguntasBox"></div>
+    </div>
+
+    <div class="toolbar no-print">
+      <button class="btn btn-ghost" id="btnAudio">🔊 Ouvir resumo</button>
+      <button class="btn btn-ghost" id="btnExplicaDif">🔄 Explica diferente</button>
+      <button class="btn btn-ghost" id="btnImprimir">🖨 Imprimir / PDF</button>
+      <button class="btn btn-secondary" id="btnNovo">+ Novo estudo</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ MODAL CONFIG (chave API) ============ -->
+<div class="modal-bg hidden" id="configModal">
+  <div class="modal">
+    <h3>⚙ Configuração</h3>
+    <p>
+      Esta versão beta usa <strong>sua própria chave da Anthropic (Claude)</strong>.
+      A chave fica salva só no seu navegador (localStorage), nunca é enviada pra nossos servidores.
+    </p>
+
+    <div class="form-row">
+      <label for="apiKey">Chave da API Anthropic</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-...">
+      <span class="hint">
+        Não tem? Crie em <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>.
+        Custo médio por estudo: <strong>R$ 0,05 a R$ 0,30</strong>.
+      </span>
+    </div>
+
+    <div class="form-row">
+      <label for="model">Modelo</label>
+      <select id="model">
+        <option value="claude-haiku-4-5-20251001" selected>Claude Haiku 4.5 (rápido, barato)</option>
+        <option value="claude-sonnet-4-6">Claude Sonnet 4.6 (mais inteligente)</option>
+      </select>
+      <span class="hint">Haiku é ótimo pra maioria dos casos. Sonnet vale a pena pra páginas com muito texto denso.</span>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="closeConfig">Cancelar</button>
+      <button class="btn btn-primary" id="saveConfig">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===========================================================================
+ * ESTUDO COM FOTO — Matemágica (beta)
+ * Frontend único, BYOK (chave Anthropic do próprio usuário, em localStorage).
+ * =========================================================================== */
+
+const LS_KEY_API = 'matemagica_estudofoto_apikey';
+const LS_KEY_MODEL = 'matemagica_estudofoto_model';
+const LS_KEY_LAST = 'matemagica_estudofoto_last';
+const MAX_PHOTOS = 10;
+const MAX_DIM = 1280;     // redimensiona o maior lado pra economizar tokens
+const JPEG_QUALITY = 0.85;
+
+// Estado
+const state = {
+  photos: [],         // {id, dataUrl (base64), thumb}
+  result: null,       // {titulo, resumo, conceitos, perguntas, ano, materia}
+  isGenerating: false,
+};
+
+// === Helpers DOM ===
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+function show(el) { el.classList.remove('hidden'); }
+function hide(el) { el.classList.add('hidden'); }
+
+// === Persistência ===
+function loadConfig() {
+  $('#apiKey').value = localStorage.getItem(LS_KEY_API) || '';
+  const model = localStorage.getItem(LS_KEY_MODEL);
+  if (model) $('#model').value = model;
+}
+function saveConfig() {
+  localStorage.setItem(LS_KEY_API, $('#apiKey').value.trim());
+  localStorage.setItem(LS_KEY_MODEL, $('#model').value);
+}
+function getApiKey() { return localStorage.getItem(LS_KEY_API) || ''; }
+function getModel() { return localStorage.getItem(LS_KEY_MODEL) || 'claude-haiku-4-5-20251001'; }
+
+// === Modal config ===
+$('#openConfig').addEventListener('click', () => {
+  loadConfig();
+  show($('#configModal'));
+});
+$('#closeConfig').addEventListener('click', () => hide($('#configModal')));
+$('#saveConfig').addEventListener('click', () => {
+  saveConfig();
+  hide($('#configModal'));
+});
+$('#configModal').addEventListener('click', e => {
+  if (e.target.id === 'configModal') hide($('#configModal'));
+});
+
+// === Upload de fotos ===
+const fileInput = $('#fileInput');
+const uploader = $('#uploader');
+const thumbsBox = $('#thumbs');
+
+uploader.addEventListener('click', () => fileInput.click());
+uploader.addEventListener('dragover', e => { e.preventDefault(); uploader.classList.add('drag'); });
+uploader.addEventListener('dragleave', () => uploader.classList.remove('drag'));
+uploader.addEventListener('drop', e => {
+  e.preventDefault();
+  uploader.classList.remove('drag');
+  handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+async function handleFiles(fileList) {
+  const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+  for (const f of files) {
+    if (state.photos.length >= MAX_PHOTOS) {
+      alert(`Limite de ${MAX_PHOTOS} fotos por estudo.`);
+      break;
+    }
+    try {
+      const resized = await resizeImage(f, MAX_DIM, JPEG_QUALITY);
+      state.photos.push({
+        id: 'p' + Date.now() + Math.random().toString(36).slice(2,6),
+        dataUrl: resized,
+      });
+    } catch (err) {
+      console.error('Erro ao processar', f.name, err);
+    }
+  }
+  fileInput.value = '';
+  renderThumbs();
+}
+
+function renderThumbs() {
+  thumbsBox.innerHTML = '';
+  state.photos.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'thumb';
+    div.innerHTML = `
+      <img src="${p.dataUrl}" alt="Página ${i+1}">
+      <span class="num">${i+1}</span>
+      <button class="rm" data-id="${p.id}" aria-label="Remover">✕</button>
+    `;
+    thumbsBox.appendChild(div);
+  });
+  $('#generate').disabled = state.photos.length === 0;
+}
+thumbsBox.addEventListener('click', e => {
+  const btn = e.target.closest('.rm');
+  if (!btn) return;
+  state.photos = state.photos.filter(p => p.id !== btn.dataset.id);
+  renderThumbs();
+});
+
+// Redimensiona imagem (canvas) e retorna data URL JPEG
+function resizeImage(file, maxDim, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        const m = Math.max(w, h);
+        if (m > maxDim) {
+          const r = maxDim / m;
+          w = Math.round(w * r);
+          h = Math.round(h * r);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// === Geração ===
+$('#generate').addEventListener('click', () => generate(false));
+
+async function generate(isExplicaDiferente) {
+  if (state.isGenerating) return;
+  if (!getApiKey()) {
+    show($('#configModal'));
+    loadConfig();
+    setTimeout(() => $('#apiKey').focus(), 50);
+    return;
+  }
+  if (state.photos.length === 0 && !isExplicaDiferente) {
+    alert('Adicione pelo menos uma foto.');
+    return;
+  }
+
+  state.isGenerating = true;
+  hide($('#config-card'));
+  hide($('#upload-card'));
+  hide($('#result-section'));
+  show($('#loading-card'));
+  $('#loadingMsg').textContent = isExplicaDiferente
+    ? 'Gerando outra explicação…'
+    : 'Lendo as páginas e preparando o estudo…';
+
+  try {
+    const ano = $('#ano').value;
+    const materia = $('#materia').value.trim() || '(detectar pelo conteúdo)';
+    const qtd = parseInt($('#qtd').value, 10);
+
+    const prompt = isExplicaDiferente
+      ? buildPromptExplicaDif(state.result, ano, materia)
+      : buildPrompt(ano, materia, qtd);
+
+    const content = isExplicaDiferente
+      ? [{ type: 'text', text: prompt }]
+      : [
+          ...state.photos.map(p => ({
+            type: 'image',
+            source: {
+              type: 'base64',
+              media_type: 'image/jpeg',
+              data: p.dataUrl.split(',')[1],
+            }
+          })),
+          { type: 'text', text: prompt },
+        ];
+
+    const json = await callAnthropic(content);
+
+    if (isExplicaDiferente && state.result) {
+      // só atualiza resumo + conceitos, mantém perguntas
+      state.result.resumo = json.resumo || state.result.resumo;
+      state.result.conceitos = json.conceitos || state.result.conceitos;
+      if (json.titulo) state.result.titulo = json.titulo;
+    } else {
+      state.result = { ...json, ano, materia: $('#materia').value.trim() };
+      try { localStorage.setItem(LS_KEY_LAST, JSON.stringify(state.result)); } catch(e) {}
+    }
+
+    renderResult();
+  } catch (err) {
+    console.error(err);
+    show($('#config-card'));
+    show($('#upload-card'));
+    hide($('#loading-card'));
+    alert('Deu ruim ao chamar a IA: ' + (err.message || err));
+  } finally {
+    state.isGenerating = false;
+    hide($('#loading-card'));
+  }
+}
+
+function buildPrompt(ano, materia, qtd) {
+  return `Você é uma professora experiente do ensino fundamental brasileiro, ajudando um pai/mãe a estudar a matéria com o filho.
+
+Contexto:
+- Ano escolar do filho: ${ano}
+- Matéria: ${materia}
+- O conteúdo a estudar está nas FOTOS de páginas de livro/caderno enviadas.
+
+Sua tarefa, baseada APENAS no conteúdo das fotos:
+
+1. TÍTULO curto (max 60 caracteres) que resume o tema central das páginas.
+
+2. RESUMO em 3 a 5 parágrafos curtos, em linguagem CLARA e adequada ao ${ano}. Use analogias do dia-a-dia da criança quando possível. Pode usar emojis com moderação. NÃO copie texto do livro, REESCREVA com suas palavras.
+
+3. CONCEITOS-CHAVE: 4 a 8 termos/palavras importantes do conteúdo, cada um com definição curta de 1 frase clara.
+
+4. PERGUNTAS: gere exatamente ${qtd} exercícios cobrindo os pontos principais. Misture estes tipos:
+   - "multipla": múltipla escolha com 4 opções, 1 correta. Use distratores plausíveis.
+   - "vf": verdadeiro ou falso.
+   - "curta": pergunta de resposta curta (até 1 linha).
+   Distribua os tipos de forma equilibrada. Comece pelas mais fáceis, termine pelas mais difíceis.
+
+5. Para cada pergunta, dê o GABARITO com a resposta correta E uma EXPLICAÇÃO curta (2-3 linhas) do PORQUÊ — escrita pra o pai/mãe poder explicar pro filho mesmo sem dominar a matéria.
+
+Retorne APENAS um JSON válido (sem markdown, sem \`\`\`), exatamente neste formato:
+{
+  "titulo": "string",
+  "resumo": ["paragrafo 1", "paragrafo 2", "..."],
+  "conceitos": [{"termo": "string", "definicao": "string"}],
+  "perguntas": [
+    {"tipo": "multipla", "enunciado": "...", "opcoes": ["A","B","C","D"], "correta": 0, "explicacao": "..."},
+    {"tipo": "vf", "enunciado": "...", "correta": true, "explicacao": "..."},
+    {"tipo": "curta", "enunciado": "...", "resposta": "texto da resposta", "explicacao": "..."}
+  ]
+}
+
+Importante: "correta" em múltipla escolha é o ÍNDICE 0-3 da opção correta. Em V/F é boolean. Não inclua nenhum texto fora do JSON.`;
+}
+
+function buildPromptExplicaDif(prev, ano, materia) {
+  return `Você é uma professora paciente. O resumo anterior abaixo NÃO ficou claro pro filho de ${ano} estudando ${materia}.
+
+Reescreva o RESUMO e os CONCEITOS-CHAVE usando uma abordagem TOTALMENTE DIFERENTE: outras analogias, outra ordem de explicação, outro ângulo. Seja ainda mais simples e concreto.
+
+Resumo anterior:
+"""
+${(prev.resumo || []).join('\n\n')}
+"""
+
+Conceitos anteriores:
+${(prev.conceitos || []).map(c => `- ${c.termo}: ${c.definicao}`).join('\n')}
+
+Retorne APENAS um JSON válido neste formato:
+{
+  "titulo": "string (pode manter o anterior se fizer sentido)",
+  "resumo": ["paragrafo 1", "paragrafo 2", "..."],
+  "conceitos": [{"termo": "string", "definicao": "string"}]
+}`;
+}
+
+async function callAnthropic(content) {
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': getApiKey(),
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: getModel(),
+      max_tokens: 4096,
+      messages: [{ role: 'user', content }],
+    }),
+  });
+
+  if (!resp.ok) {
+    let msg = `HTTP ${resp.status}`;
+    try {
+      const j = await resp.json();
+      if (j.error?.message) msg = j.error.message;
+    } catch(e) {}
+    throw new Error(msg);
+  }
+
+  const data = await resp.json();
+  const text = (data.content || [])
+    .filter(b => b.type === 'text')
+    .map(b => b.text)
+    .join('\n')
+    .trim();
+
+  // Extrai JSON (remove cercas markdown se vier)
+  const cleaned = text
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```\s*$/i, '')
+    .trim();
+
+  try {
+    return JSON.parse(cleaned);
+  } catch (e) {
+    // tentativa: extrai primeiro objeto JSON
+    const m = cleaned.match(/\{[\s\S]*\}/);
+    if (m) return JSON.parse(m[0]);
+    throw new Error('A IA respondeu em um formato inesperado. Tente de novo.');
+  }
+}
+
+// === Render do resultado ===
+function renderResult() {
+  hide($('#loading-card'));
+  show($('#result-section'));
+  const r = state.result;
+
+  $('#resultTitulo').textContent = r.titulo || 'Estudo';
+  $('#resultMeta').innerHTML = `
+    <span class="pill">${escapeHtml(r.ano || '')}</span>
+    ${r.materia ? `<span class="pill">${escapeHtml(r.materia)}</span>` : ''}
+    <span class="pill">${(r.perguntas || []).length} exercícios</span>
+  `;
+
+  // Resumo
+  const resumoBox = $('#resumoTexto');
+  resumoBox.innerHTML = '';
+  (r.resumo || []).forEach(p => {
+    const el = document.createElement('p');
+    el.textContent = p;
+    resumoBox.appendChild(el);
+  });
+
+  // Conceitos
+  const conceitosBox = $('#conceitosBox');
+  conceitosBox.innerHTML = '';
+  (r.conceitos || []).forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'conceito';
+    div.innerHTML = `<span class="termo">${escapeHtml(c.termo || '')}</span><span class="def">${escapeHtml(c.definicao || '')}</span>`;
+    conceitosBox.appendChild(div);
+  });
+
+  // Perguntas
+  const pBox = $('#perguntasBox');
+  pBox.innerHTML = '';
+  (r.perguntas || []).forEach((p, idx) => pBox.appendChild(renderPergunta(p, idx + 1)));
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderPergunta(p, n) {
+  const div = document.createElement('div');
+  div.className = 'pergunta';
+  const tipoLabel = { multipla: 'múltipla escolha', vf: 'verdadeiro/falso', curta: 'resposta curta' }[p.tipo] || p.tipo;
+
+  let opcoesHtml = '';
+  if (p.tipo === 'multipla' && Array.isArray(p.opcoes)) {
+    opcoesHtml = '<ul class="opcoes">' + p.opcoes.map((op, i) => {
+      const letra = String.fromCharCode(65 + i);
+      return `<li data-i="${i}"><span class="letra">${letra})</span><span>${escapeHtml(op)}</span></li>`;
+    }).join('') + '</ul>';
+  } else if (p.tipo === 'vf') {
+    opcoesHtml = `<ul class="opcoes">
+      <li data-v="true"><span class="letra">V)</span><span>Verdadeiro</span></li>
+      <li data-v="false"><span class="letra">F)</span><span>Falso</span></li>
+    </ul>`;
+  }
+
+  let respostaTxt = '';
+  if (p.tipo === 'multipla' && Array.isArray(p.opcoes)) {
+    const i = Number(p.correta);
+    respostaTxt = `Alternativa <strong>${String.fromCharCode(65 + i)}</strong>: ${escapeHtml(p.opcoes[i] || '')}`;
+  } else if (p.tipo === 'vf') {
+    respostaTxt = `<strong>${p.correta === true ? 'Verdadeiro' : 'Falso'}</strong>`;
+  } else {
+    respostaTxt = `<strong>${escapeHtml(p.resposta || '')}</strong>`;
+  }
+
+  div.innerHTML = `
+    <div>
+      <span class="num">${n}</span>
+      <span class="tipo">${tipoLabel}</span>
+    </div>
+    <div class="enun">${escapeHtml(p.enunciado || '')}</div>
+    ${opcoesHtml}
+    <div class="gabarito hidden-answer" data-pergunta="${n}">
+      <div class="answer-text">
+        <strong>Gabarito:</strong> <span>${respostaTxt}</span><br>
+        <em>${escapeHtml(p.explicacao || '')}</em>
+      </div>
+    </div>
+  `;
+
+  // Reveal gabarito ao clicar (e marca correta nas opções)
+  const gab = div.querySelector('.gabarito');
+  gab.addEventListener('click', () => {
+    gab.classList.remove('hidden-answer');
+    if (p.tipo === 'multipla') {
+      div.querySelectorAll('.opcoes li').forEach(li => {
+        if (Number(li.dataset.i) === Number(p.correta)) li.classList.add('correct');
+      });
+    } else if (p.tipo === 'vf') {
+      div.querySelectorAll('.opcoes li').forEach(li => {
+        if ((li.dataset.v === 'true') === (p.correta === true)) li.classList.add('correct');
+      });
+    }
+  });
+
+  return div;
+}
+
+function escapeHtml(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// === Toolbar de ações ===
+$('#btnImprimir').addEventListener('click', () => {
+  // Revela todos os gabaritos antes de imprimir
+  $$('.gabarito').forEach(g => g.classList.remove('hidden-answer'));
+  setTimeout(() => window.print(), 100);
+});
+
+$('#btnNovo').addEventListener('click', () => {
+  state.photos = [];
+  state.result = null;
+  renderThumbs();
+  hide($('#result-section'));
+  show($('#config-card'));
+  show($('#upload-card'));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+$('#btnExplicaDif').addEventListener('click', () => {
+  if (!state.result) return;
+  generate(true);
+});
+
+// === Áudio (TTS Web Speech, custo zero) ===
+let ttsUtter = null;
+$('#btnAudio').addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) {
+    alert('Seu navegador não suporta leitura em voz alta.');
+    return;
+  }
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    $('#btnAudio').textContent = '🔊 Ouvir resumo';
+    return;
+  }
+  const texto = (state.result?.resumo || []).join('\n\n');
+  if (!texto.trim()) return;
+  ttsUtter = new SpeechSynthesisUtterance(texto);
+  ttsUtter.lang = 'pt-BR';
+  ttsUtter.rate = 0.95;
+  ttsUtter.onend = () => { $('#btnAudio').textContent = '🔊 Ouvir resumo'; };
+  window.speechSynthesis.speak(ttsUtter);
+  $('#btnAudio').textContent = '⏸ Parar leitura';
+});
+
+// === Boot: pede a chave na primeira visita ===
+(function boot() {
+  if (!getApiKey()) {
+    setTimeout(() => {
+      show($('#configModal'));
+      loadConfig();
+    }, 400);
+  }
+})();
+</script>
+
+</body>
+</html>
