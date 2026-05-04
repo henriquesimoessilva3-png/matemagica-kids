@@ -295,6 +295,61 @@ main {
   color: var(--text-primary);
   margin: 0 0 12px;
 }
+
+/* mini-player de áudio */
+.audio-player {
+  background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(245,158,11,0.06));
+  border: 1.5px solid rgba(124,58,237,0.18);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin: 4px 0 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+.audio-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent-violet); color: white;
+  border: none; cursor: pointer;
+  padding: 9px 16px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-weight: 700; font-size: 14px;
+  box-shadow: 0 2px 0 var(--accent-violet-deep);
+  transition: transform var(--transition-fast);
+  white-space: nowrap;
+}
+.audio-btn:hover { box-shadow: 0 4px 0 var(--accent-violet-deep); }
+.audio-btn:active { transform: translateY(1px); }
+.audio-btn.playing { background: var(--accent-rose); box-shadow: 0 2px 0 #9d174d; }
+.audio-btn .audio-ico { font-size: 14px; }
+.audio-selects {
+  display: flex; gap: 10px;
+  flex: 1; flex-wrap: wrap;
+  min-width: 0;
+}
+.audio-sel {
+  display: flex; flex-direction: column;
+  font-size: 11px; color: var(--text-muted);
+  font-weight: 600;
+  flex: 1; min-width: 110px;
+}
+.audio-sel span { margin-bottom: 3px; letter-spacing: 0.3px; }
+.audio-sel select {
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid #ddd6f0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  background: white;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+.audio-sel select:focus {
+  outline: none;
+  border-color: var(--accent-violet);
+}
 .conceitos {
   display: grid; gap: 10px;
 }
@@ -550,6 +605,29 @@ main {
 
       <div class="resumo" id="resumoBox">
         <h3 class="section-title"><span class="ico">📖</span> Resumo</h3>
+        <div class="audio-player no-print" id="audioPlayer">
+          <button class="audio-btn" id="btnAudioPlay" type="button" aria-label="Reproduzir">
+            <span class="audio-ico">▶</span>
+            <span class="audio-lbl">Ouvir resumo</span>
+          </button>
+          <div class="audio-selects">
+            <label class="audio-sel">
+              <span>Voz</span>
+              <select id="ttsVoice"></select>
+            </label>
+            <label class="audio-sel">
+              <span>Velocidade</span>
+              <select id="ttsRate">
+                <option value="0.85">0.85×</option>
+                <option value="1" selected>1×</option>
+                <option value="1.25">1.25×</option>
+                <option value="1.5">1.5×</option>
+                <option value="1.75">1.75×</option>
+                <option value="2">2×</option>
+              </select>
+            </label>
+          </div>
+        </div>
         <div id="resumoTexto"></div>
       </div>
 
@@ -620,6 +698,8 @@ main {
 const LS_KEY_API = 'matemagica_estudofoto_apikey';
 const LS_KEY_MODEL = 'matemagica_estudofoto_model';
 const LS_KEY_LAST = 'matemagica_estudofoto_last';
+const LS_KEY_VOICE = 'matemagica_estudofoto_voice';
+const LS_KEY_RATE = 'matemagica_estudofoto_rate';
 const MAX_PHOTOS = 50;
 const MANY_PHOTOS_WARNING = 20;  // a partir daqui, avisa que vai demorar e custar mais
 const MAX_DIM = 1280;     // redimensiona o maior lado pra economizar tokens
@@ -962,6 +1042,9 @@ async function callAnthropic(content) {
 function renderResult() {
   hide($('#loading-card'));
   show($('#result-section'));
+  // Para áudio anterior (caso o usuário tenha clicado em "Explica diferente"
+  // enquanto estava ouvindo o resumo antigo)
+  if (typeof stopAudioOnRender === 'function') stopAudioOnRender();
   const r = state.result;
 
   $('#resultTitulo').textContent = r.titulo || 'Estudo';
@@ -1089,25 +1172,121 @@ $('#btnExplicaDif').addEventListener('click', () => {
 
 // === Áudio (TTS Web Speech, custo zero) ===
 let ttsUtter = null;
-$('#btnAudio').addEventListener('click', () => {
+
+// Popula seletor de vozes (vozes pt primeiro, depois outras como fallback)
+function populateVoices() {
+  if (!('speechSynthesis' in window)) return;
+  const all = window.speechSynthesis.getVoices();
+  if (!all.length) return; // ainda não carregou — onvoiceschanged dispara depois
+
+  const pt = all.filter(v => v.lang && v.lang.toLowerCase().startsWith('pt'));
+  const ordered = pt.sort((a, b) => {
+    // pt-BR primeiro
+    const aBR = a.lang.toLowerCase() === 'pt-br' ? 0 : 1;
+    const bBR = b.lang.toLowerCase() === 'pt-br' ? 0 : 1;
+    if (aBR !== bBR) return aBR - bBR;
+    return a.name.localeCompare(b.name);
+  });
+
+  const sel = $('#ttsVoice');
+  if (!sel) return;
+  if (ordered.length === 0) {
+    sel.innerHTML = '<option value="">(voz padrão do sistema)</option>';
+    return;
+  }
+  sel.innerHTML = ordered.map(v =>
+    `<option value="${v.name}">${escapeHtml(v.name)} · ${v.lang}</option>`
+  ).join('');
+
+  const saved = localStorage.getItem(LS_KEY_VOICE);
+  if (saved && ordered.some(v => v.name === saved)) {
+    sel.value = saved;
+  }
+}
+
+if ('speechSynthesis' in window) {
+  populateVoices();
+  if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
+    window.speechSynthesis.onvoiceschanged = populateVoices;
+  }
+}
+
+// Restaura velocidade salva
+(function initRate() {
+  const sel = $('#ttsRate');
+  const saved = localStorage.getItem(LS_KEY_RATE);
+  if (sel && saved) sel.value = saved;
+})();
+
+$('#ttsVoice')?.addEventListener('change', e => {
+  localStorage.setItem(LS_KEY_VOICE, e.target.value);
+});
+$('#ttsRate')?.addEventListener('change', e => {
+  localStorage.setItem(LS_KEY_RATE, e.target.value);
+  // Se estiver tocando, reinicia com a nova velocidade pra ter efeito imediato
+  if (window.speechSynthesis?.speaking) {
+    window.speechSynthesis.cancel();
+    setTimeout(() => playAudioBtn.click(), 50);
+  }
+});
+
+function setAudioBtnState(playing) {
+  const btn = $('#btnAudioPlay');
+  if (!btn) return;
+  if (playing) {
+    btn.classList.add('playing');
+    btn.querySelector('.audio-ico').textContent = '⏸';
+    btn.querySelector('.audio-lbl').textContent = 'Parar';
+  } else {
+    btn.classList.remove('playing');
+    btn.querySelector('.audio-ico').textContent = '▶';
+    btn.querySelector('.audio-lbl').textContent = 'Ouvir resumo';
+  }
+}
+
+function playResumo() {
   if (!('speechSynthesis' in window)) {
     alert('Seu navegador não suporta leitura em voz alta.');
     return;
   }
   if (window.speechSynthesis.speaking) {
     window.speechSynthesis.cancel();
-    $('#btnAudio').textContent = '🔊 Ouvir resumo';
+    setAudioBtnState(false);
     return;
   }
   const texto = (state.result?.resumo || []).join('\n\n');
   if (!texto.trim()) return;
+
   ttsUtter = new SpeechSynthesisUtterance(texto);
   ttsUtter.lang = 'pt-BR';
-  ttsUtter.rate = 0.95;
-  ttsUtter.onend = () => { $('#btnAudio').textContent = '🔊 Ouvir resumo'; };
+  ttsUtter.rate = parseFloat($('#ttsRate')?.value || '1') || 1;
+
+  const voiceName = $('#ttsVoice')?.value;
+  if (voiceName) {
+    const voice = window.speechSynthesis.getVoices().find(v => v.name === voiceName);
+    if (voice) ttsUtter.voice = voice;
+  }
+
+  ttsUtter.onend = () => setAudioBtnState(false);
+  ttsUtter.onerror = () => setAudioBtnState(false);
+
   window.speechSynthesis.speak(ttsUtter);
-  $('#btnAudio').textContent = '⏸ Parar leitura';
-});
+  setAudioBtnState(true);
+}
+
+const playAudioBtn = $('#btnAudioPlay');
+playAudioBtn?.addEventListener('click', playResumo);
+
+// Botão antigo da toolbar continua funcionando (usa as mesmas configs)
+$('#btnAudio').addEventListener('click', playResumo);
+
+// Quando vier um novo resumo (incluindo /diferente), para qualquer áudio em curso
+function stopAudioOnRender() {
+  if (window.speechSynthesis?.speaking) {
+    window.speechSynthesis.cancel();
+    setAudioBtnState(false);
+  }
+}
 
 // === Boot: pede a chave na primeira visita ===
 (function boot() {
