@@ -11,6 +11,15 @@ Contexto:
 - Matéria: ${materia || '(detectar pelo conteúdo)'}
 - O conteúdo a estudar está nas FOTOS de páginas de livro/caderno enviadas.
 
+⚠️ PRECISÃO MATEMÁTICA E FACTUAL — REGRA INEGOCIÁVEL:
+Antes de incluir QUALQUER número, conta, equação, data ou fato no resumo / conceitos / perguntas / gabarito, VERIFIQUE mentalmente que está correto. Especificamente:
+- Toda adição, subtração, multiplicação e divisão deve estar matematicamente correta. Confira CADA conta.
+- Em exercícios de "compensação" (ex: somar 10 a um e tirar 10 do outro): tenha clareza que ADIÇÃO mantém a soma com mudanças OPOSTAS, e SUBTRAÇÃO mantém a diferença com mudanças IGUAIS. NÃO confunda.
+- Datas históricas, nomes próprios, fórmulas, regras gramaticais: só use se tiver certeza.
+- Se houver QUALQUER dúvida sobre a precisão de um número/fato, NÃO use esse exemplo. Substitua por outro que você tenha certeza.
+- A criança vai estudar pelo seu material — UM ÚNICO ERRO confunde o aprendizado e perde a confiança do pai.
+Trate matemática com o cuidado de um professor que vai ser corrigido publicamente.
+
 Sua tarefa, baseada APENAS no conteúdo das fotos:
 
 1. TÍTULO curto (max 60 caracteres) que resume o tema central das páginas.
