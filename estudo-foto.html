@@ -490,10 +490,10 @@ main {
     <p class="subtitle">Até 10 fotos por estudo. Tente enquadrar bem a página, com boa luz.</p>
 
     <label class="uploader" id="uploader">
-      <input type="file" id="fileInput" accept="image/*" capture="environment" multiple style="display:none">
+      <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none">
       <span class="ico">📸</span>
-      <div class="big">Tirar foto ou escolher imagens</div>
-      <div class="small">JPG ou PNG · até 10 fotos</div>
+      <div class="big" id="uploaderBig">Toque pra tirar foto da página</div>
+      <div class="small" id="uploaderSmall">Até 10 páginas por estudo</div>
     </label>
 
     <div class="thumbs" id="thumbs"></div>
@@ -686,6 +686,21 @@ function renderThumbs() {
     thumbsBox.appendChild(div);
   });
   $('#generate').disabled = state.photos.length === 0;
+
+  // Atualiza texto do uploader baseado em quantas fotos já tem
+  const n = state.photos.length;
+  const big = $('#uploaderBig');
+  const small = $('#uploaderSmall');
+  if (n === 0) {
+    big.textContent = 'Toque pra tirar foto da página';
+    small.textContent = 'Até 10 páginas por estudo';
+  } else if (n >= MAX_PHOTOS) {
+    big.textContent = `Limite de ${MAX_PHOTOS} fotos atingido`;
+    small.textContent = 'Remova alguma pra adicionar outra';
+  } else {
+    big.textContent = `+ Tirar outra página (${n}/${MAX_PHOTOS})`;
+    small.textContent = 'Toque aqui pra adicionar mais';
+  }
 }
 thumbsBox.addEventListener('click', e => {
   const btn = e.target.closest('.rm');
