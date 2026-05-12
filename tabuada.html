@@ -31,6 +31,32 @@
   }
   .header-row .voltar { margin: 0 !important; flex-shrink: 0; }
   .header-row .header-spacer { width: 100px; flex-shrink: 0; }
+  .header-row .comprar-topo {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #ff7b3d 0%, #ff5e1f 100%);
+    color: #fff;
+    border: 2px solid #d94a0e;
+    padding: 7px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    box-shadow: 0 2px 6px rgba(217, 74, 14, 0.35);
+    margin: 0;
+    white-space: nowrap;
+  }
+  .header-row .comprar-topo:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(217, 74, 14, 0.45);
+    filter: brightness(1.05);
+  }
+  .header-row .comprar-topo:active { transform: scale(0.98); }
   h1.titulo-tabuada {
     font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
     font-size: 22px;
@@ -1771,16 +1797,11 @@
 <body>
 <div class="container">
   <div class="header-row">
-    <a href="/vitrine.html" class="voltar">← Voltar à oferta</a>
+    <a href="/" class="voltar">← Voltar ao início</a>
     <h1 class="titulo-tabuada">🧮 Tabuada Mágica</h1>
     <span class="header-spacer"></span>
   </div>
   <div class="sub-tabuada">Desbloqueie cada tabuada. Ordem não muda o total!</div>
-
-  <a href="javascript:void(0)" class="upsell-banner" onclick="goCheckout('banner_topo')">
-    <span class="ub-text"><strong>✨ Liberar 1º ao 5º ano completo</strong> · R$27 · pra sempre</span>
-    <span class="ub-arrow">→</span>
-  </a>
 
   <div class="header-player" id="header-player"></div>
 
@@ -1840,10 +1861,6 @@
       <div class="resultado-botoes">
         <button class="estudo-btn principal" onclick="iniciarTreino(_fatorAtual)">🔄 Tentar de novo</button>
         <button class="estudo-btn" onclick="mudarModo('estudo')">📖 Estudar mais</button>
-      </div>
-      <div class="upsell-result">
-        <p class="upsell-result-msg">Quer continuar com soma, fração, problemas e mais?</p>
-        <button class="upsell-result-btn" onclick="goCheckout('cta_resultado')">Liberar 1º ao 5º ano · R$27 →</button>
       </div>
     </div>
   </div>
