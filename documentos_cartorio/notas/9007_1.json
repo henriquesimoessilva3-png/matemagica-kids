@@ -1,0 +1,108 @@
+{
+  "documento": "9007_1.pdf",
+  "numero_registro": "9007",
+  "data_processamento": "2026-05-12",
+  "campos_estruturados": {
+    "numero": "9007",
+    "data": "1950-01-17",
+    "data_extenso": "17 de Janeiro de 1950",
+    "lugar": "Corego do Entre Folhas",
+    "distrito": "Paraíso",
+    "municipio": "Mesquita",
+    "comarca": "Ferros",
+    "estado": "Minas Gerais",
+    "adquirente": "Companhia Siderúrgica Belgo-Mineira",
+    "area_hectares": "54",
+    "area_ares": "99",
+    "area_centiares": "45",
+    "area_total_ha_decimal": 54.9945,
+    "natureza_terreno": "campos, capoeiras e matos",
+    "forma_aquisicao": "herança e compra",
+    "documento_base": "escritura pública e transcrições anteriores citadas"
+  },
+  "confrontantes": [
+    {"nome": "Vicente Pinto de Souza", "relacao": "co-proprietário (commum)"},
+    {"nome": "herdeiros de Ana Pinto", "relacao": "co-proprietários (commum)"},
+    {"nome": "Joaquim de Souza Caldas", "posicao": "nos altos"},
+    {"nome": "Manoel Caldas", "posicao": "lado esquerdo do corego"},
+    {"nome": "Mendes de Souza", "posicao": "no rio (descendo)", "confianca": "media"},
+    {"nome": "Joaquim Bento Soares", "posicao": "corego acima"},
+    {"nome": "João Lopes", "posicao": "ribeirão Ganafas / Garrafas"},
+    {"nome": "[Men]des de Souza", "posicao": "corego abaixo", "confianca": "media"}
+  ],
+  "assinaturas": [
+    {
+      "papel": "Publicador oficial",
+      "nome_lido": "Cemar Lage Santos",
+      "leituras_alternativas": ["Cesar Lage Santos", "Cemar Cage Santos"],
+      "confianca": "baixa"
+    },
+    {
+      "papel": "Oficial",
+      "nome_lido": "José de Oliveira Santos",
+      "confianca": "alta"
+    }
+  ],
+  "incertezas": [
+    {
+      "trecho": "Conego do Entre Folhas (cabeçalho)",
+      "leitura_principal": "Conego",
+      "leituras_alternativas": ["Corego", "Córrego"],
+      "confianca": "media",
+      "justificativa": "Na mesma página, o corpo do texto usa repetidamente 'corego' (córrego, grafia antiga sem rr) para o mesmo acidente geográfico. Provavelmente é 'Córrego do Entre Folhas'.",
+      "coordenadas_imagem": [250, 0, 500, 80]
+    },
+    {
+      "trecho": "fere em rio Mendes de Souza",
+      "leitura_principal": "fere em rio Mendes de Souza",
+      "leituras_alternativas": ["fere em rio. Mendes de Souza, dividindo...", "fere em [águas de] Mendes de Souza"],
+      "confianca": "media",
+      "justificativa": "'fere em' é termo regional MG para 'desemboca/encontra-se com'. A palavra após 'em' pode ser 'rio' ou outro substantivo. 'Mendes de Souza' pode ser nome do rio ou confrontante separado.",
+      "coordenadas_imagem": [1050, 230, 1240, 290]
+    },
+    {
+      "trecho": "ribeirão Ganafas",
+      "leitura_principal": "Ganafas",
+      "leituras_alternativas": ["Garrafas"],
+      "confianca": "baixa",
+      "justificativa": "Em caligrafia cursiva da época o duplo 'rr' frequentemente toma forma de 'n' largo. 'Ribeirão das Garrafas' é toponímia mais corriqueira em MG; 'Ganafas' não tem registro claro.",
+      "coordenadas_imagem": [170, 290, 360, 335]
+    },
+    {
+      "trecho": "terreno do testato e pelo lado",
+      "leitura_principal": "testato",
+      "leituras_alternativas": ["testado", "testada", "tatalo", "trato"],
+      "confianca": "baixa",
+      "justificativa": "Palavra borrada/cursiva pouco clara. 'Testato/testado/testada' é marco de limite ou frente de propriedade em uso arcaico. Pode também ser nome próprio de propriedade.",
+      "coordenadas_imagem": [1100, 280, 1240, 320]
+    },
+    {
+      "trecho": "[Men]des de Souza",
+      "leitura_principal": "Mendes de Souza",
+      "leituras_alternativas": ["[outro nome]des de Souza"],
+      "confianca": "media",
+      "justificativa": "Primeira sílaba na borda direita do livro (cortada). A continuação 'des de Souza' é claramente legível no início da linha seguinte, sugerindo 'Mendes de Souza'.",
+      "coordenadas_imagem": [1180, 290, 1240, 340]
+    },
+    {
+      "trecho": "Cemar Lage Santos",
+      "leitura_principal": "Cemar Lage Santos",
+      "leituras_alternativas": ["Cesar Lage Santos", "Cemar Cage Santos", "Cesar Cage Santos"],
+      "confianca": "baixa",
+      "justificativa": "Assinatura cursiva floreada. Primeiro nome ambíguo entre Cemar/Cesar. Sobrenome 'Lage' (português comum) preferido sobre 'Cage' (atípico no Brasil), mas o C/L é difícil de distinguir.",
+      "coordenadas_imagem": [220, 365, 720, 410]
+    }
+  ],
+  "selos_fiscais": {
+    "estado": "Minas Gerais",
+    "valor_unitario": "Cr$ 0,50",
+    "quantidade": 4,
+    "valor_total": "Cr$ 2,00",
+    "descricao": "Selos com brasão da balança da Justiça, escrita 'MINAS GERAIS' visível, sobrepostos a carimbos roxos parcialmente legíveis (provavelmente identificadores do cartório e do oficial)."
+  },
+  "contexto_historico": {
+    "adquirente_validado": "Companhia Siderúrgica Belgo-Mineira (fundada em 1921), maior compradora de terras na região de Ferros/Santana dos Ferros nas décadas de 1940-50 para produção de carvão vegetal destinado às suas siderúrgicas (Sabará, João Monlevade).",
+    "municipio_validado": "Mesquita-MG, emancipada de Santana dos Ferros em 1923. Pertenceu à Comarca de Ferros à época do registro.",
+    "ortografia": "Documento em ortografia pré-reforma de 1943/1971: 'commum', 'districto', 'municipio', 'corego' (sem rr)."
+  }
+}
