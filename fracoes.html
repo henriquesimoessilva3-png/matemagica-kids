@@ -3,14 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>
-(function(){
-  try {
-    var lic = JSON.parse(localStorage.getItem('matemagica_licenca_v1') || 'null');
-    if (!lic || !lic.key) location.replace('vitrine.html?premium_required=1');
-  } catch(e) { location.replace('vitrine.html?premium_required=1'); }
-})();
-</script>
 <title>Frações com Pizza — MATEMÁGICA</title>
 <!-- Microsoft Clarity (gravação de sessão + heatmap) -->
 <script type="text/javascript">

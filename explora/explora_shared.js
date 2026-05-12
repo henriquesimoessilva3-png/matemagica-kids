@@ -110,8 +110,8 @@ function fecharModal() {
 const LICENCA_STORAGE_KEY_EXPLORA = 'matemagica_licenca_v1';
 const CHECKOUT_URL_EXPLORA = 'https://pay.hotmart.com/A105538417J';
 const PRECO_EXPLORA = 'R$ 27';
-// Tudo liberado com a licença (R$27). 1º ao 5º são premium.
-const PAGINAS_PREMIUM_EXPLORA = ['ano_1.html', 'ano_2.html', 'ano_3.html', 'ano_4.html', 'ano_5.html'];
+// Site liberado: nenhuma página é mais gated por licença.
+const PAGINAS_PREMIUM_EXPLORA = [];
 
 function ehPremiumExplora() {
   // MODELO ATUAL: app 100% liberado. Retorna true pra todos.

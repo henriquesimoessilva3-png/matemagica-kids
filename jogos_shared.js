@@ -14,13 +14,8 @@ const ANOS_STORAGE_KEYS = ['jogosMat1ano_v1','jogosMat2ano_v1','jogosMat3ano_v1'
 const CHECKOUT_URL = 'https://pay.hotmart.com/A105538417J';
 const PRECO_EXIBIDO = 'R$ 27';
 
-// Páginas totalmente premium (redirecionam ao paywall se não tiver licença)
-const PAGINAS_PREMIUM = [
-  'jogos_matematica_2ano.html',
-  'jogos_matematica_3ano.html',
-  'jogos_matematica_4ano.html',
-  'jogos_matematica_5ano.html'
-];
+// Site liberado: nenhuma página é mais gated por licença.
+const PAGINAS_PREMIUM = [];
 
 // ============== BADGES ==============
 const BADGES = {
