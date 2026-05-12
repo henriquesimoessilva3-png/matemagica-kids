@@ -886,47 +886,8 @@ function fecharOnboarding() {
   if (m) m.classList.add('hidden');
 }
 
-// ============== PAYWALL (licença R$27 vitalícia) ==============
-function abrirPaywall(motivo) {
-  const m = document.getElementById('modal-overlay');
-  if (!m) return;
-  const emoji = document.getElementById('m-emoji');
-  const titulo = document.getElementById('m-titulo');
-  const conteudo = document.getElementById('m-conteudo');
-  const btn = document.getElementById('modal-btn');
-  if (emoji) emoji.textContent = '🔒';
-  if (titulo) titulo.textContent = 'Libere tudo no Matemágica';
-  if (conteudo) {
-    conteudo.innerHTML = `
-      <div style="text-align:left;line-height:1.55;font-size:14px;color:#4a3b8a">
-        ${motivo ? `<p style="text-align:center;font-size:13px;color:#888;margin:0 0 12px">${motivo}</p>` : ''}
-        <div style="background:linear-gradient(135deg,#fff3d6,#ffe5a3);border-radius:12px;padding:14px;margin-bottom:14px">
-          <div style="font-size:26px;font-weight:900;color:#a87800;text-align:center;line-height:1">${PRECO_EXIBIDO}</div>
-          <div style="text-align:center;font-size:12px;color:#a87800;margin-bottom:10px">pagamento único · vitalício · sem mensalidade</div>
-          <ul style="margin:0;padding-left:20px;font-size:13px;color:#5a3a00">
-            <li>Todos os jogos do <b>2º ao 5º ano</b></li>
-            <li><b>SOS Prova</b> — detecta fraquezas e monta prova</li>
-            <li>🎁 <b>BÔNUS: app EXPLORA</b> — História e Geografia BNCC, 1º ao 5º ano</li>
-            <li>4 PDFs extras sem gastar moedas</li>
-            <li>Temas de fundo (escuro, pastel, oceano…)</li>
-            <li>+500 moedas de bônus inicial</li>
-            <li>Badge exclusiva <b>✨ Matemágico</b></li>
-            <li>Atualizações novas pra sempre</li>
-          </ul>
-        </div>
-        <a href="${CHECKOUT_URL}" target="_blank" rel="noopener" onclick="somAcerto&&somAcerto()" style="display:block;background:linear-gradient(135deg,#2ebd7c,#4ab3a5);color:#fff;text-align:center;padding:13px;border-radius:10px;text-decoration:none;font-weight:800;font-size:15px;margin-bottom:8px;box-shadow:0 4px 10px rgba(46,189,124,0.3)">🚀 Liberar tudo por ${PRECO_EXIBIDO}</a>
-        <p style="font-size:11px;color:#888;text-align:center;margin:8px 0 0">🔒 Pagamento seguro via Hotmart · PIX, cartão ou boleto</p>
-        <p style="font-size:11px;color:#888;text-align:center;margin:2px 0 0">Garantia de 7 dias — devolvemos 100% sem perguntar</p>
-        <p style="font-size:11px;color:#888;text-align:center;margin:10px 0 0">Já comprou? <a href="#" onclick="abrirReativar();return false;" style="color:#6b54d3;font-weight:700">Inserir chave de ativação</a></p>
-      </div>
-    `;
-  }
-  if (btn) {
-    btn.textContent = 'Depois';
-    btn.onclick = () => fecharModal();
-  }
-  m.classList.remove('hidden');
-}
+// App é gratuito — paywall desativado. Função mantida como no-op pra compat.
+function abrirPaywall() { /* no-op: app gratuito */ }
 
 function abrirReativar() {
   const chave = prompt('Cole a chave de ativação recebida por email (exemplo: MM-XXXX-XXXX-XXXX-XXXX):');

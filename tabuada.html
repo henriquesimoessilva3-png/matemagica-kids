@@ -3542,20 +3542,7 @@ initJogos();
 renderPokedex();
 renderEstudo();
 
-// Checkout pro plano completo (R$27) — origem identifica de qual CTA veio
-function goCheckout(origem) {
-  if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { value: 27.00, currency: 'BRL' });
-  if (typeof clarity === 'function') clarity('set', 'cta_clicked', 'true');
-  var pos = origem || 'cta';
-  var params = new URLSearchParams({
-    sck: 'tabuada',
-    utm_source: 'app',
-    utm_medium: 'upsell',
-    utm_campaign: 'tabuada_freemium',
-    utm_content: pos
-  });
-  window.location.href = 'https://pay.hotmart.com/A105538417J?' + params.toString();
-}
+function goCheckout() { window.location.href = '/'; }
 </script>
 
 <script>

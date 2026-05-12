@@ -469,15 +469,10 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
     <p class="product-line">Matemágica · BNCC completo do 1º ao 5º ano</p>
     <div class="seals-row">
       <span class="seal">✅ 100% BNCC</span>
-      <span class="seal">♾ Acesso vitalício</span>
-      <span class="seal">🛡 Garantia 7 dias</span>
+      <span class="seal">🆓 100% gratuito</span>
+      <span class="seal">📱 Sem cadastro</span>
     </div>
-    <div class="price-hero">
-      <span class="from">Apps similares: R$ 30–50 por mês</span>
-      <div class="amount">R$ 27</div>
-      <div class="detail">pagamento único · sem mensalidade · pra sempre</div>
-    </div>
-    <button class="cta-hero" onclick="goCheckout()">Quero o Matemágica completo →</button>
+    <a class="cta-hero" href="/" style="text-decoration:none;display:inline-block">Começar agora — é grátis →</a>
 
     <p class="below-fold-divider">↓ VEJA POR DENTRO ↓</p>
 
@@ -523,13 +518,9 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
         </article>
       </div>
 
-      <button class="cta-hero" onclick="goCheckout()">Quero o Matemágica completo →</button>
-      <p class="cta-tour-note">💎 Pagamento único · acesso vitalício · 2 apps em 1 (Matemágica + EXPLORA)</p>
+      <a class="cta-hero" href="/" style="text-decoration:none;display:inline-block">Começar agora — é grátis →</a>
+      <p class="cta-tour-note">🆓 100% gratuito · 2 apps em 1 (Matemágica + EXPLORA)</p>
     </section>
-
-    <p class="guarantee">
-      🛡 <strong>Garantia de 7 dias</strong> — se seu filho não abrir o app sozinho 3 vezes na 1ª semana, devolvo 100% do dinheiro. Sem perguntas.
-    </p>
   </div>
 
 </div>
@@ -784,25 +775,7 @@ src="https://www.facebook.com/tr?id=1840468943289707&ev=PageView&noscript=1"/></
     showScreen('screen-result');
   }
 
-  function goCheckout() {
-    if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { value: 27.00, currency: 'BRL' });
-    if (typeof clarity === 'function') clarity('set', 'cta_clicked', 'true');
-
-    const params = new URLSearchParams({
-      sck: 'quiz_v2_' + (state.perfil || 'X'),
-      utm_source: utm.source || 'quiz',
-      utm_medium: utm.medium || 'organic',
-      utm_campaign: utm.campaign || 'quiz_v2_R27',
-      utm_content: 'perfil_' + (state.perfil || 'X'),
-      p1: state.answers.p1 || '',
-      p2: state.answers.p2 || '',
-      p3: state.answers.p3 || '',
-      p4: state.answers.p4 || '',
-      p5: state.answers.p5 || '',
-      email: state.email || ''
-    });
-    window.location.href = HOTMART_CHECKOUT + '?' + params.toString();
-  }
+  function goCheckout() { window.location.href = '/'; }
 </script>
 </body>
 </html>

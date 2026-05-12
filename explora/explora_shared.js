@@ -118,37 +118,7 @@ function ehPremiumExplora() {
   return true;
 }
 
-function abrirPaywallExplora(motivo) {
-  if (document.getElementById('paywall-explora-overlay')) return;
-  const ov = document.createElement('div');
-  ov.id = 'paywall-explora-overlay';
-  ov.style.cssText = 'position:fixed;inset:0;background:rgba(70,40,15,0.75);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;backdrop-filter:blur(3px)';
-  ov.innerHTML = `
-    <div style="background:#fff4dc;border:3px solid #d4a574;border-radius:18px;max-width:440px;width:100%;max-height:90vh;overflow-y:auto;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.35);font-family:inherit">
-      <div style="text-align:center;font-size:44px;margin-bottom:6px">🔒</div>
-      <h2 style="text-align:center;margin:0 0 6px;color:#3a2818;font-size:20px">EXPLORA é bônus do Matemágica</h2>
-      <p style="text-align:center;font-size:13px;color:#6b3a15;margin:0 0 14px">${motivo || 'Este ano é parte do pacote completo.'}</p>
-      <div style="background:linear-gradient(135deg,#fff4dc,#ffe8ba);border:2px solid #d4a574;border-radius:12px;padding:14px;margin-bottom:14px">
-        <div style="font-size:26px;font-weight:900;color:#8b5a2b;text-align:center;line-height:1">${PRECO_EXPLORA}</div>
-        <div style="text-align:center;font-size:12px;color:#8b5a2b;margin-bottom:10px">pagamento único · vitalício · 2 apps em 1</div>
-        <ul style="margin:0;padding-left:20px;font-size:13px;color:#5a3a00;line-height:1.55">
-          <li><b>Matemágica Completo</b> — 2º ao 5º ano, SOS Prova, PDFs extras</li>
-          <li><b>EXPLORA Completo</b> — História + Geografia 2º ao 5º ano</li>
-          <li>4 PDFs extras no Matemágica</li>
-          <li>Temas de fundo + bônus de 500 moedas</li>
-          <li>Badge ✨ Matemágico</li>
-        </ul>
-      </div>
-      <a href="${CHECKOUT_URL_EXPLORA}" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#c0392b,#8b1a10);color:#fff;text-align:center;padding:13px;border-radius:10px;text-decoration:none;font-weight:800;font-size:15px;margin-bottom:8px;box-shadow:0 4px 10px rgba(139,26,16,0.3)">🚀 Liberar tudo por ${PRECO_EXPLORA}</a>
-      <p style="font-size:11px;color:#6b3a15;text-align:center;margin:8px 0 0">🔒 Pagamento seguro via Hotmart · PIX, cartão ou boleto · 7 dias de garantia</p>
-      <div style="display:flex;gap:8px;margin-top:14px">
-        <button onclick="abrirReativarExplora()" style="flex:1;background:#ffe8ba;color:#6b3a15;border:2px solid #c9a86b;padding:10px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">Já comprei</button>
-        <button onclick="document.getElementById('paywall-explora-overlay').remove()" style="flex:1;background:#fff4dc;color:#6b3a15;border:2px solid #c9a86b;padding:10px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">Depois</button>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(ov);
-}
+function abrirPaywallExplora() { /* no-op: app gratuito */ }
 
 function abrirReativarExplora() {
   const k = prompt('Cole a chave de ativação do Matemágica (recebida por email — ex: MM-XXXX-XXXX-XXXX-XXXX):');
