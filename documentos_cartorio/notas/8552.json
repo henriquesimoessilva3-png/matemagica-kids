@@ -1,0 +1,48 @@
+{
+  "numero_registro": "8552",
+  "paginas": ["8552_1.pdf", "8552_2.pdf", "8552_3.pdf", "8552_4.pdf"],
+  "data_processamento": "2026-05-12",
+  "aquisicao": {
+    "data": "1949-02-25",
+    "lugar": "Cidade Tabôas",
+    "distrito": "Cidade",
+    "municipio": "Cidade",
+    "comarca": "Ferros",
+    "adquirentes": [
+      {"nome": "Maria Augusta Lage", "profissao": "agricultora", "residencia": "Cidade"},
+      {"nome": "João de [Pita?] Lage", "profissao": "agricultor", "residencia": "Cidade", "confianca_nome": "media"}
+    ],
+    "area_adquirida_hectares": 17.6544,
+    "area_total_hectares": 48.1138,
+    "fracao_ideal_pct": 36.7,
+    "natureza_terreno": "campos, capoeiras e matos"
+  },
+  "transmissao": {
+    "data_registro": "1949-03-04",
+    "transmitente_principal": "Augusto Olimpio Lage (falecido)",
+    "titulo": "Herança - formal de partilha",
+    "data_formal_partilha": "1945-02-25",
+    "serventuario": "vão público do 1º oficio",
+    "valor": "Cr$ 5.884,79",
+    "averbacoes": "3% pago L. est. nº 102895; imóvel transmitido em sequência ao Sr. Jacy de Carvalho Lage (registro nº 8.555 deste mesmo livro)"
+  },
+  "confrontantes": [
+    {"nome": "D. Janduira de Carvalho [Lage?]", "fonte": "8552_1"},
+    {"nome": "D. Guiomar de Carvalho Lage", "posicao": "sul", "fonte": "8552_3"},
+    {"nome": "D. Anna [ou Jacy] de Carvalho Lage", "posicao": "Oeste/transmissão", "fonte": "8552_3, 8552_4"}
+  ],
+  "topo_e_hidrografia": ["fazenda 'Banca do Tanque'", "ribeirão (não nomeado)"],
+  "uso_do_solo": "cultura de cereais e pastos; terrenos compostos de altos e baixos",
+  "transcricoes_anteriores": ["nº 5209 do L.3.3"],
+  "selos_fiscais": {
+    "transmissoes": "3 selos coloridos (azul + verde + vermelho), federais"
+  },
+  "ligacoes_outros_registros": [
+    {"registro": "8555", "tipo": "transmissão sequencial ao Sr. Jacy de Carvalho Lage (mesmo dia 4-3-1949)"}
+  ],
+  "incertezas_principais": [
+    "Nome do co-adquirente: João de Pita Lage / João de Plita Lage",
+    "Nome do receptor da segunda transmissão: D. Anna ou D. Jacy de Carvalho Lage (8552_4)",
+    "Palavra 'lu-emga boa' / 'lu-emboaba' entre 'lu-' e o nome do lugar (8552_1)"
+  ]
+}

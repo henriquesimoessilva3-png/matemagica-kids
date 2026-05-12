@@ -1,0 +1,44 @@
+{
+  "numero_registro": "8571",
+  "paginas": ["8571_1.pdf", "8571_2.pdf"],
+  "data_processamento": "2026-05-12",
+  "aquisicao": {
+    "data": "1949-03-23",
+    "lugar": "Fernandes",
+    "distrito": "São José de Cubas",
+    "municipio": "Ferros",
+    "comarca": "Ferros",
+    "adquirente": {"nome": "Odila [Fernandes Madeira?]", "filiacao": "filha de [Jeronimo? Pedro?] Fernandes Madeira (falecido)"},
+    "area_litros": 91,
+    "area_mililitros": 540,
+    "area_total_alqueires": 30,
+    "area_aprox_hectares": 11,
+    "natureza_terreno": "campos, capoeiras e matos, terrenos de qualidade inferior, com pouca aguada",
+    "co_proprietarios": "sociedade do lugar Gomes"
+  },
+  "transmissao": {
+    "transmitente": {"nome": "Ana Cuca Inácia", "status": "falecida"},
+    "titulo": "Herança - certidão",
+    "valor": "Cr$ 4.084,77",
+    "data_saida": "1947-09-19",
+    "data_sentenca": "1948-03-17",
+    "serventuario": "Escrivão do 3º oficio",
+    "averbacao_posterior": {
+      "data": "1952-03-29",
+      "referencia": "transcrição nº 10333 do L.30",
+      "sub_oficial": "Eb. Santos"
+    }
+  },
+  "confrontantes": [
+    {"nome": "José Teodoro Dionisio"},
+    {"nome": "herdeiros de Pedro Fernandes Madeira"},
+    {"nome": "José Botelho"},
+    {"nome": "Celestino Melo"},
+    {"nome": "João Melo"}
+  ],
+  "particularidades": [
+    "Único registro do lote em unidade 'litros/mililitros' em vez de 'hectares/ares/centiares'",
+    "Único registro em distrito São José de Cubas (Ferros), em vez de Cidade/Mesquita/Cidade",
+    "Outra rede de família proprietária (Fernandes Madeira, Melo, Dionisio) distinta dos Lage"
+  ]
+}

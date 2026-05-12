@@ -1,0 +1,42 @@
+{
+  "documento": "8539_1.pdf",
+  "numero_registro": "8539",
+  "face": "aquisicoes",
+  "data_processamento": "2026-05-12",
+  "campos_estruturados": {
+    "numero": "8539",
+    "data": "1949-01-17",
+    "data_extenso": "17 de Janeiro de 1949",
+    "lugar": "Passagem",
+    "distrito": "Cidade",
+    "municipio": "Cidade",
+    "comarca": "Ferros",
+    "estado": "Minas Gerais",
+    "adquirente": "José Pedro Celestino",
+    "adquirente_profissao": "Fazendeiro",
+    "adquirente_residencia": "Cidade",
+    "area_hectares": "151",
+    "area_ares": "25",
+    "area_centiares": "0",
+    "area_total_ha_decimal": 151.25,
+    "forma_aquisicao": "conforme transcrição nº 4811 do L.3.J",
+    "transcricao_anterior": "nº 4811 do L.3.J"
+  },
+  "confrontantes": [
+    {"nome": "Otelito Lage", "posicao": "alto, divisas"},
+    {"nome": "[?] de Freitas", "posicao": "no alto", "confianca": "media"},
+    {"nome": "herdeiros de Joaquim [de Freitas?]", "posicao": "altos do 'Bello Monte'"}
+  ],
+  "topo_e_hidrografia": ["alto do 'Bello Monte'", "rio Tanque", "fronteira 'do Bem'"],
+  "selos_fiscais": {
+    "estado": "Minas Gerais",
+    "valor_unitario": "Cr$ 0,50",
+    "quantidade": 4,
+    "valor_total": "Cr$ 2,00"
+  },
+  "incertezas": [
+    {"trecho": "Rust / Rural / Fazendinha (entre 'denominado' e 'Passagem')", "confianca": "baixa", "justificativa": "palavra de leitura difícil, possivelmente descritor adicional do lugar"},
+    {"trecho": "'baraúna' que se 'acravou'", "confianca": "media", "justificativa": "termo regional para árvore baraúna usada como marco; 'acravou' é forma arcaica de 'cravou-se'"},
+    {"trecho": "'palo acima'", "confianca": "media", "justificativa": "pode ser 'pelo alto' ou 'pela vegetação'"}
+  ]
+}

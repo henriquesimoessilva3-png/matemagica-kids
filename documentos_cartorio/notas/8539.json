@@ -1,0 +1,56 @@
+{
+  "numero_registro": "8539",
+  "paginas": ["8539_1.pdf", "8539_2.pdf", "8539_3.pdf", "8539_4.pdf"],
+  "data_processamento": "2026-05-12",
+  "campos_estruturados": {
+    "numero": "8539",
+    "data": "1949-01-17",
+    "data_extenso": "17 de Janeiro de 1949",
+    "lugar": "Passagem",
+    "distrito": "Cidade (?)",
+    "municipio": "Cidade (?)",
+    "comarca": "Ferros",
+    "estado": "Minas Gerais",
+    "adquirente": "José Pedro Celestino",
+    "adquirente_profissao": "Fazendeiro",
+    "adquirente_residencia": "Cidade",
+    "area_hectares": "151",
+    "area_ares": "25",
+    "area_total_ha_decimal": 151.25,
+    "transcricao_anterior": "nº 4811 do L.3.J",
+    "transcricao_posterior_averbada": "nº 10782 do L.30 (averbação Ferros 21-5-1953)"
+  },
+  "transmissao": {
+    "transmitente_principal": "Raimundo Fernandes (e filhos e sua mulher, geral)",
+    "transmitente_secundario": "divia Camillo Severino (provável serventuário)",
+    "titulo": "Compra",
+    "data_escritura": "1948-12-09",
+    "serventuario": "esc. de Paz de Passabem (?)",
+    "valor": "Cr$ 95.000,00",
+    "valor_decimal": 95000.00,
+    "preco_por_hectare": 628.10
+  },
+  "confrontantes": [
+    {"nome": "Otelito Lage", "posicao": "alto"},
+    {"nome": "[?] de Freitas", "posicao": "alto"},
+    {"nome": "herdeiros de Joaquim Henrique de Freitas", "posicao": "altos do Bello Monte"},
+    {"nome": "Jonas de Freitas Lage", "posicao": "terrenos abaixo da cachoeira"},
+    {"nome": "Leocadio Lage", "posicao": "divisas dos mesmos terrenos"}
+  ],
+  "topo_e_hidrografia": ["alto do 'Bello Monte'", "rio Tanque", "Corego Tres Cachoeiras", "gruta grande", "cachoeira", "fronteira 'do Bem'"],
+  "benfeitorias": [
+    "casa de morada asoalhada",
+    "casa coberta de telhas",
+    "moinho para fubá",
+    "garage",
+    "rancho de tropa"
+  ],
+  "selos_fiscais": {
+    "aquisicoes": {"estado": "Minas Gerais", "valor_unitario": "Cr$ 0,50", "quantidade": 4},
+    "transmissoes": {"tipo": "federal+estadual misturados", "valores": ["Cr$ 0,50", "Cr$ 0,80"]}
+  },
+  "assinaturas": {
+    "publicador_oficial": "Eemar Lage Santos",
+    "oficial": "José de Oliveira Santos"
+  }
+}

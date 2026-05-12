@@ -1,0 +1,54 @@
+{
+  "numero_registro": "8555",
+  "paginas": ["8555_1.pdf", "8555_2.pdf"],
+  "data_processamento": "2026-05-12",
+  "aquisicao": {
+    "data": "1949-03-04",
+    "lugar": "Cidade Tabôas",
+    "distrito": "Cidade",
+    "municipio": "Cidade",
+    "comarca": "Ferros",
+    "adquirente": {"nome": "Jacy de Carvalho Lage", "profissao": "Fazendeiro"},
+    "area_hectares": 17.6544,
+    "natureza_terreno": "campos, capoeiras e matos",
+    "benfeitorias": [
+      "casa de morada coberta com telhas",
+      "paiol coberto de capim",
+      "9 cumicos asoalhados (6 assoalhados + 3 terreos)",
+      "centro de madeira"
+    ]
+  },
+  "transmissao": {
+    "transmitente_principal": "João de Almeida Lage",
+    "transmitente_conjuge": "D. Maria [Lage?]",
+    "titulo": "Compra",
+    "forma": "Escritura pública lavrada",
+    "data_escritura": "1949-02-26",
+    "serventuario": "Esc. do 2º oficio",
+    "valor": "Cr$ 25.000,00",
+    "valor_decimal": 25000.00,
+    "preco_por_hectare": 1416.31,
+    "averbacao_posterior": "Vide matricula nº 1103, fls. 026 do L.28"
+  },
+  "confrontantes": [
+    {"nome": "D. Beatriz de Carvalho Lage", "posicao": "pelo espigão"},
+    {"nome": "José Verissimo de Barcelos Junior", "posicao": "ao sul"},
+    {"nome": "(próprio comprador — mesmo livro)", "posicao": "Oeste"},
+    {"nome": "Fazenda Banca do Tanque", "posicao": "leste, no ribeirão"}
+  ],
+  "transcricoes_anteriores": ["nº 8552 deste livro (mesma origem, herança Augusto Olimpio Lage)"],
+  "cadeia_transacao": [
+    "Augusto Olimpio Lage (falecido)",
+    "→ formal de partilha 25-2-1945 / registrado em 8552 em 25-2-1949",
+    "→ vendido a João de Almeida Lage [?]",
+    "→ vendido a Jacy de Carvalho Lage em 26-2-1949 / registrado em 8555 em 4-3-1949"
+  ],
+  "selos_fiscais": {
+    "aquisicoes": "4 selos estaduais Cr$ 0,50 (MG)",
+    "transmissoes": "selos federais BRASIL (Cr$ 0,50 azul + Cr$ 0,80 vermelho)"
+  },
+  "assinaturas": {
+    "publicador_oficial": "Eemar Lage Santos",
+    "oficial": "José de Oliveira Santos"
+  }
+}

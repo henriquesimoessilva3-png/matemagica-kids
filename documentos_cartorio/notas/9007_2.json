@@ -1,0 +1,65 @@
+{
+  "documento": "9007_2.pdf",
+  "numero_registro": "9007",
+  "face": "transmissoes",
+  "data_processamento": "2026-05-12",
+  "transmitente_principal": {
+    "nome": "Francis Norões Sousa",
+    "conjuge": "D. Maria",
+    "leituras_alternativas_nome": ["Francisco Norões Sousa", "Francis Sorões Sousa"],
+    "confianca": "media"
+  },
+  "transmitente_secundario": {
+    "nome": "José Costa",
+    "papel": "indeterminado (possível testemunha ou representante)",
+    "confianca": "alta"
+  },
+  "transacao": {
+    "titulo": "Compra",
+    "forma_titulo": "Escritura pública",
+    "data_escritura": "1948-12-03",
+    "data_escritura_extenso": "3 de dezembro de 1948",
+    "serventuario": "Esc. de Paz de Paraíso",
+    "valor_contrato": "Cr$ 27.270,00",
+    "valor_decimal": 27270.00,
+    "condicoes": "Não há",
+    "exercicio_averbacao": "1949"
+  },
+  "transcricoes_anteriores": ["nº 7995 do L.3.M.", "nº 7906 do L.3.M."],
+  "confrontantes_complemento": [
+    {"nome": "José Silverio Cândido", "relacao": "fazenda antiga (anterior dono do córrego)"},
+    {"nome": "herdeiros de Antº [Antonio?]", "relacao": "divisa no espigão 'Ganafas'"},
+    {"nome": "herdeiros de Antonio Men[des?]", "relacao": "pelas cabeceiras"}
+  ],
+  "toponimos_confirmados": [
+    {"nome": "espigão 'Ganafas'", "tipo": "elevação/ridge", "evidencia": "literal no documento"},
+    {"nome": "corego 'Entre Folhas'", "tipo": "córrego/creek", "evidencia": "literal"}
+  ],
+  "selos_fiscais": {
+    "tipo": "federais (BRASIL)",
+    "selos": [
+      {"valor": "Cr$ 0,50", "cor": "azul"},
+      {"valor": "Cr$ 0,80", "cor": "vermelho"},
+      {"valor": "Cr$ 0,20", "cor": "roxo"}
+    ],
+    "total": "Cr$ 1,50",
+    "diferenca": "Distintos dos selos estaduais (MG, Cr$ 0,50 x4) na face de Aquisições — marcam tributos diferentes."
+  },
+  "incertezas": [
+    {
+      "trecho": "Francis Norões Sousa",
+      "leituras_alternativas": ["Francisco Norões Sousa", "Francis Sorões Sousa"],
+      "confianca": "media",
+      "justificativa": "Primeira palavra ambígua entre 'Francis' (literal) e 'Francisco' (abreviado)."
+    },
+    {
+      "trecho": "data da escritura na coluna FORMA",
+      "leitura_principal": "vinte e sete de [mês ilegível]",
+      "confianca": "baixa",
+      "justificativa": "Mês entre o numeral '27' e a data '3-12-948' está em caligrafia rápida; pode ser 'novembro' (anterior à venda) ou data redundante."
+    }
+  ],
+  "links": {
+    "face_aquisicoes": "9007_1.html"
+  }
+}

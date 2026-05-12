@@ -1,0 +1,43 @@
+"""Helper para gerar HTML padrao (estilos compartilhados)."""
+
+CSS = """
+body { font-family: 'Georgia', serif; max-width: 780px; margin: 2em auto; line-height: 1.6; color: #222; padding: 0 1em; }
+h1 { border-bottom: 2px solid #333; padding-bottom: 0.3em; font-size: 1.4em; }
+h2 { font-size: 1.15em; color: #555; margin-top: 2em; border-bottom: 1px dotted #aaa; padding-bottom: 0.2em; }
+.meta { background: #f5f5f0; padding: 1em 1.2em; border-left: 4px solid #888; margin: 1em 0; }
+.meta dl { margin: 0; }
+.meta dt { font-weight: bold; display: inline-block; min-width: 150px; }
+.meta dd { display: inline; margin: 0; }
+.meta dl > div { margin-bottom: 0.3em; }
+.transcricao { text-align: justify; text-indent: 2em; margin: 1.2em 0; }
+.incerto { background: #fff3cd; padding: 0 2px; border-bottom: 1px dotted #b58900; cursor: help; }
+.ilegivel { background: #f8d7da; padding: 0 2px; font-style: italic; }
+.notas { background: #fafafa; border: 1px solid #ddd; padding: 1em 1.5em; font-size: 0.9em; margin-top: 1.5em; }
+.notas h2 { font-size: 1.1em; margin-top: 0; border: none; }
+.notas ul { padding-left: 1.2em; }
+.notas li { margin-bottom: 0.5em; }
+.assinaturas { margin-top: 1.5em; font-style: italic; text-align: right; }
+.elementos { font-size: 0.9em; color: #444; margin-top: 1em; background: #f0f4f8; padding: 0.8em 1.2em; border-left: 4px solid #6c8ea4; }
+.confrontantes { margin: 1em 0; font-size: 0.92em; }
+.confrontantes ul { columns: 2; padding-left: 1.2em; }
+.tx-tabela { width: 100%; border-collapse: collapse; margin: 1em 0; font-size: 0.92em; }
+.tx-tabela th { background: #e8e8e0; text-align: left; padding: 0.4em 0.6em; border: 1px solid #bbb; vertical-align: top; }
+.tx-tabela td { padding: 0.5em 0.6em; border: 1px solid #ddd; vertical-align: top; }
+.tx-tabela th.col { width: 22%; }
+nav.links { font-size: 0.9em; margin: 1em 0; }
+nav.links a { margin-right: 0.8em; }
+"""
+
+def html_head(title):
+    return f"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>{title}</title>
+<style>{CSS}</style>
+</head>
+<body>
+"""
+
+def html_foot():
+    return "</body>\n</html>\n"
