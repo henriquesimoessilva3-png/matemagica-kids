@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revisão de Transcrições — Cartório</title>
+<style>
+  :root {
+    --bg: #f7f6f1;
+    --surface: #ffffff;
+    --border: #d9d6cc;
+    --text: #2a2620;
+    --muted: #6f6a60;
+    --accent: #2a5a8a;
+    --accent-bg: #e6efff;
+    --ok: #2a7a4a;
+    --ok-bg: #dff5e7;
+    --doubt: #b58900;
+    --doubt-bg: #fff3cd;
+    --danger: #b32e2e;
+    --danger-bg: #fbe1e1;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text); font-size: 14px;
+  }
+  header.top {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0.7em 1.2em; display: flex; align-items: center; gap: 1em;
+  }
+  header.top h1 { font-size: 1.05em; margin: 0; font-weight: 600; }
+  header.top .spacer { flex: 1; }
+  header.top input, header.top select {
+    font: inherit; padding: 0.35em 0.6em; border: 1px solid var(--border); border-radius: 4px;
+    background: var(--bg);
+  }
+  header.top .key-status { font-size: 0.85em; color: var(--muted); }
+  header.top .key-status.ok { color: var(--ok); }
+  .layout {
+    display: grid; grid-template-columns: 280px 1fr 320px;
+    height: calc(100vh - 50px);
+  }
+  .panel {
+    background: var(--surface); overflow-y: auto; border-right: 1px solid var(--border);
+    padding: 0.8em 1em;
+  }
+  .panel:last-child { border-right: none; border-left: 1px solid var(--border); }
+  .panel h2 {
+    font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--muted); margin: 0 0 0.6em 0; font-weight: 600;
+  }
+  .drop-zone {
+    border: 2px dashed var(--border); border-radius: 6px; padding: 1.2em 1em;
+    text-align: center; color: var(--muted); cursor: pointer; transition: 0.15s;
+    margin-bottom: 1em; font-size: 0.9em;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--accent); color: var(--accent); background: var(--accent-bg);
+  }
+  .drop-zone input { display: none; }
+  ul.docs { list-style: none; padding: 0; margin: 0; }
+  ul.docs li {
+    padding: 0.6em 0.7em; border: 1px solid var(--border); border-radius: 4px;
+    margin-bottom: 0.4em; cursor: pointer; font-size: 0.9em; background: var(--bg);
+    display: flex; flex-direction: column; gap: 0.2em;
+  }
+  ul.docs li.active { background: var(--accent-bg); border-color: var(--accent); }
+  ul.docs li .name { font-weight: 600; }
+  ul.docs li .meta { font-size: 0.78em; color: var(--muted); }
+  .status-badge {
+    display: inline-block; padding: 0.05em 0.5em; border-radius: 10px;
+    font-size: 0.7em; font-weight: 600; text-transform: uppercase;
+  }
+  .status-queued { background: #eee; color: #666; }
+  .status-processing { background: var(--accent-bg); color: var(--accent); }
+  .status-needs-review { background: var(--doubt-bg); color: var(--doubt); }
+  .status-approved { background: var(--ok-bg); color: var(--ok); }
+  .status-error { background: var(--danger-bg); color: var(--danger); }
+
+  .work {
+    background: var(--bg); overflow-y: auto; padding: 1.5em 2em;
+  }
+  .work .empty {
+    display: flex; height: 100%; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 1em;
+  }
+  .work .doc-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1.4em 1.8em; max-width: 820px; margin: 0 auto;
+  }
+  .doc-card h2 {
+    margin-top: 0; padding-bottom: 0.3em; border-bottom: 2px solid var(--text);
+    font-size: 1.3em;
+  }
+  .doc-meta { display: flex; flex-wrap: wrap; gap: 1.2em; font-size: 0.85em; margin: 0.8em 0; color: var(--muted); }
+  .doc-meta strong { color: var(--text); }
+  .transcricao {
+    text-align: justify; line-height: 1.6; margin: 1em 0;
+    background: #fafafa; padding: 1em 1.2em; border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .incerto {
+    background: var(--doubt-bg); padding: 1px 4px; border-bottom: 2px solid var(--doubt);
+    cursor: pointer; border-radius: 2px;
+  }
+  .incerto.resolved { background: var(--ok-bg); border-bottom-color: var(--ok); }
+  .incerto.active { outline: 2px solid var(--accent); }
+
+  .panel-right .doubt-card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 5px;
+    padding: 0.7em 0.8em; margin-bottom: 0.7em;
+  }
+  .panel-right .doubt-card.resolved { opacity: 0.55; }
+  .panel-right .doubt-card.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
+  .panel-right .doubt-card .label { font-size: 0.78em; color: var(--muted); margin-bottom: 0.3em; }
+  .panel-right .doubt-card .options { display: flex; flex-direction: column; gap: 0.3em; margin-top: 0.4em; }
+  .panel-right .doubt-card .options button {
+    text-align: left; padding: 0.4em 0.6em; font: inherit; font-size: 0.85em;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    cursor: pointer;
+  }
+  .panel-right .doubt-card .options button:hover { background: var(--accent-bg); border-color: var(--accent); }
+  .panel-right .doubt-card .options button.selected { background: var(--ok-bg); border-color: var(--ok); }
+  .panel-right .doubt-card .custom {
+    margin-top: 0.4em; display: flex; gap: 0.3em;
+  }
+  .panel-right .doubt-card .custom input {
+    flex: 1; padding: 0.3em 0.5em; border: 1px solid var(--border); border-radius: 3px; font: inherit;
+  }
+  .panel-right .doubt-card .custom button { padding: 0.3em 0.6em; }
+  .panel-right .doubt-card .reason {
+    font-size: 0.78em; color: var(--muted); margin-top: 0.3em; font-style: italic;
+  }
+
+  button.primary {
+    background: var(--accent); color: white; border: none; padding: 0.55em 1em;
+    border-radius: 4px; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  button.primary:disabled { background: #aaa; cursor: not-allowed; }
+  button.primary:hover:not(:disabled) { background: #1e4870; }
+  button.secondary {
+    background: var(--bg); border: 1px solid var(--border); padding: 0.55em 1em;
+    border-radius: 4px; font: inherit; cursor: pointer;
+  }
+  .approve-row {
+    margin: 1em 0; padding-top: 1em; border-top: 1px solid var(--border);
+    display: flex; gap: 0.6em; align-items: center;
+  }
+  .approve-row .stats { flex: 1; font-size: 0.85em; color: var(--muted); }
+
+  .right-section { margin-bottom: 1.4em; }
+
+  .stats-summary {
+    display: flex; gap: 0.6em; font-size: 0.78em; margin-bottom: 0.6em;
+  }
+  .stats-summary span { padding: 0.2em 0.5em; border-radius: 3px; }
+
+  .glossario-panel { font-size: 0.85em; }
+  .glossario-panel pre {
+    background: var(--bg); padding: 0.5em; border-radius: 3px; white-space: pre-wrap;
+    max-height: 200px; overflow-y: auto; font-size: 0.8em;
+  }
+
+  /* Image preview */
+  .img-preview {
+    max-width: 100%; max-height: 320px; border: 1px solid var(--border);
+    border-radius: 4px; margin: 0.6em 0;
+  }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block; width: 12px; height: 12px;
+    border: 2px solid var(--border); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .toast {
+    position: fixed; bottom: 1.5em; right: 1.5em;
+    background: var(--text); color: white; padding: 0.7em 1.1em;
+    border-radius: 5px; font-size: 0.9em; max-width: 360px;
+    opacity: 0; pointer-events: none; transition: 0.2s;
+  }
+  .toast.show { opacity: 0.95; pointer-events: auto; }
+  .toast.error { background: var(--danger); }
+  .toast.success { background: var(--ok); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Revisão de Transcrições</h1>
+  <input type="password" id="api-key" placeholder="ANTHROPIC_API_KEY" size="32">
+  <button class="secondary" id="save-key">Salvar chave</button>
+  <span class="key-status" id="key-status">sem chave</span>
+  <input type="text" id="reviewer-name" placeholder="seu nome (revisor)" size="20"
+         style="font:inherit;padding:0.35em 0.6em;border:1px solid var(--border);border-radius:4px;background:var(--bg);">
+  <div class="spacer"></div>
+  <select id="model">
+    <option value="claude-sonnet-4-6">claude-sonnet-4-6</option>
+    <option value="claude-opus-4-7">claude-opus-4-7 (mais caro/preciso)</option>
+    <option value="claude-haiku-4-5-20251001">claude-haiku-4-5 (mais barato/rápido)</option>
+  </select>
+  <label style="font-size:0.85em;color:var(--muted)">
+    <input type="checkbox" id="auto-process" checked> auto-processar fila
+  </label>
+  <button class="secondary" id="export-zip">Baixar aprovados (ZIP)</button>
+  <button class="secondary" id="clear-all" title="Limpa fila e armazenamento local">Limpar</button>
+</header>
+
+<div class="layout">
+
+  <!-- Coluna esquerda: fila + lista -->
+  <aside class="panel">
+    <h2>Entrada</h2>
+    <label class="drop-zone" id="drop-zone">
+      <input type="file" id="file-input" accept="image/*,application/pdf" multiple>
+      <strong>Arraste imagens / PDFs aqui</strong><br>
+      <span style="font-size:0.82em">ou clique para escolher</span>
+    </label>
+
+    <div class="stats-summary">
+      <span style="background:#eee">fila: <strong id="cnt-queued">0</strong></span>
+      <span style="background:var(--accent-bg);color:var(--accent)">proc: <strong id="cnt-processing">0</strong></span>
+      <span style="background:var(--doubt-bg);color:var(--doubt)">dúvida: <strong id="cnt-needs">0</strong></span>
+      <span style="background:var(--ok-bg);color:var(--ok)">ok: <strong id="cnt-approved">0</strong></span>
+    </div>
+
+    <h2>Documentos</h2>
+    <ul class="docs" id="docs-list"></ul>
+  </aside>
+
+  <!-- Coluna central: documento selecionado -->
+  <main class="work" id="work">
+    <div class="empty">Selecione um documento à esquerda ou jogue arquivos para começar.</div>
+  </main>
+
+  <!-- Coluna direita: dúvidas + glossário -->
+  <aside class="panel panel-right">
+    <div class="right-section">
+      <h2>Dúvidas a resolver</h2>
+      <div id="doubts-container">
+        <p style="color:var(--muted);font-size:0.85em;">Nenhum documento selecionado.</p>
+      </div>
+    </div>
+
+    <div class="right-section">
+      <h2>Glossário</h2>
+      <div class="glossario-panel">
+        <p style="color:var(--muted);font-size:0.82em;margin-top:0;">
+          Termos, topônimos e pessoas conhecidas. Enviado como contexto a cada chamada da API.
+          Adicione manualmente entradas confirmadas para melhorar precisão.
+        </p>
+        <textarea id="glossario-text" rows="8" style="width:100%;font:inherit;font-size:0.78em;padding:0.4em;border:1px solid var(--border);border-radius:3px;"></textarea>
+        <button class="secondary" id="save-glossario" style="margin-top:0.4em;font-size:0.8em;">Salvar glossário</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================================
+   STORAGE LAYER — IndexedDB. Encapsulado para troca futura por API remota.
+========================================================================= */
+const DB_NAME = 'cartorio-revisao';
+const DB_VERSION = 1;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('docs')) {
+        const s = db.createObjectStore('docs', { keyPath: 'id' });
+        s.createIndex('status', 'status');
+      }
+    };
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror = e => reject(e.target.error);
+  });
+}
+
+async function dbPut(doc) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('docs', 'readwrite');
+    tx.objectStore('docs').put(doc);
+    tx.oncomplete = () => resolve(doc);
+    tx.onerror = e => reject(e.target.error);
+  });
+}
+
+async function dbGet(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('docs', 'readonly');
+    const req = tx.objectStore('docs').get(id);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = e => reject(e.target.error);
+  });
+}
+
+async function dbAll() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('docs', 'readonly');
+    const req = tx.objectStore('docs').getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = e => reject(e.target.error);
+  });
+}
+
+async function dbDelete(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('docs', 'readwrite');
+    tx.objectStore('docs').delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = e => reject(e.target.error);
+  });
+}
+
+async function dbClear() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('docs', 'readwrite');
+    tx.objectStore('docs').clear();
+    tx.oncomplete = () => resolve();
+    tx.onerror = e => reject(e.target.error);
+  });
+}
+
+/* =========================================================================
+   CONFIG (localStorage)
+========================================================================= */
+const Config = {
+  get apiKey() { return localStorage.getItem('anthropic_key') || ''; },
+  set apiKey(v) { v ? localStorage.setItem('anthropic_key', v) : localStorage.removeItem('anthropic_key'); },
+  get model() { return localStorage.getItem('model') || 'claude-sonnet-4-6'; },
+  set model(v) { localStorage.setItem('model', v); },
+  get glossario() { return localStorage.getItem('glossario') || DEFAULT_GLOSSARIO; },
+  set glossario(v) { localStorage.setItem('glossario', v); },
+};
+
+const DEFAULT_GLOSSARIO = `# Glossário (livro de Registro de Imóveis — Comarca de Ferros, MG, 1890–1976)
+
+## Regras gerais
+- Preservar grafia ORIGINAL (commum, districto, municipio, corego, transcricoes etc).
+- NÃO inventar letras. Usar [?] para letras ausentes, [ilegivel] para palavras totalmente ilegíveis.
+- Marcar duas hipoteses como [palavra1/palavra2].
+
+## Toponimos confirmados
+- Corego do "Entre Folhas" — distrito de Paraiso, mun. de Mesquita, comarca de Ferros
+- ribeirao Ganafas (NAO Garrafas; confirmado por correlato)
+- Cidade "Taboas" / Cidade "Passagem" — distrito de Cidade, comarca de Ferros
+- Lugar "Fernandes" — distrito de Sao Jose de Cubas, comarca de Ferros
+- rio Tanque; Corego Tres Cachoeiras; Bello Monte; fronteira do Bem
+- Banca/Banda do Tanque (fazenda)
+
+## Familias / pessoas recorrentes
+- Familia Lage (Carvalho Lage, de Almeida Lage, de Pita Lage, etc) — proprietaria local dominante
+- Cia. Siderurgica Belgo-Mineira — adquirente de terras em MG desde 1921
+- Cartorario: Eemar/Cemar Lage Santos (pub. oficial) + Jose de Oliveira Santos (oficial), 1949-50
+- Sub-oficial Eb. Santos (averbacoes pos-1952)
+
+## Termos juridicos/regionais
+- "fere em" = encontra-se / desemboca em
+- "testato/testada" = marco de limite / frente de propriedade
+- "corego acima/abaixo" = subindo/descendo o curso d'agua
+- "em commum com" = co-propriedade indivisa
+- "divisas conhecidas/respeitadas" = clausula padrao
+- "litros / mililitros" como unidade agraria (regional MG): 1 alqueire = 40 litros
+
+## Estrutura dos registros
+Cada registro tem face AQUISICOES (descritivo + adquirente) e face TRANSMISSOES (transmitente, titulo, valor, condicoes, averbacoes). Continuacoes podem ocupar paginas extras.
+
+## Selos fiscais
+- Aquisicoes: tipicamente 4x Cr$ 0,50 ESTADUAIS (Minas Gerais)
+- Transmissoes: selos FEDERAIS (BRASIL), valores variados (Cr$ 0,20/0,50/0,80)
+`;
+
+/* =========================================================================
+   API CLIENT (Anthropic) — substituivel por endpoint server-side em producao
+========================================================================= */
+const API_URL = 'https://api.anthropic.com/v1/messages';
+const API_VERSION = '2023-06-01';
+
+const SYSTEM_PROMPT = `Voce e um especialista em paleografia brasileira. Sua tarefa e transcrever
+documentos manuscritos de livros de Registro de Imoveis (Comarca de Ferros / MG, 1890-1976),
+em portugues antigo cursivo.
+
+REGRAS RIGIDAS:
+1. PRESERVE A ORTOGRAFIA ORIGINAL. Nunca modernize. Mantenha "commum", "districto",
+   "municipio" sem acento, "corego" sem rr, "transcricoes" sem acento, etc.
+   Se o escrivao errou, preserve o erro.
+2. NAO INVENTE LETRAS. Para letras ausentes use [?]; para palavras totalmente ilegiveis
+   use [ilegivel]; para duas hipoteses plausiveis use [palavra1/palavra2].
+3. Marque qualquer palavra de leitura DUVIDOSA em <span class="incerto"
+   data-doubt-id="X" title="motivo">palavra</span>. Use IDs incrementais (d1, d2, d3...).
+   Inclua TAMBEM o trecho na lista "incertezas" do JSON com o mesmo ID.
+4. VALIDE CONTRA O GLOSSARIO ANEXO. Topnomos, pessoas e empresas ja conhecidos tem
+   prioridade sobre leituras ad hoc.
+
+RETORNE APENAS UM JSON neste shape (sem markdown, sem prefixo):
+
+{
+  "numero_registro": "...",
+  "face": "aquisicoes|transmissoes|continuacao",
+  "campos_estruturados": {
+    "numero": "...", "data": "YYYY-MM-DD", "data_extenso": "...",
+    "lugar": "...", "distrito": "...", "municipio": "...", "comarca": "...",
+    "adquirente": "...", "area_descricao": "..."
+  },
+  "html_corpo": "<p class='transcricao'>...texto com spans de incerto...</p>",
+  "confrontantes": [{"nome": "...", "posicao": "..."}],
+  "incertezas": [
+    {"id": "d1", "trecho": "palavra como esta no texto",
+     "leitura_principal": "...", "leituras_alternativas": ["...", "..."],
+     "confianca": "alta|media|baixa", "justificativa": "..."}
+  ],
+  "selos_fiscais": {"descricao": "..."},
+  "assinaturas": ["..."],
+  "score_confianca": 0.0,
+  "glossario_adicoes_sugeridas": [
+    {"categoria": "toponimo|pessoa|empresa|termo", "termo": "...", "contexto": "..."}
+  ]
+}`;
+
+async function callAnthropic({ apiKey, model, imageDataUrl, glossario }) {
+  // imageDataUrl no formato "data:image/jpeg;base64,...."
+  const m = imageDataUrl.match(/^data:(image\/[a-z]+);base64,(.+)$/);
+  if (!m) throw new Error('imagem invalida');
+  const [, mediaType, b64] = m;
+
+  const body = {
+    model,
+    max_tokens: 4096,
+    system: SYSTEM_PROMPT,
+    messages: [{
+      role: 'user',
+      content: [
+        { type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } },
+        { type: 'text', text: `GLOSSARIO DE REFERENCIA:\n\n${glossario}\n\nTranscreva a imagem seguindo o pipeline e regras. Retorne APENAS o JSON.` }
+      ]
+    }]
+  };
+
+  const resp = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': API_VERSION,
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!resp.ok) {
+    const errBody = await resp.text();
+    throw new Error(`API ${resp.status}: ${errBody.slice(0, 200)}`);
+  }
+  const data = await resp.json();
+  const text = data.content?.[0]?.text || '';
+
+  // Remove possiveis cercas de codigo
+  let clean = text.trim();
+  if (clean.startsWith('```')) {
+    clean = clean.replace(/^```[a-z]*\n?/, '').replace(/```\s*$/, '');
+  }
+  return JSON.parse(clean);
+}
+
+/* =========================================================================
+   DOUBLE-PASS + COMPARACAO
+========================================================================= */
+async function transcribeWithDoublePass({ apiKey, model, imageDataUrl, glossario }) {
+  const [r1, r2] = await Promise.all([
+    callAnthropic({ apiKey, model, imageDataUrl, glossario }),
+    callAnthropic({ apiKey, model, imageDataUrl, glossario }),
+  ]);
+
+  // Merge: tomar r1 como base, adicionar divergencias como duvidas extras
+  const merged = JSON.parse(JSON.stringify(r1));
+  merged.incertezas = merged.incertezas || [];
+
+  // Diff de campos estruturados
+  const flatA = JSON.stringify(r1.campos_estruturados || {});
+  const flatB = JSON.stringify(r2.campos_estruturados || {});
+  if (flatA !== flatB) {
+    const diffs = [];
+    for (const k of new Set([...Object.keys(r1.campos_estruturados||{}), ...Object.keys(r2.campos_estruturados||{})])) {
+      const a = (r1.campos_estruturados||{})[k];
+      const b = (r2.campos_estruturados||{})[k];
+      if (a !== b) diffs.push({ campo: k, a, b });
+    }
+    diffs.forEach((d, i) => {
+      merged.incertezas.push({
+        id: `dp${i+1}`,
+        trecho: `[campo estruturado: ${d.campo}]`,
+        leitura_principal: String(d.a ?? ''),
+        leituras_alternativas: [String(d.b ?? '')],
+        confianca: 'baixa',
+        justificativa: 'divergencia entre 2 leituras independentes'
+      });
+    });
+  }
+
+  // Diff de confrontantes (compara listas de nomes)
+  const namesA = (r1.confrontantes || []).map(c => c.nome).sort().join('|');
+  const namesB = (r2.confrontantes || []).map(c => c.nome).sort().join('|');
+  if (namesA !== namesB) {
+    merged.incertezas.push({
+      id: `dp_confr`,
+      trecho: '[lista de confrontantes]',
+      leitura_principal: namesA || '(vazio)',
+      leituras_alternativas: [namesB || '(vazio)'],
+      confianca: 'baixa',
+      justificativa: 'lista de confrontantes divergiu entre passagens'
+    });
+  }
+
+  merged._second_pass = {
+    incertezas_pass2: r2.incertezas || [],
+    campos_pass2: r2.campos_estruturados
+  };
+
+  // Score: penaliza divergencias
+  const baseScore = Math.min(r1.score_confianca ?? 0.85, r2.score_confianca ?? 0.85);
+  const divergCount = merged.incertezas.length;
+  merged.score_confianca = Math.max(0, baseScore - divergCount * 0.02);
+  merged.needs_review = divergCount > 0;
+  return merged;
+}
+
+/* =========================================================================
+   FILE INTAKE — converte PDF/img em data URLs
+========================================================================= */
+async function fileToImageDataUrls(file) {
+  if (file.type.startsWith('image/')) {
+    return [await blobToDataUrl(file)];
+  }
+  if (file.type === 'application/pdf') {
+    return await pdfToImages(file);
+  }
+  throw new Error(`tipo nao suportado: ${file.type}`);
+}
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = e => reject(e);
+    r.readAsDataURL(blob);
+  });
+}
+
+let pdfjsLoaded = null;
+async function ensurePdfJs() {
+  if (window.pdfjsLib) return window.pdfjsLib;
+  if (pdfjsLoaded) return pdfjsLoaded;
+  pdfjsLoaded = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      resolve(window.pdfjsLib);
+    };
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+  return pdfjsLoaded;
+}
+
+async function pdfToImages(file) {
+  const pdfjs = await ensurePdfJs();
+  const arrayBuf = await file.arrayBuffer();
+  const pdf = await pdfjs.getDocument({ data: arrayBuf }).promise;
+  const out = [];
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const page = await pdf.getPage(p);
+    const viewport = page.getViewport({ scale: 2.0 });
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width; canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    out.push(canvas.toDataURL('image/jpeg', 0.88));
+  }
+  return out;
+}
+
+/* =========================================================================
+   PROCESSING QUEUE
+========================================================================= */
+const State = {
+  selected: null,
+  processing: false,
+};
+
+async function enqueueFile(file) {
+  try {
+    const dataUrls = await fileToImageDataUrls(file);
+    for (let i = 0; i < dataUrls.length; i++) {
+      const id = `${file.name}_${i+1}_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
+      const stem = file.name.replace(/\.[^.]+$/, '') + (dataUrls.length > 1 ? `_p${i+1}` : '');
+      await dbPut({
+        id, stem,
+        original_name: file.name,
+        image_data_url: dataUrls[i],
+        status: 'queued',
+        added_at: Date.now(),
+        result: null,
+        approvals: {}
+      });
+    }
+    await render();
+    if (document.getElementById('auto-process').checked) processNext();
+  } catch (e) {
+    toast('Erro ao processar arquivo: ' + e.message, 'error');
+  }
+}
+
+async function processNext() {
+  if (State.processing) return;
+  const all = await dbAll();
+  const next = all.find(d => d.status === 'queued');
+  if (!next) return;
+  State.processing = true;
+  next.status = 'processing';
+  await dbPut(next);
+  await render();
+  try {
+    const result = await transcribeWithDoublePass({
+      apiKey: Config.apiKey, model: Config.model,
+      imageDataUrl: next.image_data_url, glossario: Config.glossario
+    });
+    next.result = result;
+    next.status = result.needs_review ? 'needs-review' : 'approved';
+    if (!next.result.needs_review) {
+      // Sem duvidas: aprovado automaticamente
+      next.approved_at = Date.now();
+    }
+    await dbPut(next);
+  } catch (e) {
+    next.status = 'error';
+    next.error = e.message;
+    await dbPut(next);
+    toast(`Erro em ${next.stem}: ${e.message}`, 'error');
+  } finally {
+    State.processing = false;
+    await render();
+    setTimeout(processNext, 50);
+  }
+}
+
+/* =========================================================================
+   RENDER
+========================================================================= */
+function $(sel) { return document.querySelector(sel); }
+
+async function render() {
+  const all = await dbAll();
+  renderQueue(all);
+  renderWork(all);
+}
+
+function renderQueue(all) {
+  $('#cnt-queued').textContent = all.filter(d => d.status === 'queued').length;
+  $('#cnt-processing').textContent = all.filter(d => d.status === 'processing').length;
+  $('#cnt-needs').textContent = all.filter(d => d.status === 'needs-review').length;
+  $('#cnt-approved').textContent = all.filter(d => d.status === 'approved').length;
+
+  const list = $('#docs-list');
+  list.innerHTML = '';
+  const sorted = [...all].sort((a, b) => a.added_at - b.added_at);
+  for (const d of sorted) {
+    const li = document.createElement('li');
+    if (d.id === State.selected) li.classList.add('active');
+    li.dataset.id = d.id;
+    li.innerHTML = `
+      <div class="name">${escapeHtml(d.stem)}</div>
+      <div class="meta">
+        <span class="status-badge status-${d.status}">${d.status}</span>
+        ${d.result?.numero_registro ? `· nº ${escapeHtml(d.result.numero_registro)}` : ''}
+        ${d.result?.score_confianca != null ? ` · ${Math.round(d.result.score_confianca*100)}%` : ''}
+      </div>`;
+    li.onclick = () => { State.selected = d.id; render(); };
+    list.appendChild(li);
+  }
+}
+
+async function renderWork(all) {
+  const work = $('#work');
+  const doubtsContainer = $('#doubts-container');
+  if (!State.selected) {
+    work.innerHTML = '<div class="empty">Selecione um documento à esquerda ou jogue arquivos para começar.</div>';
+    doubtsContainer.innerHTML = '<p style="color:var(--muted);font-size:0.85em;">Nenhum documento selecionado.</p>';
+    return;
+  }
+  const doc = all.find(d => d.id === State.selected);
+  if (!doc) {
+    work.innerHTML = '<div class="empty">Documento removido.</div>';
+    return;
+  }
+
+  if (doc.status === 'queued') {
+    work.innerHTML = `<div class="doc-card"><h2>${escapeHtml(doc.stem)}</h2>
+      <p style="color:var(--muted)">Na fila. Processamento começa quando você ligar "auto-processar" ou processar manualmente.</p>
+      <img class="img-preview" src="${doc.image_data_url}">
+      <button class="primary" id="force-process">Processar agora</button></div>`;
+    $('#force-process').onclick = () => { State.processing = false; processNext(); };
+    doubtsContainer.innerHTML = '<p style="color:var(--muted);font-size:0.85em;">Aguardando processamento.</p>';
+    return;
+  }
+  if (doc.status === 'processing') {
+    work.innerHTML = `<div class="doc-card"><h2>${escapeHtml(doc.stem)}</h2>
+      <p><span class="spinner"></span> Transcrevendo (double-pass)...</p>
+      <img class="img-preview" src="${doc.image_data_url}"></div>`;
+    return;
+  }
+  if (doc.status === 'error') {
+    work.innerHTML = `<div class="doc-card"><h2>${escapeHtml(doc.stem)}</h2>
+      <p style="color:var(--danger)">Erro: ${escapeHtml(doc.error || '')}</p>
+      <img class="img-preview" src="${doc.image_data_url}">
+      <button class="secondary" id="retry">Tentar novamente</button></div>`;
+    $('#retry').onclick = async () => { doc.status = 'queued'; doc.error = null; await dbPut(doc); render(); processNext(); };
+    return;
+  }
+
+  // status: needs-review ou approved
+  const r = doc.result || {};
+  const ce = r.campos_estruturados || {};
+  const totalDoubts = (r.incertezas || []).length;
+  const resolvedDoubts = Object.keys(doc.approvals || {}).length;
+  const allResolved = totalDoubts === 0 || resolvedDoubts >= totalDoubts;
+
+  const bodyHtml = renderBodyWithDoubts(r.html_corpo || '<em>sem corpo retornado</em>', doc);
+
+  work.innerHTML = `
+    <div class="doc-card">
+      <h2>Registro nº ${escapeHtml(r.numero_registro || '?')} <small style="font-weight:normal;font-size:0.65em;color:var(--muted)">— ${escapeHtml(doc.stem)}</small></h2>
+      <div class="doc-meta">
+        <span><strong>Data:</strong> ${escapeHtml(ce.data_extenso || ce.data || '?')}</span>
+        <span><strong>Lugar:</strong> ${escapeHtml(ce.lugar || '?')}</span>
+        <span><strong>Município:</strong> ${escapeHtml(ce.municipio || '?')}</span>
+        <span><strong>Comarca:</strong> ${escapeHtml(ce.comarca || '?')}</span>
+        <span><strong>Adquirente:</strong> ${escapeHtml(ce.adquirente || '?')}</span>
+        <span><strong>Score:</strong> ${Math.round((r.score_confianca||0)*100)}%</span>
+      </div>
+      <img class="img-preview" src="${doc.image_data_url}">
+      ${bodyHtml}
+      ${renderConfrontantes(r.confrontantes)}
+      ${renderSelos(r.selos_fiscais)}
+      <div class="approve-row">
+        <span class="stats">${resolvedDoubts}/${totalDoubts} dúvidas resolvidas</span>
+        <button class="secondary" id="reprocess">Reprocessar</button>
+        <button class="primary" id="approve-btn" ${allResolved ? '' : 'disabled'}>
+          ${doc.status === 'approved' ? 'Aprovado ✓' : 'Aprovar documento'}
+        </button>
+      </div>
+    </div>
+  `;
+
+  $('#approve-btn').onclick = async () => {
+    doc.status = 'approved';
+    doc.approved_at = Date.now();
+    doc.approved_by = (localStorage.getItem('reviewer_name') || 'desconhecido');
+    await dbPut(doc);
+    toast('Documento aprovado ✓', 'success');
+    render();
+  };
+  $('#reprocess').onclick = async () => {
+    doc.status = 'queued'; doc.result = null; doc.approvals = {};
+    await dbPut(doc); render(); processNext();
+  };
+
+  // Wire doubt clicks
+  document.querySelectorAll('.incerto[data-doubt-id]').forEach(el => {
+    el.onclick = () => focusDoubt(el.dataset.doubtId);
+  });
+
+  renderDoubts(doc);
+}
+
+function renderBodyWithDoubts(html, doc) {
+  // Aplica resolucoes do usuario
+  let out = html;
+  for (const [doubtId, resolved] of Object.entries(doc.approvals || {})) {
+    // Substitui o conteudo do span de incerto pelo valor aprovado, mantendo marcador
+    const re = new RegExp(`(<span[^>]*data-doubt-id="${doubtId}"[^>]*>)([^<]*)(</span>)`, 'g');
+    out = out.replace(re, `<span class="incerto resolved" data-doubt-id="${doubtId}" title="aprovado: ${escapeAttr(resolved.value)}">${escapeHtml(resolved.value)}</span>`);
+  }
+  return out;
+}
+
+function renderDoubts(doc) {
+  const container = $('#doubts-container');
+  const doubts = (doc.result?.incertezas || []);
+  if (doubts.length === 0) {
+    container.innerHTML = '<p style="color:var(--ok);font-size:0.9em;">✓ Sem dúvidas detectadas. Documento pronto para aprovação.</p>';
+    return;
+  }
+  container.innerHTML = '';
+  for (const d of doubts) {
+    const resolved = (doc.approvals || {})[d.id];
+    const card = document.createElement('div');
+    card.className = 'doubt-card' + (resolved ? ' resolved' : '');
+    card.id = `doubt-${d.id}`;
+
+    const opts = [d.leitura_principal, ...(d.leituras_alternativas || [])].filter(Boolean);
+    const optsHtml = opts.map((o, i) => `
+      <button data-doubt="${d.id}" data-value="${escapeAttr(o)}"
+        ${resolved && resolved.value === o ? 'class="selected"' : ''}>
+        ${escapeHtml(o)}${i === 0 ? ' <small style="color:var(--muted)">(principal)</small>' : ''}
+      </button>`).join('');
+
+    card.innerHTML = `
+      <div class="label">[${escapeHtml(d.id)}] confianca: ${escapeHtml(d.confianca || 'media')}</div>
+      <div style="font-size:0.88em;"><strong>"${escapeHtml(d.trecho || '')}"</strong></div>
+      <div class="options">${optsHtml}</div>
+      <div class="custom">
+        <input type="text" placeholder="Digitar outra leitura..." value="${resolved && !opts.includes(resolved.value) ? escapeAttr(resolved.value) : ''}">
+        <button data-doubt="${d.id}" class="custom-btn">Aplicar</button>
+      </div>
+      ${d.justificativa ? `<div class="reason">${escapeHtml(d.justificativa)}</div>` : ''}
+    `;
+    container.appendChild(card);
+  }
+  // Wire
+  container.querySelectorAll('.options button').forEach(b => {
+    b.onclick = () => resolveDoubt(doc.id, b.dataset.doubt, b.dataset.value);
+  });
+  container.querySelectorAll('.custom-btn').forEach(b => {
+    b.onclick = () => {
+      const inp = b.parentElement.querySelector('input');
+      const v = inp.value.trim();
+      if (!v) return;
+      resolveDoubt(doc.id, b.dataset.doubt, v);
+    };
+  });
+}
+
+async function resolveDoubt(docId, doubtId, value) {
+  const doc = await dbGet(docId);
+  doc.approvals = doc.approvals || {};
+  doc.approvals[doubtId] = {
+    value, at: Date.now(),
+    by: localStorage.getItem('reviewer_name') || 'desconhecido'
+  };
+  await dbPut(doc);
+  render();
+}
+
+function focusDoubt(doubtId) {
+  document.querySelectorAll('.incerto.active').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll(`.incerto[data-doubt-id="${doubtId}"]`).forEach(e => e.classList.add('active'));
+  const card = document.getElementById(`doubt-${doubtId}`);
+  if (card) {
+    document.querySelectorAll('.doubt-card.active').forEach(e => e.classList.remove('active'));
+    card.classList.add('active');
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function renderConfrontantes(list) {
+  if (!list || !list.length) return '';
+  return `<div style="margin:0.8em 0;font-size:0.9em;">
+    <strong>Confrontantes:</strong>
+    <ul style="margin:0.3em 0 0 0;padding-left:1.2em;">
+      ${list.map(c => `<li>${escapeHtml(c.nome || '?')} ${c.posicao ? `<span style="color:var(--muted)">— ${escapeHtml(c.posicao)}</span>` : ''}</li>`).join('')}
+    </ul>
+  </div>`;
+}
+
+function renderSelos(s) {
+  if (!s) return '';
+  return `<div style="font-size:0.85em;color:var(--muted);margin-top:0.6em;border-top:1px dotted var(--border);padding-top:0.5em;">
+    <strong>Selos:</strong> ${escapeHtml(s.descricao || JSON.stringify(s))}</div>`;
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+function toast(msg, kind = '') {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + kind;
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+/* =========================================================================
+   EXPORT (ZIP)
+========================================================================= */
+let jszipLoaded = null;
+async function ensureJSZip() {
+  if (window.JSZip) return window.JSZip;
+  if (jszipLoaded) return jszipLoaded;
+  jszipLoaded = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    s.onload = () => resolve(window.JSZip);
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+  return jszipLoaded;
+}
+
+async function exportApprovedZip() {
+  const JSZip = await ensureJSZip();
+  const all = await dbAll();
+  const approved = all.filter(d => d.status === 'approved');
+  if (!approved.length) { toast('Nenhum documento aprovado.', 'error'); return; }
+
+  const zip = new JSZip();
+  const indexRows = [];
+
+  for (const d of approved) {
+    const stem = d.stem;
+    // Aplicar resolucoes no HTML final
+    const corpoFinal = renderBodyWithDoubts(d.result.html_corpo || '', d);
+
+    const fullHtml = `<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><title>${escapeHtml(stem)}</title>
+<style>${SHARED_CSS}</style></head><body>
+<h1>Registro nº ${escapeHtml(d.result.numero_registro || '?')} — ${escapeHtml(d.result.campos_estruturados?.data_extenso || '')}</h1>
+<div class="meta">
+${Object.entries(d.result.campos_estruturados || {}).map(([k,v]) => `<div><strong>${escapeHtml(k)}:</strong> ${escapeHtml(String(v))}</div>`).join('')}
+</div>
+${corpoFinal}
+${renderConfrontantes(d.result.confrontantes)}
+${renderSelos(d.result.selos_fiscais)}
+<div class="rodape" style="margin-top:2em;padding-top:1em;border-top:1px solid #ccc;font-size:0.8em;color:#666;">
+Aprovado por <strong>${escapeHtml(d.approved_by || 'desconhecido')}</strong> em ${new Date(d.approved_at || Date.now()).toLocaleString('pt-BR')}.<br>
+Score automático: ${Math.round((d.result.score_confianca||0)*100)}% · Dúvidas resolvidas: ${Object.keys(d.approvals||{}).length}/${(d.result.incertezas||[]).length}
+</div>
+</body></html>`;
+
+    zip.file(`html/${stem}.html`, fullHtml);
+    zip.file(`notas/${stem}.json`, JSON.stringify({
+      stem,
+      original_name: d.original_name,
+      approved_by: d.approved_by,
+      approved_at: new Date(d.approved_at).toISOString(),
+      result: d.result,
+      approvals: d.approvals
+    }, null, 2));
+
+    // Imagem
+    const imgB64 = d.image_data_url.split(',')[1];
+    zip.file(`imagens/${stem}.jpg`, imgB64, { base64: true });
+
+    indexRows.push(`<tr><td><a href="html/${stem}.html">${escapeHtml(stem)}</a></td>
+      <td>${escapeHtml(d.result.numero_registro || '?')}</td>
+      <td>${escapeHtml(d.result.campos_estruturados?.data || '?')}</td>
+      <td>${escapeHtml(d.result.campos_estruturados?.adquirente || '?')}</td>
+      <td>${Math.round((d.result.score_confianca||0)*100)}%</td>
+      <td>${escapeHtml(d.approved_by || '?')}</td></tr>`);
+  }
+
+  zip.file('index.html', `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Aprovados</title><style>${SHARED_CSS}
+table{border-collapse:collapse;width:100%}th,td{padding:0.5em;border-bottom:1px solid #ddd;text-align:left}
+th{background:#eee}
+</style></head><body>
+<h1>Documentos aprovados (${approved.length})</h1>
+<table><thead><tr><th>Arquivo</th><th>Nº</th><th>Data</th><th>Adquirente</th><th>Score</th><th>Aprovado por</th></tr></thead>
+<tbody>${indexRows.join('')}</tbody></table>
+</body></html>`);
+
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `transcricoes_${new Date().toISOString().slice(0,10)}.zip`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast(`ZIP gerado com ${approved.length} documento(s)`, 'success');
+}
+
+const SHARED_CSS = `
+body{font-family:Georgia,serif;max-width:780px;margin:2em auto;line-height:1.6;color:#222;padding:0 1em;}
+h1{border-bottom:2px solid #333;padding-bottom:0.3em;font-size:1.4em;}
+.meta{background:#f5f5f0;padding:1em 1.2em;border-left:4px solid #888;margin:1em 0;}
+.meta div{margin-bottom:0.3em;}
+.transcricao{text-align:justify;text-indent:2em;margin:1.2em 0;}
+.incerto{background:#fff3cd;padding:0 2px;border-bottom:1px dotted #b58900;}
+.incerto.resolved{background:#dff5e7;border-bottom-color:#2a7a4a;}
+`;
+
+/* =========================================================================
+   BINDINGS
+========================================================================= */
+function bindUI() {
+  // API key
+  const keyInput = $('#api-key');
+  const keyStatus = $('#key-status');
+  keyInput.value = Config.apiKey;
+  refreshKeyStatus();
+  $('#save-key').onclick = () => {
+    Config.apiKey = keyInput.value.trim();
+    refreshKeyStatus();
+    toast(Config.apiKey ? 'Chave salva' : 'Chave removida', 'success');
+  };
+  function refreshKeyStatus() {
+    if (Config.apiKey && Config.apiKey.length > 20) {
+      keyStatus.textContent = '✓ chave salva (' + Config.apiKey.slice(0,8) + '...)';
+      keyStatus.classList.add('ok');
+    } else {
+      keyStatus.textContent = 'sem chave';
+      keyStatus.classList.remove('ok');
+    }
+  }
+
+  // Model
+  $('#model').value = Config.model;
+  $('#model').onchange = e => Config.model = e.target.value;
+
+  // Reviewer name
+  const reviewerInput = $('#reviewer-name');
+  reviewerInput.value = localStorage.getItem('reviewer_name') || '';
+  reviewerInput.onchange = () => {
+    const v = reviewerInput.value.trim();
+    if (v) localStorage.setItem('reviewer_name', v);
+    else localStorage.removeItem('reviewer_name');
+  };
+
+  // Glossario
+  $('#glossario-text').value = Config.glossario;
+  $('#save-glossario').onclick = () => {
+    Config.glossario = $('#glossario-text').value;
+    toast('Glossário salvo', 'success');
+  };
+
+  // Drop zone
+  const dz = $('#drop-zone');
+  const fi = $('#file-input');
+  dz.addEventListener('click', () => fi.click());
+  fi.addEventListener('change', async e => {
+    for (const f of e.target.files) await enqueueFile(f);
+    fi.value = '';
+  });
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', async e => {
+    e.preventDefault(); dz.classList.remove('dragover');
+    for (const f of e.dataTransfer.files) await enqueueFile(f);
+  });
+
+  // Export
+  $('#export-zip').onclick = exportApprovedZip;
+
+  // Clear all
+  $('#clear-all').onclick = async () => {
+    if (!confirm('Limpar TODA a fila local? (Não afeta documentos já baixados.)')) return;
+    await dbClear();
+    State.selected = null;
+    await render();
+    toast('Fila limpa.', 'success');
+  };
+}
+
+/* =========================================================================
+   BOOT
+========================================================================= */
+bindUI();
+render();
+// Tenta retomar processamento se houver pendentes
+setTimeout(processNext, 500);
+</script>
+</body>
+</html>
